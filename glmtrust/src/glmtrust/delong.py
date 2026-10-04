@@ -31,8 +31,11 @@ to the shared subset before calling this, which is precisely that condition.
 from __future__ import annotations
 
 import math
+import warnings
 
 import numpy as np
+
+from ._checks import as_labels, as_scores, check_alpha
 
 __all__ = ["delong_auroc_variance", "delong_delta_ci", "must_answer_placements",
            "must_answer_delta_ci", "midrank"]
@@ -44,7 +47,10 @@ def midrank(x: np.ndarray) -> np.ndarray:
     Ties are not an edge case for variant scores: conservation tracks quantise heavily, and a
     scorer that emits the same value for thousands of variants would get a systematically wrong
     AUROC under naive ranking.
+
+    Every value must be present: a NaN never equals itself, so it would never close its tie block.
     """
+    x = as_scores(x, "x", allow_nan=False)
     order = np.argsort(x, kind="mergesort")
     z = x[order]
     n = z.size
@@ -61,23 +67,40 @@ def midrank(x: np.ndarray) -> np.ndarray:
     return out
 
 
+def _score_rows(scores, n):
+    """`scores` as a (k, n) float array, one row per scorer. A masked entry is a missing value (and
+    is then refused below), never the number under the mask; a row of the wrong length is refused
+    by name."""
+    if isinstance(scores, np.ma.MaskedArray):
+        scores = np.ma.filled(scores.astype(float), np.nan)
+    if isinstance(scores, (list, tuple)):
+        # one scorer given as a flat list, or one array per scorer (their lengths checked below)
+        rows = [scores] if scores and all(np.ndim(r) == 0 for r in scores) else list(scores)
+    elif isinstance(scores, np.ndarray) and scores.ndim == 2:
+        rows = list(scores)
+    else:
+        rows = [scores]
+    if not rows:
+        raise ValueError("scores must hold at least one scorer: (k, n), one row per scorer")
+    return np.vstack([as_scores(r, "scores of scorer %d" % i, n=n) for i, r in enumerate(rows)])
+
+
 def delong_auroc_variance(labels, scores):
     """AUROCs and their covariance matrix for k scorers over one shared panel.
 
     `scores` is (k, n) or a sequence of k length-n arrays. Returns (aucs, cov) with shapes
     (k,) and (k, k).
     """
-    y = np.asarray(labels, dtype=int).ravel()
-    s = np.atleast_2d(np.asarray(scores, dtype=float))
-    if s.shape[1] != y.size:
-        raise ValueError("scores have %d columns for %d labels" % (s.shape[1], y.size))
+    y = as_labels(labels, "labels")
+    s = _score_rows(scores, y.size)
     pos = y == 1
     m = int(pos.sum())
     n = int((~pos).sum())
     if m == 0 or n == 0:
         raise ValueError("both classes must be present; got %d positive, %d negative" % (m, n))
     if not np.isfinite(s).all():
-        raise ValueError("DeLong needs complete scores; restrict to the shared subset first")
+        raise ValueError("DeLong needs complete scores (a masked entry counts as missing); restrict "
+                         "to the variants every scorer scores first")
 
     k = s.shape[0]
     x = s[:, pos]                                    # positives
@@ -94,16 +117,22 @@ def delong_auroc_variance(labels, scores):
     # structural components: v10 over positives, v01 over negatives
     v10 = (txz[:, :m] - tx) / n
     v01 = 1.0 - (txz[:, m:] - tz) / m
-    s10 = np.cov(v10, ddof=1) if k > 1 else np.array([[np.var(v10[0], ddof=1)]])
-    s01 = np.cov(v01, ddof=1) if k > 1 else np.array([[np.var(v01[0], ddof=1)]])
+    # a class with one member has no spread to estimate: the covariance comes out NaN, which the
+    # callers report as an undefined interval, so numpy's warnings about it are not repeated
+    with np.errstate(all="ignore"), warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)
+        s10 = np.cov(v10, ddof=1) if k > 1 else np.array([[np.var(v10[0], ddof=1)]])
+        s01 = np.cov(v01, ddof=1) if k > 1 else np.array([[np.var(v01[0], ddof=1)]])
     cov = np.atleast_2d(s10) / m + np.atleast_2d(s01) / n
     return aucs, cov
 
 
 def delong_delta_ci(labels, score_a, score_b, alpha: float = 0.05):
     """(delta, (lo, hi)) for AUROC(a) - AUROC(b) on a shared panel, in closed form."""
-    aucs, cov = delong_auroc_variance(labels, np.vstack([np.asarray(score_a, dtype=float),
-                                                         np.asarray(score_b, dtype=float)]))
+    alpha = check_alpha(alpha)
+    y = as_labels(labels, "labels")
+    aucs, cov = delong_auroc_variance(y, [as_scores(score_a, "score_a", n=y.size),
+                                          as_scores(score_b, "score_b", n=y.size)])
     delta = float(aucs[0] - aucs[1])
     L = np.array([1.0, -1.0])
     var = float(L @ cov @ L)
@@ -144,8 +173,8 @@ def must_answer_placements(labels, score):
     must_answer_auroc() exactly, so DeLong's covariance machinery applies unchanged and the interval
     comes out in closed form rather than from a bootstrap.
     """
-    y = np.asarray(labels, dtype=int).ravel()
-    s = np.asarray(score, dtype=float).ravel()
+    y = as_labels(labels, "labels")
+    s = as_scores(score, "score")
     if s.size != y.size:
         raise ValueError("scores have %d entries for %d labels" % (s.size, y.size))
     pos, neg = y == 1, y == 0
@@ -177,6 +206,7 @@ def must_answer_delta_ci(labels, score_a, score_b, alpha: float = 0.05):
     Unlike `delong_delta_ci` this does NOT require complete scores -- incomplete coverage is the
     quantity being measured. Both scorers must be defined over the same panel.
     """
+    alpha = check_alpha(alpha)
     a10, a01 = must_answer_placements(labels, score_a)
     b10, b01 = must_answer_placements(labels, score_b)
     auc_a = float(a10.mean())

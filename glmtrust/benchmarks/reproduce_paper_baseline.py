@@ -14,6 +14,7 @@ file 3's scripts/recompute_labelfree_baseline.py. Exits 0 only if gene identity,
 and gene and consequence read 0.880, 0.837 and 0.974 at the published three decimals.
 """
 import argparse
+import os
 import sys
 
 import numpy as np
@@ -36,6 +37,10 @@ def main(argv=None):
         import polars as pl
     except ImportError:
         sys.exit("reading the parquet panel needs: pip install 'glmtrust[io]'")
+    if not os.path.isfile(a.panel):
+        sys.exit("no such file: %s. The panel is Additional file 4 of the article (the reduced "
+                 "dbNSFP panel), archived with the article's data rather than in this repository; "
+                 "download it and pass its path to --panel." % a.panel)
     d = pl.read_parquet(a.panel, columns=["label", "gene", "consequence"])
     y = d["label"].to_numpy().astype(int)
     # the study's gene key: the symbol, or "?" where it is empty (the deposited panel has none)

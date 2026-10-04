@@ -2,9 +2,10 @@
 
 # glmtrust
 
-[![tests](https://img.shields.io/badge/tests-166%20passing-brightgreen.svg)](glmtrust/tests)
+[![tests](https://img.shields.io/badge/tests-246%20passing-brightgreen.svg)](glmtrust/tests)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/asediya/evo2-reliability-atlas/blob/main/notebooks/quickstart.ipynb)
 
 Varunkumar Asediya, Udayaraja GK, Haja N. Kadarmideen and Chandra S. Pareek
 
@@ -84,7 +85,9 @@ share of declined pairs that may resolve arbitrarily before the order is lost, w
 grid of that share (`--lambdas`). `glmtrust baseline` fits the sequence-blind baselines an accuracy
 should be read against, the pathogenic rate of each variant's gene, of its consequence class and of the
 two together, out of fold; `python glmtrust/benchmarks/reproduce_paper_baseline.py --panel
-dbnsfp_reach_panel.parquet` returns the paper's 0.880, 0.837 and 0.974 from Additional file 4.
+dbnsfp_reach_panel.parquet` returns the paper's 0.880, 0.837 and 0.974 from Additional file 4 of the
+article, the reduced dbNSFP panel, which is archived with the article's data rather than in this
+repository.
 
 ## The trust layer
 
@@ -108,6 +111,9 @@ aid, not a safety net.
 **[notebooks/quickstart.ipynb](notebooks/quickstart.ipynb)** runs all of the above on a fixture that
 ships with the package, 11,109 variants across nine species, with no data of your own. Its outputs
 are committed as executed.
+
+To run it in the browser with nothing installed, open it in Google Colab with the badge at the
+top of this page; its first cell fetches this repository and installs `glmtrust`.
 
 ```bash
 python glmtrust/benchmarks/reproduce_paper_trust_layer.py

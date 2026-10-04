@@ -22,7 +22,12 @@ nonconformities for that stratum.
 """
 from __future__ import annotations
 
+import math
+from fractions import Fraction
+
 import numpy as np
+
+from ._checks import as_labels, as_probabilities, as_scores, check_alpha
 
 __all__ = ["conformal_quantile", "SplitConformal", "MondrianConformal", "ABSTAIN"]
 
@@ -32,12 +37,17 @@ ABSTAIN = -1
 def conformal_quantile(scores, alpha: float) -> float:
     """The finite-sample-valid conformal threshold: the k-th smallest nonconformity score with
     k = ceil((n + 1)(1 - alpha)). Returns +inf when that index exceeds n (admit the label always),
-    which is the correct behaviour for a calibration set too small to certify level alpha."""
-    scores = np.asarray(scores, float).ravel()
+    which is the correct behaviour for a calibration set too small to certify level alpha.
+
+    ``alpha`` must lie strictly between 0 and 1. The index is computed in exact rational arithmetic:
+    in binary floating point, (n + 1)(1 - alpha) can land a hair above a whole number (alpha = 0.07,
+    say) and the ceiling then demands one rank more than the guarantee needs."""
+    alpha = check_alpha(alpha)
+    scores = as_scores(scores, "nonconformity scores", allow_nan=False)
     n = len(scores)
     if n == 0:
         return float("inf")
-    k = int(np.ceil((n + 1) * (1 - alpha)))
+    k = math.ceil((n + 1) * (1 - Fraction(repr(alpha))))
     if k > n:
         return float("inf")
     return float(np.sort(scores)[k - 1])
@@ -45,17 +55,34 @@ def conformal_quantile(scores, alpha: float) -> float:
 
 class _BaseConformal:
     def __init__(self, alpha: float = 0.1):
-        if not 0 < alpha < 1:
-            raise ValueError("alpha must be in (0, 1)")
-        self.alpha = alpha
+        self.alpha = check_alpha(alpha)
         self._fitted = False
+
+    @staticmethod
+    def _fit_inputs(cal_probs, cal_labels):
+        p = as_probabilities(cal_probs, "cal_probs")
+        y = as_labels(cal_labels, "cal_labels", n=p.size)
+        return p, y
+
+    def _set_inputs(self, probs, alpha):
+        """Probabilities to predict on (NaN allowed: a declined variant gets the empty set, i.e.
+        abstains) and the level to use."""
+        if not self._fitted:
+            raise RuntimeError("call fit() first")
+        a = self.alpha if alpha is None else check_alpha(alpha)
+        p = as_scores(probs, "probs")
+        fin = p[np.isfinite(p)]
+        if fin.size and (fin.min() < 0.0 or fin.max() > 1.0):
+            raise ValueError("probs must lie in [0, 1]; got [%g, %g]" % (fin.min(), fin.max()))
+        return p, a
 
     def predict_set(self, probs, alpha=None):
         """Return an (n, 2) boolean array; column 0 = negative in set, column 1 = positive in set."""
         raise NotImplementedError
 
     def predict(self, probs, alpha=None):
-        """Decision per variant: 1 (positive), 0 (negative), or ABSTAIN for a non-singleton set."""
+        """Decision per variant: 1 (positive), 0 (negative), or ABSTAIN for a non-singleton set
+        (including the empty set a missing probability gets)."""
         s = self.predict_set(probs, alpha)
         out = np.full(len(s), ABSTAIN)
         out[(~s[:, 0]) & s[:, 1]] = 1
@@ -64,8 +91,8 @@ class _BaseConformal:
 
     def evaluate(self, probs, labels, alpha=None):
         """Empirical coverage and abstention on a labelled set."""
-        probs = np.asarray(probs, float).ravel()
-        labels = np.asarray(labels, int).ravel()
+        probs = as_probabilities(probs, "probs")
+        labels = as_labels(labels, "labels", n=probs.size)
         s = self.predict_set(probs, alpha)
         in_set = s[np.arange(len(labels)), labels]
         abstain = (s.sum(1) != 1)
@@ -81,17 +108,13 @@ class SplitConformal(_BaseConformal):
     """Marginal split conformal: one threshold pooled over both classes."""
 
     def fit(self, cal_probs, cal_labels):
-        p = np.clip(np.asarray(cal_probs, float).ravel(), 0, 1)
-        y = np.asarray(cal_labels, int).ravel()
+        p, y = self._fit_inputs(cal_probs, cal_labels)
         self._cal = np.where(y == 1, 1 - p, p)          # nonconformity of the true label
         self._fitted = True
         return self
 
     def predict_set(self, probs, alpha=None):
-        if not self._fitted:
-            raise RuntimeError("call fit() first")
-        a = self.alpha if alpha is None else alpha
-        p = np.clip(np.asarray(probs, float).ravel(), 0, 1)
+        p, a = self._set_inputs(probs, alpha)
         q = conformal_quantile(self._cal, a)
         return np.column_stack([p <= q, (1 - p) <= q])
 
@@ -101,17 +124,13 @@ class MondrianConformal(_BaseConformal):
     within the positive class and within the negative class rather than only on average."""
 
     def fit(self, cal_probs, cal_labels):
-        p = np.clip(np.asarray(cal_probs, float).ravel(), 0, 1)
-        y = np.asarray(cal_labels, int).ravel()
+        p, y = self._fit_inputs(cal_probs, cal_labels)
         self._cal = {0: p[y == 0], 1: 1 - p[y == 1]}    # per-class true-label nonconformities
         self._fitted = True
         return self
 
     def predict_set(self, probs, alpha=None):
-        if not self._fitted:
-            raise RuntimeError("call fit() first")
-        a = self.alpha if alpha is None else alpha
-        p = np.clip(np.asarray(probs, float).ravel(), 0, 1)
+        p, a = self._set_inputs(probs, alpha)
         q0 = conformal_quantile(self._cal[0], a)
         q1 = conformal_quantile(self._cal[1], a)
         return np.column_stack([p <= q0, (1 - p) <= q1])

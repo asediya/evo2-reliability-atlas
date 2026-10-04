@@ -1,6 +1,6 @@
 # glmtrust
 
-[![tests](https://img.shields.io/badge/tests-166%20passing-brightgreen.svg)](tests)
+[![tests](https://img.shields.io/badge/tests-246%20passing-brightgreen.svg)](tests)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 
@@ -74,9 +74,9 @@ table needs no column bookkeeping.
 - **A declared `readout` is mandatory.** How a model's output becomes one number per variant can
   invert a verdict, so scorers that declare different readouts are refused a delta rather than
   quietly differenced.
-- **Warnings are gated on effect size, not just significance.** On a million-variant panel every
-  reach gap excludes zero, including gaps of 0.001 worth 0.0007 AUROC. Every number is printed
-  regardless; only the warnings are gated.
+- **Warnings are gated on effect size, not just significance.** On a million-variant panel a reach
+  gap far too small to matter still excludes zero: CADD's +0.0006 on the 1.4-million-variant ClinVar
+  panel. Every number is printed regardless; only the warnings are gated.
 - **It says so when nothing is wrong.** Two conservation tracks with matching 99.9% reach report an
   inflation of exactly 0.0000 — a tool that only ever reports problems carries no information when
   it stays quiet.
@@ -87,8 +87,8 @@ table needs no column bookkeeping.
   be audited for reach, which is the point.
 - **Intervals are variant-level unless you name a cluster.** Where variants share a gene or locus
   that is too narrow: on the dbNSFP panel gene-resampled intervals run several times wider.
-  `cluster=` (CLI `--cluster-col`) makes every interval a bootstrap over whole groups, and the
-  report states which kind it printed.
+  `cluster=` (CLI `--cluster-col`) makes every whole-panel interval a bootstrap over whole groups
+  (the within-stratum intervals stay variant-level), and the report states which kind it printed.
 - **An AUROC below one half is flagged, not reported as weakness.** It usually means the score is
   stored the other way round; declare that with `higher_is_worse=False` (CLI `--lower-is-worse`).
 
@@ -191,10 +191,24 @@ glmtrust transfer  variants.parquet --score-col evo2 --label-col label --group-c
 
 ```bash
 glmtrust audit variants.parquet \
-    --score-col evo2 --readout "8192bp mean-LL" \
-    --score-col gerp --readout "8192bp mean-LL" \
+    --score-col revel --readout "precomputed per-substitution score" \
+    --score-col alphamissense --readout "precomputed per-substitution score" \
     --label-col label --strata-col consequence --cluster-col gene --card audit.html
 ```
+
+Give two scorers the same readout only when their numbers are produced the same way; with different
+readouts the audit reports each one's reach and accuracy but no head-to-head delta.
+
+**Bringing your own table.** Every command reads `.csv`, `.tsv` or `.txt` (optionally gzipped,
+comma-, tab- or semicolon-separated, UTF-8, UTF-16 or Windows-1252) and `.parquet`; save a
+spreadsheet as CSV first. Labels are 0/1 or true/false; for text labels name the values, e.g.
+`--positive-label Pathogenic --positive-label Likely_pathogenic --negative-label Benign
+--negative-label Likely_benign`. A variant with no label stops the run unless `--drop-unlabelled`
+says to leave it out. An empty or NA score cell means "not scored"; an infinite value is refused.
+`--lower-is-worse` declares a score where lower means more damaging, for every command, and the
+reports say when a score appears to run the other way. `calibrate` and `transfer` write one row per
+input row, numbered from 0, and `--id-col` carries an identifier beside each. Any input problem ends
+in one line saying what is wrong.
 
 `--lower-is-worse COL` declares a score stored with lower values meaning more damaging. When the
 scores themselves cannot be shared, `reach` works from reach indicators alone, and counts identified
@@ -245,12 +259,13 @@ order, the benchmark also checks that the published capture lies inside the rang
 permutations produce. The package's default, `tie_policy="whole_block"`, refuses whole tie blocks and
 never part of one, and gives a pooled capture of 0.542 on this panel.
 
-The dbNSFP pair counts reproduce from Additional file 4 and the covered AUROCs in Additional file 3's
+The dbNSFP pair counts reproduce from Additional file 4, saved as `dbnsfp_reach_panel.parquet` (the
+name Additional file 3 expects in its `tables/`), and the covered AUROCs in Additional file 3's
 `figures/`:
 
 ```bash
 python glmtrust/benchmarks/reproduce_paper_reach.py \
-    --panel 16_Additional_file_4_dbNSFP_reach_panel_coordinates_and_reach_only.parquet \
+    --panel dbnsfp_reach_panel.parquet \
     --covered <Additional file 3>/figures/dbnsfp_49.csv \
     --missense-covered <Additional file 3>/figures/dbnsfp_49_missense.csv
 ```

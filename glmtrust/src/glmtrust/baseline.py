@@ -36,6 +36,7 @@ from __future__ import annotations
 
 import math
 import numbers
+import warnings
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -58,12 +59,32 @@ def stratified_kfold_folds(y, n_splits: int = 5, random_state: int = 0) -> np.nd
     is shuffled by one legacy MT19937 np.random.RandomState(random_state), the generator
     check_random_state returns for an integer, and handed to that class's rows in row order.
     Row order therefore matters only through this assignment.
+
+    As in scikit-learn, more folds than there are rows, or than any class holds, is refused, and
+    more folds than the smallest class holds is allowed with a warning: some folds then carry none
+    of that class. oof_rate(), oof_group_within_class() and sequence_blind() refuse that case too,
+    because an out-of-fold rate computed on such folds drifts towards leave-one-out encoding,
+    which runs against the held-out label.
     """
+    from ._checks import check_int
+    n_splits = check_int(n_splits, "n_splits", 2)
+    random_state = check_int(random_state, "random_state", 0)
     y = np.asarray(y).ravel()
+    if n_splits > y.size:
+        raise ValueError("n_splits=%d folds cannot be more than the %d rows supplied"
+                         % (n_splits, y.size))
     _, y_idx, y_inv = np.unique(y, return_index=True, return_inverse=True)
     _, class_perm = np.unique(y_idx, return_inverse=True)
     y_enc = class_perm[np.ravel(y_inv)]
     n_classes = len(y_idx)
+    counts = np.bincount(y_enc)
+    if np.all(n_splits > counts):
+        raise ValueError("n_splits=%d folds cannot be more than every class holds (%s rows)"
+                         % (n_splits, ", ".join(str(int(c)) for c in counts)))
+    if n_splits > counts.min():
+        warnings.warn("the least populated class has only %d rows, fewer than n_splits=%d, so some "
+                      "folds hold none of it" % (int(counts.min()), n_splits), UserWarning,
+                      stacklevel=2)
     y_order = np.sort(y_enc)
     allocation = np.asarray([np.bincount(y_order[i::n_splits], minlength=n_classes)
                              for i in range(n_splits)])
@@ -79,13 +100,11 @@ def stratified_kfold_folds(y, n_splits: int = 5, random_state: int = 0) -> np.nd
 # --------------------------------------------------------------------------- inputs
 def _binary(labels) -> np.ndarray:
     """0/1 labels as an int array; anything else is refused by value rather than cast."""
-    y_f = np.asarray(labels, dtype=float).ravel()
-    if y_f.size == 0:
+    from ._checks import as_labels
+    y = as_labels(labels, "labels")
+    if y.size == 0:
         raise ValueError("empty panel")
-    if not np.all(np.isin(y_f, (0.0, 1.0))):
-        bad = np.unique(y_f[~np.isin(y_f, (0.0, 1.0))])
-        raise ValueError("labels must be 0 or 1; found %s" % bad[:5].tolist())
-    return y_f.astype(int)
+    return y
 
 
 def _codes(values, n: int, what: str) -> np.ndarray:
@@ -111,9 +130,19 @@ def _check_alpha(alpha) -> float:
     return a
 
 
+def _check_folds_fit(folds, y) -> int:
+    """`folds` checked against the panel: every label needs a member in every fold."""
+    k = _check_folds(folds)
+    smallest = int(np.bincount(y, minlength=2).min())
+    if k > smallest:
+        raise ValueError("folds=%d needs at least %d variants of each label, as label-stratified "
+                         "folds do; the smaller class has %d. Use fewer folds." % (k, k, smallest))
+    return k
+
+
 def _assignment(y, folds, seed, fold_ids) -> np.ndarray:
     if fold_ids is None:
-        return stratified_kfold_folds(y, _check_folds(folds), seed)
+        return stratified_kfold_folds(y, _check_folds_fit(folds, y), seed)
     f = np.asarray(fold_ids).ravel()
     if f.size != y.size:
         raise ValueError("fold_ids has %d entries for %d labels" % (f.size, y.size))
@@ -200,12 +229,9 @@ def midrank_auroc(labels, scores) -> float:
     The midranks are half-integers and their sum is exact, so the value is correctly rounded
     whatever order the rows arrive in. `labels` is 0/1; NaN when a class is absent.
     """
-    y = np.asarray(labels).ravel()
-    s = np.asarray(scores, dtype=float).ravel()
-    if y.size != s.size:
-        raise ValueError("%d scores for %d labels" % (s.size, y.size))
-    if np.isnan(s).any():
-        raise ValueError("midrank_auroc needs a score for every row; found NaN")
+    from ._checks import as_labels, as_scores
+    y = as_labels(labels, "labels")
+    s = as_scores(scores, "scores", n=y.size, allow_nan=False)
     pos = y == 1
     n1 = int(pos.sum())
     n0 = y.size - n1
@@ -281,11 +307,19 @@ def sequence_blind(labels, groups=None, classes=None, folds: int = 5, alpha: flo
                          % np.unique(y).tolist())
     if groups is None and classes is None:
         raise ValueError("give groups, classes or both; a baseline needs a category to score")
-    k = _check_folds(folds)
+    k = _check_folds_fit(folds, y)
     a = _check_alpha(alpha)
     if isinstance(seeds, numbers.Integral):
         raise TypeError("seeds takes the fold seeds themselves, e.g. range(8), not a count")
-    seed_list = [int(s) for s in seeds]
+    if seeds is None or isinstance(seeds, (str, bytes)):
+        raise TypeError("seeds takes the fold seeds themselves, e.g. range(8); got %r" % (seeds,))
+    try:
+        seed_list = list(seeds)
+    except TypeError:
+        raise TypeError("seeds takes the fold seeds themselves, e.g. range(8); got %r"
+                        % (seeds,)) from None
+    from ._checks import check_int
+    seed_list = [check_int(s, "each fold seed", 0) for s in seed_list]
     if not seed_list:
         raise ValueError("give at least one fold seed")
     gcodes = _codes(groups, y.size, "groups") if groups is not None else None

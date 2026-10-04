@@ -50,6 +50,7 @@ def _label_vectors():
 
 @pytest.mark.parametrize("n_splits", [2, 3, 5])
 @pytest.mark.parametrize("seed", [0, 1, 7, 12345])
+@pytest.mark.filterwarnings("ignore:the least populated class")
 def test_fold_assignment_is_the_documented_algorithm(n_splits, seed):
     for y in _label_vectors():
         assert np.array_equal(stratified_kfold_folds(y, n_splits, seed),

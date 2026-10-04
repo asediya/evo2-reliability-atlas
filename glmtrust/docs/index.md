@@ -54,8 +54,9 @@ Use it when you have variant-effect scores from a genomic language model and nee
    audit, restricting a comparison to shared variants is likewise established practice — what is added
    is the must-answer accounting and the treatment of reach as a reportable property.
 2. **Silence has to mean something.** Warnings are gated on effect size as well as significance,
-   because on a million-variant panel every reach gap excludes zero. A tool that flags everything is
-   a tool whose flags are ignored, so the audit states plainly when it finds nothing wrong.
+   because on a million-variant panel even a reach gap far too small to matter excludes zero. A tool
+   that flags everything is a tool whose flags are ignored, so the audit states plainly when it finds
+   nothing wrong.
 3. **No hidden optimism.** Conformal and selective thresholds are fitted on out-of-fold probabilities;
    `TrustLayer.evaluate` scores every variant with a model fitted without it.
 4. **State what does not transfer.** A transferred probability is not better than a global sigmoid; the

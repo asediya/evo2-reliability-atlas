@@ -15,6 +15,7 @@ from __future__ import annotations
 import numpy as np
 
 from . import metrics
+from ._checks import as_groups, as_labels, as_scores
 from .calibration import make_calibrator
 
 __all__ = ["transfer_calibration", "leave_one_group_out"]
@@ -30,38 +31,61 @@ def leave_one_group_out(scores, labels, groups, method: str = "isotonic"):
     """For each group, fit the calibration map on every *other* group and predict the held-out group.
 
     Returns ``(probs, report)`` where ``probs`` are out-of-group calibrated probabilities aligned with
-    the input order (NaN for a group that could not be predicted, e.g. its training pool held a single
-    class), and ``report`` maps each group to its ``n``, AUROC and transferred-probability ECE, plus a
-    ``__macro__`` entry averaging over groups.
+    the input order (NaN for a group that could not be predicted because the OTHER groups together
+    hold a single class), and ``report`` maps each group to its ``n``, AUROC and transferred-probability
+    ECE, plus a ``__macro__`` entry averaging over the groups that carry both classes.
+
+    A held-out group with a single class of its own is still predicted -- a target with no labels of
+    one kind is the setting this function exists for -- but its AUROC is undefined, so its report
+    entry says so and it is left out of the macro averages.
 
     The reported AUROC is signed: a group on which the score runs the wrong way reads below 0.5 and
     is flagged with ``below_chance``. It is not oriented upward, because a group whose score is
     anti-predictive is the case a user most needs to see, and reporting max(a, 1-a) would hide it.
+
+    Refused: a single group (there is nothing to transfer from; use
+    :func:`glmtrust.cross_conformal_calibrate` for out-of-fold probabilities within it), and input
+    on which no group at all can be predicted.
     """
-    scores = np.asarray(scores, float).ravel()
-    labels = np.asarray(labels, int).ravel()
-    groups = np.asarray(groups).ravel()
+    scores = as_scores(scores, "scores", allow_nan=False)
+    labels = as_labels(labels, "labels", n=scores.size)
+    groups = as_groups(groups, scores.size)
+    make_calibrator(method)                                  # refuse an unknown method up front
+    order = _unique_stable(groups)
+    if len(order) < 2:
+        raise ValueError("leave-one-group-out needs at least two groups; groups has %d (%s). With a "
+                         "single group there is nothing to transfer from: use "
+                         "cross_conformal_calibrate (CLI: glmtrust calibrate) for out-of-fold "
+                         "probabilities within it." % (len(order), ", ".join(repr(_key(g))
+                                                                            for g in order[:1])))
     probs = np.full(len(labels), np.nan)
     report = {}
-    for g in _unique_stable(groups):
+    for g in order:
         te = groups == g
         tr = ~te
-        if len(np.unique(labels[tr])) < 2 or len(np.unique(labels[te])) < 2:
-            report[_key(g)] = {"n": int(te.sum()), "note": "insufficient class diversity"}
+        if len(np.unique(labels[tr])) < 2:
+            report[_key(g)] = {"n": int(te.sum()),
+                               "note": "the other groups together hold a single class, so no map "
+                                       "can be fitted for this group"}
             continue
         cal = make_calibrator(method).fit(scores[tr], labels[tr])
         p = cal.predict_proba(scores[te])
         probs[te] = p
-        a = metrics.auroc(labels[te], scores[te])
-        rec = {
-            "n": int(te.sum()),
-            "n_positive": int(labels[te].sum()),
-            "auroc": a,
-            "ece": metrics.ece(labels[te], p),
-        }
-        if a < 0.5:
-            rec["below_chance"] = True
+        rec = {"n": int(te.sum()), "n_positive": int(labels[te].sum()),
+               "ece": metrics.ece(labels[te], p)}
+        if len(np.unique(labels[te])) < 2:
+            rec["note"] = "single class in this group: probabilities given, AUROC undefined"
+        else:
+            a = metrics.auroc(labels[te], scores[te])
+            rec["auroc"] = a
+            if a < 0.5:
+                rec["below_chance"] = True
         report[_key(g)] = rec
+    if not np.isfinite(probs).any():
+        raise ValueError("no group could be predicted: for every group, the other groups together "
+                         "hold a single class, so no calibration map can be fitted (groups: %s). "
+                         "Each map is fitted on the groups left in, so the groups need to mix both "
+                         "labels between them." % ", ".join(repr(_key(g)) for g in order[:8]))
     scored = [r for r in report.values() if "auroc" in r]
     if scored:
         report["__macro__"] = {

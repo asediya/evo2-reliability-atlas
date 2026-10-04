@@ -76,6 +76,35 @@ def _e(s):
     return html.escape(str(s))
 
 
+def _ci(ci, dp):
+    """An interval as '[lo, hi]' with signs, or em dashes where it is undefined. Plain text, so it
+    reads the same in a table cell and inside escaped verdict text."""
+    return "[%s, %s]" % tuple("—" if not math.isfinite(v) else "%+.*f" % (dp, v) for v in ci)
+
+
+def _opposed(p) -> bool:
+    """True when the matched delta is zero or points the other way from the delta as usually
+    reported, which names a leader."""
+    a, b = p.delta_as_usually_reported, p.delta_matched
+    return (a > 0 and b <= 0) or (a < 0 and b >= 0)
+
+
+def _reverses(p) -> bool:
+    """True when the matched delta points strictly the other way AND its interval excludes zero.
+    A tie, or a matched delta whose interval spans zero, is not a reversal: the matched comparison
+    is then inconclusive, and _verdicts() says that instead."""
+    a, b = p.delta_as_usually_reported, p.delta_matched
+    return ((a > 0 and b < 0) or (a < 0 and b > 0)) and p.matched_delta_excludes_zero
+
+
+def _full_reach(s) -> bool:
+    return s.k_pos == s.n_pos and s.k_neg == s.n_neg
+
+
+def _level(rep) -> str:
+    return "%g%% CI" % (100 * (1 - getattr(rep, "alpha", 0.05)))
+
+
 def _verdicts(rep):
     """The lines that go above the fold. Empty means the audit found nothing worth reporting."""
     out = []
@@ -88,26 +117,48 @@ def _verdicts(rep):
             continue
         if not (math.isfinite(p.delta_matched) and math.isfinite(p.delta_as_usually_reported)):
             continue
-        if (p.delta_as_usually_reported > 0) != (p.delta_matched > 0):
-            lead_naive, lead_true = (p.a, p.b) if p.delta_as_usually_reported > 0 else (p.b, p.a)
+        lead_naive, other = (p.a, p.b) if p.delta_as_usually_reported > 0 else (p.b, p.a)
+        if _reverses(p):
             out.append(("The verdict reverses: %s leads as usually reported, %s leads on the "
-                        "variants both can score" % (lead_naive, lead_true),
+                        "variants both can score" % (lead_naive, other),
                         "Quoted on their own covered subsets the difference is %+.4f; on the %s "
-                        "variants both scorers reach it is %+.4f (95%% CI [%+.4f, %+.4f]). The gap "
-                        "of %+.4f is bookkeeping."
+                        "variants both scorers reach it is %+.4f (%s %s). The gap of %+.4f is "
+                        "bookkeeping."
                         % (p.delta_as_usually_reported, format(p.n_matched, ","), p.delta_matched,
-                           p.delta_matched_ci[0], p.delta_matched_ci[1], p.inflation)))
+                           _level(rep), _ci(p.delta_matched_ci, 4), p.inflation)))
+        elif _opposed(p) and all(math.isfinite(v) for v in p.delta_matched_ci):
+            # the lead as usually reported does not survive the matched comparison, but the matched
+            # comparison does not establish the opposite either: inconclusive, not a reversal
+            out.append(("%s leads as usually reported, but on the variants both can score the two "
+                        "are not separated" % lead_naive,
+                        "Quoted on their own covered subsets the difference is %+.4f; on the %s "
+                        "variants both scorers reach it is %+.4f (%s %s), an interval that "
+                        "includes zero, so the lead is not supported. The gap of %+.4f is "
+                        "bookkeeping."
+                        % (p.delta_as_usually_reported, format(p.n_matched, ","), p.delta_matched,
+                           _level(rep), _ci(p.delta_matched_ci, 4), p.inflation)))
     for s in rep.scorers:
-        if math.isfinite(s.lex_gain) and not s.values_add_to_reach:
+        if getattr(s, "values_run_backwards", False):
+            out.append(("%s: its values run opposite to the declared direction" % s.name,
+                        "Ranking by them loses %+.4f AUROC on the missingness pattern (%s %s); "
+                        "declare the score's direction before reading its numbers."
+                        % (s.lex_gain, _level(rep), _ci(s.lex_gain_ci, 4))))
+        elif s.values_add_nothing and _full_reach(s):
+            # every variant is scored, so there is no missingness pattern for the values to add
+            # to: the plain statement is the right one, as in the report's warning
+            out.append(("%s: its values are not resolvably better than chance" % s.name,
+                        "It scores every variant, with AUROC %.4f; the %s on its gain over one "
+                        "half is %s." % (s.auroc_covered, _level(rep), _ci(s.lex_gain_ci, 4))))
+        elif s.values_add_nothing:
             # The same rule as the report's warning: what the values add to the missingness
             # indicator. Comparing the indicator with the must-answer AUROC is not used, because
             # the one-half rule decides that comparison for the indicator even against a perfect
             # covered AUROC once |r_pos - r_neg| > r_pos * r_neg.
             out.append(("%s: its values add nothing detectable beyond its reach" % s.name,
                         "Ranking by whether a value was produced and then by the value gains "
-                        "%+.4f AUROC over the missingness pattern alone (interval [%+.4f, %+.4f]), "
-                        "so an accuracy quoted for this scorer is carried by where it answers."
-                        % (s.lex_gain, s.lex_gain_ci[0], s.lex_gain_ci[1])))
+                        "%+.4f AUROC over the missingness pattern alone (%s %s), so an accuracy "
+                        "quoted for this scorer is carried by where it answers."
+                        % (s.lex_gain, _level(rep), _ci(s.lex_gain_ci, 4))))
         # These two were missing, and their absence was an honesty defect rather than an omission:
         # with none of the three conditions above met, the page fell through to a banner asserting
         # that no reach gap and no penalty were material -- two things it had never checked. The
@@ -116,9 +167,10 @@ def _verdicts(rep):
         elif s.reach_is_class_dependent:
             out.append(("%s reaches the two classes unequally" % s.name,
                         "It scores %.1f%% of positives against %.1f%% of negatives (gap %+.3f, "
-                        "95%% CI [%+.3f, %+.3f]), so its covered-subset accuracy is measured on an "
+                        "%s [%+.3f, %+.3f]), so its covered-subset accuracy is measured on an "
                         "easier panel than the one it is reported for."
-                        % (100 * s.reach_pos, 100 * s.reach_neg, s.class_gap, *s.class_gap_ci)))
+                        % (100 * s.reach_pos, 100 * s.reach_neg, s.class_gap, _level(rep),
+                           *s.class_gap_ci)))
         elif s.penalty >= s.min_penalty:
             out.append(("%s carries a material must-answer penalty" % s.name,
                         "Over the whole panel, with its no-calls answered at chance, %.4f becomes "
@@ -128,7 +180,12 @@ def _verdicts(rep):
 
 
 def render_card(rep, title="glmtrust audit", subtitle=None) -> str:
-    """Return the card as one HTML string. No external assets, no scripts."""
+    """Return the card as one HTML string. No external assets, no scripts. Takes the report
+    :func:`glmtrust.audit` returns."""
+    from .audit import AuditReport
+    if not isinstance(rep, AuditReport):
+        raise TypeError("render_card takes the report audit() returns; got %s. A reach_audit() "
+                        "report has its own text form: print(report)." % type(rep).__name__)
     V = _verdicts(rep)
     L = ['<!doctype html><html lang="en"><head><meta charset="utf-8">',
          '<meta name="viewport" content="width=device-width,initial-scale=1">',
@@ -152,23 +209,25 @@ def render_card(rep, title="glmtrust audit", subtitle=None) -> str:
     L.append("<h2>Reach &mdash; what each scorer can be run on at all</h2>")
     L.append('<div class="tablewrap"><table><thead><tr><th>scorer</th><th>readout</th>'
              "<th>reach</th><th>on positives</th><th>on negatives</th><th>gap</th>"
-             "<th>95% CI</th></tr></thead><tbody>")
+             "<th>%s</th></tr></thead><tbody>" % _level(rep))
     for s in rep.scorers:
         cls = ' class="flag"' if s.reach_is_class_dependent else ""
         L.append("<tr%s><td>%s</td><td>%s</td><td class='num'>%s</td><td class='num'>%s</td>"
-                 "<td class='num'>%s</td><td class='num'>%s</td><td class='num'>[%+.3f, %+.3f]</td>"
+                 "<td class='num'>%s</td><td class='num'>%s</td><td class='num'>%s</td>"
                  "</tr>"
                  % (cls, _e(s.name), _e(s.readout), _pct(s.reach), _pct(s.reach_pos),
-                    _pct(s.reach_neg), _n(s.class_gap, 3), *s.class_gap_ci))
+                    _pct(s.reach_neg), _n(s.class_gap, 3), _ci(s.class_gap_ci, 3)))
     L.append("</tbody></table></div>")
 
     L.append("<h2>Accuracy &mdash; covered subset against the panel it is reported for</h2>")
     L.append('<div class="tablewrap"><table><thead><tr><th>scorer</th><th>covered</th>'
              "<th>must-answer</th><th>penalty</th><th>reach alone</th></tr></thead><tbody>")
     for s in rep.scorers:
-        _adds_nothing = math.isfinite(s.lex_gain) and not s.values_add_to_reach
+        _adds_nothing = s.values_add_nothing
         cls = ' class="flag"' if _adds_nothing else ""
-        tail = " <span class='tag'>values add nothing</span>" if _adds_nothing else ""
+        tail = (" <span class='tag'>%s</span>" % ("not better than chance" if _full_reach(s)
+                                                  else "values add nothing")
+                if _adds_nothing else "")
         L.append("<tr%s><td>%s</td><td class='num'>%s</td><td class='num'>%s</td>"
                  "<td class='num'>%s</td><td class='num'>%s%s</td></tr>"
                  % (cls, _e(s.name), _n(s.auroc_covered), _n(s.auroc_must_answer),
@@ -201,17 +260,17 @@ def render_card(rep, title="glmtrust audit", subtitle=None) -> str:
     if pairs:
         L.append("<h2>Head to head &mdash; on the variants both can score</h2>")
         L.append('<div class="tablewrap"><table><thead><tr><th>comparison</th><th>n matched</th>'
-                 "<th>matched &Delta;</th><th>95% CI</th><th>as usually reported</th>"
-                 "<th>inflation</th></tr></thead><tbody>")
+                 "<th>matched &Delta;</th><th>%s</th><th>as usually reported</th>"
+                 "<th>inflation</th></tr></thead><tbody>" % _level(rep))
         for p in pairs:
-            flip = (p.delta_as_usually_reported > 0) != (p.delta_matched > 0)
+            flip = _reverses(p)
             cls = ' class="flag"' if flip else ""
             tail = " <span class='tag'>reverses</span>" if flip else ""
             L.append("<tr%s><td>%s vs %s%s</td><td class='num'>%s</td><td class='num'>%s</td>"
-                     "<td class='num'>[%+.4f, %+.4f]</td><td class='num'>%s</td>"
+                     "<td class='num'>%s</td><td class='num'>%s</td>"
                      "<td class='num'>%s</td></tr>"
                      % (cls, _e(p.a), _e(p.b), tail, format(p.n_matched, ","),
-                        _n(p.delta_matched), *p.delta_matched_ci,
+                        _n(p.delta_matched), _ci(p.delta_matched_ci, 4),
                         _n(p.delta_as_usually_reported), _n(p.inflation)))
         L.append("</tbody></table></div>")
 
@@ -222,9 +281,9 @@ def render_card(rep, title="glmtrust audit", subtitle=None) -> str:
         L.append("</ul>")
 
     L.append("<footer>Generated by <b>glmtrust audit</b>. Warnings are gated on practical as well "
-             "as statistical significance: on a panel of a million variants every reach gap "
-             "excludes zero, so a flag that ignored effect size would fire on all of them. Every "
-             "number above is printed regardless.</footer>")
+             "as statistical significance: on a panel of a million variants a reach gap of 0.0006 "
+             "already excludes zero, so a flag that ignored effect size would fire on gaps far "
+             "too small to matter. Every number above is printed regardless.</footer>")
     L.append("</main></body></html>")
     return "\n".join(L)
 

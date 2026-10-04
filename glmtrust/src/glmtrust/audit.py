@@ -50,8 +50,9 @@ score.
 
 INTERVALS ARE VARIANT-LEVEL unless `cluster=` names a grouping (gene, locus). Variants that share a
 gene share sequence context and annotation history, and on a gene-dense panel variant-level
-intervals can be several times too narrow; with `cluster=` every interval here is a percentile
-bootstrap over whole clusters, and the report states which kind it printed.
+intervals can be several times too narrow; with `cluster=` every whole-panel interval here is a
+percentile bootstrap over whole clusters, and the report states which kind it printed. The
+within-stratum class-gap intervals stay variant-level (Newcombe) either way.
 
 THE MUST-ANSWER PENALTY IS EXACT, NOT A SIMULATION. AUROC is the fraction of (positive, negative)
 pairs the score orders correctly. A pair in which either variant is unscorable carries no
@@ -66,8 +67,8 @@ covered median was tried and rejected: it moves a no-call towards whichever clas
 covered set, manufacturing the very asymmetry under test.
 
     from glmtrust.audit import Scorer, audit
-    report = audit(labels, [Scorer("evo2", s1, readout="8192bp mean-LL"),
-                            Scorer("gerp", s2, readout="8192bp mean-LL")])
+    report = audit(labels, [Scorer("revel", s1, readout="per-substitution score"),
+                            Scorer("alphamissense", s2, readout="per-substitution score")])
     print(report)
 """
 from __future__ import annotations
@@ -78,6 +79,7 @@ from typing import Sequence
 
 import numpy as np
 
+from ._checks import as_labels, as_scores, check_alpha, check_int
 from .metrics import auroc as _auroc
 
 __all__ = ["Scorer", "ScorerAudit", "StratumAudit", "PairAudit", "AuditReport", "audit",
@@ -86,8 +88,30 @@ __all__ = ["Scorer", "ScorerAudit", "StratumAudit", "PairAudit", "AuditReport", 
 
 
 # --------------------------------------------------------------------------- intervals
-def wilson_interval(k: int, n: int, z: float = 1.959963985) -> tuple:
+_Z95 = 1.959963985          # the z every interval helper here defaults to (a 95% interval)
+
+#: Fewest bootstrap draws a percentile interval is computed from, and the count below which the
+#: report says the intervals are rough. With one draw the 2.5th and 97.5th percentiles coincide
+#: and print as a zero-width interval that can exclude its own estimate.
+MIN_BOOT, ROUGH_BOOT = 10, 200
+
+
+def _counts(k, n, what):
+    k = check_int(k, "k_" + what, 0)
+    n = check_int(n, "n_" + what, 0)
+    if k > n:
+        raise ValueError("k_%s (%d) cannot exceed n_%s (%d): more variants reached than exist"
+                         % (what, k, what, n))
+    return k, n
+
+
+def wilson_interval(k: int, n: int, z: float = _Z95) -> tuple:
     """Wilson score interval for a proportion. Correct at the boundaries, where reach often sits."""
+    k, n = check_int(k, "k", 0), check_int(n, "n", 0)
+    if k > n:
+        raise ValueError("k (%d) cannot exceed n (%d)" % (k, n))
+    if not (isinstance(z, (int, float, np.floating)) and math.isfinite(z) and z > 0):
+        raise ValueError("z must be a positive number; got %r" % (z,))
     if n <= 0:
         return (float("nan"), float("nan"))
     p = k / n
@@ -97,7 +121,7 @@ def wilson_interval(k: int, n: int, z: float = 1.959963985) -> tuple:
     return (max(0.0, (c - h) / d), min(1.0, (c + h) / d))
 
 
-def _newcombe(k1: int, n1: int, k2: int, n2: int, z: float = 1.959963985) -> tuple:
+def _newcombe(k1: int, n1: int, k2: int, n2: int, z: float = _Z95) -> tuple:
     """Newcombe's interval for a difference of proportions, built from two Wilson intervals."""
     l1, u1 = wilson_interval(k1, n1, z)
     l2, u2 = wilson_interval(k2, n2, z)
@@ -113,6 +137,9 @@ def must_answer_auroc(auroc_covered: float, k_pos: int, n_pos: int, k_neg: int, 
 
     Exact, not simulated: pairs touching an unscorable variant contribute 1/2 by construction.
     """
+    auroc_covered = _unit(auroc_covered, "a covered AUROC")
+    k_pos, n_pos = _counts(k_pos, n_pos, "pos")
+    k_neg, n_neg = _counts(k_neg, n_neg, "neg")
     n_pairs = n_pos * n_neg
     if n_pairs == 0:
         return float("nan")
@@ -131,6 +158,9 @@ def identification_bounds(auroc_covered: float, k_pos: int, n_pos: int,
     a scorer that reaches nothing is unidentified at [0, 1] and one that reaches everything
     collapses to a point. Manski bounds; nothing here is a confidence statement.
     """
+    auroc_covered = _unit(auroc_covered, "a covered AUROC")
+    k_pos, n_pos = _counts(k_pos, n_pos, "pos")
+    k_neg, n_neg = _counts(k_neg, n_neg, "neg")
     n_pairs = n_pos * n_neg
     if n_pairs == 0:
         return (float("nan"), float("nan"))
@@ -227,8 +257,11 @@ def missingness_auroc(labels, observed) -> float:
     a binary predictor is (sensitivity + specificity) / 2. Computed here from the indicator rather
     than from that identity so it stays correct when callers pass a subset, e.g. one stratum.
     """
-    y = np.asarray(labels, dtype=int).ravel()
-    o = np.asarray(observed, dtype=float).ravel()
+    y = as_labels(labels, "labels")
+    o = as_scores(observed, "observed", n=y.size, allow_nan=False)
+    if not np.isin(o, (0.0, 1.0)).all():
+        raise ValueError("observed is the missingness indicator and must be True/False (or 1/0) "
+                         "for every variant")
     if np.unique(y).size < 2:
         return float("nan")          # one outcome class: no AUROC is defined
     if np.unique(o).size < 2:
@@ -251,10 +284,33 @@ def lexicographic_gain(auroc_covered: float, k_pos: int, n_pos: int, k_neg: int,
     (k_pos * k_neg) / (n_pos * n_neg). Zero at chance, positive whenever the covered values carry
     signal, and unlike a comparison with the must-answer AUROC it can fail on the values alone.
     """
+    auroc_covered = _unit(auroc_covered, "a covered AUROC")
+    k_pos, n_pos = _counts(k_pos, n_pos, "pos")
+    k_neg, n_neg = _counts(k_neg, n_neg, "neg")
     n_pairs = n_pos * n_neg
     if n_pairs == 0 or not math.isfinite(auroc_covered):
         return float("nan")
     return (k_pos * k_neg / n_pairs) * (auroc_covered - 0.5)
+
+
+# --------------------------------------------------------------------------- table names
+def _cut(text, width) -> str:
+    """`text` in at most `width` characters, shortened in the middle with '...' so that both its
+    start and its end stay readable."""
+    text = str(text)
+    if len(text) <= width:
+        return text
+    head = (width - 2) // 2
+    tail = width - 3 - head
+    return text[:head] + "..." + (text[-tail:] if tail > 0 else "")
+
+
+def _fit_names(names, width) -> list:
+    """Names for a table column at most `width` wide. If shortening would make two names print
+    alike, every name is printed in full instead, so that no row can be taken for another."""
+    full = [str(x) for x in names]
+    shown = [_cut(x, width) for x in full]
+    return full if len(set(shown)) < len(set(full)) else shown
 
 
 # --------------------------------------------------------------------------- inputs and results
@@ -271,17 +327,28 @@ class Scorer:
     higher_is_worse: bool = True
 
     def __post_init__(self):
-        self.score = np.asarray(self.score, dtype=float).ravel()
-        if not str(self.readout).strip():
+        if self.name is None or not str(self.name).strip():
+            raise ValueError("every scorer needs a name")
+        self.name = str(self.name)
+        if not isinstance(self.higher_is_worse, (bool, np.bool_)):
+            raise TypeError("scorer %r: higher_is_worse must be True or False; got %r. A string such "
+                            "as 'False' is not False." % (self.name, self.higher_is_worse))
+        self.higher_is_worse = bool(self.higher_is_worse)
+        self.score = as_scores(self.score, "the scores of scorer %r" % self.name)
+        if self.readout is None or not str(self.readout).strip():
             raise ValueError(
                 "scorer %r has no declared readout. This module will not compare scores whose "
                 "readout is unstated: how a model's output is reduced to one number per variant "
                 "can invert the verdict, so it is part of the result, not a detail." % self.name)
+        self.readout = str(self.readout)
 
 
 @dataclass
 class StratumAudit:
-    """One scorer's reach inside a single stratum, e.g. one variant-consequence class."""
+    """One scorer's reach inside a single stratum, e.g. one variant-consequence class.
+
+    `class_gap_ci` is Newcombe's variant-level interval even when audit() was given `cluster=`:
+    the clustered bootstrap covers the whole-panel intervals only, and the report says so."""
     label: str
     n: int
     n_pos: int
@@ -295,8 +362,9 @@ class StratumAudit:
 
     @property
     def reach_gap_is_significant(self) -> bool:
+        """True when the interval excludes zero; an undefined interval decides nothing."""
         lo, hi = self.class_gap_ci
-        return not (lo <= 0.0 <= hi)
+        return math.isfinite(lo) and math.isfinite(hi) and not (lo <= 0.0 <= hi)
 
     @property
     def reach_is_class_dependent(self) -> bool:
@@ -343,13 +411,43 @@ class ScorerAudit:
     def values_add_to_reach(self) -> bool:
         """True when the values carry information beyond whether a value was produced.
 
-        The interval on lex_gain decides it: ranking by the missingness indicator and then by value
-        beats the indicator alone by rho * (A_cov - 1/2), so a scorer whose covered values are at
-        chance gains nothing and this is False. The warning in audit() uses this, not
-        missingness_beats_score.
+        The lower end of the interval on lex_gain decides it, a one-sided test: ranking by the
+        missingness indicator and then by value beats the indicator alone by rho * (A_cov - 1/2),
+        so a scorer whose covered values are at chance gains nothing and this is False. The warning
+        in audit() uses this, not missingness_beats_score.
+
+        The two interval modes answer different questions. At variant level rho is held at its
+        observed value and only the covered AUROC's sampling error enters, so the interval is
+        conditional on the observed reach; with `cluster=` reach and covered AUROC are both
+        re-estimated on every whole-cluster resample, which also carries the uncertainty in rho.
         """
         lo, _ = self.lex_gain_ci
         return math.isfinite(lo) and lo > 0.0
+
+    @property
+    def values_add_nothing(self) -> bool:
+        """True when the interval on lex_gain is defined and contains zero: nothing detectable is
+        added beyond whether a value was produced. An undefined interval decides nothing, so this
+        is False then, as values_add_to_reach is; see values_gain_undefined."""
+        lo, hi = self.lex_gain_ci
+        return (math.isfinite(self.lex_gain) and math.isfinite(lo) and math.isfinite(hi)
+                and lo <= 0.0 <= hi)
+
+    @property
+    def values_gain_undefined(self) -> bool:
+        """True when the gain itself is computed but its interval is not -- typically a class with a
+        single scored variant, whose spread cannot be estimated. Neither verdict on the values is
+        drawn then."""
+        lo, hi = self.lex_gain_ci
+        return math.isfinite(self.lex_gain) and not (math.isfinite(lo) and math.isfinite(hi))
+
+    @property
+    def values_run_backwards(self) -> bool:
+        """True when the values carry information but in the opposite direction to the one declared:
+        the whole interval on lex_gain lies below zero. Such a scorer's values do not 'add nothing';
+        they need ``higher_is_worse`` flipped."""
+        _, hi = self.lex_gain_ci
+        return math.isfinite(hi) and hi < 0.0
 
     @property
     def bound_width(self) -> float:
@@ -358,18 +456,20 @@ class ScorerAudit:
 
     @property
     def reach_gap_is_significant(self) -> bool:
-        """True when the positive/negative reach difference excludes zero. Statistical only."""
+        """True when the positive/negative reach difference excludes zero. Statistical only; an
+        undefined interval decides nothing."""
         lo, hi = self.class_gap_ci
-        return not (lo <= 0.0 <= hi)
+        return math.isfinite(lo) and math.isfinite(hi) and not (lo <= 0.0 <= hi)
 
     @property
     def reach_is_class_dependent(self) -> bool:
         """Significant AND large enough to matter.
 
-        Significance alone is useless at scale. On a 1.4-million-variant ClinVar panel, phyloP's
-        reach gap of +0.001 has a 95% interval of [+0.000, +0.001] -- unambiguously significant,
-        and worth 0.0007 AUROC. Reporting that as a defect alongside a genuine +0.489 teaches the
-        reader to ignore the flag, so both conditions must hold.
+        Significance alone is useless at scale. On a 1.4-million-variant ClinVar panel, CADD's
+        reach gap of +0.0006 has a 95% interval of [+0.0005, +0.0008] -- unambiguously
+        significant, and far too small to matter. Reporting that as a defect alongside
+        AlphaMissense's +0.229 on the same panel teaches the reader to ignore the flag, so both
+        conditions must hold.
         """
         return self.reach_gap_is_significant and abs(self.class_gap) >= self.min_gap
 
@@ -434,7 +534,7 @@ class PairAudit:
     @property
     def matched_delta_excludes_zero(self) -> bool:
         lo, hi = self.delta_matched_ci
-        return not (lo <= 0.0 <= hi)
+        return math.isfinite(lo) and math.isfinite(hi) and not (lo <= 0.0 <= hi)
 
     @property
     def must_answer_delta_excludes_zero(self) -> bool:
@@ -448,6 +548,7 @@ class AuditReport:
     pairs: list = field(default_factory=list)
     warnings: list = field(default_factory=list)
     interval_level: str = "variant-level"
+    alpha: float = 0.05
 
     def __str__(self) -> str:
         L = ["glmtrust audit", "=" * 78]
@@ -462,23 +563,34 @@ class AuditReport:
             for w in self.warnings:
                 L.append("  ! " + w)
             L.append("")
+        names = _fit_names([s.name for s in self.scorers], 30)
+        w = max([14] + [len(x) for x in names])
+        if self.scorers:
+            s0 = self.scorers[0]
+            L.append("Panel: %s variants, %s positive and %s negative."
+                     % (format(s0.n, ","), format(s0.n_pos, ","), format(s0.n_neg, ",")))
+            L.append("")
         L.append("REACH  (what each scorer can be run on at all)")
-        L.append("  %-14s %-22s %7s %8s %8s %9s" %
-                 ("scorer", "readout", "reach", "on pos", "on neg", "gap"))
-        for s in self.scorers:
+        L.append("  %-*s %-22s %7s %8s %8s %9s" %
+                 (w, "scorer", "readout", "reach", "on pos", "on neg", "gap"))
+        for s, shown in zip(self.scorers, names):
             flag = "  <- class-dependent" if s.reach_is_class_dependent else ""
-            L.append("  %-14s %-22s %6.1f%% %7.1f%% %7.1f%% %+8.3f%s"
-                     % (s.name, s.readout[:22], 100 * s.reach, 100 * s.reach_pos,
+            L.append("  %-*s %-22s %6.1f%% %7.1f%% %7.1f%% %+8.3f%s"
+                     % (w, shown, _cut(s.readout, 22), 100 * s.reach, 100 * s.reach_pos,
                         100 * s.reach_neg, s.class_gap, flag))
         L.append("")
         L.append("ACCURACY  (covered subset vs the whole panel it is reported for)")
-        L.append("  %-14s %10s %13s %9s %14s %12s" %
-                 ("scorer", "covered", "must-answer", "change", "reach alone", "values add"))
-        for s in self.scorers:
-            mark = ("  <- values add nothing beyond reach"
-                    if math.isfinite(s.lex_gain) and not s.values_add_to_reach else "")
-            L.append("  %-14s %10.4f %13.4f %+9.4f %14s %12s%s"
-                     % (s.name, s.auroc_covered, s.auroc_must_answer, -s.penalty,
+        L.append("  %-*s %10s %13s %9s %14s %12s" %
+                 (w, "scorer", "covered", "must-answer", "change", "reach alone", "values add"))
+        for s, shown in zip(self.scorers, names):
+            full = s.k_pos == s.n_pos and s.k_neg == s.n_neg
+            mark = ("  <- values run opposite to the declared direction" if s.values_run_backwards
+                    else "  <- not resolvably better than chance" if full and s.values_add_nothing
+                    else "  <- values add nothing beyond reach" if s.values_add_nothing
+                    else "  <- interval on this gain undefined" if s.values_gain_undefined
+                    else "")
+            L.append("  %-*s %10.4f %13.4f %+9.4f %14s %12s%s"
+                     % (w, shown, s.auroc_covered, s.auroc_must_answer, -s.penalty,
                         "--" if not math.isfinite(s.miss_auroc) else "%.4f" % s.miss_auroc,
                         "--" if not math.isfinite(s.lex_gain) else "%+.4f" % s.lex_gain, mark))
         L.append("  'reach alone' discards the scores and keeps only whether a value was produced.")
@@ -498,11 +610,20 @@ class AuditReport:
                             "--" if not math.isfinite(s.miss_auroc_stratified)
                             else "%.4f" % s.miss_auroc_stratified,
                             len(s.strata), drop))
-                for t in sorted(s.strata, key=lambda x: -x.n)[:8]:
-                    L.append("     %-28s n=%-7s gap %+7.3f   reach-alone %s%s"
-                             % (t.label[:28], format(t.n, ","), t.class_gap,
+                top = sorted(s.strata, key=lambda x: -x.n)[:8]
+                labs = _fit_names([t.label for t in top], 28)
+                lw = max([28] + [len(x) for x in labs])
+                for t, lab in zip(top, labs):
+                    L.append("     %-*s n=%-7s gap %+7.3f   reach-alone %s%s"
+                             % (lw, lab, format(t.n, ","), t.class_gap,
                                 "--" if not math.isfinite(t.miss_auroc) else "%.4f" % t.miss_auroc,
                                 "  *" if t.reach_is_class_dependent else ""))
+            L.append("     * reach is class-dependent within that stratum (significant and at least "
+                     "the minimum gap)")
+            if self.interval_level != "variant-level":
+                L.append("     The within-stratum intervals behind * are variant-level (Newcombe); "
+                         "the cluster bootstrap")
+                L.append("     covers the whole-panel intervals only.")
         if self.pairs:
             L.append("")
             L.append("HEAD-TO-HEAD  (on the variants BOTH can score)")
@@ -580,7 +701,16 @@ def _must_answer_of(y, s):
     return must_answer_auroc(float(_auroc(y[fin], s[fin])), k_pos, n_pos, k_neg, n_neg)
 
 
-def _stratified_reach(y, fin, strata, min_stratum, min_class, min_gap=0.02, z=1.959963985):
+def _strata_index(strata):
+    """Stratum labels (as strings, sorted) and the row indices of each, built once per audit."""
+    labs = np.asarray([str(v) for v in strata])
+    uniq, inv = np.unique(labs, return_inverse=True)
+    order = np.argsort(inv, kind="stable")
+    bounds = np.searchsorted(inv[order], np.arange(uniq.size + 1))
+    return [(str(u), order[bounds[i]:bounds[i + 1]]) for i, u in enumerate(uniq)]
+
+
+def _stratified_reach(y, fin, strata, min_stratum, min_class, min_gap=0.02, z=_Z95):
     """Per-stratum reach and missingness AUROC, plus the size-weighted within-stratum summary.
 
     The weighted summary is the quantity a composition-matched benchmark is still exposed to: it
@@ -593,22 +723,23 @@ def _stratified_reach(y, fin, strata, min_stratum, min_class, min_gap=0.02, z=1.
     within-stratum number worth nothing. `min_class` is the gate that matters.
     """
     out, num, den, dropped = [], 0.0, 0.0, 0
-    for lab in sorted(set(map(str, strata))):
-        m = np.asarray([str(s) == lab for s in strata], dtype=bool)
-        yp, ym = y[m], fin[m]
+    index = strata if isinstance(strata, list) else _strata_index(strata)
+    for lab, idx in index:
+        yp, ym = y[idx], fin[idx]
+        n_s = int(idx.size)
         npos, nneg = int((yp == 1).sum()), int((yp == 0).sum())
-        if m.sum() < min_stratum or npos < min_class or nneg < min_class:
+        if n_s < min_stratum or npos < min_class or nneg < min_class:
             dropped += 1
             continue
         kp, kn = int(ym[yp == 1].sum()), int(ym[yp == 0].sum())
         ma = missingness_auroc(yp, ym)
         out.append(StratumAudit(
-            label=lab, n=int(m.sum()), n_pos=npos, n_neg=nneg,
+            label=lab, n=n_s, n_pos=npos, n_neg=nneg,
             reach_pos=kp / npos, reach_neg=kn / nneg, class_gap=kp / npos - kn / nneg,
             class_gap_ci=_newcombe(kp, npos, kn, nneg, z), miss_auroc=ma, min_gap=min_gap))
         if math.isfinite(ma):
-            num += m.sum() * ma
-            den += m.sum()
+            num += n_s * ma
+            den += n_s
     return out, (num / den if den else float("nan")), dropped
 
 
@@ -625,54 +756,73 @@ def audit(labels, scorers, strata=None, n_boot: int = 2000, seed: int = 0,
 
     `min_gap` and `min_penalty` are practical-significance floors on the warnings. They exist
     because statistical significance stops discriminating at scale: on a 1.4-million-variant panel
-    every scorer's reach gap excludes zero, including gaps of 0.001 that cost 0.0007 AUROC. The
-    numbers are always printed; only the warnings are gated, so nothing is hidden.
+    a reach gap of 0.0006 already excludes zero, though it is far too small to matter. The numbers
+    are always printed; only the warnings are gated, so nothing is hidden.
 
     `delong_above` is the matched-panel size at which head-to-head intervals switch from the paired
     bootstrap to DeLong's closed form. Pass None to always bootstrap.
 
-    `cluster`, if given, is one group label per variant -- gene, or locus. Every interval is then a
-    percentile bootstrap over whole clusters with `n_boot` draws: the class gap, the lexicographic
-    gain and both head-to-head deltas. Without it the intervals are variant-level, which on a panel
-    where variants share genes can be several times too narrow, and the report says so.
+    `cluster`, if given, is one group label per variant -- gene, or locus. Every whole-panel
+    interval is then a percentile bootstrap over whole clusters with `n_boot` draws: reach per
+    class, the class gap and with it the missingness AUROC, the lexicographic gain and both
+    head-to-head deltas. The within-stratum class-gap intervals stay variant-level. Without it the
+    intervals are variant-level, which on a panel where variants share genes can be several times
+    too narrow, and the report says so.
+
+    Every interval -- reach, class gap, missingness, the values' gain and both head-to-head deltas
+    -- is at level 1 - `alpha`.
+
+    Row order: the bootstraps draw rows by position, so with a fixed `seed` the ends of a
+    bootstrap interval (the paired bootstrap below `delong_above`, and every interval under
+    `cluster=`) move within their Monte Carlo error when the same panel is given in another row
+    order, and a delta whose interval ends near zero can change side. The closed-form intervals
+    (Wilson, Newcombe, DeLong) do not depend on row order. Sort the panel by a variant key first
+    when a result must be reproducible across row orders.
     """
-    # Validate BEFORE casting. `np.asarray(..., dtype=int)` truncates, so 0.2/1.2 arrived here as
-    # a clean 0/1 panel and was audited without a word; -1/+1 and 0/2 became 0/1 and 0/2 and
-    # produced an empty report rather than an error. Labels decide every number in this module.
-    y_raw = np.asarray(labels).ravel()
-    if y_raw.size == 0:
-        raise ValueError("empty panel")
-    y_f = np.asarray(y_raw, dtype=float)
-    if not np.all(np.isfinite(y_f)):
-        raise ValueError("labels contain non-finite values; 0/1 required")
-    bad = np.unique(y_f[~np.isin(y_f, (0.0, 1.0))])
-    if bad.size:
-        raise ValueError("labels must be 0 or 1; found %s. Recode explicitly rather than relying "
-                         "on a silent cast (0.2 would otherwise become 0)." % bad[:5].tolist())
-    y = y_f.astype(int)
-    if y.size == 0:
-        raise ValueError("empty panel")
-    present = np.unique(y)
-    if present.size < 2:
-        raise ValueError("the panel carries only label %s; an AUROC is undefined" % present.tolist())
+    # Labels decide every number in this module, so they are validated by value, never cast:
+    # 0.2 must not become 0, -1/+1 must not become an empty report (glmtrust._checks.as_labels).
+    y = as_labels(labels, "labels", both_classes=True)
+    if isinstance(scorers, Scorer):
+        scorers = [scorers]
+    scorers = list(scorers)
+    if not scorers or not all(isinstance(sc, Scorer) for sc in scorers):
+        raise TypeError("scorers must be a list of Scorer(name, score, readout=...) objects")
+    _names = [sc.name for sc in scorers]
+    _dups = sorted({x for x in _names if _names.count(x) > 1})
+    if _dups:
+        raise ValueError("scorer names must be unique; %s appear more than once. Every comparison "
+                         "is keyed by name, so a duplicate would silently replace another scorer."
+                         % _dups)
+    n_boot = check_int(n_boot, "n_boot", MIN_BOOT)
+    seed = check_int(seed, "seed", 0)
+    alpha = check_alpha(alpha)
+    min_stratum = check_int(min_stratum, "min_stratum", 1)
+    min_class = check_int(min_class, "min_class", 1)
+    if delong_above is not None:
+        delong_above = check_int(delong_above, "delong_above", 1)
     for sc in scorers:
         if sc.score.size != y.size:
             raise ValueError("scorer %r has %d scores for %d labels"
                              % (sc.name, sc.score.size, y.size))
 
     if strata is not None:
-        strata = np.asarray(strata).ravel()
+        strata = np.asarray(strata, dtype=object).ravel()
         if strata.size != y.size:
             raise ValueError("strata has %d entries for %d labels" % (strata.size, y.size))
+        strata = _strata_index(strata)
 
     groups = _cluster_groups(cluster, y.size) if cluster is not None else None
     pos, neg = (y == 1), (y == 0)
     n_pos, n_neg = int(pos.sum()), int(neg.sum())
     rep = AuditReport(interval_level=(
         "variant-level" if groups is None else
-        "percentile bootstrap over %s clusters, B = %d" % (format(len(groups), ","), n_boot)))
+        "percentile bootstrap over %s clusters, B = %d" % (format(len(groups), ","), n_boot)),
+        alpha=alpha)
     from statistics import NormalDist
     z = NormalDist().inv_cdf(1 - alpha / 2)
+    # the reach and class-gap intervals at the default level use the helpers' own default z, so the
+    # level argument leaves default output exactly as the helpers give it
+    z_reach = _Z95 if alpha == 0.05 else z
     lvl = "%g%%" % (100 * (1 - alpha))
 
     for sc in scorers:
@@ -692,9 +842,10 @@ def audit(labels, scorers, strata=None, n_boot: int = 2000, seed: int = 0,
                 k_pos=k_pos, k_neg=k_neg,
                 reach=float((k_pos + k_neg) / y.size),
                 reach_pos=k_pos / n_pos, reach_neg=k_neg / n_neg,
-                reach_pos_ci=wilson_interval(k_pos, n_pos), reach_neg_ci=wilson_interval(k_neg, n_neg),
+                reach_pos_ci=wilson_interval(k_pos, n_pos, z_reach),
+                reach_neg_ci=wilson_interval(k_neg, n_neg, z_reach),
                 class_gap=k_pos / n_pos - k_neg / n_neg,
-                class_gap_ci=_newcombe(k_pos, n_pos, k_neg, n_neg),
+                class_gap_ci=_newcombe(k_pos, n_pos, k_neg, n_neg, z_reach),
                 auroc_covered=float("nan"), auroc_must_answer=0.5,
                 bound_lo=0.0, bound_hi=1.0,
                 penalty=float("nan"), miss_auroc=missingness_auroc(y, fin),
@@ -712,51 +863,65 @@ def audit(labels, scorers, strata=None, n_boot: int = 2000, seed: int = 0,
         # both slower and worse: on a million-variant panel it cost minutes per scorer to
         # re-estimate a quantity available in closed form.
         miss_a = missingness_auroc(y, fin)
-        miss_ci = (float("nan"), float("nan"))
-        if math.isfinite(miss_a):
-            _glo, _ghi = _newcombe(k_pos, n_pos, k_neg, n_neg)
-            miss_ci = (0.5 + _glo / 2.0, 0.5 + _ghi / 2.0)
 
         st, st_mean, dropped = ([], float("nan"), 0)
         if strata is not None:
             st, st_mean, dropped = _stratified_reach(y, fin, strata, min_stratum, min_class,
-                                                     min_gap)
+                                                     min_gap, z_reach)
 
         # What the values add beyond the indicator, and its interval. Variant-level: DeLong's
         # variance of the covered AUROC, pushed through the linear map rho * (A - 1/2) with rho
-        # held at its observed value. Clustered: both reach and covered AUROC are re-estimated on
-        # every whole-cluster resample, and the class gap's interval comes from the same draws.
+        # held at its observed value, so the interval is conditional on the observed reach.
+        # Clustered: both reach and covered AUROC are re-estimated on every whole-cluster
+        # resample, and the class gap's interval comes from the same draws.
         gain = lexicographic_gain(cov, k_pos, n_pos, k_neg, n_neg)
-        gap_ci = _newcombe(k_pos, n_pos, k_neg, n_neg)
+        gap_ci = _newcombe(k_pos, n_pos, k_neg, n_neg, z_reach)
+        rpos_ci = wilson_interval(k_pos, n_pos, z_reach)
+        rneg_ci = wilson_interval(k_neg, n_neg, z_reach)
         if groups is None:
             rho = (k_pos * k_neg) / (n_pos * n_neg)
             try:
                 from .delong import delong_auroc_variance
+                # one scored variant in a class leaves the spread undefined (NaN): reported below
+                # as an undefined interval
                 _, _v = delong_auroc_variance(y[fin], s[fin][None, :])
                 se = math.sqrt(max(float(np.atleast_2d(_v)[0, 0]), 0.0))
             except (ValueError, IndexError, ZeroDivisionError):
                 se = float("nan")
             gain_ci = (rho * (cov - z * se - 0.5), rho * (cov + z * se - 0.5))
         else:
-            gd, gg = [], []
+            # one set of whole-cluster draws gives every interval: reach per class, the class
+            # gap (and through it the missingness AUROC) and the values' gain
+            gd, gg, rp, rn = [], [], [], []
             for ii in _cluster_draws(groups, n_boot, seed):
                 yy, ff = y[ii], fin[ii]
                 npb, nnb = int((yy == 1).sum()), int((yy == 0).sum())
                 if not (npb and nnb):
                     continue
                 kp, kn = int(ff[yy == 1].sum()), int(ff[yy == 0].sum())
+                rp.append(kp / npb)
+                rn.append(kn / nnb)
                 gd.append(kp / npb - kn / nnb)
                 if kp and kn and np.unique(yy[ff]).size == 2:
                     gg.append(lexicographic_gain(float(_auroc(yy[ff], s[ii][ff])), kp, npb, kn, nnb))
             gap_ci, gain_ci = _pct(gd, alpha), _pct(gg, alpha)
+            rpos_ci, rneg_ci = _pct(rp, alpha), _pct(rn, alpha)
+
+        # The missingness AUROC is exactly 0.5 + class_gap/2, so its interval is the class gap's
+        # interval pushed through that same monotone map: Newcombe at variant level, the cluster
+        # bootstrap with cluster=. Either way the two always agree on significance.
+        miss_ci = (float("nan"), float("nan"))
+        if math.isfinite(miss_a) and all(math.isfinite(v) for v in gap_ci):
+            miss_ci = (0.5 + gap_ci[0] / 2.0, 0.5 + gap_ci[1] / 2.0)
 
         a = ScorerAudit(
             name=sc.name, readout=sc.readout, n=int(y.size), n_pos=n_pos, n_neg=n_neg,
             k_pos=k_pos, k_neg=k_neg, bound_lo=b_lo, bound_hi=b_hi,
             reach=float(fin.mean()), reach_pos=k_pos / n_pos, reach_neg=k_neg / n_neg,
-            reach_pos_ci=wilson_interval(k_pos, n_pos), reach_neg_ci=wilson_interval(k_neg, n_neg),
+            reach_pos_ci=tuple(float(v) for v in rpos_ci),
+            reach_neg_ci=tuple(float(v) for v in rneg_ci),
             class_gap=k_pos / n_pos - k_neg / n_neg,
-            class_gap_ci=gap_ci,
+            class_gap_ci=tuple(float(v) for v in gap_ci),
             auroc_covered=cov, auroc_must_answer=ma, penalty=cov - ma,
             miss_auroc=miss_a, miss_auroc_ci=miss_ci,
             strata=st, miss_auroc_stratified=st_mean, n_strata_dropped=dropped,
@@ -771,7 +936,30 @@ def audit(labels, scorers, strata=None, n_boot: int = 2000, seed: int = 0,
                 "%s: covered AUROC is %.4f, below one half. If higher values of this score mean "
                 "benign, declare it (Scorer(..., higher_is_worse=False); CLI --lower-is-worse %s); "
                 "read as given, every figure below for it is inverted." % (sc.name, cov, sc.name))
-        if math.isfinite(a.lex_gain) and not a.values_add_to_reach:
+        full_reach = (k_pos == n_pos and k_neg == n_neg)
+        if a.values_run_backwards:
+            rep.warnings.append(
+                "%s: its values are informative but run the opposite way to the declared direction "
+                "(ranking by them LOSES %+.4f AUROC on the indicator, %s CI [%+.4f, %+.4f]). Declare "
+                "the direction (Scorer(..., higher_is_worse=False); CLI --lower-is-worse %s) before "
+                "reading any figure for it." % (sc.name, a.lex_gain, lvl, a.lex_gain_ci[0],
+                                                a.lex_gain_ci[1], sc.name))
+        elif full_reach and a.values_add_nothing:
+            # with every variant scored there is no missingness to carry anything, so the plain
+            # statement is the right one
+            rep.warnings.append(
+                "%s: its values are not resolvably better than chance on this panel (AUROC %.4f, "
+                "%s CI on its gain over one half [%+.4f, %+.4f], %s)."
+                % (sc.name, cov, lvl, a.lex_gain_ci[0], a.lex_gain_ci[1], rep.interval_level))
+        elif a.values_gain_undefined:
+            # an undefined interval is evidence of nothing, so neither verdict on the values is
+            # drawn: say that, rather than report the values as adding nothing
+            rep.warnings.append(
+                "%s: what its values add beyond reach cannot be assessed: ranking by the "
+                "indicator and then by value gains %+.4f AUROC, but the interval on that gain is "
+                "undefined (too few scored variants of one class to estimate its spread)."
+                % (sc.name, a.lex_gain))
+        elif a.values_add_nothing:
             # ONE RULE, SHARED WITH THE PAPER. Comparing the oriented missingness AUROC with the
             # must-answer AUROC cannot serve as this gate: the must-answer rule decides that
             # comparison in the indicator's favour whenever |r_pos - r_neg| > r_pos * r_neg,
@@ -785,9 +973,9 @@ def audit(labels, scorers, strata=None, n_boot: int = 2000, seed: int = 0,
                    rep.interval_level))
         elif math.isfinite(miss_a) and miss_a > 0.55:
             rep.warnings.append(
-                "%s: its missingness pattern alone scores %.4f (95%% CI [%.4f, %.4f]); part of any "
+                "%s: its missingness pattern alone scores %.4f (%s CI [%.4f, %.4f]); part of any "
                 "covered-subset accuracy is coverage, not skill."
-                % (sc.name, miss_a, miss_ci[0], miss_ci[1]))
+                % (sc.name, miss_a, lvl, miss_ci[0], miss_ci[1]))
         if a.missingness_survives_stratification:
             rep.warnings.append(
                 "%s: holding stratum composition fixed, missingness still scores %.4f across %d "
@@ -795,16 +983,20 @@ def audit(labels, scorers, strata=None, n_boot: int = 2000, seed: int = 0,
                 % (sc.name, a.miss_auroc_stratified, len(st)))
         if a.reach_is_class_dependent:
             rep.warnings.append(
-                "%s reaches %.1f%% of positives against %.1f%% of negatives (gap %+.3f, 95%% CI "
+                "%s reaches %.1f%% of positives against %.1f%% of negatives (gap %+.3f, %s CI "
                 "[%+.3f, %+.3f]). Its covered-subset accuracy is measured on an easier panel than "
                 "the one it is reported for." % (sc.name, 100 * a.reach_pos, 100 * a.reach_neg,
-                                                 a.class_gap, *a.class_gap_ci))
+                                                 a.class_gap, lvl, *a.class_gap_ci))
         if a.penalty >= min_penalty:
             rep.warnings.append(
                 "%s cannot score %d of %d variants; answering all of them at chance costs %.4f "
                 "AUROC (%.4f -> %.4f)."
                 % (sc.name, int((~fin).sum()), int(y.size), a.penalty, cov, ma))
 
+    if n_boot < ROUGH_BOOT:
+        rep.warnings.append("intervals from bootstrap resampling use only %d draws (n_boot); below "
+                            "%d their ends are rough, so read them as indicative"
+                            % (n_boot, ROUGH_BOOT))
     rng = np.random.default_rng(seed)
     byname = {a.name: a for a in rep.scorers}
     for i in range(len(scorers)):
@@ -854,8 +1046,8 @@ def audit(labels, scorers, strata=None, n_boot: int = 2000, seed: int = 0,
             # DeLong's closed form above `delong_above`, the paired bootstrap below it. The
             # bootstrap is the more trustworthy of the two -- no asymptotics, no symmetry
             # assumption -- but it re-sorts the whole matched panel twice per draw, which on a
-            # million-variant panel means half an hour for one comparison. DeLong needs one sort per
-            # scorer. The crossover is set where the asymptotics are comfortable and the bootstrap
+            # million-variant panel means half an hour for one comparison. DeLong needs three sorts
+            # per scorer. The crossover is set where the asymptotics are comfortable and the bootstrap
             # has become expensive; the tests check the two agree in the overlap.
             use_delong = (groups is None and delong_above is not None
                           and yb.size >= delong_above)
@@ -911,6 +1103,18 @@ def audit(labels, scorers, strata=None, n_boot: int = 2000, seed: int = 0,
 
 
 # --------------------------------------------------------------------------- reach-only audit
+from statistics import NormalDist  # noqa: E402
+
+
+def _is_missing_value(v) -> bool:
+    if type(v).__name__ in ("NAType", "NaTType"):
+        return True
+    try:
+        return math.isnan(float(v))
+    except (TypeError, ValueError):
+        raise TypeError("a covered AUROC must be a number; got %r" % (v,)) from None
+
+
 @dataclass
 class ReachScorer:
     """One scorer known only by WHERE it answers, plus its covered AUROC when that is supplied.
@@ -942,9 +1146,14 @@ class ReachReport:
     """Reach accounting for every scorer and every pair, from reach indicators alone.
 
     feasible        rho_i + rho_j > 1: the pair could be separated at SOME covered AUROCs in [0, 1]
-    feasible_sharp  rho_max + rho_min / 2 > 1: separable with both covered AUROCs at or above 1/2
+    feasible_sharp  rho_max + rho_min / 2 > 1: the pair could be separated at some covered AUROCs
+                    that are both at least 1/2
     identified      disjoint bounds [rho*A, rho*A + 1 - rho]; -1 when covered AUROCs were not given
     identified_monotone   disjoint [rho*A, A]: unscored variants assumed no easier than scored
+
+    The two feasibility counts are conditions on reach alone: they ask whether ANY covered AUROCs
+    in the stated range could separate the pair, and the covered AUROCs supplied do not enter them.
+    Those decide `identified`.
 
     With covered AUROCs, the breakdown frontier (contamination_bounds, breakdown_point):
     breakdown       (name_i, name_j, lambda*) for every pair, name_i the higher covered AUROC
@@ -964,21 +1173,36 @@ class ReachReport:
     breakdown: list = field(default_factory=list)
     frontier: dict = field(default_factory=dict)
     median_breakdown_undecided: float = float("nan")
+    read_as: dict = field(default_factory=dict)
 
     def __str__(self) -> str:
         L = ["glmtrust reach audit", "=" * 78,
              "Intervals on the class gap: %s." % (
                  "Newcombe, variant-level" if self.interval_level == "variant-level"
-                 else self.interval_level), ""]
+                 else self.interval_level)]
+        if self.scorers:
+            s0 = self.scorers[0]
+            L.append("Panel: %s variants, %s positive and %s negative."
+                     % (format(s0.n, ","), format(s0.n_pos, ","), format(s0.n_neg, ",")))
+        for how, text in (("indicator", "read as 0/1 reach indicators (1 = reached)"),
+                          ("score", "read as raw scores (a value present = reached)")):
+            names = [k for k, v in self.read_as.items() if v == how]
+            if names:
+                L.append("Columns %s: %s%s" % (text, ", ".join(names[:8]),
+                                               " and %d more" % (len(names) - 8) if len(names) > 8
+                                               else ""))
+        L.append("")
         for w in self.warnings:
             L.append("  ! " + w)
         if self.warnings:
             L.append("")
-        L.append("  %-26s %7s %8s %8s %9s %7s %9s %17s"
-                 % ("scorer", "reach", "on pos", "on neg", "gap", "rho", "covered", "bounds"))
-        for s in self.scorers:
-            L.append("  %-26s %6.1f%% %7.1f%% %7.1f%% %+8.3f %7.4f %9s %17s"
-                     % (s.name[:26], 100 * s.reach, 100 * s.reach_pos, 100 * s.reach_neg,
+        names = _fit_names([s.name for s in self.scorers], 26)
+        w = max([26] + [len(x) for x in names])
+        L.append("  %-*s %7s %8s %8s %9s %7s %9s %17s"
+                 % (w, "scorer", "reach", "on pos", "on neg", "gap", "rho", "covered", "bounds"))
+        for s, shown in zip(self.scorers, names):
+            L.append("  %-*s %6.1f%% %7.1f%% %7.1f%% %+8.3f %7.4f %9s %17s"
+                     % (w, shown, 100 * s.reach, 100 * s.reach_pos, 100 * s.reach_neg,
                         s.class_gap, s.rho,
                         "--" if not math.isfinite(s.auroc_covered) else "%.4f" % s.auroc_covered,
                         "--" if not math.isfinite(s.bound_lo)
@@ -989,6 +1213,8 @@ class ReachReport:
                  % format(self.feasible, ","))
         L.append("  feasible with covered AUROCs >= 1/2 (rho_max + rho_min/2 > 1) %s"
                  % format(self.feasible_sharp, ","))
+        L.append("    (both feasibility counts use reach alone: could ANY covered AUROCs in that "
+                 "range separate the pair?)")
         if self.identified >= 0:
             L.append("  identified (disjoint sharp bounds)                      %s"
                      % format(self.identified, ","))
@@ -1010,18 +1236,33 @@ class ReachReport:
         return "\n".join(L)
 
 
-def _reach_indicator(v, n):
-    """Reach from either a boolean/0-1 indicator or a raw score column (finite = reached)."""
-    r = np.asarray(v).ravel()
-    if r.size != n:
-        raise ValueError("a reach column has %d entries for %d labels" % (r.size, n))
-    if r.dtype == bool:
-        return r
-    f = np.asarray(r, dtype=float)
-    vals = np.unique(f[np.isfinite(f)])
-    if np.all(np.isfinite(f)) and set(vals.tolist()) <= {0.0, 1.0}:
-        return f == 1.0
-    return np.isfinite(f)
+def _reach_indicator(v, n, name="a reach column"):
+    """Reach from either a boolean/0-1 indicator or a raw score column (finite = reached), and how
+    the column was read: 'indicator' or 'score'.
+
+    A column holding only 0/1 (or True/False) values plus missing entries is refused: as an
+    indicator a missing entry has no meaning, and as a raw score every 0 would count as reached.
+    The caller has to say which it is."""
+    r = np.asarray(v)
+    if r.dtype == bool and not isinstance(v, np.ma.MaskedArray):
+        r = r.ravel()
+        if r.size != n:
+            raise ValueError("%s has %d entries for %d variants; every argument needs one value "
+                             "per variant" % (name, r.size, n))
+        return r, "indicator"
+    f = as_scores(v, name, n=n)
+    fin = np.isfinite(f)
+    vals = np.unique(f[fin])
+    if set(vals.tolist()) <= {0.0, 1.0}:
+        if fin.all():
+            return f == 1.0, "indicator"
+        raise ValueError(
+            "%s holds only 0/1 (True/False) values plus %d missing entries, which reads two ways: "
+            "as a reach indicator a missing entry means nothing, and as a raw score every 0 "
+            "would count as reached. If it is an indicator, fill the missing entries with 0 (not "
+            "reached); if it is a score whose values happen to be 0 and 1, pass its reach "
+            "explicitly, e.g. np.isfinite(score)." % (name, int((~fin).sum())))
+    return fin, "score"
 
 
 def _lambda_grid(lambdas) -> tuple:
@@ -1059,26 +1300,40 @@ def reach_audit(labels, reach, covered_auroc=None, cluster=None, n_boot: int = 2
     (breakdown_point) and, for each share in `lambdas`, how many pairs stay ordered when that share
     of the unscored pairs may resolve arbitrarily (contamination_bounds). The count at lambda = 1
     comes from the same strict test as `identified` and is checked to equal it.
+
+    Scorer names are compared as strings, in `reach` and in `covered_auroc` alike. The report's
+    ``read_as`` says how each reach column was read, as an indicator or as a raw score; a column
+    holding only 0/1 values plus missing entries could be either, and is refused with the two
+    remedies.
     """
     lams = _lambda_grid(lambdas)
-    y_raw = np.asarray(labels).ravel()
-    y_f = np.asarray(y_raw, dtype=float)
-    if y_f.size == 0 or not np.all(np.isin(y_f, (0.0, 1.0))):
-        raise ValueError("labels must be 0 or 1 over the whole panel")
-    y = y_f.astype(int)
+    y = as_labels(labels, "labels", both_classes=True)
+    seed = check_int(seed, "seed", 0)
+    if not hasattr(reach, "items"):
+        raise TypeError("reach maps each scorer's name to its reach column, e.g. {'REVEL': revel}; "
+                        "got %s" % type(reach).__name__)
+    n_boot = check_int(n_boot, "n_boot", MIN_BOOT)
+    alpha = check_alpha(alpha)
+    _names = [str(k) for k in reach]
+    _dups = sorted({x for x in _names if _names.count(x) > 1})
+    if _dups:
+        raise ValueError("scorer names must be unique as strings; %s appear more than once" % _dups)
     pos, neg = y == 1, y == 0
     n_pos, n_neg = int(pos.sum()), int(neg.sum())
-    if not (n_pos and n_neg):
-        raise ValueError("the panel needs both classes")
     groups = _cluster_groups(cluster, y.size) if cluster is not None else None
     rep = ReachReport(interval_level=(
         "variant-level" if groups is None else
         "percentile bootstrap over %s clusters, B = %d" % (format(len(groups), ","), n_boot)))
-    cov_map = dict(covered_auroc or {})
+    if covered_auroc is not None and not hasattr(covered_auroc, "items"):
+        raise TypeError("covered_auroc maps scorer names to covered AUROCs; got %s"
+                        % type(covered_auroc).__name__)
+    cov_map = {str(k): v for k, v in dict(covered_auroc or {}).items()}
+    z_reach = _Z95 if alpha == 0.05 else NormalDist().inv_cdf(1 - alpha / 2)
     for name in reach:
-        fin = _reach_indicator(reach[name], y.size)
+        fin, how = _reach_indicator(reach[name], y.size, "the reach column of %r" % str(name))
+        rep.read_as[str(name)] = how
         k_pos, k_neg = int(fin[pos].sum()), int(fin[neg].sum())
-        gap_ci = _newcombe(k_pos, n_pos, k_neg, n_neg)
+        gap_ci = _newcombe(k_pos, n_pos, k_neg, n_neg, z_reach)
         if groups is not None:
             gd = []
             for ii in _cluster_draws(groups, n_boot, seed):
@@ -1092,12 +1347,19 @@ def reach_audit(labels, reach, covered_auroc=None, cluster=None, n_boot: int = 2
                         k_neg=k_neg, reach=float(fin.mean()), reach_pos=k_pos / n_pos,
                         reach_neg=k_neg / n_neg, class_gap=k_pos / n_pos - k_neg / n_neg,
                         class_gap_ci=tuple(float(v) for v in gap_ci), rho=rho)
-        a_cov = cov_map.get(name, float("nan"))
-        if a_cov is not None and math.isfinite(float(a_cov)):
+        a_cov = cov_map.get(str(name), float("nan"))
+        if a_cov is None or _is_missing_value(a_cov):
+            a_cov = float("nan")
+        if math.isfinite(float(a_cov)):
             if not 0.0 <= float(a_cov) <= 1.0:
                 raise ValueError("covered AUROC of %r is %r; an AUROC lies in [0, 1]"
                                  % (str(name), a_cov))
             r.auroc_covered = float(a_cov)
+            if r.auroc_covered < 0.5:
+                rep.warnings.append(
+                    "the covered AUROC of %s is %.4f, below one half: if its score runs the other "
+                    "way, its covered AUROC is %.4f, and the pair counts below read it as given."
+                    % (str(name), r.auroc_covered, 1.0 - r.auroc_covered))
             r.auroc_must_answer = must_answer_auroc(r.auroc_covered, k_pos, n_pos, k_neg, n_neg)
             r.bound_lo, r.bound_hi = identification_bounds(r.auroc_covered, k_pos, n_pos,
                                                            k_neg, n_neg)

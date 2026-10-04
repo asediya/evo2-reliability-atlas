@@ -79,27 +79,106 @@ wolf on large ones.
   one-half rule decides that comparison for the pattern whenever |r_pos - r_neg| > r_pos * r_neg,
   however good the values. The HTML card flags the same rule.
 - Warnings now require practical **and** statistical significance (`min_gap`, `min_penalty`). On a
-  1.4-million-variant panel every reach gap excludes zero, including gaps of 0.001 worth 0.0007
-  AUROC; flagging those beside a genuine +0.229 teaches the reader to ignore the flag. Every number
-  is still printed — only the warnings are gated, and the bare statistical test remains available as
+  1.4-million-variant ClinVar panel CADD's reach gap of +0.0006 excludes zero; flagging that beside
+  AlphaMissense's +0.229 teaches the reader to ignore the flag. Every number is still printed — only
+  the warnings are gated, and the bare statistical test remains available as
   `reach_gap_is_significant`.
 - Head-to-head intervals use DeLong above `delong_above` (default 20,000 matched variants) and the
   paired bootstrap below it. A full 1,434,335-variant ClinVar audit takes 42 seconds rather than more
-  than half an hour, and the two methods agree to the last reported digit.
+  than half an hour. Just above the switch, at 22,000 matched variants, the two intervals differ by at
+  most 0.0002 at either end, the Monte Carlo error of a 2,000-draw bootstrap.
 - The missingness interval is the Newcombe interval on the class gap pushed through the identity
   instead of a percentile bootstrap: exact, and better behaved at the boundary.
 - Package description and keywords now name the audit, which was invisible on the distribution
   metadata.
 
+### Fixed
+Every public entry point now reads input by one contract (`glmtrust._checks`): labels are 0/1 with
+every one present, a score is a real number per variant with NaN for a no-call, one value per
+variant, and anything else is refused by name with the recoding to apply.
+- Labels coded 0.7, NaN, 1/2, -1/+1 or as text were cast silently by the calibrators, the conformal
+  classes, `leave_one_group_out`, `missingness_auroc` and DeLong; they are now refused, with the
+  recoding to apply.
+- `PlattCalibrator` fits on the score centred on its median and scaled by its standard deviation,
+  which leaves the fitted map a sigmoid of the raw score. On the raw scale a score of small magnitude
+  (likelihood deltas below about 3e-4) stopped the solver at its first iteration and every
+  probability collapsed to the prevalence; the fit is now independent of the score's units and agrees
+  with the unpenalised maximum-likelihood logistic to 1e-6 in the tests, including on a skewed,
+  SpliceAI-like score. A fit left nearly flat although the score separates the classes, which a few
+  values near the float limit can cause, raises a RuntimeWarning.
+- An infinite score is refused instead of being counted as a no-call; a masked entry is a no-call; a
+  2-D input other than a single row or column is refused.
+- `audit` and `reach_audit` apply `alpha` to every interval (reach, class gap, missingness); with
+  `cluster=` the reach and missingness intervals come from the same whole-cluster draws as the class
+  gap. An undefined interval no longer counts as significant. Duplicate scorer names, a missing
+  readout, `higher_is_worse` given as text, `n_boot` below 10 and `min_class` below 1 are refused.
+  Strata are indexed once, so one stratum per variant no longer takes quadratic time. A scorer whose
+  values run opposite to the declared direction is named as such, and one that reaches every variant
+  is no longer said to be carried by its reach. An undefined interval on the values' gain (a class
+  with a single scored variant) is reported as undefined, not as the values adding nothing. Long
+  scorer and stratum names are shortened with '...', and printed in full if shortening would make two
+  alike. With `cluster=` the report says that the within-stratum intervals stay variant-level.
+  `AuditReport.alpha`, `ScorerAudit.values_run_backwards`, `values_add_nothing` and
+  `values_gain_undefined` are new, and the docstrings say which intervals depend on row order.
+- `reach_audit` matches scorer names as strings in `reach` and `covered_auroc`, reads pandas missing
+  markers, reports how it read each column (`ReachReport.read_as`), refuses a 0/1 or boolean column
+  that also has missing entries (it could be an indicator or a score, and the two readings give
+  different reach), and warns on a covered AUROC below one half. The report says that both
+  feasibility counts use reach alone.
+- `metrics.selective_lift` divides by the fraction actually refused, so random refusal scores 1; kept
+  and refused counts always partition the panel; capture with no errors is NaN everywhere; lengths,
+  masks, `n_bins`, `n_boot`, `alpha` and `seed` are checked; `auroc_ci` returns (nan, nan) instead of
+  failing when no resample carries both classes. DeLong treats a masked entry as missing and names a
+  scorer of the wrong length.
+- `conformal_quantile` computes its rank in exact rational arithmetic and refuses `alpha` outside
+  (0, 1); conformal and selective layers refuse NaN or out-of-range calibration probabilities.
+- `precision_operating_point` thresholds only between distinct score values, so the certified set is
+  the flagged set when scores tie; NaN scores and `delta` outside (0, 1) are refused.
+- `TrustLayer` checks its settings when built and when used; `fit` is all-or-nothing; `evaluate` keeps
+  no state between calls, accepts `seed=None`, reports the raw score's AUROC with its DeLong interval
+  (a score is flagged as running the other way only when that interval lies wholly below one half),
+  refuses more folds than the smaller class has variants, applies each group's own refusal exactly
+  in the selective figures, and uses DeLong's closed form for the AUROC interval from 20,000 variants;
+  `predict` gives a declined (NaN) variant probability NaN and ABSTAIN; `summary(report=...)` renders a
+  report without evaluating again and prints its warnings before the numbers.
+- `leave_one_group_out` predicts a held-out group with a single class of its own, which is the
+  label-free target this function exists for; a missing group label, a single group, and a panel on
+  which no group can be predicted are refused. `group_selective_report` warns when variants without a
+  probability are left out, counts them in `pooled`, and refuses input with no probability at all.
+- `midrank` refuses NaN instead of looping forever; `sequence_blind`, `oof_rate` and
+  `oof_group_within_class` refuse more folds than either class has variants, and
+  `stratified_kfold_folds` refuses what scikit-learn refuses and warns where it warns;
+  `midrank_auroc` reads labels and scores by the same contract as everything else. `render_card`
+  refuses a reach report, labels its intervals at the audit's level, calls a verdict reversed only
+  when the matched interval excludes zero (an opposite-signed delta whose interval spans zero is
+  called inconclusive), and cards a scorer that reaches every variant as not better than chance
+  rather than as carried by its reach.
+- The command line reads semicolon-separated files with decimal commas, UTF-8 with a byte-order mark,
+  UTF-16, Windows-1252, gzip and parquet files whatever their name, and refuses spreadsheets,
+  folders, duplicate column names and over-long rows by name. Labels may be text named with
+  `--positive-label`/`--negative-label`; an unlabelled variant stops the run unless `--drop-unlabelled`
+  is given. `--lower-is-worse` applies to every command. `calibrate` and `transfer` write one row per
+  input row, numbered from 0, with `--id-col` carried through. A probable no-call sentinel (a
+  conventional code such as -999, or a value set apart from the rest, holding 10% or more of a column
+  at its extreme) is noted, and so are exact duplicate rows when some column identifies the rows; a
+  number written with a comma in a comma-separated file is refused with the reason; an output folder
+  that does not exist is refused before the computation; `--auto` skips coordinate-like columns such
+  as `pos(1-based)`; `transfer` exits with an error when no group can be predicted and otherwise
+  says how many variants got no probability; `reach` names a `--reach-prefix` that matches nothing
+  and the `--covered` columns it looked for; the `audit --out` JSON records `interval_level` and
+  `alpha`; any input the package refuses ends in one line rather than a traceback.
+- `notebooks/quickstart.ipynb` opens in Google Colab, and its first cell fetches the repository and
+  installs the package when they are missing.
+
 ### Notes
 - `TrustLayer.evaluate` fits each fold's calibration map on half of the fold's training variants and its
   conformal layer on the other half, so that the conformal quantile is fitted on probabilities the map
-  has not seen. On the shipped fixture its selective figures read a capture of 0.6124 and a lift of 4.08
+  has not seen. On the shipped fixture its selective figures read a capture of 0.6124 and a lift of 4.09
   (`notebooks/quickstart.ipynb`). `benchmarks/reproduce_paper_trust_layer.py`, which fits each map on the
   whole training fold through `leave_one_group_out` and `group_selective_report`, reproduces the deposited
   numbers exactly.
-- 166 tests, including tests that check the documentation matches the code;
-  `pytest --collect-only` reports 166, which is the number that ships.
+- 246 tests, including tests that check the documentation matches the code and one for each input a
+  stranger is likely to bring; `pytest --collect-only` reports 246, which is the number that ships.
 
 ## [0.1.0] - 2026-07-24
 
@@ -124,4 +203,4 @@ tested, installable package.
 - A command-line interface, `glmtrust evaluate | calibrate | transfer`; 0.1.1 adds `audit`, `reach` and
   `baseline`, and the `--card` report of `audit`.
 - Test suite covering coverage guarantees, calibration improvement, and selective lift; the
-  deposited suite collects 166.
+  deposited suite collects 246.
