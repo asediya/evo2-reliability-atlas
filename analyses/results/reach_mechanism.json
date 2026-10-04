@@ -1,0 +1,61 @@
+{
+ "_generated_by": "analyses/scripts/reach_mechanism.py",
+ "_panel": "human atlas, 3000 variants, the only panel where both conservation tracks are genuine third-party releases",
+ "_tracks": {
+  "gerp": "Ensembl 91-mammal GERP, as deposited",
+  "phylop": "UCSC phyloP100way (hg38), queried here"
+ },
+ "_question": "Do two different alignments go silent on the same variants?",
+ "n": 3000,
+ "n_pos": 1500,
+ "n_neg": 1500,
+ "reach": {
+  "gerp": 0.96,
+  "phylop": 1.0,
+  "both": 0.96,
+  "neither": 0.0,
+  "gerp_only": 0.0,
+  "phylop_only": 0.04,
+  "n_gerp_cannot_score": 120,
+  "n_phylop_cannot_score": 0,
+  "n_gerp_holes_that_phylop_fills": 120,
+  "fraction_of_gerp_holes_phylop_fills": 1.0
+ },
+ "agreement": {
+  "observed": 0.96,
+  "expected_by_chance": 0.96,
+  "cohens_kappa": 0.0,
+  "_degenerate": true,
+  "_reading": "If one track reaches every variant while the other does not, the two alignments cannot be failing on the same sequence. Silence is then a property of the alignment, not of the variant."
+ },
+ "class_dependence": {
+  "gerp": {
+   "reach_pathogenic": 0.9633333333333334,
+   "reach_benign": 0.9566666666666667,
+   "class_gap_benign_minus_pathogenic": -0.00666666666666671,
+   "gap_ci95_newcombe": [
+    -0.020919740019607495,
+    0.007480531834994418
+   ],
+   "gap_excludes_zero": false
+  },
+  "phylop": {
+   "reach_pathogenic": 1.0,
+   "reach_benign": 1.0,
+   "class_gap_benign_minus_pathogenic": 0.0,
+   "gap_ci95_newcombe": [
+    -0.0025544307213771766,
+    0.0025544307213771766
+   ],
+   "gap_excludes_zero": false
+  }
+ },
+ "discrimination_on_the_shared_set": {
+  "n": 2880,
+  "auroc_gerp": 0.8736872309899569,
+  "auroc_phylop": 0.9249718481366722,
+  "auroc_gerp_covered": 0.8736872309899569,
+  "auroc_phylop_covered": 0.9257755555555556,
+  "_note": "Two conservation tracks on one panel. A difference here is a track difference, not a biology difference, and it bounds how much of any Evo 2 margin over 'conservation' is really a margin over one particular track."
+ }
+}

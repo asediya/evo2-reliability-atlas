@@ -1,0 +1,59 @@
+{
+  "title": "Auditing variant effect predictor comparisons for missing scores: analysis code, glmtrust and the reach resource",
+  "description": "<p>The code and data of the study <em>Auditing variant effect predictor comparisons for missing scores: a reach resource for 49 predictors and nine amniote species</em> (GigaScience), archived as one record: the article's Additional files 2 to 6. Additional file 2 holds the analysis code, the recompute layer and the <code>glmtrust</code> 0.1.1 Python package, which charges each predictor for the variants it declines and adds calibration, conformal and selective-prediction layers. Additional file 3 holds the reduced per-variant tables, the scripts that recompute the article's reported values from them, the figure builders and the builders of every table. Additional files 4 and 5 are per-variant reach matrices for 49 dbNSFP predictors and five ClinVar scores, and Additional file 6 is a 500,000-variant splicing deployment background.</p><p>The code is under the MIT licence and the tables the authors computed under CC0 1.0; third-party content keeps its own terms, which LICENSING.md and LICENSES.tsv give file by file. The dbNSFP, CADD, REVEL and AlphaMissense score values of Additional files 4 and 5, and the CADD scores TraitGym distributes, are withheld; builders rebuild them from each source.</p>",
+  "upload_type": "dataset",
+  "license": "other-open",
+  "access_right": "open",
+  "version": "0.1.1",
+  "language": "eng",
+  "creators": [
+    {
+      "name": "Asediya, Varunkumar",
+      "orcid": "0000-0002-9402-0349",
+      "affiliation": "Faculty of Biological and Veterinary Sciences, Institute of Veterinary Medicine, and Institute of Advanced Studies, Nicolaus Copernicus University in Toruń, Poland"
+    },
+    {
+      "name": "GK, Udayaraja",
+      "orcid": "0000-0003-2163-6297",
+      "affiliation": "Department of Animal and Veterinary Sciences, Aarhus University, Tjele, Denmark, and Leeds Institute of Medical Research, University of Leeds, United Kingdom"
+    },
+    {
+      "name": "Kadarmideen, Haja N.",
+      "orcid": "0000-0001-6294-382X",
+      "affiliation": "Department of Animal and Veterinary Sciences, Aarhus University, Tjele, and Department of Molecular Biology and Genetics, Aarhus University, Aarhus, Denmark"
+    },
+    {
+      "name": "Pareek, Chandra S.",
+      "orcid": "0000-0002-0329-787X",
+      "affiliation": "Faculty of Biological and Veterinary Sciences, Institute of Veterinary Medicine, and Institute of Advanced Studies, Nicolaus Copernicus University in Toruń, Poland"
+    }
+  ],
+  "keywords": [
+    "genomic foundation model",
+    "variant-effect prediction",
+    "benchmarking",
+    "predictor reach",
+    "missing scores",
+    "calibration transfer",
+    "selective prediction",
+    "cross-species transfer",
+    "regulatory variants",
+    "Evo 2",
+    "reach matrix",
+    "dbNSFP",
+    "ClinVar"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/asediya/evo2-reliability-atlas",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.5281/zenodo.19701997",
+      "relation": "references",
+      "scheme": "doi"
+    }
+  ],
+  "notes": "Code under the MIT licence; the tables the authors computed under CC0 1.0. Third-party content keeps its own terms: PigGTEx's fine-mapping probabilities and eQTL coordinates in Additional file 2 are under CC BY-NC 4.0 (non-commercial); the Smith and Kitzman splice-predictor scores, the cattle phyloP column, the AlphaMissense predictions, the UniProt accessions and four PhyloPic silhouettes under CC BY 4.0; GPN-Star's scores under the Apache License 2.0; TraitGym's scores under the MIT licence; ClinVar, ClinGen, Ensembl, UCSC, OMIA and MaveDB content as LICENSES.tsv attributes it. The CC0 release of the reach indicators of Additional files 4 and 5 rests on the reading LICENSING.md sets out; if it is not accepted for dbNSFP, Additional file 4 is withdrawn, and if not for REVEL, its reach column in Additional file 5 is released under the Open Database License 1.0. LICENSING.md here and LICENSING.md and LICENSES.tsv in Additional file 3 give the licence file by file."
+}

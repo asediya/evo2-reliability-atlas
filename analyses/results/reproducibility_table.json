@@ -1,0 +1,126 @@
+{
+  "_generated_by": "analyses/scripts/build_reproducibility_table.py",
+  "rows": [
+    {
+      "claim": "Macro AUROC across nine species, 8,192-bp readout",
+      "value": "0.9431",
+      "artefact": "reports/readout_effect_fullpanel.json",
+      "bound_by": "verify_from_data.py, atlas"
+    },
+    {
+      "claim": "Macro AUROC, 1,001-bp readout",
+      "value": "0.8783",
+      "artefact": "reports/readout_effect_fullpanel.json",
+      "bound_by": "verify_from_data.py, atlas"
+    },
+    {
+      "claim": "Readout effect on identical variants",
+      "value": "+0.0647",
+      "artefact": "reports/readout_effect_fullpanel.json",
+      "bound_by": "verify_from_data.py, atlas"
+    },
+    {
+      "claim": "Variants carrying both readouts",
+      "value": "11109",
+      "artefact": "reports/readout_effect_fullpanel.json",
+      "bound_by": "verify_from_data.py, atlas"
+    },
+    {
+      "claim": "Pooled errors at the 8,192-bp trust layer",
+      "value": "415",
+      "artefact": "reports/trust_layer_8192.json",
+      "bound_by": "verify_from_data.py, trust"
+    },
+    {
+      "claim": "Error capture at 15% refusal, 8,192-bp arm",
+      "value": "0.6096",
+      "artefact": "reports/trust_layer_8192.json",
+      "bound_by": "verify_from_data.py, trust"
+    },
+    {
+      "claim": "Macro expected calibration error, 8,192-bp arm",
+      "value": "0.0209",
+      "artefact": "reports/trust_layer_8192.json",
+      "bound_by": "glmtrust benchmark"
+    },
+    {
+      "claim": "Pig cis-eQTL, Evo 2, panel as published",
+      "value": "0.4879",
+      "artefact": "analyses/results/eqtl_tss_matched.json",
+      "bound_by": "eqtl_tss_matched.py"
+    },
+    {
+      "claim": "Pig cis-eQTL, positional baseline after matching",
+      "value": "0.5165",
+      "artefact": "analyses/results/eqtl_tss_matched.json",
+      "bound_by": "eqtl_tss_matched.py"
+    },
+    {
+      "claim": "Splicing panel, Evo 2 (1B)",
+      "value": "0.6214",
+      "artefact": "analyses/results/mfass_evo2_vs_specialists.json",
+      "bound_by": "verify_new_results.py"
+    },
+    {
+      "claim": "Splicing panel, SpliceAI",
+      "value": "0.7986",
+      "artefact": "analyses/results/mfass_evo2_vs_specialists.json",
+      "bound_by": "verify_new_results.py"
+    },
+    {
+      "claim": "Splicing panel, Pangolin",
+      "value": "0.8029",
+      "artefact": "analyses/results/mfass_evo2_vs_specialists.json",
+      "bound_by": "verify_new_results.py"
+    },
+    {
+      "claim": "ClinVar 3' UTR rung, Evo 2",
+      "value": "0.7023",
+      "artefact": "analyses/results/clinvar_evo2_participant.json",
+      "bound_by": "verify_new_results.py"
+    },
+    {
+      "claim": "ClinVar 5' UTR rung, Evo 2",
+      "value": "0.6497",
+      "artefact": "analyses/results/clinvar_evo2_participant.json",
+      "bound_by": "verify_new_results.py"
+    },
+    {
+      "claim": "Evo 2's own reach penalty on ClinVar",
+      "value": "+0.0000",
+      "artefact": "analyses/results/clinvar_evo2_participant.json",
+      "bound_by": "verify_new_results.py"
+    },
+    {
+      "claim": "S-Cap coverage, six-gene benchmark",
+      "value": "0.6406",
+      "artefact": "analyses/results/mfass_reach.json",
+      "bound_by": "verify_new_results.py"
+    },
+    {
+      "claim": "S-Cap coverage, 500,000 random variants",
+      "value": "0.3895",
+      "artefact": "analyses/results/mfass_random500k_coverage.json",
+      "bound_by": "verify_new_results.py"
+    },
+    {
+      "claim": "Variants answered by all eight splice predictors",
+      "value": "0.0792",
+      "artefact": "analyses/results/mfass_random500k_coverage.json",
+      "bound_by": "verify_new_results.py"
+    },
+    {
+      "claim": "Strand-choice AUROC shift, 40B, 8,192 bp",
+      "value": "0.0079",
+      "artefact": "analyses/results/strand_ladder.json",
+      "bound_by": "verify_new_results.py"
+    },
+    {
+      "claim": "Strand-choice shift as a percentage of the 8,192-bp margin",
+      "value": "8.2%",
+      "artefact": "analyses/results/strand_ladder.json",
+      "bound_by": "verify_new_results.py"
+    }
+  ],
+  "unbuildable": []
+}

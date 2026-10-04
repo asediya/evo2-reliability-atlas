@@ -1,0 +1,30 @@
+{
+  "_scope": "panel-level adversarial controls on data/interim/verify_table.parquet; leakage/gain/permutation concern an exploratory evo2+phylop ensemble not reported in the manuscript (see docstring); composition + spatial bear on the shared panel.",
+  "composition": {
+    "composition_only_auroc": 0.2545,
+    "trinuc_chi2_p": 1.0,
+    "gc_mwu_p": 0.62,
+    "gc_mean_pos": 0.541,
+    "gc_mean_neg": 0.537,
+    "criterion": "composition-only (trinuc-context + local GC) AUROC should be ~0.5 if matched"
+  },
+  "spatial": {
+    "neg_within_1kb": 0,
+    "neg_within_10kb": 1,
+    "neg_within_50kb": 10,
+    "auroc_full": 0.9691,
+    "auroc_drop_50kb": 0.9717
+  },
+  "permutation": {
+    "real_auroc": 0.9691,
+    "null_mean": 0.4962,
+    "p_value": 0.003322
+  },
+  "ensemble_provenance": {
+    "evo2_auroc": 0.912,
+    "phylop_auroc": 0.9421,
+    "ensemble_auroc": 0.9691,
+    "leakage_gap_insample_minus_oof": 0.0016,
+    "note": "ensemble is exploratory and NOT a manuscript result"
+  }
+}

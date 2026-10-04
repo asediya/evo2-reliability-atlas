@@ -1,0 +1,155 @@
+{
+ "_generated_by": "analyses/scripts/panels_40b_singlepos.py",
+ "_readout": "1,001-bp SINGLE-POSITION next-token delta, negated (src/ccs/score_evo2_40b_local.py)",
+ "_not_comparable_to": "the 1B and 7B scores deposited for these same panels, which are a WINDOW-SUM log-likelihood readout (analyses/scripts/score_mfass_evo2.py). Capacity and readout would move together, which is the confound Note S48 retracted for the strand ladder.",
+ "_why_no_40b_window_sum": "BioNeMo's predict_evo2 loads the whole model to the GPU and its runner accepts 1b and 7b only; in this pipeline the 40B single-position readout runs through block streaming, and 40B has no window-sum readout.",
+ "bootstrap": {
+  "B": 2000,
+  "seed": 20260807,
+  "unit": "variant"
+ },
+ "panels": {
+  "splicing": {
+   "n": 3912,
+   "n_pos": 1060,
+   "auroc": 0.5959290401968826,
+   "auroc_ci95": [
+    0.5756615401202416,
+    0.616852104179344
+   ],
+   "n_exactly_zero": 2,
+   "by_class": {
+    "Deep Exon": {
+     "n": 1419,
+     "n_pos": 372,
+     "auroc": 0.5037151718684207,
+     "auroc_ci95": [
+      0.47075452560045933,
+      0.5371526476730172
+     ]
+    },
+    "Essential Splice": {
+     "n": 246,
+     "n_pos": 238,
+     "auroc": 0.32773109243697474,
+     "auroc_ci95": [
+      0.2305525664376018,
+      0.45869817673535407
+     ],
+     "_caution": "only 8 in the smaller class; the interval is the honest summary and the point estimate should not be quoted alone"
+    },
+    "Exon Near Junction": {
+     "n": 434,
+     "n_pos": 148,
+     "auroc": 0.5713003213003214,
+     "auroc_ci95": [
+      0.5139633498354086,
+      0.626358705906945
+     ]
+    },
+    "Intron Near Junction": {
+     "n": 643,
+     "n_pos": 188,
+     "auroc": 0.6076046294131401,
+     "auroc_ci95": [
+      0.5552205679170088,
+      0.6595302974282962
+     ]
+    },
+    "Proximal Intron": {
+     "n": 1170,
+     "n_pos": 114,
+     "auroc": 0.6935223950026581,
+     "auroc_ci95": [
+      0.6497418491665258,
+      0.7338559843868832
+     ]
+    }
+   }
+  },
+  "clinvar": {
+   "n": 3714,
+   "n_pos": 1714,
+   "auroc": 0.6857323512252043,
+   "auroc_ci95": [
+    0.6686986150859533,
+    0.7025829814752009
+   ],
+   "n_exactly_zero": 2,
+   "by_class": {
+    "3_prime_UTR_variant": {
+     "n": 304,
+     "n_pos": 54,
+     "auroc": 0.6492222222222221,
+     "auroc_ci95": [
+      0.5610636230776895,
+      0.7318670980853106
+     ]
+    },
+    "5_prime_UTR_variant": {
+     "n": 410,
+     "n_pos": 160,
+     "auroc": 0.6923875,
+     "auroc_ci95": [
+      0.6353672747706027,
+      0.7453173162242107
+     ]
+    },
+    "missense_variant": {
+     "n": 500,
+     "n_pos": 250,
+     "auroc": 0.841336,
+     "auroc_ci95": [
+      0.8064929038864622,
+      0.8754900244419536
+     ]
+    },
+    "non-coding_transcript_variant": {
+     "n": 500,
+     "n_pos": 250,
+     "auroc": 0.695424,
+     "auroc_ci95": [
+      0.6494701511116975,
+      0.742118285048296
+     ]
+    },
+    "nonsense": {
+     "n": 500,
+     "n_pos": 250,
+     "auroc": 0.713536,
+     "auroc_ci95": [
+      0.6677469567220827,
+      0.7584351232197747
+     ]
+    },
+    "splice_acceptor_variant": {
+     "n": 500,
+     "n_pos": 250,
+     "auroc": 0.6263759999999999,
+     "auroc_ci95": [
+      0.5741424163682239,
+      0.674547582963546
+     ]
+    },
+    "splice_donor_variant": {
+     "n": 500,
+     "n_pos": 250,
+     "auroc": 0.613,
+     "auroc_ci95": [
+      0.5638781662995594,
+      0.6612453695509127
+     ]
+    },
+    "synonymous_variant": {
+     "n": 500,
+     "n_pos": 250,
+     "auroc": 0.628568,
+     "auroc_ci95": [
+      0.5767178148378945,
+      0.6789662290821811
+     ]
+    }
+   }
+  }
+ }
+}

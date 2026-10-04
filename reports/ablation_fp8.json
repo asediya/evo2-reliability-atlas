@@ -1,0 +1,14 @@
+{
+ "n": 600,
+ "n_pos": 300,
+ "batch_sizes": [
+  4,
+  32
+ ],
+ "max_abs_diff": 0.0,
+ "bit_identical": 600,
+ "frac_bit_identical": 1.0,
+ "class_diff_in_batch_effect": 0.0,
+ "auroc_diff": 0.0,
+ "verdict": "no class-correlated FP8 batch effect"
+}

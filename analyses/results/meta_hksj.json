@@ -1,0 +1,137 @@
+{
+ "_generated_by": "analyses/scripts/meta_analysis.py",
+ "_method": "Random-effects meta-analysis. tau^2 by REML (DerSimonian-Laird reported alongside). Interval by Hartung-Knapp-Sidik-Jonkman with Röver's modification (never narrower than the classic random-effects interval). Prediction interval by Higgins-Thompson-Spiegelhalter.",
+ "_why": "The manuscript concedes that its nine-cluster percentile bootstrap undercovers. This replaces it with the standard small-k treatment and adds two quantities the bootstrap cannot give: explicit heterogeneity, and an interval for a species not in the panel.",
+ "_citations": [
+  "10.1186/1471-2288-14-25",
+  "10.1186/s12874-015-0091-1",
+  "10.1002/jrsm.1164",
+  "10.1002/jrsm.1316"
+ ],
+ "evo2_minus_gerp": {
+  "_what": "Evo 2 minus GERP, per species, co-scorable variants",
+  "_note": "SE derived from the deposited paired-bootstrap 95% interval half-width. The pooled estimate is not the macro mean: it is inverse-variance weighted, so goat's 80 variants no longer count the same as human's 2,880.",
+  "k": 9,
+  "species": [
+   "chicken",
+   "human",
+   "dog",
+   "cat",
+   "horse",
+   "pig",
+   "cattle",
+   "sheep",
+   "goat"
+  ],
+  "y": [
+   0.13720197930724254,
+   -0.04843398478473149,
+   0.009442187127822299,
+   0.013377926421404673,
+   -0.03303804821376721,
+   0.06291042815865511,
+   0.07488396736878267,
+   0.04696609161213583,
+   0.17274305555555558
+  ],
+  "se": [
+   0.07635587225514376,
+   0.010493885690963026,
+   0.019567832422402003,
+   0.02838079990000441,
+   0.03869417036830607,
+   0.08906172631666638,
+   0.023012862835444865,
+   0.04563068961373501,
+   0.04977066641427945
+  ],
+  "pooled": 0.03513812728681271,
+  "tau2_reml": 0.003523268913953161,
+  "tau": 0.059357130270534145,
+  "tau2_dersimonian_laird": 0.0036925020182932357,
+  "Q": 48.45866540871624,
+  "I2": 0.8349108475744146,
+  "se_random_effects": 0.023922148838821225,
+  "se_hksj": 0.02373889435917852,
+  "se_hksj_modified": 0.023922148838821225,
+  "ci95_hksj_modified": [
+   -0.02002644685847855,
+   0.09030270143210398
+  ],
+  "ci95_classic_random_effects": [
+   -0.011748422881086455,
+   0.08202467745471187
+  ],
+  "prediction_interval_95": [
+   -0.1161892919576398,
+   0.1864655465312652
+  ],
+  "t_crit_k_minus_1": 2.306004135204165,
+  "hksj_wider_than_classic_by": 1.0,
+  "excludes_zero_hksj": false,
+  "prediction_interval_excludes_zero": false
+ },
+ "readout_effect": {
+  "_what": "readout effect (8,192-bp mean-LL minus 1,001-bp single position)",
+  "_note": "SE proxied by the 8,192-bp AUROC interval half-width; the readout delta has no deposited per-species interval of its own. Treat tau2 and I2 here as indicative, and the pooled point estimate as the quantity of interest.",
+  "k": 9,
+  "species": [
+   "chicken",
+   "human",
+   "dog",
+   "cat",
+   "horse",
+   "pig",
+   "cattle",
+   "sheep",
+   "goat"
+  ],
+  "y": [
+   0.093,
+   0.149,
+   0.082,
+   0.043,
+   0.059,
+   0.015,
+   0.074,
+   0.06,
+   0.009
+  ],
+  "se": [
+   0.018573448214765732,
+   0.0028523435007363177,
+   0.008111694134660896,
+   0.025602700209637955,
+   0.021122165035425168,
+   0.052073092980212156,
+   0.007522506077705144,
+   0.019713614674400148,
+   0.022263458298854028
+  ],
+  "pooled": 0.07162632809558002,
+  "tau2_reml": 0.0015212831501843045,
+  "tau": 0.03900362996163696,
+  "tau2_dersimonian_laird": 0.002715212265830308,
+  "Q": 208.2713009103106,
+  "I2": 0.9615885627782913,
+  "se_random_effects": 0.014622589458785489,
+  "se_hksj": 0.01412127135306752,
+  "se_hksj_modified": 0.014622589458785489,
+  "ci95_hksj_modified": [
+   0.03790657633622785,
+   0.10534607985493219
+  ],
+  "ci95_classic_random_effects": [
+   0.04296657938891982,
+   0.10028607680224022
+  ],
+  "prediction_interval_95": [
+   -0.02687108032507804,
+   0.17012373651623808
+  ],
+  "t_crit_k_minus_1": 2.306004135204165,
+  "hksj_wider_than_classic_by": 1.0,
+  "excludes_zero_hksj": true,
+  "prediction_interval_excludes_zero": false
+ }
+}

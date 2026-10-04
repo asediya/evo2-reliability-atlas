@@ -1,0 +1,404 @@
+{
+ "_what": "old-to-new citation map between the pre-renumber draft reference list and the submitted manuscript list. reports/supplementary_prose.md and reports/supplementary_tables.md are pre-renumber SOURCES and cite the OLD numbers; Additional file 1 as submitted is renumbered and cites the NEW ones. Resolve any marker in those two files through this map before reading it against the manuscript's reference list.",
+ "_n_old": 144,
+ "_n_new": 87,
+ "_n_supplement_only": 12,
+ "map": {
+  "1": {
+   "new": 12,
+   "reference": "Nguyen E, Poli M, Durrant MG, Kang B, Katrekar D, Li DB, et al. Sequence modeling and design from molecular to genome scale with Evo. Science. 2024;386(6723):eado9336. doi:10.1126/science.ado9336."
+  },
+  "3": {
+   "new": 13,
+   "reference": "Benegas G, Batra SS, Song YS. DNA language models are powerful predictors of genome-wide variant effects. Proc Natl Acad Sci U S A. 2023;120(44):e2311219120. doi:10.1073/pnas.2311219120."
+  },
+  "5": {
+   "new": 14,
+   "reference": "Brixi G, Durrant MG, Ku J, Naghipourfar M, Poli M, Sun G, et al. Genome modelling and design across all domains of life with Evo 2. Nature. 2026;652(8112):1349-1361. doi:10.1038/s41586-026-10176-5."
+  },
+  "8": {
+   "new": 21,
+   "reference": "Georges M, Charlier C, Hayes B. Harnessing genomic information for livestock improvement. Nat Rev Genet. 2019;20(3):135-156. doi:10.1038/s41576-018-0082-2."
+  },
+  "10": {
+   "new": 22,
+   "reference": "Hu ZL, Park CA, Reecy JM. Bringing the Animal QTLdb and CorrDB into the future: meeting new challenges and providing updated services. Nucleic Acids Res. 2022;50(D1):D956-D961. doi:10.1093/nar/gkab1116."
+  },
+  "14": {
+   "new": 1,
+   "reference": "Kumar P, Henikoff S, Ng PC. Predicting the effects of coding non-synonymous variants on protein function using the SIFT algorithm. Nat Protoc. 2009;4(7):1073-1081. doi:10.1038/nprot.2009.86."
+  },
+  "15": {
+   "new": 2,
+   "reference": "Adzhubei IA, Schmidt S, Peshkin L, Ramensky VE, Gerasimova A, Bork P, et al. A method and server for predicting damaging missense mutations. Nat Methods. 2010;7(4):248-249. doi:10.1038/nmeth0410-248."
+  },
+  "16": {
+   "new": 3,
+   "reference": "Jaganathan K, Kyriazopoulou Panagiotopoulou S, McRae JF, Darbandi SF, Knowles D, Li YI, et al. Predicting Splicing from Primary Sequence with Deep Learning. Cell. 2019;176(3):535-548.e24. doi:10.1016/j.cell.2018.12.015."
+  },
+  "19": {
+   "new": 4,
+   "reference": "Livesey BJ, Marsh JA. Using deep mutational scanning to benchmark variant effect predictors and identify disease mutations. Mol Syst Biol. 2020;16(7):e9380. doi:10.15252/msb.20199380."
+  },
+  "26": {
+   "new": 16,
+   "reference": "Siepel A, Bejerano G, Pedersen JS, Hinrichs AS, Hou M, Rosenbloom K, et al. Evolutionarily conserved elements in vertebrate, insect, worm, and yeast genomes. Genome Res. 2005;15(8):1034-1050. doi:10.1101/gr.3715005."
+  },
+  "27": {
+   "new": 17,
+   "reference": "Karczewski KJ, Francioli LC, Tiao G, Cummings BB, Alföldi J, Wang Q, et al. The mutational constraint spectrum quantified from variation in 141,456 humans. Nature. 2020;581(7809):434-443. doi:10.1038/s41586-020-2308-7."
+  },
+  "28": {
+   "new": 18,
+   "reference": "Liu X, Li C, Mou C, Dong Y, Tu Y. dbNSFP v4: a comprehensive database of transcript-specific functional predictions and annotations for human nonsynonymous and splice-site SNVs. Genome Med. 2020;12(1):103. doi:10.1186/s13073-020-00803-9."
+  },
+  "29": {
+   "new": 23,
+   "reference": "Giuffra E, Tuggle CK, FAANG Consortium. Functional Annotation of Animal Genomes (FAANG): Current Achievements and Roadmap. Annu Rev Anim Biosci. 2019;7:65-88. doi:10.1146/annurev-animal-020518-114913."
+  },
+  "31": {
+   "new": 15,
+   "reference": "Benegas G, Albors C, Aw AJ, Ye C, Song YS. A DNA language model based on multispecies alignment predicts the effects of genome-wide variants. Nat Biotechnol. 2025;43(12):1960-1965. doi:10.1038/s41587-024-02511-w."
+  },
+  "33": {
+   "new": 28,
+   "reference": "Cooper GM, Stone EA, Asimenos G, NISC Comparative Sequencing Program, Green ED, Batzoglou S, et al. Distribution and intensity of constraint in mammalian genomic sequence. Genome Res. 2005;15(7):901-913. doi:10.1101/gr.3577405."
+  },
+  "34": {
+   "new": 29,
+   "reference": "Davydov EV, Goode DL, Sirota M, Cooper GM, Sidow A, Batzoglou S. Identifying a High Fraction of the Human Genome to be under Selective Constraint Using GERP++. PLoS Comput Biol. 2010;6(12):e1001025. doi:10.1371/journal.pcbi.1001025."
+  },
+  "35": {
+   "new": 19,
+   "reference": "Armstrong J, Hickey G, Diekhans M, Fiddes IT, Novak AM, Deran A, et al. Progressive Cactus is a multiple-genome aligner for the thousand-genome era. Nature. 2020;587(7833):246-251. doi:10.1038/s41586-020-2871-y."
+  },
+  "38": {
+   "new": 8,
+   "reference": "Radivojac P, Clark WT, Oron TR, Schnoes AM, Wittkop T, Sokolov A, et al. A large-scale evaluation of computational protein function prediction. Nat Methods. 2013;10(3):221-227. doi:10.1038/nmeth.2340."
+  },
+  "39": {
+   "new": 9,
+   "reference": "Jiang Y, Oron TR, Clark WT, Bankapur AR, D'Andrea D, Lepore R, et al. An expanded evaluation of protein function prediction methods shows an improvement in accuracy. Genome Biol. 2016;17(1):184. doi:10.1186/s13059-016-1037-6."
+  },
+  "42": {
+   "new": 6,
+   "reference": "Pejaver V, Byrne AB, Feng BJ, Pagel KA, Mooney SD, Karchin R, et al. Calibration of computational tools for missense variant pathogenicity classification and ClinGen recommendations for PP3/BP4 criteria. Am J Hum Genet. 2022;109(12):2163-2177. doi:10.1016/j.ajhg.2022.10.013."
+  },
+  "43": {
+   "new": 7,
+   "reference": "Richards S, Aziz N, Bale S, Bick D, Das S, Gastier-Foster J, et al. Standards and guidelines for the interpretation of sequence variants: a joint consensus recommendation of the American College of Medical Genetics and Genomics and the Association for Molecular Pathology. Genet Med. 2015;17(5):405-424. doi:10.1038/gim.2015.30."
+  },
+  "45": {
+   "new": 20,
+   "reference": "Jiang J, Tiezzi F, Maltecca C. Cross-species functional variant classification using the Evo 2 genomic language model: implications for farm animal genetics and breeding. Research Square [Preprint]. 2025. doi:10.21203/rs.3.rs-7579108/v1."
+  },
+  "46": {
+   "new": 82,
+   "reference": "Fannjiang C, Bates S, Angelopoulos AN, Listgarten J, Jordan MI. Conformal prediction under feedback covariate shift for biomolecular design. Proc Natl Acad Sci U S A. 2022;119(43). doi:10.1073/pnas.2204569119."
+  },
+  "48": {
+   "new": 68,
+   "reference": "Chow CK. On optimum recognition error and reject tradeoff. IEEE Trans Inf Theory. 1970;16(1):41-46. doi:10.1109/tit.1970.1054406."
+  },
+  "49": {
+   "new": 11,
+   "reference": "El-Yaniv R, Wiener Y. On the foundations of noise-free selective classification. J Mach Learn Res. 2010;11:1605-1641."
+  },
+  "51": {
+   "new": 24,
+   "reference": "Esposito D, Weile J, Shendure J, Starita LM, Papenfuss AT, Roth FP, et al. MaveDB: an open-source platform to distribute and interpret data from multiplexed assays of variant effect. Genome Biol. 2019;20(1):223. doi:10.1186/s13059-019-1845-6."
+  },
+  "55": {
+   "new": 25,
+   "reference": "Findlay GM, Daza RM, Martin B, Zhang MD, Leith AP, Gasperini M, et al. Accurate classification of *BRCA1* variants with saturation genome editing. Nature. 2018;562(7726):217-222. doi:10.1038/s41586-018-0461-z."
+  },
+  "56": {
+   "new": 26,
+   "reference": "Tammen I, Mather M, Leeb T, Nicholas FW. Online Mendelian Inheritance in Animals (OMIA): a genetic resource for vertebrate animals. Mamm Genome. 2024;35(4):556-564. doi:10.1007/s00335-024-10059-y."
+  },
+  "57": {
+   "new": 27,
+   "reference": "Landrum MJ, Lee JM, Benson M, Brown GR, Chao C, Chitipiralla S, et al. ClinVar: improving access to variant interpretations and supporting evidence. Nucleic Acids Res. 2018;46(D1):D1062-D1067. doi:10.1093/nar/gkx1153."
+  },
+  "58": {
+   "new": 74,
+   "reference": "Meier J, Rao R, Verkuil R, Liu J, Sercu T, Rives A. Language models enable zero-shot prediction of the effects of mutations on protein function. In: Advances in Neural Information Processing Systems 34 (NeurIPS 2021). 2021. p. 29287-29303. Preprint version: doi:10.1101/2021.07.09.450648."
+  },
+  "59": {
+   "new": 70,
+   "reference": "Zhao R, Owen R, Marr M, Jayaraman S, Chue Hong N, Talenti A, et al. The potential of regulatory variant prediction AI models to improve cattle traits. bioRxiv [Preprint]. 2024. doi:10.1101/2024.08.01.606140."
+  },
+  "60": {
+   "new": 69,
+   "reference": "Mantel N, Haenszel W. Statistical aspects of the analysis of data from retrospective studies of disease. J Natl Cancer Inst. 1959;22(4):719-748. doi:10.1093/jnci/22.4.719."
+  },
+  "61": {
+   "new": 72,
+   "reference": "Lin Z, Akin H, Rao R, Hie B, Zhu Z, Lu W, et al. Evolutionary-scale prediction of atomic-level protein structure with a language model. Science. 2023;379(6637):1123-1130. doi:10.1126/science.ade2574."
+  },
+  "62": {
+   "new": 30,
+   "reference": "Teng J, Gao Y, Yin H, Bai Z, Liu S, Zeng H, et al. A compendium of genetic regulatory effects across pig tissues. Nat Genet. 2024;56(1):112-123. doi:10.1038/s41588-023-01585-7."
+  },
+  "63": {
+   "new": 31,
+   "reference": "Cui R, Elzur RA, Kanai M, Ulirsch JC, Weissbrod O, Daly MJ, et al. Improving fine-mapping by modeling infinitesimal effects. Nat Genet. 2024;56(1):162-169. doi:10.1038/s41588-023-01597-3."
+  },
+  "64": {
+   "new": 32,
+   "reference": "Dalla-Torre H, Gonzalez L, Mendoza-Revilla J, Lopez Carranza N, Grzywaczewski AH, Oteri F, et al. Nucleotide Transformer: building and evaluating robust foundation models for human genomics. Nat Methods. 2025;22(2):287-297. doi:10.1038/s41592-024-02523-z."
+  },
+  "65": {
+   "new": 36,
+   "reference": "Avsec Ž, Agarwal V, Visentin D, Ledsam JR, Grabska-Barwinska A, Taylor KR, et al. Effective gene expression prediction from sequence by integrating long-range interactions. Nat Methods. 2021;18(10):1196-1203. doi:10.1038/s41592-021-01252-x."
+  },
+  "66": {
+   "new": 37,
+   "reference": "Linder J, Srivastava D, Yuan H, Agarwal V, Kelley DR. Predicting RNA-seq coverage from DNA sequence as a unifying model of gene regulation. Nat Genet. 2025;57(4):949-961. doi:10.1038/s41588-024-02053-6."
+  },
+  "67": {
+   "new": 38,
+   "reference": "Avsec Ž, Latysheva N, Cheng J, Novati G, Taylor KR, Ward T, et al. Advancing regulatory variant effect prediction with AlphaGenome. Nature. 2026;649(8099):1206-1218. doi:10.1038/s41586-025-10014-0."
+  },
+  "68": {
+   "new": 80,
+   "reference": "Vovk V, Gammerman A, Shafer G. Algorithmic learning in a random world. New York: Springer; 2005. doi:10.1007/b106715."
+  },
+  "69": {
+   "new": 39,
+   "reference": "Zhou J, Troyanskaya OG. Predicting effects of noncoding variants with deep learning–based sequence model. Nat Methods. 2015;12(10):931-934. doi:10.1038/nmeth.3547."
+  },
+  "73": {
+   "new": 59,
+   "reference": "Rentzsch P, Witten D, Cooper GM, Shendure J, Kircher M. CADD: predicting the deleteriousness of variants throughout the human genome. Nucleic Acids Res. 2019;47(D1):D886-D894. doi:10.1093/nar/gky1016."
+  },
+  "75": {
+   "new": 75,
+   "reference": "Zadrozny B, Elkan C. Transforming classifier scores into accurate multiclass probability estimates. In: Proceedings of the Eighth ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD '02). New York: ACM; 2002. p. 694-699. doi:10.1145/775047.775151."
+  },
+  "76": {
+   "new": 76,
+   "reference": "Kull M, Silva Filho TM, Flach P. Beta calibration: a well-founded and easily implemented improvement on logistic calibration for binary classifiers. In: Proceedings of the 20th International Conference on Artificial Intelligence and Statistics (AISTATS). Proc Mach Learn Res. 2017;54:623-631."
+  },
+  "77": {
+   "new": 77,
+   "reference": "Platt JC. Probabilistic outputs for support vector machines and comparisons to regularized likelihood methods. In: Smola AJ, Bartlett P, Scholkopf B, Schuurmans D, editors. Advances in Large Margin Classifiers. Cambridge (MA): MIT Press; 1999. p. 61-74."
+  },
+  "80": {
+   "new": 64,
+   "reference": "Eyre-Walker A, Keightley PD. The distribution of fitness effects of new mutations. Nat Rev Genet. 2007;8(8):610-618. doi:10.1038/nrg2146."
+  },
+  "82": {
+   "new": 65,
+   "reference": "Exome Aggregation Consortium, Lek M, Karczewski KJ, Minikel EV, Samocha KE, Banks E, et al. Analysis of protein-coding genetic variation in 60,706 humans. Nature. 2016;536(7616):285-291. doi:10.1038/nature19057."
+  },
+  "83": {
+   "new": 88,
+   "reference": "Ellegren H. Comparative genomics and the study of evolution by natural selection. Mol Ecol. 2008;17(21):4586-4596. doi:10.1111/j.1365-294X.2008.03954.x."
+  },
+  "84": {
+   "new": 89,
+   "reference": "Keightley PD, Eyre-Walker A. Joint Inference of the Distribution of Fitness Effects of Deleterious Mutations and Population Demography Based on Nucleotide Polymorphism Frequencies. Genetics. 2007;177(4):2251-2261. doi:10.1534/genetics.107.080663."
+  },
+  "85": {
+   "new": 90,
+   "reference": "Ohta T. Role of random genetic drift in the evolution of interactive systems. J Mol Evol. 1997;44(Suppl 1):S9-S14. doi:10.1007/pl00000054."
+  },
+  "86": {
+   "new": 60,
+   "reference": "Ioannidis NM, Rothstein JH, Pejaver V, Middha S, McDonnell SK, Baheti S, et al. REVEL: an ensemble method for predicting the pathogenicity of rare missense variants. Am J Hum Genet. 2016;99(4):877-885. doi:10.1016/j.ajhg.2016.08.016."
+  },
+  "87": {
+   "new": 61,
+   "reference": "Cheng J, Novati G, Pan J, Bycroft C, Zemgulyte A, Applebaum T, et al. Accurate proteome-wide missense variant effect prediction with AlphaMissense. Science. 2023;381(6664):eadg7492. doi:10.1126/science.adg7492."
+  },
+  "88": {
+   "new": 5,
+   "reference": "Grimm DG, Azencott C, Aicheler F, Gieraths U, MacArthur DG, Samocha KE, et al. The Evaluation of Tools Used to Predict the Impact of Missense Variants Is Hindered by Two Types of Circularity. Hum Mutat. 2015;36(5):513-523. doi:10.1002/humu.22768."
+  },
+  "89": {
+   "new": 73,
+   "reference": "Notin P, Kollasch AW, Ritter D, van Niekerk L, Paul S, Spinner H, et al. ProteinGym: large-scale benchmarks for protein fitness prediction and design. Adv Neural Inf Process Syst. 2023;36:64331-64379."
+  },
+  "90": {
+   "new": 33,
+   "reference": "Tang Z, Somia N, Yu Y, Koo PK. Evaluating the representational power of pre-trained DNA language models for regulatory genomics. Genome Biol. 2025;26(1):203. doi:10.1186/s13059-025-03674-8."
+  },
+  "92": {
+   "new": 91,
+   "reference": "Karollus A, Mauermeier T, Gagneur J. Current sequence-based models capture gene expression determinants in promoters but mostly ignore distal enhancers. Genome Biol. 2023;24(1). doi:10.1186/s13059-023-02899-9."
+  },
+  "93": {
+   "new": 92,
+   "reference": "Feng H, Wu L, Zhao B, Huff C, Zhang J, Wu J, et al. Benchmarking DNA foundation models for genomic and genetic tasks. Nat Commun. 2025;16(1). doi:10.1038/s41467-025-65823-8."
+  },
+  "94": {
+   "new": 93,
+   "reference": "Jiang S, Liu X, Wang ZJ. Evaluating DNA Function Understanding in Genomic Language Models Using Evolutionarily Implausible Sequences. ACS Synth Biol. 2026;15(6):2256-2263. doi:10.1021/acssynbio.6c00024."
+  },
+  "95": {
+   "new": 94,
+   "reference": "Tzanakakis A, Mouratidis I, Georgakopoulos-Soares I. Fundamental limitations of genomic language models for realistic sequence generation. bioRxiv [Preprint]. 2026. doi:10.64898/2026.01.17.700093."
+  },
+  "96": {
+   "new": 34,
+   "reference": "Benegas G, Ye C, Albors C, Li JC, Song YS. Genomic language models: opportunities and challenges. Trends Genet. 2025;41(4):286-302. doi:10.1016/j.tig.2024.11.013."
+  },
+  "97": {
+   "new": 95,
+   "reference": "Veiner M, Supek F. The DNA dialect: a comprehensive guide to pretrained genomic language models. Mol Syst Biol. 2026;22(3):309-332. doi:10.1038/s44320-025-00184-4."
+  },
+  "98": {
+   "new": 96,
+   "reference": "Sanabria M, Hirsch J, Poetsch AR. Distinguishing word identity and sequence context in DNA language models. BMC Bioinformatics. 2024;25(1). doi:10.1186/s12859-024-05869-5."
+  },
+  "99": {
+   "new": 97,
+   "reference": "Mclaughlin SM, Lim DA. Probing genomic language models: Nucleotide Generative Pretrained Transformer and the role of pretraining in learned representations. Brief Bioinform. 2026;27(1):bbag011. doi:10.1093/bib/bbag011."
+  },
+  "100": {
+   "new": 98,
+   "reference": "You N, Liu C, Lin H, Wu S, Chen G, Shen N. Benchmarking pre-trained genomic language models for RNA sequence-related predictive applications. Nat Commun. 2025;17(1):223. doi:10.1038/s41467-025-66899-y."
+  },
+  "101": {
+   "new": 35,
+   "reference": "Rothammer S, Seichter D, Förster M, Medugorac I. A genome-wide scan for signatures of differential artificial selection in ten cattle breeds. BMC Genomics. 2013;14:908. doi:10.1186/1471-2164-14-908."
+  },
+  "104": {
+   "new": 78,
+   "reference": "Elkan C. The foundations of cost-sensitive learning. In: Proceedings of the Seventeenth International Joint Conference on Artificial Intelligence (IJCAI'01). San Francisco (CA): Morgan Kaufmann; 2001. p. 973-978."
+  },
+  "110": {
+   "new": 67,
+   "reference": "Poli M, Massaroli S, Nguyen E, Fu DY, Dao T, Baccus S, et al. Hyena Hierarchy: towards larger convolutional language models. In: Proceedings of the 40th International Conference on Machine Learning (ICML). Proc Mach Learn Res. 2023;202:28043-28078. Preprint version: doi:10.48550/arXiv.2302.10866."
+  },
+  "111": {
+   "new": 40,
+   "reference": "Martin FJ, Amode MR, Aneja A, Austine-Orimoloye O, Azov AG, Barnes I, et al. Ensembl 2023. Nucleic Acids Res. 2023;51(D1):D933-D941. doi:10.1093/nar/gkac958."
+  },
+  "112": {
+   "new": 41,
+   "reference": "Rosen BD, Bickhart DM, Schnabel RD, Koren S, Elsik CG, Tseng E, et al. De novo assembly of the cattle reference genome with single-molecule sequencing. GigaScience. 2020;9(3):giaa021. doi:10.1093/gigascience/giaa021."
+  },
+  "113": {
+   "new": 42,
+   "reference": "Warr A, Affara N, Aken B, Beiki H, Bickhart DM, Billis K, et al. An improved pig reference genome sequence to enable pig genetics and genomics research. GigaScience. 2020;9(6):giaa051. doi:10.1093/gigascience/giaa051."
+  },
+  "114": {
+   "new": 43,
+   "reference": "Davenport KM, Bickhart DM, Worley K, Murali SC, Salavati M, Clark EL, et al. An improved ovine reference genome assembly to facilitate in-depth functional annotation of the sheep genome. GigaScience. 2022;11:giab096. doi:10.1093/gigascience/giab096."
+  },
+  "115": {
+   "new": 44,
+   "reference": "Bickhart DM, Rosen BD, Koren S, Sayre BL, Hastie AR, Chan S, et al. Single-molecule sequencing and chromatin conformation capture enable de novo reference assembly of the domestic goat genome. Nat Genet. 2017;49(4):643-650. doi:10.1038/ng.3802."
+  },
+  "116": {
+   "new": 45,
+   "reference": "Kalbfleisch TS, Rice ES, DePriest MS, Walenz BP, Hestand MS, Vermeesch JR, et al. Improved reference genome for the domestic horse increases assembly contiguity and composition. Commun Biol. 2018;1:197. doi:10.1038/s42003-018-0199-z."
+  },
+  "117": {
+   "new": 46,
+   "reference": "Buckley RM, Davis BW, Brashear WA, Farias FHG, Kuroki K, Graves T, et al. A new domestic cat genome assembly based on long sequence reads empowers feline genomic medicine and identifies a novel gene for dwarfism. PLoS Genet. 2020;16(10):e1008926. doi:10.1371/journal.pgen.1008926."
+  },
+  "118": {
+   "new": 47,
+   "reference": "International Chicken Genome Sequencing Consortium. Sequence and comparative analysis of the chicken genome provide unique perspectives on vertebrate evolution. Nature. 2004;432(7018):695-716. doi:10.1038/nature03154."
+  },
+  "119": {
+   "new": 48,
+   "reference": "Lindblad-Toh K, Wade CM, Mikkelsen TS, Karlsson EK, Jaffe DB, Kamal M, et al. Genome sequence, comparative analysis and haplotype structure of the domestic dog. Nature. 2005;438(7069):803-819. doi:10.1038/nature04338."
+  },
+  "120": {
+   "new": 99,
+   "reference": "Hoeppner MP, Lundquist A, Pirun M, Meadows JRS, Zamani N, Johnson J, et al. An improved canine genome and a comprehensive catalogue of coding genes and non-coding transcripts. PLoS ONE. 2014;9(3):e91172. doi:10.1371/journal.pone.0091172."
+  },
+  "121": {
+   "new": 49,
+   "reference": "Wang G, Sarkar A, Carbonetto P, Stephens M. A Simple New Approach to Variable Selection in Regression, with Application to Genetic Fine Mapping. J R Stat Soc Series B Stat Methodol. 2020;82(5):1273-1300. doi:10.1111/rssb.12388."
+  },
+  "122": {
+   "new": 50,
+   "reference": "Zou Y, Carbonetto P, Wang G, Stephens M. Fine-mapping from summary data with the \"Sum of Single Effects\" model. PLoS Genet. 2022;18(7):e1010299. doi:10.1371/journal.pgen.1010299."
+  },
+  "123": {
+   "new": 62,
+   "reference": "Chang CC, Chow CC, Tellier LC, Vattikuti S, Purcell SM, Lee JJ. Second-generation PLINK: rising to the challenge of larger and richer datasets. GigaScience. 2015;4:7. doi:10.1186/s13742-015-0047-8."
+  },
+  "124": {
+   "new": 63,
+   "reference": "Daetwyler HD, Capitan A, Pausch H, Stothard P, van Binsbergen R, Brondum RF, et al. Whole-genome sequencing of 234 bulls facilitates mapping of monogenic and complex traits in cattle. Nat Genet. 2014;46(8):858-865. doi:10.1038/ng.3034."
+  },
+  "125": {
+   "new": 66,
+   "reference": "Lindblad-Toh K, Garber M, Zuk O, Lin MF, Parker BJ, Washietl S, et al. A high-resolution map of human evolutionary constraint using 29 mammals. Nature. 2011;478(7370):476-482. doi:10.1038/nature10530."
+  },
+  "126": {
+   "new": 84,
+   "reference": "DeLong ER, DeLong DM, Clarke-Pearson DL. Comparing the areas under two or more correlated receiver operating characteristic curves: a nonparametric approach. Biometrics. 1988;44(3):837-845. doi:10.2307/2531595."
+  },
+  "127": {
+   "new": 85,
+   "reference": "Sun X, Xu W. Fast implementation of DeLong's algorithm for comparing the areas under correlated receiver operating characteristic curves. IEEE Signal Process Lett. 2014;21(11):1389-1393. doi:10.1109/LSP.2014.2337313."
+  },
+  "128": {
+   "new": 71,
+   "reference": "Pollard KS, Hubisz MJ, Rosenbloom KR, Siepel A. Detection of nonneutral substitution rates on mammalian phylogenies. Genome Res. 2010;20(1):110-121. doi:10.1101/gr.097857.109."
+  },
+  "129": {
+   "new": 79,
+   "reference": "Saerens M, Latinne P, Decaestecker C. Adjusting the outputs of a classifier to new a priori probabilities: a simple procedure. Neural Comput. 2002;14(1):21-41. doi:10.1162/089976602753284446."
+  },
+  "131": {
+   "new": 81,
+   "reference": "Angelopoulos AN, Bates S. Conformal Prediction: A Gentle Introduction. Found Trends Mach Learn. 2023;16(4):494-591. doi:10.1561/2200000101."
+  },
+  "132": {
+   "new": 83,
+   "reference": "Benjamini Y, Hochberg Y. Controlling the false discovery rate: a practical and powerful approach to multiple testing. J R Stat Soc Series B Stat Methodol. 1995;57(1):289-300. doi:10.1111/j.2517-6161.1995.tb02031.x."
+  },
+  "133": {
+   "new": 86,
+   "reference": "Pedregosa F, Varoquaux G, Gramfort A, Michel V, Thirion B, Grisel O, et al. Scikit-learn: Machine Learning in Python. J Mach Learn Res. 2011;12:2825-2830."
+  },
+  "134": {
+   "new": 87,
+   "reference": "Cingolani P, Platts A, Wang LL, Coon M, Nguyen T, Wang L, et al. A program for annotating and predicting the effects of single nucleotide polymorphisms, SnpEff: SNPs in the genome of *Drosophila melanogaster* strain w1118; iso-2; iso-3. Fly. 2012;6(2):80-92. doi:10.4161/fly.19695."
+  },
+  "135": {
+   "new": 10,
+   "reference": "Smith C, Kitzman JO. Benchmarking splice variant prediction algorithms using massively parallel splicing assays. Genome Biol. 2023;24(1):294. doi:10.1186/s13059-023-03144-z."
+  },
+  "137": {
+   "new": 52,
+   "reference": "Zeng T, Li YI. Predicting RNA splicing from DNA sequence using Pangolin. Genome Biol. 2022;23(1):103. doi:10.1186/s13059-022-02664-4."
+  },
+  "138": {
+   "new": 53,
+   "reference": "Danis D, Jacobsen JOB, Carmody LC, Gargano MA, McMurry JA, Hegde A, et al. Interpretable prioritization of splice variants in diagnostic next-generation sequencing. Am J Hum Genet. 2021;108(9):1564-1577. doi:10.1016/j.ajhg.2021.06.014."
+  },
+  "139": {
+   "new": 54,
+   "reference": "Xiong HY, Alipanahi B, Lee LJ, Bretschneider H, Merico D, Yuen RKC, et al. The human splicing code reveals new insights into the genetic determinants of disease. Science. 2015;347(6218):1254806. doi:10.1126/science.1254806."
+  },
+  "140": {
+   "new": 55,
+   "reference": "Rosenberg AB, Patwardhan RP, Shendure J, Seelig G. Learning the sequence determinants of alternative splicing from millions of random sequences. Cell. 2015;163(3):698-711. doi:10.1016/j.cell.2015.09.054."
+  },
+  "141": {
+   "new": 56,
+   "reference": "Cheng J, Nguyen TYD, Cygan KJ, Celik MH, Fairbrother WG, Avsec Z, Gagneur J. MMSplice: modular modeling improves the predictions of genetic variant effects on splicing. Genome Biol. 2019;20(1):48. doi:10.1186/s13059-019-1653-z."
+  },
+  "142": {
+   "new": 57,
+   "reference": "Jagadeesh KA, Paggi JM, Ye JS, Stenson PD, Cooper DN, Bernstein JA, Bejerano G. S-CAP extends pathogenicity prediction to genetic variants that affect RNA splicing. Nat Genet. 2019;51(4):755-763. doi:10.1038/s41588-019-0348-4."
+  },
+  "143": {
+   "new": 58,
+   "reference": "Cormier MJ, Pedersen BS, Bayrak-Toydemir P, Quinlan AR. Combining genetic constraint with predictions of alternative splicing to prioritize deleterious splicing in rare disease studies. BMC Bioinformatics. 2022;23(1):482. doi:10.1186/s12859-022-05041-x."
+  },
+  "144": {
+   "new": 51,
+   "reference": "Benegas G, Eraslan G, Song YS. Benchmarking DNA sequence models for causal regulatory variant prediction in human genetics. bioRxiv. 2025:2025.02.11.637758. doi:10.1101/2025.02.11.637758."
+  }
+ }
+}

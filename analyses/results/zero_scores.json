@@ -1,0 +1,66 @@
+{
+ "_generated_by": "analyses/scripts/zero_score_tally.py",
+ "_readout": "1,001-bp single-position variant delta, Evo 2-40B, nine-species atlas",
+ "_why": "An exactly-zero delta means no expressed preference. Two causes: an identical ref/alt window (the assembly carries the alternate allele) or a numerical tie in reduced-precision inference. Separating them matters because a whole panel of zeros is instead the signature of a var_off fault.",
+ "n": 11130,
+ "n_zero": 13,
+ "n_zero_identical_window": 1,
+ "n_zero_numerical_tie": 12,
+ "pct_zero": 0.1168,
+ "per_species": {
+  "goat": {
+   "n": 99,
+   "n_zero": 0,
+   "n_zero_identical_window": 0,
+   "n_zero_numerical_tie": 0
+  },
+  "chicken": {
+   "n": 308,
+   "n_zero": 0,
+   "n_zero_identical_window": 0,
+   "n_zero_numerical_tie": 0
+  },
+  "pig": {
+   "n": 396,
+   "n_zero": 0,
+   "n_zero_identical_window": 0,
+   "n_zero_numerical_tie": 0
+  },
+  "sheep": {
+   "n": 616,
+   "n_zero": 1,
+   "n_zero_identical_window": 0,
+   "n_zero_numerical_tie": 1
+  },
+  "horse": {
+   "n": 781,
+   "n_zero": 1,
+   "n_zero_identical_window": 0,
+   "n_zero_numerical_tie": 1
+  },
+  "cat": {
+   "n": 1365,
+   "n_zero": 4,
+   "n_zero_identical_window": 1,
+   "n_zero_numerical_tie": 3
+  },
+  "cattle": {
+   "n": 2068,
+   "n_zero": 2,
+   "n_zero_identical_window": 0,
+   "n_zero_numerical_tie": 2
+  },
+  "dog": {
+   "n": 2497,
+   "n_zero": 1,
+   "n_zero_identical_window": 0,
+   "n_zero_numerical_tie": 1
+  },
+  "human": {
+   "n": 3000,
+   "n_zero": 4,
+   "n_zero_identical_window": 0,
+   "n_zero_numerical_tie": 4
+  }
+ }
+}

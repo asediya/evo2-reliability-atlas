@@ -1,0 +1,63 @@
+# Python 3.12.10
+# NOT DIRECTLY INSTALLABLE, and not meant to be: see the note at the foot of this file.
+# Generated from the imports of the tracked source. These versions RECORD the environment
+# that produced every published number; they are not a floor the analysis requires. A later run
+# reproduced the table and supplementary builders under Python 3.11.15 with numpy
+# 2.4.6 and pandas 2.3.3, so read the pins as provenance rather than as a constraint.
+# analyses/scripts/build_piggtex_maf.py and maf_stratified_auroc.py ran under Python 3.13.13 with numpy
+# 2.5.2, pandas 3.0.5, scipy 1.18.0 and pyarrow 25.0.1.
+# evo2 and vortex are intentionally absent: they are installed only on the GPU host that
+# performs scoring (see Methods and container/), not needed to reproduce the analysis from the cached
+# scores, and this file therefore specifies the ANALYSIS layer only.
+
+biopython==1.87
+duckdb==1.5.4
+freesasa==2.2.1
+joblib==1.5.3
+matplotlib==3.11.1
+numpy==2.5.1
+pandas==3.0.3
+pillow==12.3.0
+polars==1.42.1
+pyarrow==24.0.0
+pybigtools==0.3.0
+pyfaidx==0.9.0.4
+python-docx==1.2.0
+# Imported by ten tracked files. Five spell it `import fitz` (check_figure_clearance.py,
+# figure_tiles.py, stage_figures.py, src/ccs/fig2_split.py, and src/ccs/style_main.py, which uses it
+# only for the page check it runs on each main figure it writes), four `import pymupdf`
+# (check_overlaps.py, inkunder.py, legendcheck.py, textcontrast.py), and tools/pdfcheck.py
+# carries it in a comma list, which is why a grep for "import fitz" alone undercounts.
+# check_figure_clearance.py, one of them, sits in run_all_gates.py's NEEDS_DATA list, not among the
+# four self-contained gates. Deliberately
+# unpinned: every other line here records the version that produced a published number, and
+# pymupdf serves only the figure-geometry checks.
+pymupdf
+requests==2.34.2
+scikit-learn==1.9.0
+scipy==1.18.0
+# torch carries a +cu124 local version served only by download.pytorch.org, so a bare
+# "pip install -r requirements.txt" cannot resolve it. It is recorded because tracked scoring code
+# imports it; the Evo 2 scores themselves come from the container in container/, whose PyTorch is
+# NVIDIA's 2.7.0a0 build. Nothing in the archive-reproducible tier imports it. To install it:
+#   pip install torch==2.6.0+cu124 --extra-index-url https://download.pytorch.org/whl/cu124
+torch==2.6.0+cu124
+transformers==4.44.2
+
+# Not pip-installable here / required only for specific arms:
+#   evo2, vortex        GPU scoring host only (see Methods); not needed to reproduce from cached scores
+#   pyBigWig            phyloP/GERP bigWig readers: query_gerp.py, query_phylop.py,
+#                       conservation_full.py and phylop_diag.py all import it.
+#                       The deposited conservation VALUES are cached, so no published number depends
+#                       on installing it; the phyloP cross-check uses pybigtools, pinned above.
+#   pyliftover          dog_liftover_panel.py
+#   fair-esm            score_esm_baseline.py, build_proteingym_grounding.py
+#   pymol               mol_pymol.py (structure rendering, not used for any published number)
+
+# `pip install -r requirements.txt` FAILS as written, and that is a
+# property of the file rather than an accident to work around: numpy==2.5.1 requires Python >= 3.12
+# while the reproduction quoted above ran under 3.11.15, and torch's +cu124 local version is
+# served only by download.pytorch.org. This file is a PROVENANCE RECORD of the environment that
+# produced the published numbers. To reproduce the analysis layer, install the packages without the
+# pins, or use the combination quoted above (Python 3.11.15, numpy 2.4.6, pandas 2.3.3), which is what
+# that reproduction actually used. torch is needed only on the GPU scoring host.

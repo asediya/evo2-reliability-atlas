@@ -1,0 +1,49 @@
+{
+ "_meta": {
+  "what": "minimum detectable AUROC at 80% power, two-sided alpha 0.05, Hanley-McNeil SE",
+  "why": "Referee gap analysis S1: the paper names underpowered cells after the fact and never stated what each design could detect.",
+  "note": "This is a retrospective MDE computed from the realised panel sizes; it is not a prospective power analysis, and the paper says so."
+ },
+ "panels": {
+  "eQTL panel (central negative)": {
+   "n_pos": 5000,
+   "n_neg": 15000,
+   "mde_auroc": 0.5133
+  },
+  "eQTL consequence-matched subpanel": {
+   "n_pos": 1000,
+   "n_neg": 1000,
+   "mde_auroc": 0.5361
+  },
+  "human ClinVar atlas panel": {
+   "n_pos": 1500,
+   "n_neg": 1500,
+   "mde_auroc": 0.5295
+  },
+  "regulatory consequence cell": {
+   "n_pos": 18,
+   "n_neg": 507,
+   "mde_auroc": 0.6966
+  },
+  "goat (smallest atlas panel)": {
+   "n_pos": 9,
+   "n_neg": 90,
+   "mde_auroc": 0.7669
+  },
+  "chicken": {
+   "n_pos": 28,
+   "n_neg": 280,
+   "mde_auroc": 0.6632
+  },
+  "pig": {
+   "n_pos": 36,
+   "n_neg": 360,
+   "mde_auroc": 0.6447
+  },
+  "cattle": {
+   "n_pos": 188,
+   "n_neg": 1880,
+   "mde_auroc": 0.5634
+  }
+ }
+}

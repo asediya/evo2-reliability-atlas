@@ -1,0 +1,24 @@
+{
+ "_meta": {
+  "what": "per-variant Evo 2-40B scores for the 20,000-variant pig cis-eQTL panel (5,000 fine-mapped causal, 15,000 within-eGene controls)",
+  "columns": {
+   "variant_id": "chrom_pos_ref_alt on Sscrofa11.1",
+   "gene_id": "the eGene the control is drawn within",
+   "pip": "SuSiE-inf posterior inclusion probability",
+   "label": "1 = causal (PIP >= 0.9), 0 = control (PIP <= 0.001)",
+   "evo2_40b_score": "1,001-bp single-position variant delta"
+  },
+  "orientation": "ASSERTED, NOT INFERRED. Use the column as deposited: roc_auc_score(label, evo2_40b_score) = 0.4875, the published 0.488. Negating it returns 0.5125, which is 1 minus the same number and would turn a null into a positive result. This arm is a null and must stay one.",
+  "readout": "1,001-bp single-position variant delta; this panel was never scored at 8,192 bp",
+  "published": {
+   "auroc": 0.4875,
+   "ci95": [
+    0.4782,
+    0.4967
+   ],
+   "n": 20000,
+   "n_egenes": 3160
+  },
+  "why_deposited": "This arm carries the paper's central negative result, and its per-variant scores let a reader check it."
+ }
+}

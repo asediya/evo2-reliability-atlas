@@ -1,0 +1,169 @@
+{
+  "_meta": {
+    "readout": "1001bp single-position",
+    "n_boot": 2000,
+    "must_answer_interval": "closed form (DeLong on must-answer placements)",
+    "matched_interval": "paired bootstrap (panels are below delong_above)",
+    "sign": "positive favours Evo 2"
+  },
+  "per_species": [
+    {
+      "species": "goat",
+      "n": 99,
+      "gerp_reach": 0.8080808080808081,
+      "delta_matched": 0.17274305555555558,
+      "delta_matched_ci": [
+        0.08159722222222232,
+        0.2725694444444443
+      ],
+      "delta_matched_excludes_zero": true,
+      "delta_must_answer": 0.25123456790123455,
+      "delta_must_answer_ci": [
+        0.16106610143342603,
+        0.34140303436904307
+      ],
+      "delta_must_answer_excludes_zero": true
+    },
+    {
+      "species": "chicken",
+      "n": 308,
+      "gerp_reach": 0.8896103896103896,
+      "delta_matched": 0.13720197930724254,
+      "delta_matched_ci": [
+        -0.009298620482830953,
+        0.283931249062828
+      ],
+      "delta_matched_excludes_zero": false,
+      "delta_must_answer": 0.16932397959183665,
+      "delta_must_answer_ci": [
+        0.03547858925861583,
+        0.3031693699250575
+      ],
+      "delta_must_answer_excludes_zero": true
+    },
+    {
+      "species": "pig",
+      "n": 396,
+      "gerp_reach": 0.42424242424242425,
+      "delta_matched": 0.06291042815865511,
+      "delta_matched_ci": [
+        -0.10717100078802211,
+        0.22458957184134487
+      ],
+      "delta_matched_excludes_zero": false,
+      "delta_must_answer": 0.2743827160493827,
+      "delta_must_answer_ci": [
+        0.16634806940286462,
+        0.38241736269590076
+      ],
+      "delta_must_answer_excludes_zero": true
+    },
+    {
+      "species": "sheep",
+      "n": 616,
+      "gerp_reach": 0.7321428571428571,
+      "delta_matched": 0.04696609161213583,
+      "delta_matched_ci": [
+        -0.04411362284354538,
+        0.13237507436049945
+      ],
+      "delta_matched_excludes_zero": false,
+      "delta_must_answer": 0.20725446428571426,
+      "delta_must_answer_ci": [
+        0.1297002475680942,
+        0.28480868100333434
+      ],
+      "delta_must_answer_excludes_zero": true
+    },
+    {
+      "species": "horse",
+      "n": 781,
+      "gerp_reach": 0.4852752880921895,
+      "delta_matched": -0.03303804821376721,
+      "delta_matched_ci": [
+        -0.11088561332171559,
+        0.04047221415432291
+      ],
+      "delta_matched_excludes_zero": false,
+      "delta_must_answer": 0.21049394961317192,
+      "delta_must_answer_ci": [
+        0.1474459671473347,
+        0.2735419320790091
+      ],
+      "delta_must_answer_excludes_zero": true
+    },
+    {
+      "species": "cat",
+      "n": 1365,
+      "gerp_reach": 0.7597069597069597,
+      "delta_matched": 0.013377926421404673,
+      "delta_matched_ci": [
+        -0.039988387216648186,
+        0.06974881549609802
+      ],
+      "delta_matched_excludes_zero": false,
+      "delta_must_answer": 0.10619032258064509,
+      "delta_must_answer_ci": [
+        0.05506040213987976,
+        0.15732024302141043
+      ],
+      "delta_must_answer_excludes_zero": true
+    },
+    {
+      "species": "cattle",
+      "n": 2068,
+      "gerp_reach": 0.9598646034816247,
+      "delta_matched": 0.07488396736878267,
+      "delta_matched_ci": [
+        0.03202763323032471,
+        0.12065184734604964
+      ],
+      "delta_matched_excludes_zero": true,
+      "delta_must_answer": 0.08936453146220036,
+      "delta_must_answer_ci": [
+        0.04586701290983944,
+        0.13286205001456128
+      ],
+      "delta_must_answer_excludes_zero": true
+    },
+    {
+      "species": "dog",
+      "n": 2497,
+      "gerp_reach": 0.9122947537044453,
+      "delta_matched": 0.009442187127822299,
+      "delta_matched_ci": [
+        -0.030411364156689775,
+        0.04662007626826634
+      ],
+      "delta_matched_excludes_zero": false,
+      "delta_must_answer": 0.06400861650720946,
+      "delta_must_answer_ci": [
+        0.02663604856942179,
+        0.10138118444499714
+      ],
+      "delta_must_answer_excludes_zero": true
+    },
+    {
+      "species": "human",
+      "n": 3000,
+      "gerp_reach": 0.96,
+      "delta_matched": -0.04843398478473149,
+      "delta_matched_ci": [
+        -0.06939560903270908,
+        -0.028225462064309172
+      ],
+      "delta_matched_excludes_zero": true,
+      "delta_must_answer": -0.01949555555555571,
+      "delta_must_answer_ci": [
+        -0.03989355264196792,
+        0.0009024415308565049
+      ],
+      "delta_must_answer_excludes_zero": false
+    }
+  ],
+  "summary": {
+    "evo2_ahead_matched": 2,
+    "evo2_ahead_must_answer": 8,
+    "n_species": 9
+  }
+}

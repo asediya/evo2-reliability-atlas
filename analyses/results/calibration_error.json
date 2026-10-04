@@ -1,0 +1,166 @@
+{
+ "_generated_by": "analyses/scripts/calibration_error.py",
+ "_citations": [
+  "arXiv:2012.08668",
+  "arXiv:1909.10155",
+  "arXiv:1902.06977",
+  "arXiv:1904.01685"
+ ],
+ "_why": "The supplement discloses that the ECE conclusion moves with the binning rule. That is published behaviour with a published fix. Reporting the spread as an identification issue, plus a debiased estimator with an interval, turns the most awkward note in the supplement into a contribution.",
+ "_estimands": "L1 ECE under six binning schemes, macro over species. Debiased L2 calibration error (Kumar 2019), macro over species. The two are different quantities and are not compared to each other.",
+ "arms": {
+  "isotonic_LOSO": {
+   "_what": "isotonic transfer, leave-one-species-out",
+   "l1_ece": {
+    "width_10": 0.05013726051295461,
+    "width_15": 0.05208857561457289,
+    "width_20": 0.05323052382795261,
+    "mass_10": 0.05464508343358473,
+    "mass_15": 0.055437217195697955,
+    "mass_20": 0.05634331949198315
+   },
+   "debiased_l2": {
+    "width_10": 0.004140058075280437,
+    "width_15": 0.004270733279867959,
+    "width_20": 0.00509599336287137,
+    "mass_10": 0.004684209186418976,
+    "mass_15": 0.004809169403677404,
+    "mass_20": 0.005038487064842251
+   },
+   "l1_spread_across_schemes": 0.006206058979028539,
+   "l1_min": 0.05013726051295461,
+   "l1_max": 0.05634331949198315,
+   "pooled_l1_ece_mass15": 0.05133546759799838,
+   "pooled_l1_ece_mass15_ci95": [
+    0.048203822827631596,
+    0.05698034146347766
+   ],
+   "pooled_debiased_l2": 0.004063451351028431,
+   "pooled_debiased_l2_ci95": [
+    0.003450397050611379,
+    0.005021980421615613
+   ],
+   "pooled_debiased_l2_negative": false,
+   "singleton_bins_dropped_from_correction": 0
+  },
+  "platt_LOSO": {
+   "_what": "Platt transfer, leave-one-species-out",
+   "l1_ece": {
+    "width_10": 0.05407033571882071,
+    "width_15": 0.05532569463272072,
+    "width_20": 0.05628173519058313,
+    "mass_10": 0.05449488332472133,
+    "mass_15": 0.06098094277686271,
+    "mass_20": 0.06428186138678477
+   },
+   "debiased_l2": {
+    "width_10": 0.006533223912284984,
+    "width_15": 0.0068782849187709275,
+    "width_20": 0.007279640250409788,
+    "mass_10": 0.005620011342707106,
+    "mass_15": 0.006842399768781569,
+    "mass_20": 0.0073030314548806425
+   },
+   "l1_spread_across_schemes": 0.010211525667964058,
+   "l1_min": 0.05407033571882071,
+   "l1_max": 0.06428186138678477,
+   "pooled_l1_ece_mass15": 0.056335353488493174,
+   "pooled_l1_ece_mass15_ci95": [
+    0.05222489799812874,
+    0.06148221312517137
+   ],
+   "pooled_debiased_l2": 0.004999785118299678,
+   "pooled_debiased_l2_ci95": [
+    0.004325717309513662,
+    0.006082525845665112
+   ],
+   "pooled_debiased_l2_negative": false,
+   "singleton_bins_dropped_from_correction": 0
+  },
+  "global_sigmoid": {
+   "_what": "a two-parameter sigmoid fitted once and used everywhere",
+   "l1_ece": {
+    "width_10": 0.050597195138844114,
+    "width_15": 0.05169612168866349,
+    "width_20": 0.05319346755207083,
+    "mass_10": 0.05145873724064639,
+    "mass_15": 0.057770168750672014,
+    "mass_20": 0.06089707284733619
+   },
+   "debiased_l2": {
+    "width_10": 0.005739194100011981,
+    "width_15": 0.006080889099114638,
+    "width_20": 0.006328524886631719,
+    "mass_10": 0.004732872024429208,
+    "mass_15": 0.005879384107163408,
+    "mass_20": 0.00636316939728039
+   },
+   "l1_spread_across_schemes": 0.010299877708492076,
+   "l1_min": 0.050597195138844114,
+   "l1_max": 0.06089707284733619,
+   "pooled_l1_ece_mass15": 0.04641516904452326,
+   "pooled_l1_ece_mass15_ci95": [
+    0.04127410503911011,
+    0.05122210753707738
+   ],
+   "pooled_debiased_l2": 0.0036744786379188533,
+   "pooled_debiased_l2_ci95": [
+    0.0030430496261014094,
+    0.004488998916432067
+   ],
+   "pooled_debiased_l2_negative": false,
+   "singleton_bins_dropped_from_correction": 0
+  },
+  "oracle_isotonic": {
+   "_what": "in-species oracle (unattainable bound)",
+   "l1_ece": {
+    "width_10": 0.016690191329946005,
+    "width_15": 0.0170971036686324,
+    "width_20": 0.019592940505580775,
+    "mass_10": 0.0218382694743215,
+    "mass_15": 0.02110999227473288,
+    "mass_20": 0.024207030786564165
+   },
+   "debiased_l2": {
+    "width_10": 0.0015051506025041757,
+    "width_15": 0.0014442057995468368,
+    "width_20": 0.0014963574694751578,
+    "mass_10": 0.0006590751430594977,
+    "mass_15": 0.0004812991093110571,
+    "mass_20": 0.0006667556541979195
+   },
+   "l1_spread_across_schemes": 0.007516839456618161,
+   "l1_min": 0.016690191329946005,
+   "l1_max": 0.024207030786564165,
+   "pooled_l1_ece_mass15": 0.008931877277928166,
+   "pooled_l1_ece_mass15_ci95": [
+    0.007212115345553988,
+    0.014344644804408894
+   ],
+   "pooled_debiased_l2": 9.719348808954495e-06,
+   "pooled_debiased_l2_ci95": [
+    -6.485680459843698e-06,
+    0.0002414303925718751
+   ],
+   "pooled_debiased_l2_negative": false,
+   "singleton_bins_dropped_from_correction": 0
+  }
+ },
+ "platt_transfer_is_the_trivial_sigmoid": {
+  "identical_in_every_deposited_binning_scheme": true,
+  "schemes_checked": [
+   "width10",
+   "width15",
+   "mass10",
+   "mass15"
+  ],
+  "_what_was_compared": "platt_LOSO against trivial_sigmoid_LOSO in reports/fig4_reconciliation.json ece_grid, macro, pooled and per species",
+  "_naming_hazard": "The per-variant table's `global_sigmoid` column is a POOLED fit, not the LOSO trivial sigmoid, and differs from the Platt arm on all 11,130 variants (max |diff| 0.099). The two must not be conflated."
+ },
+ "pooled_fit_sigmoid_is_a_different_estimator": {
+  "max_abs_difference_from_platt_LOSO": 0.09923832587250642,
+  "n_variants_differing": 11130,
+  "n_variants": 11130,
+  "_note": "Reported so nobody repeats the mistake of reading this column as the trivial sigmoid the manuscript's null refers to."
+ }
+}
