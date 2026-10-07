@@ -62,7 +62,7 @@ _SEP = "|---|---|---|---|---|"
 
 
 def main():
-    lines = ["# Decision-theoretic cost panel (calibration+abstention turns 'weak' into 'safe')", "",
+    lines = ["# Decision-theoretic cost panel (calibration and abstention against trivial policies)", "",
              f"Asymmetric costs: false-benign (miss a pathogenic) = {C_FN}, false-alarm = {C_FP}, abstain = {C_AB}, correct = 0. "
              "Calibrated probs are leave-one-species-out isotonic transfers (pooled across all 9 species). Lower expected "
              "cost is better.", "",

@@ -2,6 +2,8 @@
 
 Baseline = GERP (sole conservation baseline; the fabricated byte-identical phyloP copies are no longer used). The atlas statistic `p_40b_gt_cons` is the bootstrap fraction P(delta>0); we convert it to a one-sided p-value  p = 1 - P(delta>0)  and apply Benjamini-Hochberg at q<=0.05.
 
+AUROC Evo2, n and pos are the full panel's; AUROC GERP, Δ and P(Δ>0) are on the variants GERP scores (`reports/evo2_vs_conservation.parquet`), so Δ is not the difference of the two printed AUROCs.
+
 | species | n | pos | AUROC Evo2 | AUROC GERP | Δ | P(Δ>0) | one-sided p | BH q | verdict |
 |---|---|---|---|---|---|---|---|---|---|
 | goat | 99 | 9 | 0.951 | 0.78 | +0.173 | 1.000 | 0.000 | 0.000 | SIGNIFICANT (BH) |

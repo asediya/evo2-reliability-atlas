@@ -10,6 +10,8 @@ rng = np.random.default_rng(0)
 n = 6000
 y = (rng.random(n) < 0.25).astype(int)      # 25% deleterious
 score = rng.normal(y * 1.5, 1.0)            # higher score = more deleterious
+species = rng.choice(["a", "b", "c"], n)   # three groups, for section 4
+new_scores = rng.normal(0, 1, 10)           # unlabelled scores, for section 5
 ```
 
 ## 1. Calibration — score to probability

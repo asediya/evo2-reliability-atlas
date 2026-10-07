@@ -207,7 +207,7 @@ def panel_a(ax, axtop, axright, box):
     ax.set_xlim(XLO, XHI); ax.set_ylim(YLO, YHI)
     ax.set_xticks([2, 3, 4, 5, 6])
     ax.set_xticklabels(["100 bp", "1 kb", "10 kb", "100 kb", "1 Mb"], fontsize=TICK)
-    ax.set_xlabel("distance from the variant to its own eGene's lead credible-set variant",
+    ax.set_xlabel("Distance from the variant to its own eGene's lead credible-set variant",
                   fontsize=AXIS)
     ax.set_ylabel("Evo 2-40B score", fontsize=AXIS)
     _spines(ax)
@@ -232,9 +232,9 @@ def panel_a(ax, axtop, axright, box):
     # The medians are formatted from the values the dotted lines are drawn at, so the label and its
     # line cannot disagree. The candidate causal median of 1,840 distances is a half-integer,
     # 89,783.5 bp, and prints rounded to the nearest base pair.
-    axtop.text(0.045, 0.98, "candidate causal, median {:,.0f} bp".format(med["candidate causal"]), transform=_t,
+    axtop.text(0.045, 0.98, "Candidate causal, median {:,.0f} bp".format(med["candidate causal"]), transform=_t,
                fontsize=FOOT, ha="left", va="top", color=FAIL_T)
-    axtop.text(0.045, 0.98, "non-causal control, median {:,.0f} bp".format(med["non-causal control"]),
+    axtop.text(0.045, 0.98, "Non-causal control, median {:,.0f} bp".format(med["non-causal control"]),
                transform=_t + _drop,
                fontsize=FOOT, ha="left", va="top", color=EQTL_T)
 
@@ -245,7 +245,7 @@ def panel_a(ax, axtop, axright, box):
     axright.set_ylim(YLO, YHI); axright.set_xticks([]); axright.set_yticks([])
     for s_ in axright.spines.values():
         s_.set_visible(False)
-    axright.text(0.5, -0.012, "by score",
+    axright.text(0.5, -0.012, "By score",
                  transform=axright.transAxes, fontsize=FOOT, ha="center", va="top", color=MUTED)
 
 
@@ -283,11 +283,11 @@ def panel_b(ax, box):
             "not plotted" % ("{:,}".format(int((~ok).sum())), "{:,}".format(len(cau))),
             fontsize=FOOT, ha="left", va="top", color=FAIL_T, linespacing=1.4)
     ax.set_xlim(LO, HI); ax.set_ylim(LO, HI)
-    ax.set_xlabel("the candidate causal variant's own score", fontsize=AXIS)
-    ax.set_ylabel("median score of the controls\nin the same eGene", fontsize=AXIS,
+    ax.set_xlabel("The candidate causal variant's own score", fontsize=AXIS)
+    ax.set_ylabel("Median score of the controls\nin the same eGene", fontsize=AXIS,
                   linespacing=1.35)
     _spines(ax)
-    _prov(ax, box, ["one hexagon = a count of matched pairs, log-scaled"])
+    _prov(ax, box, ["One hexagon = a count of matched pairs, log-scaled"])
 
 
 # ---------------------------------------------------------------- d. scale, on a broken axis
@@ -320,7 +320,7 @@ def panel_d_scale(axt, axb, boxt):
     axt.set_ylim(ctr - SPAN / 2, ctr + SPAN / 2)
     axt.plot(xs, cod, color=CODING, lw=1.0, marker="o", ms=3.4, mfc="white", mew=1.0, zorder=4)
     bracket(axt, cod[0], cod[2], CODING, f"+{cod[2] - cod[0]:.3f}")
-    axt.text(XLO + 0.04, ctr + SPAN / 2 - 0.004, "whole-atlas macro", fontsize=FOOT,
+    axt.text(XLO + 0.04, ctr + SPAN / 2 - 0.004, "Whole-atlas macro", fontsize=FOOT,
              color=CODING, ha="left", va="top")
     axt.set_yticks([0.86, 0.90, 0.94])
     axt.set_xticks([])
@@ -333,23 +333,23 @@ def panel_d_scale(axt, axb, boxt):
     # bracket() colours its rule AND its number with one value; the number is type, so both take
     # the text-safe rendition and stay matched.
     bracket(axb, eq[0], eq[2], FAIL_T, f"{eq[2] - eq[0]:+.3f}")
-    axb.text(XLO + 0.04, 0.5 + SPAN / 2 - 0.004, "candidate causal eQTL (band: 95% CI)", fontsize=FOOT,
+    axb.text(XLO + 0.04, 0.5 + SPAN / 2 - 0.004, "Candidate causal eQTL (band: 95% CI)", fontsize=FOOT,
              color=FAIL_T, ha="left", va="top")
     # the chance rule stops before the bracket rail. Run full width (axhline) it passes 0.05 mm
     # above the "+0.006" label, which reads as a collision at reproduction size.
     axb.plot([XLO, BR - 0.16], [0.5, 0.5], color=BEDROCK, lw=0.9, ls=(0, (4, 2)), zorder=2)
-    axb.text(XLO + 0.04, 0.5015, "chance", fontsize=FOOT, color=BEDROCK, ha="left", va="bottom")
+    axb.text(XLO + 0.04, 0.5015, "Chance", fontsize=FOOT, color=BEDROCK, ha="left", va="bottom")
     axb.set_yticks([0.46, 0.50, 0.54])
     axb.set_xticks(xs)
     axb.set_xticklabels(models, fontsize=TICK)
-    axb.set_xlabel("model scale", fontsize=AXIS)
+    axb.set_xlabel("Model scale", fontsize=AXIS)
     _spines(axb)
 
     for ax in (axt, axb):
         ax.set_xlim(XLO, XHI)
     # named "eQTL": the n belongs to the lower series. Set bare above a two-series panel whose
     # upper series is the whole atlas, it reads as the atlas's n, which it is not.
-    _prov(axt, boxt, ["whole-atlas macro: point estimate only; eQTL n = %s/%s" % (f"{sc['eqtl']['40B']['n_pos']:,}",
+    _prov(axt, boxt, ["Whole-atlas macro: point estimate only; eQTL n = %s/%s" % (f"{sc['eqtl']['40B']['n_pos']:,}",
                                         f"{sc['eqtl']['40B']['n_neg']:,}")])
 
 
@@ -393,7 +393,7 @@ def panel_e(ax, box):
     oth = [("PIP (circular by construction)", {"auroc": sc["PIP (positive control)"]["auroc"],
                                                "lo": sc["PIP (positive control)"]["lo"],
                                                "hi": sc["PIP (positive control)"]["hi"]}, None),
-           ("distance to the TSS", {"auroc": tss["auroc"], "lo": tss["ci"][0],
+           ("Distance to the TSS", {"auroc": tss["auroc"], "lo": tss["ci"][0],
                                     "hi": tss["ci"][1]}, None),
            ("|z| effect size (circular)", sc["|z| effect size (positive control)"], None),
            ("Evo 2-1B probe, concat", {"auroc": probe["probe"]["concat (ref|alt|delta)"]["auroc_gene_grouped"],
@@ -432,16 +432,16 @@ def panel_e(ax, box):
     # The rule sits 0.45 of a row above the gap's centre: at the centre it ran through the top of the
     # two group labels hung under it.
     ax.plot([XLO, XDATA], [gy + 0.45, gy + 0.45], color=RULE, lw=0.5, zorder=1)
-    ax.text(XDATA, ys_seq[0] + 0.52, "scores tested here", fontsize=SG.FLOOR, color=MUTED,
+    ax.text(XDATA, ys_seq[0] + 0.52, "Scores tested here", fontsize=SG.FLOOR, color=MUTED,
             ha="right", va="center",
             bbox=dict(facecolor="white", edgecolor="none", alpha=0.88, pad=0.9))
-    ax.text(XDATA, gy - 0.20, "other signals on the same panel", fontsize=FOOT, color=MUTED,
+    ax.text(XDATA, gy - 0.20, "Other signals on the same panel", fontsize=FOOT, color=MUTED,
             ha="right", va="center",
             bbox=dict(facecolor="white", edgecolor="none", alpha=0.88, pad=0.9))
     ax.plot([XLO + 0.012], [gy - 0.20], marker="D", ms=3.4, color=POS, clip_on=False, zorder=5)
     # White plate, like the two section headers above: the chance rule at x = 0.5 runs straight
     # through this label (14.1% edge density under it, tools/inkunder.py).
-    ax.text(XLO + 0.028, gy - 0.20, "circular by construction", fontsize=FOOT, color=MUTED,
+    ax.text(XLO + 0.028, gy - 0.20, "Circular by construction", fontsize=FOOT, color=MUTED,
             ha="left", va="center",
             bbox=dict(facecolor="white", edgecolor="none", alpha=0.88, pad=0.9))
     ax.text(0.872, ytop, "AUROC", transform=ax.get_yaxis_transform(), fontsize=FOOT, color=MUTED,
@@ -450,12 +450,12 @@ def panel_e(ax, box):
             color=MUTED, va="top", ha="right", clip_on=False)
 
     _chance_v(ax)
-    ax.text(0.5, ytop, " chance", fontsize=FOOT, color=BEDROCK, ha="left", va="top")
+    ax.text(0.5, ytop, " Chance", fontsize=FOOT, color=BEDROCK, ha="left", va="top")
     # On the header row, with "chance", "AUROC" and "95% CI": one row lower it ran into the
     # "scores tested here" head.
     ax.scatter([0.60], [ytop - 0.45], s=15, marker="o", facecolor="white", edgecolor=CODING,
                lw=0.8, clip_on=False, zorder=6)
-    ax.text(0.612, ytop - 0.45, "the same score on the coding panel", fontsize=FOOT,
+    ax.text(0.612, ytop - 0.45, "The same score on the coding panel", fontsize=FOOT,
             color=CODING, ha="left", va="center")
 
     ax.set_yticks([y for y, _ in rows])
@@ -473,7 +473,7 @@ def panel_e(ax, box):
     ez = sc["Evo2-40B"]
     # The comparison ("vs within-eGene non-causal control") is the legend's: at the head of this
     # line it sat under panel b's axis title and read as its second line.
-    _prov(ax, box, ["sequence n = %s/%s    GERP n = %s–%s (reach)    probe gene-grouped over %s eGenes"
+    _prov(ax, box, ["Sequence n = %s/%s    GERP n = %s–%s (reach)    probe gene-grouped over %s eGenes"
                     % (f"{ez['n_pos']:,}", f"{ez['n_neg']:,}", f"{gn[0]:,}", f"{gn[-1]:,}",
                        f"{probe['n_egenes']:,}")])
 

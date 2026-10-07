@@ -23,10 +23,10 @@ pyarrow==24.0.0
 pybigtools==0.3.0
 pyfaidx==0.9.0.4
 python-docx==1.2.0
-# Imported by ten tracked files. Five spell it `import fitz` (check_figure_clearance.py,
-# figure_tiles.py, stage_figures.py, src/ccs/fig2_split.py, and src/ccs/style_main.py, which uses it
-# only for the page check it runs on each main figure it writes), four `import pymupdf`
-# (check_overlaps.py, inkunder.py, legendcheck.py, textcontrast.py), and tools/pdfcheck.py
+# Imported by seven tracked files. Four spell it `import fitz` (check_figure_clearance.py,
+# stage_figures.py, src/ccs/fig2_split.py, and src/ccs/style_main.py, which uses it
+# only for the page check it runs on each main figure it writes), two `import pymupdf`
+# (check_overlaps.py, inkunder.py), and tools/pdfcheck.py
 # carries it in a comma list, which is why a grep for "import fitz" alone undercounts.
 # check_figure_clearance.py, one of them, sits in run_all_gates.py's NEEDS_DATA list, not among the
 # four self-contained gates. Deliberately
@@ -47,12 +47,11 @@ transformers==4.44.2
 # Not pip-installable here / required only for specific arms:
 #   evo2, vortex        GPU scoring host only (see Methods); not needed to reproduce from cached scores
 #   pyBigWig            phyloP/GERP bigWig readers: query_gerp.py, query_phylop.py,
-#                       conservation_full.py and phylop_diag.py all import it.
+#                       and conservation_full.py import it.
 #                       The deposited conservation VALUES are cached, so no published number depends
 #                       on installing it; the phyloP cross-check uses pybigtools, pinned above.
 #   pyliftover          dog_liftover_panel.py
 #   fair-esm            score_esm_baseline.py, build_proteingym_grounding.py
-#   pymol               mol_pymol.py (structure rendering, not used for any published number)
 
 # `pip install -r requirements.txt` FAILS as written, and that is a
 # property of the file rather than an accident to work around: numpy==2.5.1 requires Python >= 3.12

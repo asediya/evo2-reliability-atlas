@@ -179,7 +179,7 @@ def main():
         lines.append(f"| {r['species']} | {r['role']} | {r['n']} | {r['pos']} | {g('ece_none')}→{g('ece_transfer')} "
                      f"| **{g('aece_none')}→{g('aece_transfer')}** | {g('ks_none')}→{g('ks_transfer')} "
                      f"| {g('brier_none')}→{g('brier_transfer')} | {g('aece_oracle')} |")
-    lines += ["", f"Median adaptive-ECE: transfer **{med_tr:.3f}** ≈ oracle **{med_or:.3f}** (holds on the debiased metric too).", "",
+    lines += ["", f"Median adaptive-ECE: transfer **{med_tr:.3f}** against oracle **{med_or:.3f}** (holds on the debiased metric too).", "",
               "## (2) Formal calibration test — can we reject 'perfectly calibrated'?",
               "KS-calibration goodness-of-fit test (simulate under H0=perfect calibration); p>0.05 = CANNOT reject perfect calibration. + 95% bootstrap CI on transfer adaptive-ECE.",
               "| species | KS-cal test p | cannot reject perfect cal? | transfer aECE [95% CI] |", "|---|---|---|---|"]

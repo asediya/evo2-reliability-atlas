@@ -3,8 +3,8 @@
 Why this exists. The manuscript reports that over the 9,532 co-scoreable variants Evo 2 and
 GERP are "statistically indistinguishable" (0.8805 vs 0.8780). Stated that way the claim rests
 on a failure to reject, which low power would explain equally well and which a referee is right
-to reject as evidence of absence. A null needs an equivalence test against a smallest effect
-size of interest (SESOI) declared in advance and justified.
+to reject as evidence of absence. A null needs an equivalence test against a justified smallest
+effect size of interest (SESOI). The margin below was set after the data were seen, as the Methods state.
 
 SESOI. No published source supplies a domain bound on "an AUROC difference that would matter",
 so we justify one from this study's own scale rather than importing one:

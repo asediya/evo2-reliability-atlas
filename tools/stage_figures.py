@@ -49,8 +49,6 @@ SUB = os.path.join(ROOT, os.environ.get("CCS_SUBMISSION_OUT", os.path.join("repo
 # in the supplement and are NOT shipped beside it as separate PDFs; that name is the staging name.
 FIGURES = [
     ("fig5_final",           "Figure5_reach.pdf",        "Additional_file_1_FigureS5.pdf"),
-    # NOT fig1.py. That module is exploratory and emits a different 175.3 x 186.9 mm figure that
-    # breaks the 170 mm width; despite its name it builds no submitted figure.
     ("fig_brca1_composite",  "Figure_BRCA1.pdf",         "Additional_file_1_FigureS6.pdf"),
     ("fig7_atlas",           "Figure7_atlas.pdf",        "fig9.pdf"),
     ("fig8_readout",         "Figure8_readout.pdf",      "fig10.pdf"),
@@ -98,7 +96,7 @@ def main():
             if not os.path.exists(script):
                 print("  SKIP %s (no such builder)" % mod)
                 continue
-            p = subprocess.run([py, script], cwd=ROOT, stdout=subprocess.PIPE,
+            p = subprocess.run([py, "-m", "src.ccs." + mod], cwd=ROOT, stdout=subprocess.PIPE,
                                stderr=subprocess.STDOUT)
             print("  build %-22s %s" % (mod, "OK" if p.returncode == 0 else "FAILED"))
             if p.returncode != 0:

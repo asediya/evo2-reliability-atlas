@@ -1,4 +1,6 @@
-# OOD / abstention: selective prediction on transferred-calibrated Evo2-40B (Fig 4)
+# OOD / abstention: selective prediction on transferred-calibrated Evo2-40B (Additional file 1, Table S26 and Figure S4)
+
+The random-abstain column is one seeded draw (seed 0); the published random control is in Table S26.
 
 Per-species deployment frame (9 species, macro-averaged). Confidence = |2p-1| on the LOSO-transferred calibrated probability; abstain on the least-confident variants.
 

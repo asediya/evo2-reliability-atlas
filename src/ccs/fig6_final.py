@@ -342,7 +342,7 @@ def panel_a_resid(ax, ax_cb=None):
     ax.get_xticklabels()[-1].set_ha("right")
     ax.set_yticks(np.arange(NY + 1) - 0.5)
     ax.set_yticklabels([_edge(e) for e in ye], fontsize=MINPT)
-    ax.set_xlabel("minor allele frequency in cattle   (folded MAF; both axes equal-count bins)",
+    ax.set_xlabel("Minor allele frequency in cattle   (folded MAF; both axes equal-count bins)",
                   fontsize=AXIS)
     # ONE line, not two. "(variant-delta ~1 kb, equal-count bins)" moves to the
     # legend and to the x-label: rotated, two lines of that length are both
@@ -434,7 +434,7 @@ def panel_a(ax, ax_cb=None):
     ax.set_xticklabels([_fmt_maf(float(10 ** np.quantile(lx, t))) for t in xt])
     ax.set_yticks(xt)
     ax.set_yticklabels([f"{np.quantile(dele, t):+.1f}" for t in xt])
-    ax.set_xlabel("minor allele frequency in cattle   (folded MAF, equal-count bins)", fontsize=AXIS)
+    ax.set_xlabel("Minor allele frequency in cattle   (folded MAF, equal-count bins)", fontsize=AXIS)
     ax.set_ylabel("Evo 2 deleteriousness\n(variant-delta ~1 kb, equal-count bins)",
                   fontsize=AXIS, linespacing=1.25)
     _spines(ax)
@@ -546,9 +546,9 @@ def panel_b(fig, gs_slice):
         # TOP-RIGHT, not top-left. These curves start high on the left and fall to the right, so the
         # left shoulder is exactly where the first data marker lands — it was drawn on top of its own
         # caption in the q3 cell. Top-right is the clear quadrant for a descending series.
-        # "ALL QUINTILES", not "ALL VARIANTS": this cell pools the five strata, the 27,234 variants
+        # "All quintiles", not "All variants": this cell pools the five strata, the 27,234 variants
         # phyloP reaches, not the 28,006 of panel a and Table S6's first row.
-        ax.text(0.955, 0.955, ("ALL QUINTILES" if pooled else c["label"].replace("phyloP ", "phyloP ")),
+        ax.text(0.955, 0.955, ("All quintiles" if pooled else c["label"].replace("phyloP ", "phyloP ")),
                 transform=ax.transAxes, fontsize=MINPT, color=col, fontweight="bold",
                 ha="right", va="top")
         # Print the statistic the VERDICT is made on. The previous version printed only the endpoint
@@ -656,7 +656,7 @@ def panel_c(ax):
     for r, xl in zip(lab, lx_):
         ax.plot([r["a_c"], xl], [r["a_cf"] + span * 0.012, y_lab - span * 0.012],
                 color="#B9B4AD", lw=0.35, zorder=4)
-        ax.text(xl, y_lab, r["sp"], fontsize=MINPT, color=INK, ha="center", va="bottom",
+        ax.text(xl, y_lab, r["sp"][:1].upper() + r["sp"][1:], fontsize=MINPT, color=INK, ha="center", va="bottom",
                 rotation=90)
 
     ax.set_xlim(lo, hi); ax.set_ylim(lo, hi)
@@ -673,8 +673,8 @@ def panel_c(ax):
     tk = np.arange(0.70, 1.001, 0.05)
     ax.set_xticks(np.arange(0.70, 1.001, 0.10)); ax.set_yticks(tk)
     ax.set_aspect("equal", adjustable="box")
-    ax.set_xlabel("conservation alone — AUROC", fontsize=AXIS)
-    ax.set_ylabel("conservation + Evo 2\nAUROC", fontsize=AXIS, linespacing=1.2)
+    ax.set_xlabel("Conservation alone — AUROC", fontsize=AXIS)
+    ax.set_ylabel("Conservation + Evo 2\nAUROC", fontsize=AXIS, linespacing=1.2)
     ax.tick_params(labelsize=MINPT)
     _spines(ax)
     # the lower-right, below the diagonal, is the only region with no sticks and no label leaders --
@@ -695,9 +695,9 @@ def panel_c(ax):
     # No three-line arrangement carries all four claims: "n-weighted mean +0.054" is 85.7 pt and the
     # top slot of a three-line stack is 79.1. Splitting the key off the count is what makes it fit,
     # and the reading order still runs encoding -> count -> estimate -> interval.
-    _lines = [(0.236, "stick = Evo 2's lift", MUTED, "normal"),
+    _lines = [(0.236, "Stick = Evo 2's lift", MUTED, "normal"),
               (0.159, f"{D['n_positive']}/{D['n_species']} species positive", MUTED, "normal"),
-              (0.082, f"species mean {SM['mean']:+.3f}", "#8A6A00", "bold"),
+              (0.082, f"Species mean {SM['mean']:+.3f}", "#8A6A00", "bold"),
               (0.005, f"[{SM['lo']:+.3f}, {SM['hi']:+.3f}], t on {len(_v) - 1} df", "#8A6A00", "normal")]
     for _h, _s, _c, _wt in _lines:
         ax.text(0.99, _h, _s, transform=ax.transAxes, fontsize=MINPT, color=_c,
@@ -783,7 +783,7 @@ def hero_preview():
 
     fig.text(0.112, 0.848, "a", fontsize=PANEL, fontweight="bold", ha="center", va="bottom",
              color=INK)
-    fig.text(0.972, 0.850, f"cattle · ARS-UCD1.2 · n = {J['selection']['n']:,}",
+    fig.text(0.972, 0.850, f"Cattle · ARS-UCD1.2 · n = {J['selection']['n']:,}",
              fontsize=FOOT - 0.4, color=MUTED, ha="right", va="bottom")
 
     os.makedirs(ROOT / "reports" / "figures", exist_ok=True)
@@ -873,9 +873,9 @@ def main():
     axb0 = panel_b(fig, gs_b[0, 0])
     # The lattice y-label belongs to the LATTICE, not to its top-left cell. On a
     # 18 mm cell a 42 mm rotated string overhangs the cell by more than its own
-    # height; centred on the 44 mm band it fits with room to spare.
+    # height. It sits 1.5 mm below the band's centre so its top end clears panel b's letter.
     axb0.set_ylabel("")
-    fig.text(0.038, T(103.5), "P(deleteriousness > stratum median)", fontsize=AXIS,
+    fig.text(0.038, T(105.0), "P(deleteriousness > stratum median)", fontsize=AXIS,
              color=INK, ha="center", va="center", rotation=90)
     # panel b had NO x-axis label anywhere — on the panel COMPILED_RESULTS §10b calls the strongest
     # result in the figure. One shared label under the lattice. The ticks are now
@@ -901,7 +901,7 @@ def main():
 
     for x_, y_mm, letter, title, note in (
             (None, 24.5, "a", "Evo 2 score is associated with allele frequency genome-wide, label-free",
-             f"cattle · ARS-UCD1.2 · n = {S['n']:,}"),
+             f"Cattle · ARS-UCD1.2 · n = {S['n']:,}"),
             (None, 78.0, "b", "…and it is not conservation in disguise — except where conservation ends",
              f"phyloP quintiles · reach {C['reach']:.1%}"),
             (None, 140.5, "c", "The same, on the labelled panels", None),
@@ -991,8 +991,8 @@ def panel_e_lattice(ax):
 
     ax.set_xticks(np.arange(len(macs)) + .5); ax.set_xticklabels(macs, fontsize=FOOT)
     ax.set_yticks(np.arange(len(ans)) + .5); ax.set_yticklabels([int(a) for a in ans], fontsize=FOOT)
-    ax.set_xlabel("minor allele count", fontsize=AXIS)
-    ax.set_ylabel("allele number called", fontsize=AXIS)
+    ax.set_xlabel("Minor allele count", fontsize=AXIS)
+    ax.set_ylabel("Allele number called", fontsize=AXIS)
     ax.tick_params(length=0)
     for s_ in ax.spines.values():
         s_.set_visible(False)
@@ -1004,10 +1004,10 @@ def panel_e_lattice(ax):
     # in a 90.7 pt box, so each gap is ~8 pt whatever the box height becomes.
     top = int(np.nanmax(G))
     ti, tj = [int(v[0]) for v in np.where(G == top)]
-    ax.text(1.06, 1.00, "darkest cell: allele number %d, count %d,\nholding %s variants"
+    ax.text(1.06, 1.00, "Darkest cell: allele number %d, count %d,\nholding %s variants"
             % (ans[ti], macs[tj], "{:,}".format(top)), transform=ax.transAxes, fontsize=FOOT,
             ha="left", va="top", color=INK, linespacing=1.35, clip_on=False)
-    ax.text(1.06, 0.70, "so the frequency floor is 1/AN: 0.05\nwith all ten called, 0.167 at AN = 6",
+    ax.text(1.06, 0.70, "So the frequency floor is 1/AN: 0.05\nwith all ten called, 0.167 at AN = 6",
             transform=ax.transAxes, fontsize=FOOT, ha="left", va="top",
             color=INK, linespacing=1.35, clip_on=False)
     ax.text(1.06, 0.40, "%d cells are not empty but impossible:\na minor allele count cannot exceed\n"
@@ -1023,7 +1023,7 @@ def panel_e_lattice(ax):
     cb_d = ax.figure.colorbar(im, cax=cax_d, orientation="horizontal",
                               ticks=[0.0, 1.0, 2.0, 3.0])
     cb_d.ax.set_xticklabels(["1", "10", "100", "1,000"])
-    cb_d.set_label("variants per cell  (log scale)", fontsize=MINPT, labelpad=2.0)
+    cb_d.set_label("Variants per cell  (log scale)", fontsize=MINPT, labelpad=2.0)
     cb_d.ax.tick_params(labelsize=MINPT, length=1.5, width=0.4, pad=1.5)
     cb_d.outline.set_linewidth(0.4)
 

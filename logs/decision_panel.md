@@ -1,4 +1,4 @@
-# Decision-theoretic cost panel (calibration+abstention turns 'weak' into 'safe')
+# Decision-theoretic cost panel (calibration and abstention against trivial policies)
 
 Asymmetric costs: false-benign (miss a pathogenic) = 10.0, false-alarm = 1.0, abstain = 0.5, correct = 0. Calibrated probs are leave-one-species-out isotonic transfers (pooled across all 9 species). Lower expected cost is better.
 

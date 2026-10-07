@@ -24,17 +24,19 @@ Label-rich sources (LOSO training pool): ['sheep', 'horse', 'cat', 'cattle', 'do
 
 ## Adaptive / equal-mass ECE (10 quantile bins)
 
+Binned by value with `ece_mass` (tied posteriors share a bin). The global-sigmoid, isotonic-transfer and oracle columns are the deposited per-species values of `reports/fig4_reconciliation.json` (`ece_grid.mass10`: `trivial_sigmoid_LOSO`, `isotonic_LOSO`, `oracle_isotonic`), as in Additional file 1, Table S33.
+
 | species | pos | ecm_none | ecm_base_rate | ecm_global_sigmoid | ecm_iso_transfer | ecm_oracle |
 |---|---|---|---|---|---|---|
-| goat | 9 | 0.316 | 0.121 | 0.061 | 0.068 | 0.067 |
-| chicken | 28 | 0.21 | 0.119 | 0.022 | 0.024 | 0.028 |
-| pig | 36 | 0.366 | 0.119 | 0.048 | 0.057 | 0.015 |
-| sheep | 56 | 0.323 | 0.126 | 0.06 | 0.053 | 0.018 |
-| horse | 71 | 0.34 | 0.129 | 0.038 | 0.039 | 0.014 |
-| cat | 125 | 0.428 | 0.136 | 0.038 | 0.046 | 0.017 |
-| cattle | 188 | 0.314 | 0.149 | 0.068 | 0.061 | 0.005 |
-| dog | 227 | 0.306 | 0.157 | 0.039 | 0.048 | 0.011 |
-| human | 1500 | 0.151 | 0.409 | 0.135 | 0.118 | 0.009 |
+| goat | 9 | 0.314 | 0.119 | 0.054 | 0.056 | 0.066 |
+| chicken | 28 | 0.21 | 0.119 | 0.021 | 0.026 | 0.022 |
+| pig | 36 | 0.366 | 0.119 | 0.047 | 0.058 | 0.013 |
+| sheep | 56 | 0.323 | 0.126 | 0.059 | 0.055 | 0.018 |
+| horse | 71 | 0.34 | 0.129 | 0.038 | 0.039 | 0.017 |
+| cat | 125 | 0.428 | 0.136 | 0.038 | 0.047 | 0.015 |
+| cattle | 188 | 0.314 | 0.149 | 0.068 | 0.061 | 0.009 |
+| dog | 227 | 0.306 | 0.157 | 0.038 | 0.047 | 0.01 |
+| human | 1500 | 0.151 | 0.409 | 0.135 | 0.115 | 0.011 |
 
 ## Brier score (proper scoring rule)
 

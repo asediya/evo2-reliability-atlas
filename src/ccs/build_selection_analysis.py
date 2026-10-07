@@ -39,7 +39,7 @@ def main():
     lines = ["# Idea 1: Evo2-40B deleteriousness vs purifying selection (cattle, 28k variants)", "",
              "| freq bin | n | mean MAF | mean Evo2 deleteriousness |", "|---|---|---|---|"]
     for r in agg.rows(named=True):
-        lines.append(f"| {r['freq_bin']} | {r['n']} | {r['mean_maf']:.4f} | {r['mean_del']:.3f} |")
+        lines.append(f"| {({'singleton': 'ultra-rare'}).get(r['freq_bin'], r['freq_bin'])} | {r['n']} | {r['mean_maf']:.4f} | {r['mean_del']:.3f} |")
     verdict = "PASS" if (rho < 0 and p < 1e-3) else "WEAK/FAIL"
     lines += ["", f"Spearman(MAF, deleteriousness) = {rho:+.3f} (p={p:.1e}); expected NEGATIVE.",
               f"Monotone rise toward rare: {monotone}.",

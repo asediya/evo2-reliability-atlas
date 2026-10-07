@@ -114,11 +114,12 @@ def main():
         evo_cov = float(et["cov_mond"].mean()); evo_abst = float(et["abstain"].mean())
         evo_line = (f"\n**MODEL-AGNOSTIC (conformal):** the coverage guarantee holds on BOTH backbones on zero-label targets "
                     f"(mean Mondrian coverage: Evo2 {evo_cov:.3f}, NT {mean_cov_tgt:.3f}; both ~nominal 0.90). "
-                    f"The weaker NT backbone simply ABSTAINS more (mean {{both}} rate: Evo2 {evo_abst:.2f} vs NT {mean_abst_tgt:.2f}) "
-                    f"- exactly the intended behaviour: coverage is a property of the METHOD, informativeness a property of the MODEL.")
+                    f"The weaker NT backbone abstains {'slightly LESS' if mean_abst_tgt < evo_abst else 'MORE'} (mean {{both}} rate: Evo2 {evo_abst:.2f} vs NT {mean_abst_tgt:.2f})"
+                    + (", so abstention did not track backbone quality: coverage behaved as a property of the METHOD."
+                       if mean_abst_tgt < evo_abst else " - coverage is a property of the METHOD, informativeness a property of the MODEL."))
     lines += ["", f"**VERDICT:** conformal coverage {'TRACKS the nominal guarantee' if ok else 'is approximate'} on NT too - "
-              "distribution-free coverage is preserved on a second architecture; the weaker discriminator trades "
-              "informativeness (more abstention) for the SAME guarantee." + evo_line]
+              "coverage is preserved on a second architecture, under the same cross-species exchangeability caveat "
+              "as for Evo 2." + evo_line]
     os.makedirs("logs", exist_ok=True)
     open("logs/nt_conformal.md", "w", encoding="utf-8").write("\n".join(lines) + "\n")
     print("\n".join(lines))

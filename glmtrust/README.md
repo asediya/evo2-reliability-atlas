@@ -90,7 +90,7 @@ table needs no column bookkeeping.
   `cluster=` (CLI `--cluster-col`) makes every whole-panel interval a bootstrap over whole groups
   (the within-stratum intervals stay variant-level), and the report states which kind it printed.
 - **An AUROC below one half is flagged, not reported as weakness.** It usually means the score is
-  stored the other way round; declare that with `higher_is_worse=False` (CLI `--lower-is-worse`).
+  stored the other way round; declare that with `higher_is_worse=False` (CLI `--lower-is-worse`; `audit` takes it with a column name).
 
 ### What the audit does *not* claim
 
@@ -205,12 +205,12 @@ spreadsheet as CSV first. Labels are 0/1 or true/false; for text labels name the
 `--positive-label Pathogenic --positive-label Likely_pathogenic --negative-label Benign
 --negative-label Likely_benign`. A variant with no label stops the run unless `--drop-unlabelled`
 says to leave it out. An empty or NA score cell means "not scored"; an infinite value is refused.
-`--lower-is-worse` declares a score where lower means more damaging, for every command, and the
+`--lower-is-worse` declares a score where lower means more damaging, for `evaluate`, `calibrate`, `transfer` and `audit`, and the
 reports say when a score appears to run the other way. `calibrate` and `transfer` write one row per
 input row, numbered from 0, and `--id-col` carries an identifier beside each. Any input problem ends
 in one line saying what is wrong.
 
-`--lower-is-worse COL` declares a score stored with lower values meaning more damaging. When the
+In `audit`, `--lower-is-worse COL`, given once per column, declares a score stored with lower values meaning more damaging. When the
 scores themselves cannot be shared, `reach` works from reach indicators alone, and counts identified
 pairs once each scorer's covered AUROC is supplied:
 

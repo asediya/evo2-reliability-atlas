@@ -1,6 +1,6 @@
 # API reference
 
-Import everything from the top level: `from glmtrust import audit, Scorer, TrustLayer, ...`.
+Import the main API from the top level: `from glmtrust import audit, Scorer, TrustLayer, ...`; the baseline building blocks below are imported from `glmtrust.baseline`.
 
 ## Input contract
 
@@ -89,7 +89,7 @@ first when a result must be reproducible across row orders.
 - `must_answer_auroc(auroc_covered, k_pos, n_pos, k_neg, n_neg)` — the closed form. A pair touching an
   unscorable variant contributes ½, so no imputation is involved.
 - `missingness_auroc(labels, observed)` — scores the missingness indicator alone.
-- `wilson_interval(k, n, z=1.96)`.
+- `wilson_interval(k, n, z=1.959963985)`.
 - `lexicographic_gain(auroc_covered, k_pos, n_pos, k_neg, n_neg)` — ρ(A_cov − ½), exactly what ranking by
   the missingness pattern and then by value gains over the pattern alone.
 - `contamination_bounds(auroc_covered, rho, lam)` → `(lo, hi)`: the whole-panel AUROC when a share λ
@@ -150,7 +150,7 @@ rate. `SequenceBlindReport.per_seed[name]` lists one AUROC per seed and `.mean[n
 with `n`, `n_pos`, `n_neg`, `n_groups`, `n_classes`, `folds`, `alpha` and `seeds`. The CLI form is
 `glmtrust baseline TABLE --label-col L --group-col G --class-col C [--folds 5] [--alpha 1.0] [--seeds 8] [--out JSON]`.
 
-The building blocks are public too:
+The building blocks are public too, in `glmtrust.baseline`:
 
 - `stratified_kfold_folds(y, n_splits=5, random_state=0)` — fold index per row, byte for byte the test
   folds of scikit-learn's `StratifiedKFold(n_splits, shuffle=True, random_state)` for an integer seed;

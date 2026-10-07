@@ -1,6 +1,6 @@
 # Crown-jewel rigor: calibration-transfer ECE with bootstrap CIs
 
-2000× bootstrap per species. ECE lower=better; Δ = ECE_none − ECE_transfer (>0 = transfer helps). 'sig' = 95% bootstrap CI of Δ excludes 0.
+2000× bootstrap per species. ECE lower=better; Δ = ECE_none − ECE_transfer (>0 = transfer helps). 'sig' = 95% bootstrap CI of Δ excludes 0. Values before the brackets are bootstrap medians, not the point estimates of Additional file 1, Table S23.
 
 | species | n | pos | role | ECE none [95% CI] | ECE transfer [95% CI] | Δ [95% CI] | p | sig |
 |---|---|---|---|---|---|---|---|---|

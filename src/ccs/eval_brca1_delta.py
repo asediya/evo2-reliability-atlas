@@ -51,7 +51,7 @@ def main():
     lines = [
         "# BRCA1 positive control — variant-delta (evo2_40b_neg), block-streaming harness",
         "",
-        f"Scored {d.height} BRCA1 SNVs ({npos} pathogenic / {nneg} benign) with the SAME variant-delta",
+        f"Scored {d.height} BRCA1 SNVs ({npos} loss-of-function / {nneg} functional or intermediate) with the SAME variant-delta",
         "scorer + 1001bp windows as the cross-species atlas (score_evo2_40b_local.py). The paper's 8192bp",
         "mean-LL protocol exhausts GPU memory in this harness (vortex fftconv) even at batch 2 — this validates OUR harness.",
         "",

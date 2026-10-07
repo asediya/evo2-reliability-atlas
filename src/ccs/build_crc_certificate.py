@@ -66,12 +66,13 @@ def main():
 
     lines = ["# GATE TEST (Idea 2) - transported positive-class-FNR certificate", "",
              "Control E[missed-positive rate] <= alpha; calibrate lambda on label-rich species via Conformal Risk "
-             "Control; transport to each held-out species. VALID if achieved FNR <= alpha; NON-TRIVIAL if it still "
-             "calls a real fraction benign (benign-rate > 0).", ""]
+             "Control; transport to each held-out species. VALID if achieved FNR <= alpha + 0.02 (a 0.02 tolerance "
+             "on the nominal level; the strict count is in the verdict); NON-TRIVIAL if it still calls a real "
+             "fraction benign (benign-rate > 0.15).", ""]
     verdicts = []
     for a in ALPHAS:
         lines += [f"## alpha = {a} (guarantee: <= {a:.0%} of true pathogenics missed)",
-                  "| held-out species | role | n | pos | achieved FNR | <=alpha? | benign-call rate | informative? |",
+                  "| held-out species | role | n | pos | achieved FNR | <=alpha+0.02? | benign-call rate | informative? |",
                   "|---|---|---|---|---|---|---|---|"]
         for sp in data:
             p, y, pcal_pos = cal_probs(sp)
@@ -85,13 +86,14 @@ def main():
             lines.append(f"| {sp} | {role} | {len(y)} | {int(y.sum())} | {fnr:.3f} | {'YES' if ok else 'no'} "
                          f"| {benign_rate:.2f} | {'yes' if info else 'no'} |")
             if role == "TARGET":
-                verdicts.append((a, sp, ok, info, fnr, benign_rate))
+                verdicts.append((a, sp, ok, info, fnr, benign_rate, fnr <= a))
         lines.append("")
 
     # gate verdict on the ZERO-LABEL targets
     tgt = [v for v in verdicts]
-    holds = sum(1 for _, _, ok, _, _, _ in tgt if ok)
-    nontrivial = sum(1 for _, _, ok, info, _, _ in tgt if ok and info)
+    holds = sum(1 for _, _, ok, _, _, _, _ in tgt if ok)
+    strict = [(a, sp) for a, sp, _, _, _, _, s in tgt if s]
+    nontrivial = sum(1 for _, _, ok, info, _, _, _ in tgt if ok and info)
     if not tgt:
         # Both comparisons reduce to 0 >= 0.0 on an empty target set, so this would print "GATE PASS"
         # and exit 0 having evaluated nothing -- the opposite of the deposited note's verdict.
@@ -102,7 +104,9 @@ def main():
         return 3
     passed = holds >= 0.7 * len(tgt) and nontrivial >= 0.5 * len(tgt)
     lines += ["## GATE VERDICT",
-              f"Across {len(tgt)} (alpha x zero-label-target) cases: guarantee HELD in {holds}/{len(tgt)}, "
+              f"Across {len(tgt)} (alpha x zero-label-target) cases: guarantee HELD in {holds}/{len(tgt)} within the "
+              f"tolerance ({len(strict)}/{len(tgt)} strictly"
+              + "".join(", %s at alpha = %s" % (sp, a) for a, sp in strict) + "), "
               f"and was NON-TRIVIAL (benign-rate>15%) in {nontrivial}/{len(tgt)}.",
               "",
               (f"**GATE PASS** - the transported positive-class-FNR certificate holds and is non-trivial on zero-label "

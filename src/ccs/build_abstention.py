@@ -101,7 +101,9 @@ def main():
     e_tail = float(macro[-1])                          # error at lowest coverage (confidently-wrong tail)
 
     verdict = "PASS" if (rel >= 0.10 and aurc < aurc_rand) else "WEAK"
-    lines = ["# OOD / abstention: selective prediction on transferred-calibrated Evo2-40B (Fig 4)", "",
+    lines = ["# OOD / abstention: selective prediction on transferred-calibrated Evo2-40B (Additional file 1, Table S26 "
+             "and Figure S4)", "", "The random-abstain column is one seeded draw (seed 0); the published random "
+             "control is in Table S26.", "",
              f"Per-species deployment frame ({len(curves)} species, macro-averaged). Confidence = |2p-1| "
              f"on the LOSO-transferred calibrated probability; abstain on the least-confident variants.", "",
              "| coverage | macro selective error | random-abstain error |", "|---|---|---|"]

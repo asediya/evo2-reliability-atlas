@@ -7,14 +7,14 @@
 
 The `data/` tree for this study is not deposited — nine genome FASTAs, per-species variant-window files, and the 8,192-bp Evo 2 score parquets — which exceeds any reasonable supplementary-file limit. It is therefore **not** included in Additional file 2.
 
-**This does not block reproduction of the published numbers.** Every value in the manuscript, tables and figures is held in the recompute layer — the `reports/*.json` files and the small `reports/*.parquet` files, both shipped in Additional file 2 — which the table and figure builders read directly. Running `src/ccs/build_tables.py` against those deposited artifacts regenerates the deposit's own tables report, `reports/tables.md`, without touching `data/`, while `src/ccs/build_supplementary.py` does not produce the submitted supplementary table set, which ships as the export `reports/supplementary_tables.md`; `tools/verify_from_data.py`, by contrast, re-derives published values from the raw score and label files under `data/`. The `fig*_stats.py` scripts are **not** in that class: they read per-variant panels under `data/` and exit non-zero without it. So do most deposited analysis scripts — 109 of the 201 under `src/` reference a `data/` path, including `build_tost_equivalence.py`, `build_phylop_crosscheck.py` and the `fig*_stats.py` family. What they emit — the recompute JSONs and small parquets — IS deposited, so every published value stays checkable where the script that produced it cannot be re-run here. The raw tree is needed to re-run Evo 2 scoring end-to-end (a GPU workload) and to rebuild Additional file 1's Figures S3, S5 and S6 (see FIGURES.md). Figures 9 and 10 and Additional file 1's Figures S1, S2, S4 and S7 rebuild from deposited artefacts, and Figures 1 to 8 and Additional file 1's Figure S8 are built in Additional file 3 and need nothing from `data/`.
+**This does not block reproduction of the published numbers.** Every value in the manuscript, tables and figures is held in the recompute layer — the `reports/*.json` files and the small `reports/*.parquet` files, both shipped in Additional file 2 — which the table and figure builders read directly. Running `src/ccs/build_tables.py` against those deposited artifacts regenerates the deposit's own tables report, `reports/tables.md`, without touching `data/`, while `src/ccs/build_supplementary.py` does not produce the submitted supplementary table set, which ships as the export `reports/supplementary_tables.md`; `tools/verify_from_data.py`, by contrast, re-derives published values from the raw score and label files under `data/`. The `fig*_stats.py` scripts are **not** in that class: they read per-variant panels under `data/` and exit non-zero without it. So do most deposited analysis scripts — 106 of the 173 under `src/` reference a `data/` path, including `build_tost_equivalence.py`, `build_phylop_crosscheck.py` and the `fig*_stats.py` family. What they emit — the recompute JSONs and small parquets — IS deposited, so every published value stays checkable where the script that produced it cannot be re-run here. The raw tree is needed to re-run Evo 2 scoring end-to-end (a GPU workload) and to rebuild Additional file 1's Figures S3, S5 and S6 (see FIGURES.md). Figures 9 and 10 and Additional file 1's Figures S1, S2, S4 and S7 rebuild from deposited artefacts, and Figures 1 to 8 and Additional file 1's Figure S8 are built in Additional file 3 and need nothing from `data/`.
 
 
 ## Deposited `reports/` artefacts with no in-deposit writer
 
 Three artefacts in the deposit are inputs rather than outputs: deposited scripts read them, but no deposited script writes them. They are listed here so the provenance chain has no unexplained node.
 
-- `reports/_recon_pervariant_trust.parquet` — per-variant trust-layer reconstruction (species, variant_id, label, score and the four calibration posteriors) for the 8,192-bp panel. It is a deposited **input**, consumed by `build_emin.py`, `build_fig3_consequence.py`, `build_locus_clustered_ci.py` and `build_ablation_fp8.py`. Produced by the trust-layer build from `data/processed/scores_cloud/`, which is not deposited; the file is shipped so those four consumers run without it.
+- `reports/_recon_pervariant_trust.parquet` — per-variant trust-layer reconstruction (species, variant_id, label, score and the four calibration posteriors) for the 8,192-bp panel. It is a deposited **input**, consumed by `build_emin.py`, `build_fig3_consequence.py`, `build_locus_clustered_ci.py`, `build_ablation_fp8.py`, `build_raw_ece.py`, `fig4_trust.py` and `analyses/scripts/calibration_error.py`. Produced by the trust-layer build from `data/processed/scores_cloud/`, which is not deposited; the file is shipped so those consumers run without it.
 - `reports/ablation_fp8.parquet` — the FP8 batch-size control's per-variant scores at both batch sizes (variant_id, delta_b4, delta_b32; 600 rows). `build_ablation_fp8.py` reads it and regenerates `reports/ablation_fp8.json` from it, joining labels from `_recon_pervariant_trust.parquet`.
 - `reports/fig4_leak.json` — the selective-layer confusion counts (missed positives, false alarms, caught, reaching the clinician); Additional file 1 prints the first three in Table S28, the refusal total in Table S27's notes and the share of errors refused (35.4%) in Note S52. Every stored count recomputes from the deposited `reports/fig4_pervariant.parquet` at the 15% cut.
 
@@ -30,7 +30,7 @@ Exact releases and assembly accessions are in the manuscript Methods and Availab
 - **Label-free panels:** the cattle population allele-frequency panel and the pilot bat cohort VCF described in Methods.
 
 
-## Path inventory (162 distinct templates; `<var>` = species or sample)
+## Path inventory (158 distinct templates; `<var>` = species or sample)
 
 
 ### `analyses/data/` — 
@@ -95,8 +95,6 @@ Exact releases and assembly accessions are in the manuscript Methods and Availab
 - `data/interim/eqtl_piggtex_maf_meta.json`
 - `data/interim/eqtl_windows.parquet`
 - `data/interim/full_phylop.parquet`
-- `data/interim/func_lof_panel.parquet`
-- `data/interim/func_mis_panel.parquet`
 - `data/interim/human_scoring_windows.parquet`
 - `data/interim/omia_matched_panel.parquet`
 - `data/interim/omia_multispecies_positives.parquet`
@@ -129,7 +127,6 @@ Exact releases and assembly accessions are in the manuscript Methods and Availab
 - `data/processed/conservation/<var>_gerp.parquet`
 - `data/processed/conservation/cattle_ensvar_gerp.parquet`
 - `data/processed/conservation/dog_cf3_gerp.parquet`
-- `data/processed/conservation/func_phylop.parquet`
 - `data/processed/conservation/human_gerp.parquet`
 - `data/processed/conservation/omia_matched_phylop.parquet`
 - `data/processed/dbnsfp_panel.parquet`
@@ -163,7 +160,6 @@ Exact releases and assembly accessions are in the manuscript Methods and Availab
 - `data/processed/scores/eqtl_evo2_40b.parquet`
 - `data/processed/scores/esm/<var>_esm.parquet`
 - `data/processed/scores/esm/human_esm.parquet`
-- `data/processed/scores/func_evo2_scores.parquet`
 - `data/processed/scores/human_evo2_40b_local_scores.parquet`
 - `data/processed/scores/nt/eqtl_nt.parquet`
 - `data/processed/scores/omia_matched_evo2_scores.parquet`

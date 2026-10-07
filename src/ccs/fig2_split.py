@@ -100,7 +100,7 @@ def build_supplement(N):
     _rows = sorted(MEAS._load()[0]["forest"], key=lambda r: (r["divergence_my"], r["species"]))
     _h = [Line2D([], [], ls="none", marker="o", markersize=4.2, markerfacecolor=MEAS.S.species_color(r["species"]),
                  markeredgecolor="white", markeredgewidth=.4) for r in _rows]
-    axA.legend(_h, [r["species"] for r in _rows], loc="lower right", ncol=3, frameon=False,
+    axA.legend(_h, [r["species"][:1].upper() + r["species"][1:] for r in _rows], loc="lower right", ncol=3, frameon=False,
                fontsize=SG.ANNOT, handletextpad=.25, columnspacing=1.1, labelspacing=.35,
                borderaxespad=.3)
     MEAS.panel_d(axB1, axB2)
@@ -116,7 +116,7 @@ def build_supplement(N):
     # uninformative; a statistic that cannot inform does not belong on the plate.
     pos = axA.get_position()
     fig.text(pos.x1, pos.y1 + _fh(fig, 5.0),
-             "pooled %.3f [%.3f, %.3f]" % (_pool["auroc"], _pool["lo"], _pool["hi"]),
+             "Pooled %.3f [%.3f, %.3f]" % (_pool["auroc"], _pool["lo"], _pool["hi"]),
              fontsize=SG.ANNOT, color=SG.MUTED, ha="right", va="bottom", linespacing=1.4)
     _ = (_dist, _k)
     return fig

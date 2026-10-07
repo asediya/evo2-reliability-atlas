@@ -579,7 +579,7 @@
   {
    "value": "0.02",
    "artifact": "reports/tost_equivalence.json",
-   "key": "_meta.sesoi_primary (the pre-declared SESOI threshold applied in dbnsfp_reach_audit summary.class_gap_material)",
+   "key": "_meta.sesoi_primary (the SESOI threshold, set after the data were seen, applied in dbnsfp_reach_audit summary.class_gap_material)",
    "resolved": 0.02,
    "transform": "identity",
    "section": "Discussion and Conclusions (gb_manuscript_FINAL.md lines 190"

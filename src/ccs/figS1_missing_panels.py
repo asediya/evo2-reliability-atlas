@@ -98,12 +98,12 @@ def main():
         SG.spines(ax)
         n = int(m.sum())
         share = float(y_all[m].mean())
-        ax.set_title(name, fontsize=SG.ANNOT, color=SG.INK, pad=12.5)
+        ax.set_title(name[:1].upper() + name[1:], fontsize=SG.ANNOT, color=SG.INK, pad=12.5)
         ax.text(0.5, 1.02, "n = {:,}, {:.0%} positive".format(n, share), transform=ax.transAxes,
                 fontsize=SG.ANNOT, color=SG.MUTED, ha="center", va="bottom")
-    fig.text(0.5, 5.0 / H_PT, "predicted probability, transferred two-parameter (Platt) map",
+    fig.text(0.5, 5.0 / H_PT, "Predicted probability, transferred two-parameter (Platt) map",
              fontsize=SG.AXIS, ha="center", va="bottom", color=SG.INK)
-    fig.text(9.0 / W_PT, (BOT + (H_PT - TOP - BOT) / 2) / H_PT, "observed frequency", rotation=90,
+    fig.text(9.0 / W_PT, (BOT + (H_PT - TOP - BOT) / 2) / H_PT, "Observed frequency", rotation=90,
              fontsize=SG.AXIS, ha="center", va="center", color=SG.INK)
 
     out = ROOT / "reports" / "figures"

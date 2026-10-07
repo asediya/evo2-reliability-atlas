@@ -10,7 +10,8 @@ Run from the study repository root (it reads the study's data and results):
 
     python glmtrust/benchmarks/reproduce_paper_trust_layer.py
 
-Exit code 0 means every headline figure reproduced within tolerance.
+Exit code 0 means the order-invariant figures (total errors, macro ECE) reproduced within tolerance and the
+published pooled capture lies inside its row-order permutation range; the other figures are printed beside it.
 """
 import json
 import os

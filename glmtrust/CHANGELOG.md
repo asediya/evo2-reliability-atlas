@@ -38,7 +38,7 @@ wolf on large ones.
   scorer's values add beyond whether it produced one: ranking by the missingness pattern and then by
   value beats the pattern alone by exactly rho * (A_cov - 1/2). A scorer at chance on its covered set
   gains nothing, so this test can fail on the values.
-- `audit(..., cluster=)` and `--cluster-col` — every interval becomes a percentile bootstrap over whole
+- `audit(..., cluster=)` and `--cluster-col` — every whole-panel interval becomes a percentile bootstrap over whole
   groups (gene, locus): class gap, the gain above, and both head-to-head deltas. The report states the
   interval level either way.
 - `--lower-is-worse` on the CLI, matching `Scorer(higher_is_worse=False)`, and a warning whenever a
@@ -157,7 +157,7 @@ variant, and anything else is refused by name with the recoding to apply.
   UTF-16, Windows-1252, gzip and parquet files whatever their name, and refuses spreadsheets,
   folders, duplicate column names and over-long rows by name. Labels may be text named with
   `--positive-label`/`--negative-label`; an unlabelled variant stops the run unless `--drop-unlabelled`
-  is given. `--lower-is-worse` applies to every command. `calibrate` and `transfer` write one row per
+  is given. `--lower-is-worse` applies to `evaluate`, `calibrate`, `transfer` and `audit`. `calibrate` and `transfer` write one row per
   input row, numbered from 0, with `--id-col` carried through. A probable no-call sentinel (a
   conventional code such as -999, or a value set apart from the rest, holding 10% or more of a column
   at its extreme) is noted, and so are exact duplicate rows when some column identifies the rows; a

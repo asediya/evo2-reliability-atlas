@@ -273,8 +273,9 @@ def _md(T1, T2, T3, T4):
              "manuscript.** They present the same recompute layer more fully -- Table D1 carries the "
              "8,192-bp panel with fourteen columns; the manuscript's eight-column Table 2 reports "
              "the same nine species at both readouts against GERP, on slightly different "
-             "per-species panels, so its point estimates agree with D1 at three decimals while "
-             "its intervals do not.\n")
+             "per-species panels, so its 8,192-bp and GERP point estimates agree with D1 at three decimals "
+             "while its 1,001-bp column, on the full 11,130-variant panel, differs in the third decimal for "
+             "goat, horse and cat, and its intervals do not agree.\n")
 
     L.append(f"\n## Table D1. {T1['title']}\n")
     p = T1["pooled_8192"]; rp = T1["readout_pooled"]; dp = T1["d_fm_pooled"]

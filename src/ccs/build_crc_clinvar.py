@@ -42,7 +42,7 @@ def main():
     rng = np.random.default_rng(0); half = rng.random(len(y)) < 0.5
 
     lines = ["# GATE follow-up - positive-class-FNR certificate at ClinVar scale (n~1.6M, labels exist)", ""]
-    id_ok = 0; id_tot = 0; tr_ok = 0; tr_tot = 0
+    id_ok = 0; id_tot = 0; tr_ok = 0; tr_tot = 0; id_strict = 0; tr_strict = 0
     for name, col in SCORES.items():
         s = df.select(pl.col(col).cast(pl.Float64, strict=False))[col]
         m = s.is_not_null().to_numpy(); p = s.to_numpy()
@@ -54,13 +54,13 @@ def main():
             cal = m & half; te = m & ~half
             lam = crc_lambda(p[cal & (y == 1)], a)
             fnr_id, br_id = eval_at(p[te], y[te], lam)
-            ok_id = fnr_id <= a + 0.02; id_ok += ok_id; id_tot += 1
+            ok_id = fnr_id <= a + 0.02; id_ok += ok_id; id_tot += 1; id_strict += fnr_id <= a
             # (2) coding -> noncoding transport
             calc = m & coding; ten = m & ~coding
             if (ten & (y == 1)).sum() >= 20:
                 lam2 = crc_lambda(p[calc & (y == 1)], a)
                 fnr_tr, br_tr = eval_at(p[ten], y[ten], lam2)
-                ok_tr = fnr_tr <= a + 0.03; tr_ok += ok_tr; tr_tot += 1
+                ok_tr = fnr_tr <= a + 0.03; tr_ok += ok_tr; tr_tot += 1; tr_strict += fnr_tr <= a
                 trs = f"{fnr_tr:.3f} | {br_tr:.2f} | {'YES' if ok_tr else 'no'}"
             else:
                 trs = "n/a | n/a | n/a"
@@ -68,8 +68,10 @@ def main():
         lines.append("")
 
     lines += ["## VERDICT",
-              f"In-distribution: guarantee held in {id_ok}/{id_tot} (score x alpha) cases with non-trivial benign-rates. "
-              f"Coding->noncoding transport: held in {tr_ok}/{tr_tot}.",
+              f"In-distribution: guarantee held in {id_ok}/{id_tot} (score x alpha) cases with non-trivial benign-rates "
+              f"within the tolerance (FNR <= alpha + 0.02), {id_strict}/{id_tot} strictly. "
+              f"Coding->noncoding transport: held in {tr_ok}/{tr_tot} within the tolerance (FNR <= alpha + 0.03), "
+              f"{tr_strict}/{tr_tot} strictly.",
               "",
               ("**OBJECT VALID at scale** - the positive-class-FNR certificate holds and is informative in-distribution on "
                "ClinVar, and (partly) survives the coding->noncoding shift. So Conformal Risk Control for missed-"

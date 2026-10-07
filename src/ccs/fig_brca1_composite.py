@@ -125,7 +125,7 @@ def load_heatmap():
 # (make_brca1_structure.py, label_res = [24, 61]) bakes its labels into the raster at a size the
 # renderer picks, and here that came out at roughly 2.2 pt: a third of style_gb.FLOOR, unreadable
 # at print size, and invisible to EVERY gate in this repo because raster text is not in the PDF's
-# text layer. pdfcheck sees no span, textcontrast sees no span, the 6.5 pt floor is never tested.
+# text layer. pdfcheck sees no span, the 6.5 pt floor is never tested.
 #
 # Re-rendering needs the 3Dmol/browser pipeline, which is not available here, so the baked labels
 # are covered on their own white plates and redrawn as real text at ANNOT. They also read "CYS24"
@@ -303,14 +303,14 @@ def main():
     axD = fig.add_subplot(gs[1, :])
     axD.imshow(domtrack[None, :], aspect="auto", cmap=ListedColormap(["#EDEDED", RING_C, BRCT_C]),
                vmin=0, vmax=2, interpolation="nearest")
-    axD.set_yticks([0]); axD.set_yticklabels(["domain"], fontsize=SG.ANNOT); axD.set_xticks([])
+    axD.set_yticks([0]); axD.set_yticklabels(["Domain"], fontsize=SG.ANNOT); axD.set_xticks([])
     for s in axD.spines.values(): s.set_visible(False)
     axD.tick_params(length=0)
 
     axSg = fig.add_subplot(gs[2, :])
     axSg.imshow(truth[None, :], aspect="auto", cmap=ListedColormap([SGE_FUNC, SGE_INT, SGE_LOF]),
                 vmin=0, vmax=2, interpolation="nearest")
-    axSg.set_yticks([0]); axSg.set_yticklabels(["experiment"], fontsize=SG.ANNOT); axSg.set_xticks([])
+    axSg.set_yticks([0]); axSg.set_yticklabels(["Experiment"], fontsize=SG.ANNOT); axSg.set_xticks([])
     for s in axSg.spines.values(): s.set_visible(False)
     axSg.tick_params(length=0)
 
@@ -376,7 +376,7 @@ def main():
     # ---- b: 2x2 structure grid ----
     sgs = gs[5:7, 0].subgridspec(2, 2, hspace=0.0, wspace=0.04)
     grid = [["ring_evo2", "brct_evo2"], ["ring_sge", "brct_sge"]]
-    rowlab = ["predicted\n(Evo 2)", "measured\n(SGE)"]; collab = ["RING", "BRCT"]
+    rowlab = ["Predicted\n(Evo 2)", "Measured\n(SGE)"]; collab = ["RING", "BRCT"]
     pdbid = ["PDB 1JM7", "PDB 1T29"]; colc = [0.19, 0.40]; grid_top = 0.50
     for i in range(2):
         for j in range(2):
@@ -414,8 +414,8 @@ def main():
     cueax.imshow(np.linspace(0, 1, 256)[None, :], aspect="auto", cmap=SG.tol_del_cmap())
     cueax.set_xticks([]); cueax.set_yticks([])
     for s in cueax.spines.values(): s.set_edgecolor("#BBB"); s.set_linewidth(0.5)
-    fig.text(0.205, Y(477.0), "tolerated", fontsize=SG.ANNOT, ha="left", va="top", color=CAP)
-    fig.text(0.355, Y(477.0), "deleterious", fontsize=SG.ANNOT, ha="right", va="top", color=CAP)
+    fig.text(0.205, Y(477.0), "Tolerated", fontsize=SG.ANNOT, ha="left", va="top", color=CAP)
+    fig.text(0.355, Y(477.0), "Deleterious", fontsize=SG.ANNOT, ha="right", va="top", color=CAP)
 
     # ---- c: quantified -- predicted vs measured (continuous, per residue), coloured by domain ----
     axV = fig.add_subplot(gs[5:7, 1])
@@ -456,15 +456,15 @@ def main():
     # sit in bands the scatter does not enter (nothing lies above 0.0129 except residue 1837, and
     # the 0.0105–0.0120 band is empty between x 1.0 and 2.4).
     if 1837 in rmap:
-        _tag(1837, "res 1837 · max Evo 2", (1.62, 0.01435), "#33506F", ha="right")
+        _tag(1837, "Res 1837 · max Evo 2", (1.62, 0.01435), "#33506F", ha="right")
     if 96 in rmap:
-        _tag(96, "res 96 · max SGE", (2.30, 0.01125), "#33506F", ha="right")
+        _tag(96, "Res 96 · max SGE", (2.30, 0.01125), "#33506F", ha="right")
     # honest model-miss: start-loss (residue 1) -- SGE LOF, Evo 2 near baseline. Coloured MISS (magenta),
     # decoupled from the deleteriousness-red used elsewhere.
     if 1 in rmap:
         # BELOW and right of the residue, in the band under the cloud's right flank that no marker
         # enters: seated above it at (1.72, 0.0044) the label's first letters sat on BRCT markers.
-        _tag(1, "start-loss (res 1)", (2.02, 0.0009), MISS_C, arrow="->")
+        _tag(1, "Start-loss (res 1)", (2.02, 0.0009), MISS_C, arrow="->")
     # (residue 1775 / M1775R under-call is discussed in the legend, NOT ringed on-figure: any leader to it
     #  would have to cross the dense cloud and could misread as a spurious negative trend in a no-fit plot.)
 
@@ -474,7 +474,7 @@ def main():
     # 173 mm and the block ends 4 pt off the foot), so the room comes from here. Measured at
     # labelpad 3: 3.2 pt of real ink between the tick digits and this label, 2.6 pt between this
     # label and the block.
-    axV.set_xlabel("measured deleteriousness   (SGE, −function score)", fontsize=SG.AXIS, labelpad=3)
+    axV.set_xlabel("Measured deleteriousness   (SGE, −function score)", fontsize=SG.AXIS, labelpad=3)
     # The default locator emits a −0.002 y-tick that lies OUTSIDE ylim; matplotlib still draws its
     # label, pinned at the axes corner, where it collided with the x-axis label. Pin the ticks inside
     # the range instead — and carry the top one to 0.015, because the data really does reach 0.0149.
@@ -491,7 +491,7 @@ def main():
                         Line2D([0], [0], marker=DOM_MARK[1], color="none", markerfacecolor=BRCT_C, markersize=6.5, label="BRCT"),
                         # "linker", without "(n = 11)": the count ran the row out of the marker-free
                         # corner and onto a BRCT marker; the legend gives it.
-                        Line2D([0], [0], marker=DOM_MARK[2], color="none", markerfacecolor=LINK_C, markersize=6.5, label="linker")],
+                        Line2D([0], [0], marker=DOM_MARK[2], color="none", markerfacecolor=LINK_C, markersize=6.5, label="Linker")],
                # UPPER LEFT AT y = 0.86. At lower right this key would sit exactly where the
                # "start-loss (res 1)" ring and its leader land: the pink circle would enclose the "N"
                # of "RING", so the key would read as though it were the thing being annotated. A ring
@@ -530,10 +530,10 @@ def main():
              # No p-value on the plate: its exponent, set as a superscript, rendered at 5.2 pt, under the
              # 7.0 pt floor, and the interval beside it already carries the inference; Note S43 prints
              # it (p = 7 x 10^-24).
-             f"per-residue rank agreement, Spearman ρ  (n = {len(ev)})\n"
+             f"Per-residue rank agreement, Spearman ρ  (n = {len(ev)})\n"
              f" RING ρ = {rho_ring:+.2f} (n = {n_ring})  ·  BRCT ρ = {rho_brct:+.2f} (n = {n_brct})\n"
-             f" pooled ρ = {rho_all:+.2f}  [{rlo:+.2f}, {rhi:+.2f}]\n"
-             f"variant-level discrimination  (n = {n_lof + n_neg:,})\n"
+             f" Pooled ρ = {rho_all:+.2f}  [{rlo:+.2f}, {rhi:+.2f}]\n"
+             f"Variant-level discrimination  (n = {n_lof + n_neg:,})\n"
              f" AUROC = {auroc_pt:.3f}  [{alo:.3f}, {ahi:.3f}]  ·  LOF ({n_lof:,}) vs FUNC+INT ({n_neg:,})\n"
              f"  95% CIs: site-clustered / residue bootstrap",
              fontsize=SG.ANNOT, color=INK_, ha="left", va="top", linespacing=1.40)

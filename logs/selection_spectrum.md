@@ -2,7 +2,7 @@
 
 | freq bin | n | mean MAF | mean Evo2 deleteriousness |
 |---|---|---|---|
-| singleton | 5607 | 0.0006 | 0.772 |
+| ultra-rare | 5607 | 0.0006 | 0.772 |
 | rare | 5624 | 0.0050 | 0.511 |
 | low | 5581 | 0.0244 | 0.319 |
 | common | 5596 | 0.1214 | 0.201 |

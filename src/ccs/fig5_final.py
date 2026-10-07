@@ -280,16 +280,16 @@ def panel_a(fig, gs_slice):
             ncol, row_h = plate_grid(ax, max(nb, npo), HW, span)
             draw_half(ax, np.ones(nb), 0.0, HW, CODING, ncol, row_h)
             draw_half(ax, np.ones(npo), HW + GAP, HW, CODING, ncol, row_h)
-            lab, gap_s, col = "Evo 2", "gap +0.000", CODING
+            lab, gap_s, col = "Evo 2", "Gap +0.000", CODING
             l_pct, r_pct = "100%", "100%"
-            ci_s = "nothing punched out"
+            ci_s = "Nothing punched out"
             cells = f"{nb + npo:,} cells"
         else:
             r = R[sp]; ben, pat = plate_cells(sp)
             ncol, row_h = plate_grid(ax, max(len(ben), len(pat)), HW, span)
             draw_half(ax, ben, 0.0, HW, SUB, ncol, row_h)
             draw_half(ax, pat, HW + GAP, HW, FAIL, ncol, row_h)
-            lab = sp; gap_s = f"gap {r['class_gap']:+.3f}"
+            lab = sp[:1].upper() + sp[1:]; gap_s = f"Gap {r['class_gap']:+.3f}"
             col = FAIL if _sig_gap(r) else MUTED
             lo_, hi_ = r["class_gap_ci"]
             ci_s = f"[{lo_:+.3f}, {hi_:+.3f}]"
@@ -383,7 +383,7 @@ def panel_b(ax):
     _span = YTOP - (-0.66)
     _axh = ax.get_position().height * ax.figure.get_figheight() * 72.0
     _dyp = _span / _axh                      # data units per point on this axis
-    SG_label_row(ax, [(xc, sp, INK) for xc, sp, _w in seats], -0.01 - 6.0 * _dyp, FOOT,
+    SG_label_row(ax, [(xc, sp[:1].upper() + sp[1:], INK) for xc, sp, _w in seats], -0.01 - 6.0 * _dyp, FOOT,
                  y_from=-0.01, rotation=90, ha="right", va="center", gap_pt=2.0,
                  lead_color="#B4B4B4")
     # The count row: one baseline 7 pt over the block, each count on a leader from its own column's
@@ -450,7 +450,7 @@ def panel_c(ax):
     ax.text(0.985, hi * 1.02, f"species-resampled 95%\n{lo:+.3f} to {hi:+.3f}", fontsize=FOOT,
             color=MUTED, ha="right", va="bottom", linespacing=1.45, style="italic")
     ax.set_xlim(-0.03, 1.30); ax.set_ylim(-0.028, hi * 1.22)
-    ax.set_xticks([0, 1]); ax.set_xticklabels(["", "one decade of panel size"])
+    ax.set_xticks([0, 1]); ax.set_xticklabels(["", "One decade of panel size"])
     ax.set_yticks([0, 0.05, 0.10])
     ax.set_ylabel("conservation − Evo 2\nAUROC gained", fontsize=AXIS, linespacing=1.45, labelpad=2.5)
     _spines(ax)
@@ -506,7 +506,7 @@ def panel_d(ax):
                                            zorder=5))
     ax.set_xticks(range(len(conds)))
     ax.set_xticklabels([c for c, _ in conds], fontsize=FOOT, linespacing=1.45)
-    ax.set_yticks(range(len(order))); ax.set_yticklabels(order, fontsize=FOOT)
+    ax.set_yticks(range(len(order))); ax.set_yticklabels([o[:1].upper() + o[1:] for o in order], fontsize=FOOT)
     ax.tick_params(length=0)
     for s in ("top", "right", "left", "bottom"):
         ax.spines[s].set_visible(False)
@@ -647,7 +647,7 @@ def main():
     # pathogenic half is a short strip, and a reader who does not know why could read the clear area
     # above it as punched-out rather than as absent variants. The clustering count moves to the footer.
     fig.text(0.972, 0.96400,
-             f"punched = no score  ·  half height = class size  ·  bold name and red gap = CI "
+             f"Punched = no score  ·  half height = class size  ·  bold name and red gap = CI "
              f"excludes 0 ({_nsig} of 9)",
              fontsize=FOOT, color=MUTED, ha="right", va="bottom")
     fig.add_artist(plt.Line2D([0.092, 0.972], [0.98000, 0.98000], color="#C4BFB8", lw=0.6))

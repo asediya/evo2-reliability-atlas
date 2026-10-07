@@ -303,7 +303,7 @@ def panel_a(fig, gs_slice):
         # carried; the argument goes to the legend and Additional file 1 Note S45.
         # Grey, unbolded, and set in the strip's own headroom rather than haloed over the profile
         # curve: the halo was there only because the caption was sitting on the line it described.
-        axm.annotate(f"band: logit {h0:+.1f} to {h1:+.1f} — {_rate:.0%} local error, "
+        axm.annotate(f"Band: logit {h0:+.1f} to {h1:+.1f} — {_rate:.0%} local error, "
                      f"{_rate / base:.1f}× the cohort rate",
                      xy=(h0, np.nanmax(pr) * 0.55), xytext=(LO + 0.2, np.nanmax(pr) * 2.13),
                      fontsize=FOOT, color=MUTED, ha="left", va="top",
@@ -365,7 +365,7 @@ def panel_a(fig, gs_slice):
                 ax.scatter(v, i + 0.50 + (rng.random(len(v)) - 0.5) * 0.46, s=sz, marker=mk,
                            color=col, alpha=0.85, linewidths=0.12, edgecolors='white', zorder=7,
                            rasterized=True)
-        lab = r["species"] + (" *" if r["target_only"] else "")
+        lab = r["species"][:1].upper() + r["species"][1:] + (" *" if r["target_only"] else "")
         # The asterisk and the colour carry "never trained on"; the bold was emphasis on top of an
         # encoding that already worked, so it goes (style_gb rule: bold is for the panel letter).
         ax.text(-0.371, i + 0.50, lab, transform=ax.get_yaxis_transform(),
@@ -404,7 +404,7 @@ def panel_a(fig, gs_slice):
     # TWO LINES, both ending short of the marginal profile. As one line the key ran on under the
     # profile curve, which rises from the left edge of the field at this height, and the white plate
     # behind the words cut the curve in two.
-    ax.text(-0.350, -2.35, "bar = that species' error rate", transform=ax.get_yaxis_transform(),
+    ax.text(-0.350, -2.35, "Bar = that species' error rate", transform=ax.get_yaxis_transform(),
             ha="left", va="center", fontsize=FOOT, color=MUTED, clip_on=False, zorder=9)
     ax.text(-0.350, -1.15, "* = never in the 1,001-bp training pool",
             transform=ax.get_yaxis_transform(), ha="left", va="center", fontsize=FOOT, color=MUTED,
@@ -440,7 +440,7 @@ def panel_a(fig, gs_slice):
     # in-field callout needed a leader across the entire panel to reach the zone it named.
     # name the corridor on the row where it is widest, so the leader stays short
     iw = int(np.argmax([r["refuse_logit_abs"] for r in RW]))
-    ax.annotate("dashed box =\nwhat this species refuses",
+    ax.annotate("Dashed box =\nwhat this species refuses",
                 xy=(-RW[iw]["refuse_logit_abs"], iw + 0.50), xytext=(LO + 0.25, iw + 0.10),
                 color=BEDROCK, ha="left", va="center", linespacing=1.45,
                 arrowprops=dict(arrowstyle="->", color=BEDROCK, lw=0.55,
@@ -449,10 +449,10 @@ def panel_a(fig, gs_slice):
     # the boundary is named on its own tick rather than floated as a label -- anywhere it floated
     # it landed on the profile line or on the field
     ax.set_xticks([-8, -4, 0, 2, 4])
-    ax.set_xticklabels(["-8", "-4", "0\ndecision boundary, p = 0.5", "2", "4"], linespacing=1.3)
+    ax.set_xticklabels(["-8", "-4", "0\nDecision boundary, p = 0.5", "2", "4"], linespacing=1.3)
     ax.tick_params(labelsize=FOOT)
-    ax.set_xlabel("signed log-odds, logit(p)      ←  confidently negative        "
-                  "confidently positive  →", fontsize=AXIS, labelpad=1)
+    ax.set_xlabel("Signed log-odds, logit(p)      ←  Confidently negative        "
+                  "Confidently positive  →", fontsize=AXIS, labelpad=1)
     for sname in ("top", "right", "left"):
         ax.spines[sname].set_visible(False)
     ax.spines["bottom"].set_color("#8C8C8C")
@@ -500,15 +500,15 @@ def panel_a(fig, gs_slice):
     _yk = y - _lh * 0.5
     _bw_mm = ax.get_position().width * W_MM
     _kx = lambda mm: -0.310 + mm / _bw_mm
-    for _xm, _col, _mk, _sz, _lb in ((0.0, "#4A0910", "o", 7.0, "missed positive"),
-                                     (27.0, POS, "^", 9.0, "over-call")):
+    for _xm, _col, _mk, _sz, _lb in ((0.0, "#4A0910", "o", 7.0, "Missed positive"),
+                                     (27.0, POS, "^", 9.0, "Over-call")):
         ax.scatter([_kx(_xm)], [_yk], s=_sz, marker=_mk, color=_col, transform=ax.transAxes,
                    clip_on=False, zorder=9, edgecolors="white", linewidths=0.3)
         ax.text(_kx(_xm + 1.7), _yk, _lb, transform=ax.transAxes, ha="left", va="center",
                 fontsize=FOOT, color=INK, clip_on=False, zorder=9)
     ax.plot([_kx(45.0), _kx(48.6)], [_yk, _yk], transform=ax.transAxes, color="#BDB7AF", lw=0.42,
             solid_capstyle="butt", clip_on=False, zorder=9)
-    ax.text(_kx(50.3), _yk, f"bin holds 1\u2013{MIN_N - 1} calls: too few to rate",
+    ax.text(_kx(50.3), _yk, f"Bin holds 1\u2013{MIN_N - 1} calls: too few to rate",
             transform=ax.transAxes, ha="left", va="center", fontsize=FOOT, color=INK,
             clip_on=False, zorder=9)
     # 2.6 -> 1.0 pt here and 2.6 -> 1.4 pt on the two caption lines below. On the 173 mm canvas
@@ -534,8 +534,8 @@ def panel_b(ax):
     If a cross-species map were better than two parameters, these would sit left of zero. They pile on it."""
     from scipy.stats import gaussian_kde
     order = ["width10", "width15", "mass10", "mass15"]
-    lab = {"width10": "equal-width, 10 bins", "width15": "equal-width, 15 bins",
-           "mass10": "equal-mass, 10 bins", "mass15": "equal-mass, 15 bins"}
+    lab = {"width10": "Equal-width, 10 bins", "width15": "Equal-width, 15 bins",
+           "mass10": "Equal-mass, 10 bins", "mass15": "Equal-mass, 15 bins"}
     keys = [k for k in R["paired_verdicts"] if k.endswith("__macro")]
     keys = sorted(keys, key=lambda k: order.index(k.split("__")[1]))
     allx = np.concatenate([R["paired_verdicts"][k]["draws"] for k in keys])
@@ -558,7 +558,7 @@ def panel_b(ax):
         ax.plot(xs, dens, color=c, lw=1.0, ls=st, zorder=3, label=lab[k.split("__")[1]])
     ax.axvline(0, color=BEDROCK, lw=1.0, zorder=5)
     # left of the rule, so it cannot touch the legend that occupies the upper right
-    ax.text(-0.0004, peak * 1.24, "no difference", fontsize=FOOT, color=BEDROCK, ha="right",
+    ax.text(-0.0004, peak * 1.24, "No difference", fontsize=FOOT, color=BEDROCK, ha="right",
             va="bottom")
     frac = float(np.mean(allx < 0))
     ax.set_xlim(xs[0], xs[-1]); ax.set_ylim(0, peak * 1.48)
@@ -616,10 +616,10 @@ def panel_c(ax):
     # Three curves identified by a legend, not by inline labels. The inline labels had to sit ON the
     # curves they named, and at low coverage the curves crowd together, so no placement cleared both
     # its neighbours and the callouts. A legend in the empty corner is collision-free by construction.
-    ax.plot(cov, rnd, color=SUB, lw=1.0, ls=(0, (3, 1.6)), zorder=3, label="random (control)")
+    ax.plot(cov, rnd, color=SUB, lw=1.0, ls=(0, (3, 1.6)), zorder=3, label="Random (control)")
     ax.plot(cov, orc, color=POS, lw=1.0, ls=(0, (1, 1.4)), zorder=3,
-            label="oracle (needs labels)")
-    ax.plot(cov, hon, color=CODING, lw=1.0, zorder=5, label="transferred (honest)")
+            label="Oracle (needs labels)")
+    ax.plot(cov, hon, color=CODING, lw=1.0, zorder=5, label="Transferred (honest)")
     i = int(np.argmin(hon))
     ax.scatter([cov[i]], [hon[i]], s=22, color=CODING, zorder=6, edgecolors="white", lw=0.7)
     # The key sits below the axes: inside them it would cross the control and oracle curves.
@@ -631,8 +631,8 @@ def panel_c(ax):
     _fr = _P[_wk]["n_err"] / R["staircase"]["census"]["n_errors"]
     ax.set_xticks([1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3])
     ax.set_xlim(1.03, 0.27); ax.set_ylim(0.026, 0.0800)
-    ax.set_xlabel("coverage  (fraction still called)", fontsize=AXIS)
-    ax.set_ylabel("macro error", fontsize=AXIS)
+    ax.set_xlabel("Coverage  (fraction still called)", fontsize=AXIS)
+    ax.set_ylabel("Macro error", fontsize=AXIS)
     y_lg = _below(ax, -0.05)                     # measured: below the x-label, whatever height it took
     # Handles and column gaps tightened (1.7/0.45/1.0 -> 1.2/0.35/0.8) and the anchor clamped
     # below. At the corrected type scale the three-column key measured 232 pt against 166 pt of
@@ -661,7 +661,7 @@ def panel_c(ax):
     # Was a red italic "Caveat: ... and there confidence does not predict error" -- a warning about
     # how to read the panel, which is legend copy. What stays is the plain arithmetic behind it: the
     # weight, the error share and the self-knowledge AUROC, none of which is printed anywhere else.
-    _line(ax, y_cap, f"macro average over {len(_P)} species", fontsize=FOOT, color=MUTED)
+    _line(ax, y_cap, f"Macro average over {len(_P)} species", fontsize=FOOT, color=MUTED)
     _spines(ax)
 
 
@@ -731,15 +731,15 @@ def panel_dm(ax):
     from matplotlib.ticker import FuncFormatter as _FF
     for _axis in (ax.xaxis, ax.yaxis):
         _axis.set_major_formatter(_FF(lambda v, _: "0" if abs(v) < 1e-9 else "%g" % v))
-    ax.set_xlabel("probability under one global sigmoid", fontsize=AXIS)
-    ax.set_ylabel("probability under leave-one-species-out\nisotonic transfer", fontsize=AXIS,
+    ax.set_xlabel("Probability under one global sigmoid", fontsize=AXIS)
+    ax.set_ylabel("Probability under leave-one-species-out\nisotonic transfer", fontsize=AXIS,
                   linespacing=1.35)
     _spines(ax)
     # Three short lines that end left of the diagonal: the longer wording ran through it.
-    ax.text(0.035, 0.965, "shaded: the two disagree\nred: a call crossing the\ndecision boundary",
+    ax.text(0.035, 0.965, "Shaded: the two disagree\nRed: a call crossing the\ndecision boundary",
             transform=ax.transAxes, fontsize=FOOT, ha="left", va="top", color=INK,
             linespacing=1.4)
-    ax.text(0.965, 0.035, "one hexagon =\na count of calls", transform=ax.transAxes,
+    ax.text(0.965, 0.035, "One hexagon =\na count of calls", transform=ax.transAxes,
             fontsize=FOOT, ha="right", va="bottom", color=MUTED, linespacing=1.3)
 
 
@@ -769,7 +769,7 @@ def panel_e(ax):
                # "— abstains on 0%" is dropped from the KEY: it is a finding, it reads like a
                # bug beside a series name, and the legend now states it. Every class-conditional
                # point already prints its own abstention rate along the bottom of the panel.
-               label="marginal")
+               label="Marginal")
     ax.scatter(xs, p_mond, s=18, color=CODING, zorder=5, edgecolors="white", lw=0.4,
                # No range in the label. Every Mondrian point now carries its OWN abstention rate
                # along the bottom of the panel, which is the whole point of finding 39; a min-max
@@ -777,11 +777,11 @@ def panel_e(ax):
                # made the legend wide enough to start at x 343 and run into the "nominal 90%
                # target" annotation at 354. Without it the widest entry is the marginal one, 83 pt,
                # and the legend starts at 373.
-               label="class-conditional")
+               label="Class-conditional")
     # KEYED, NOT CAPTIONED. The rule is a legend entry like the two series rather than a floating
     # caption beside the key, which would read as one run of words with it, and the whole key
     # sits above the data, where the dashed rule cannot strike through it.
-    ax.axhline(0.90, color=BEDROCK, lw=1.0, ls=(0, (4, 2)), zorder=6, label="nominal 90%")
+    ax.axhline(0.90, color=BEDROCK, lw=1.0, ls=(0, (4, 2)), zorder=6, label="Nominal 90%")
     n_ok = int((p_mond >= 0.90).sum())
     # Counting all nine flatters the arm: six are the calibration species, where coverage at or
     # above nominal follows by construction and is not evidence of transfer. The out-of-sample
@@ -800,7 +800,7 @@ def panel_e(ax):
     # rotation_mode="anchor" applies the alignment BEFORE the rotation, which pushed the
     # vertical labels up into the axes and over the panel's shaded field. Default mode
     # rotates first and then aligns the rotated box, so the labels hang below the axis.
-    _tl = ax.set_xticklabels([s_ + (" *" if s_.lower() in HELD_OUT else "") for s_ in sp],
+    _tl = ax.set_xticklabels([s_[:1].upper() + s_[1:] + (" *" if s_.lower() in HELD_OUT else "") for s_ in sp],
                              fontsize=TICK, rotation=90, ha="center", va="top")
     for _t, _s in zip(_tl, sp):
         _t.set_color(FAIL if _s.lower() in HELD_OUT else INK)
@@ -817,17 +817,17 @@ def panel_e(ax):
                 fontsize=FOOT, color=CODING, ha="center", va="bottom", zorder=7)
     # The row of percentages is keyed where it is read: over its right-hand end, in the empty band
     # under the lowest triangle of those columns.
-    ax.text(len(xs) - 0.55, 0.150, "class-conditional abstention", transform=ax.get_xaxis_transform(),
+    ax.text(len(xs) - 0.55, 0.150, "Class-conditional abstention", transform=ax.get_xaxis_transform(),
             fontsize=FOOT, color=CODING, ha="right", va="bottom", zorder=7)
     # y=0.33, not 0.40: at 170 mm the rotated label's top reached into panel e's own letter chip --
     # the same chip-eats-ylabel defect Fig 5 shipped once (memory figure-qa-tooling blind spot 4).
-    ax.set_ylabel("positive-class coverage", fontsize=AXIS, y=0.33)
+    ax.set_ylabel("Positive-class coverage", fontsize=AXIS, y=0.33)
     # UPPER right, not lower. The per-species abstention rates added above are printed along the
     # bottom of this panel at y = 0.02, which is exactly where a lower-right legend sits: the
     # class-conditional entry overlapped seven of the nine rates. Measured on the plate, the only
     # band inside panel e with no ink at all is its top, y 300-320 pt, which holds both entries.
     _h, _l = ax.get_legend_handles_labels()
-    _o = [_l.index(k) for k in ("nominal 90%", "marginal", "class-conditional") if k in _l]
+    _o = [_l.index(k) for k in ("Nominal 90%", "Marginal", "Class-conditional") if k in _l]
     ax.legend([_h[k] for k in _o], [_l[k] for k in _o], fontsize=FOOT, frameon=False,
               loc="lower right", bbox_to_anchor=(1.0, 1.005), ncol=2, handletextpad=0.3,
               columnspacing=1.1, borderaxespad=0.0, labelspacing=0.2)

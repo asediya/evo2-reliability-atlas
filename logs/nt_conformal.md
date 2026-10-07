@@ -24,5 +24,5 @@ Mean Mondrian coverage on held-out TARGETS = **0.981** vs nominal 0.90 (mean abs
 | 0.1 | 0.9 | **0.979** | 0.918 | 0.453 | 0.547 |
 | 0.2 | 0.8 | **0.854** | 0.781 | 0.993 | 0.007 |
 
-**VERDICT:** conformal coverage TRACKS the nominal guarantee on NT too - distribution-free coverage is preserved on a second architecture; the weaker discriminator trades informativeness (more abstention) for the SAME guarantee.
-**MODEL-AGNOSTIC (conformal):** the coverage guarantee holds on BOTH backbones on zero-label targets (mean Mondrian coverage: Evo2 0.970, NT 0.981; both ~nominal 0.90). The weaker NT backbone simply ABSTAINS more (mean {both} rate: Evo2 0.60 vs NT 0.55) - exactly the intended behaviour: coverage is a property of the METHOD, informativeness a property of the MODEL.
+**VERDICT:** conformal coverage TRACKS the nominal guarantee on NT too - coverage is preserved on a second architecture, under the same cross-species exchangeability caveat as for Evo 2.
+**MODEL-AGNOSTIC (conformal):** the coverage guarantee holds on BOTH backbones on zero-label targets (mean Mondrian coverage: Evo2 0.970, NT 0.981; both ~nominal 0.90). The weaker NT backbone abstains slightly LESS (mean {both} rate: Evo2 0.60 vs NT 0.55), so abstention did not track backbone quality: coverage behaved as a property of the METHOD.

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Check that every panel title clears the text above it.
 
-WHY THIS EXISTS. tools/figure_tiles.py measures bounding-box INTERSECTION, so two labels can sit
+WHY THIS EXISTS. A bounding-box INTERSECTION test lets two labels sit
 0.7 pt apart and pass every automated check while reading, to a human, as one run-together block.
 That is what happened when Figure 2's early-retrieval strip was given its own panel letter: its
 title landed 0.7 pt under the ROC panel's x-axis label. The boxes never touched, so nothing

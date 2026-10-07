@@ -90,7 +90,7 @@ def main():
                          auroc=round(auc, 3), auroc_ci=f"[{auc_lo}, {auc_hi}]" if auc_lo is not None else "n/a",
                          ece_transfer=e_tr, ece_ci=f"[{e_lo}, {e_hi}]" if e_lo is not None else "n/a"))
 
-    lines = ["# STEP 2 hardening - bootstrap 95% CIs on the headline tables (Evo2-40B)", "",
+    lines = ["# STEP 2 hardening - variant-level bootstrap 95% CIs (Evo2-40B; not the published locus-clustered intervals of Table 2)", "",
              f"Nonparametric percentile bootstrap, {NBOOT}x, stratified by class. Transferred ECE uses an isotonic "
              "map fit on the OTHER label-rich species (leave-one-species-out), bootstrapping the target species.", "",
              "| species | n | pos | AUROC | AUROC 95% CI | ECE transfer | ECE 95% CI |",

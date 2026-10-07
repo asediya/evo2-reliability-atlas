@@ -1,7 +1,7 @@
 """The measurement figure, its supplement, and the two atlas panels that read the per-variant table.
 
 fig2_split draws Figure S7 from panel_c and panel_d, and fig7_atlas and fig8_readout read the atlas
-through this module; panel_a, panel_b, panel_headtohead and fig2_defgh.panel_D/E/F/H are not called.
+through this module; panel_a, panel_b and panel_headtohead are not called.
 
   measurement plate (panel_a, panel_b, panel_headtohead)
     a  discrimination melts to the missense floor -- drawn against the panel's own
@@ -17,8 +17,7 @@ through this module; panel_a, panel_b, panel_headtohead and fig2_defgh.panel_D/E
        pooled band behind them.
     b  the conservation plane -- GERP against Evo 2 at 1,001 bp -- with the paired interval on
        every per-species difference beside it.
-  atlas plate (panel_composition; its panel a is fig2_hero.build_dotplot, which reads
-  atlas_skill() and table2_intervals() below)
+  atlas plate (panel_composition; atlas_skill() and table2_intervals() below)
     c  what each species' panel is made of: the coding share of positives and of negatives.
 
 Every number is read from the recompute layer (`reports/fig2_data.json`,
@@ -304,10 +303,10 @@ def panel_c(ax):
     _names = mtransforms.offset_copy(ax.get_xaxis_transform(), fig=ax.figure, y=-16.5,
                                      units="points")
     for j, t in enumerate(ticks):
-        txt = grp[t][0]["species"] if len(grp[t]) == 1 else "%d mammals" % len(grp[t])
+        txt = grp[t][0]["species"][:1].upper() + grp[t][0]["species"][1:] if len(grp[t]) == 1 else "%d mammals" % len(grp[t])
         ax.text(slot_x[t], 0, txt, transform=_names, fontsize=ANNOT, ha="center", va="top",
                 color=SG.INK, clip_on=False)
-    ax.set_xlabel("divergence from human (TimeTree), one slot per divergence", fontsize=SG.AXIS,
+    ax.set_xlabel("Divergence from human (TimeTree), one slot per divergence", fontsize=SG.AXIS,
                   labelpad=16.0)
     # The default labelpad: this panel was pulled in to 1.0 on the measurement plate, where panel
     # b's nine-species key ran up to its y-label. On the supplementary plate nothing sits to its left.
@@ -321,7 +320,7 @@ def panel_c(ax):
                 clip_on=False, solid_capstyle="butt", zorder=2)
     # "pooled" in the empty stretch between the mammals' slot and chicken's
     _mid = (slot_x[ticks[-2]] + SLOT_W[ticks[-2]] / 2 + slot_x[ticks[-1]]) / 2
-    ax.text(_mid, P["auroc"] + .004, "pooled", fontsize=ANNOT, color=S.EVO2, ha="center",
+    ax.text(_mid, P["auroc"] + .004, "Pooled", fontsize=ANNOT, color=S.EVO2, ha="center",
             va="bottom")
     # The seven non-human mammals all sit at 94 My and are spread across x only so their intervals
     # do not overlap; the tick says "7 mammals" and the legend says the spread carries no
@@ -389,9 +388,9 @@ def panel_d(axP, axS):
     from matplotlib.lines import Line2D
     _h = [Line2D([0], [0], marker="o", linestyle="none", markerfacecolor="none",
                  markeredgecolor=S.PATHO, markeredgewidth=.5, markersize=3.0,
-                 label="catalogued allele"),
+                 label="Catalogued allele"),
           Line2D([0], [0], marker="h", linestyle="none", markerfacecolor=_greys(0.30),
-                 markeredgecolor="none", markersize=4.2, label="population variant")]
+                 markeredgecolor="none", markersize=4.2, label="Population variant")]
     _lg = axP.legend(handles=_h, loc="lower left", frameon=True, framealpha=0.88,
                      facecolor="white", edgecolor="none", borderpad=0.25, handletextpad=0.5,
                      labelspacing=0.35, borderaxespad=0.4, fontsize=ANNOT)
@@ -438,7 +437,7 @@ def panel_d(axP, axS):
                      color=(SG.INK if strong else SG.MUTED))
     axS.axvline(0, color=SG.RULE, lw=.6, ls=(0, (2.5, 2)), zorder=2)
     axS.set_yticks(range(len(rows)))
-    axS.set_yticklabels([sp for sp, _ in rows], fontsize=ANNOT)
+    axS.set_yticklabels([sp[:1].upper() + sp[1:] for sp, _ in rows], fontsize=ANNOT)
     for tick, (sp, _) in zip(axS.get_yticklabels(), rows):
         tick.set_color(S.species_text_color(sp))
     axS.set_ylim(-.8, len(rows) - .3); axS.invert_yaxis()
@@ -446,7 +445,7 @@ def panel_d(axP, axS):
     axS.set_xlabel("Evo 2 − GERP, paired\n(AUROC, 95% CI)", fontsize=SG.AXIS, linespacing=1.35)
     SG.spines(axS, keep=("bottom",))
     axS.tick_params(axis="y", length=0)
-    axS.annotate("difference", xy=(max(rr["hi"] for _, rr in rows), -0.70), xycoords="data",
+    axS.annotate("Difference", xy=(max(rr["hi"] for _, rr in rows), -0.70), xycoords="data",
                  xytext=(3, 0), textcoords="offset points", fontsize=ANNOT, va="bottom",
                  ha="left", color=SG.MUTED, annotation_clip=False)
     return rows

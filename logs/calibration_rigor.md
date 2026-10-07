@@ -15,7 +15,7 @@ Sources (label-rich): ['sheep', 'horse', 'cat', 'cattle', 'dog', 'human'] | labe
 | dog | source | 2497 | 227 | 0.3224→0.0495 | **0.3063→0.0472** | 0.3149→0.0451 | 0.1431→0.0333 | 0.0101 |
 | human | source | 3000 | 1500 | 0.1548→0.1174 | **0.1508→0.1153** | 0.1066→0.1167 | 0.17→0.1578 | 0.0107 |
 
-Median adaptive-ECE: transfer **0.054** ≈ oracle **0.015** (holds on the debiased metric too).
+Median adaptive-ECE: transfer **0.054** against oracle **0.015** (holds on the debiased metric too).
 
 ## (2) Formal calibration test — can we reject 'perfectly calibrated'?
 KS-calibration goodness-of-fit test (simulate under H0=perfect calibration); p>0.05 = CANNOT reject perfect calibration. + 95% bootstrap CI on transfer adaptive-ECE.

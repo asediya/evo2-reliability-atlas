@@ -86,11 +86,6 @@ def collect():
                  if f.replace("\\", "/") not in INTERNAL)
     for top in ("README.md", "LICENSE", "glmtrust/LICENSE",
                 "requirements.txt",                                    # R2: README's install step needs it
-                # No glob reaches a top-level .py, so this builder silently omitted
-                # build_reach_penalty_figure.py and it had to be added to the deposit by hand
-                # afterwards -- which is why the shipped zip could not be rebuilt byte-for-byte.
-                # Naming it here makes the builder the whole story.
-                "build_reach_penalty_figure.py",
                 ".zenodo.json",                                        # Zenodo release metadata
                 "FIGURES.md",                                          # E107: figure-to-script manifest
                 "reports/COMPILED_RESULTS.md", "reports/tables.md",    # R2: README references these directly
@@ -220,7 +215,6 @@ def main():
                  "glmtrust/tests/test_audit.py",
                  "glmtrust/tests/test_card.py",
                  "glmtrust/tests/test_delong.py",
-                 "build_reach_penalty_figure.py",
                  "tools/export_from_submission.py",
                  "tools/capture_scoring_environment.py",
                  ".zenodo.json"):

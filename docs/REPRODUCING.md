@@ -29,8 +29,8 @@ and `torch`, `transformers`, `fair-esm`, `evo2` and `vortex` on a GPU scoring ho
 commands above rather than from its pins: `numpy==2.5.1` needs Python 3.12, and `torch`'s `+cu124`
 build is served only by download.pytorch.org. `torch` is needed only on a GPU scoring host.
 
-Scripts locate the repository root from their own path, so they run from any checkout. Set
-`CCS_ROOT` to override.
+Run scripts from the archive root. Some locate it from their own path and honour `CCS_ROOT`; many
+open `reports/` relative to the working directory.
 
 ## Three tiers of reproducibility
 
@@ -221,7 +221,7 @@ clean, which is what a clone gives you if the flag is left off.
 ## The traceability table
 
 `reports/traceability_table.json` is an artefact map: it gives the artefact and key that carry each of 211 values
-from the analysis. Its section labels and printed forms are those of the reading map behind it, and 8 of its
+from the analysis. Its section labels and printed forms are those of the reading map behind it, and some of its
 values are printed in this submission in another form or not at all (17.6% is printed as 17.64%, for example), so
 it ties values to artefacts, not to the submitted text, and
 `python tools/check_traceability.py` re-resolves every row against those artefacts from this archive alone. Its
