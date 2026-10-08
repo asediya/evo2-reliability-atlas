@@ -557,7 +557,9 @@ def panel_b(fig, gs_slice):
         rc = (_strata[c["key"]]["ci"] if c["key"] in _strata else c.get("rho_ci")) or [float("nan"), float("nan")]
         # 0.955 / 0.807 / 0.659 is a 6 pt stack on an 18 mm cell: the pitch is
         # set from the type size, not guessed, so the three lines cannot touch.
-        ax.text(0.955, 0.807, f"n = {c['n']:,}   ρ = {c['rho']:+.3f}", transform=ax.transAxes,
+        # Spearman's correlation, named in words: ρ is the paper's pair coverage, and an r with a subscript s
+        # would print the s under the 7.0 pt floor. The legend and the Notes write it rₛ.
+        ax.text(0.955, 0.807, f"n = {c['n']:,}   Spearman {c['rho']:+.3f}", transform=ax.transAxes,
                 fontsize=MINPT, color=MUTED, ha="right", va="top")
         ax.text(0.955, 0.659, f"[{rc[0]:+.3f}, {rc[1]:+.3f}]", transform=ax.transAxes,
                 fontsize=MINPT, color=(CODING if flat else MUTED), ha="right", va="top",

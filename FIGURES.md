@@ -3,8 +3,8 @@
 Each figure is rendered by exactly one **live builder**, and no number is typed into a figure script by
 hand.
 
-**Figures 1 to 8 and Additional file 1's Figure S8 are built from Additional file 3** rather than
-from this repository, and their builders ship there, in its `figures/` directory. Five of them have a
+**Figures 1 to 8 and Additional file 1's Figures S8 and S9 are built from Additional file 3** rather than
+from this repository, and their builders ship there, in its `figures/` directory. Six of them have a
 prep script beside them that recomputes what they draw from the deposited per-variant panels, and
 Figures 3 and 5 draw what Figure 2's prep script writes, Figure 5 with Additional file 3's tables; Figure S8
 reads Additional file 3's tables directly, and Figure 1 draws a constructed toy panel and reads no data. They are listed below for
@@ -64,7 +64,7 @@ Read this before matching any filename to any figure.
 1. **Project numbering** — what the builder module is called and what it writes into
    `reports/figures/`. `fig3_rebuild.py` emits `Figure3_blindspot.pdf`, which reads as "Figure 3"
    and is Additional file 1's Figure S2, not Figure 3 of the submission.
-2. **Submission numbering** — Figures 1 to 10 and Additional file 1's Figures S1 to S8.
+2. **Submission numbering** — Figures 1 to 10 and Additional file 1's Figures S1 to S9.
 
 Three builder output names carry their figure's number (`Figure2.pdf`, `figS1_missing_panels.pdf`
 and `FigureS7_measurement_supp.pdf`) and the rest do not, so the table below is the map.
@@ -92,6 +92,7 @@ need the undeposited `data/` tree (Figures S3, S5 and S6).
 | Additional file 1: Figure S6 | `Figure_BRCA1.pdf` | `src/ccs/fig_brca1_composite.py` | `reports/brca1_residue_scores.parquet` **+ `data/`** | `Additional_file_1_FigureS6.pdf` |
 | Additional file 1: Figure S7 | `FigureS7_measurement_supp.pdf` | `src/ccs/fig2_split.py` (panels from `src/ccs/fig2_measure.py`) | `reports/fig2_data.json`, and **Additional file 3** `tables/fig1_atlas_pervariant.parquet` | `Additional_file_1_FigureS7.pdf` |
 | Additional file 1: Figure S8 | `FigureTransfer.pdf` | **Additional file 3** `figures/build_fig_transfer.py` | `tables/atlas_missense_transfer.parquet`, joined to `tables/fig1_atlas_pervariant.parquet` by `scripts/recompute_atlas_strata.py` | `Additional_file_1_FigureS8.pdf` |
+| Additional file 1: Figure S9 | `FigurePlate.pdf` | **Additional file 3** `figures/build_fig_plate.py` | `figures/dbnsfp_49_pairspace.json`, from `tables/dbnsfp_reach_panel.parquet` and `tables/dbnsfp_predictors.csv` by `figures/prep_fig_plate.py` | `Additional_file_1_FigureS9.pdf` |
 
 **Figures 9 and 10 each have their own builder, and Figure S7 comes from `fig2_split.py`.**
 `fig7_atlas.py` draws the three panels of Figure 9 and `fig8_readout.py` the four of Figure 10. Both read the
@@ -110,7 +111,7 @@ Figure S3.
 **`tools/stage_figures.py` applies the map in the table above for the figures built here.**
 It holds the builder-to-deliverable mapping and renames builder outputs to the staged names. Its
 `--check` mode reports any deliverable that is behind its builder without changing anything. It does
-not handle Figures 1 to 8 or Figure S8: those are built in Additional file 3 and copied in, and that
+not handle Figures 1 to 8 or Figures S8 and S9: those are built in Additional file 3 and copied in, and that
 archive's `figures/README.md` says how.
 
 ```bash

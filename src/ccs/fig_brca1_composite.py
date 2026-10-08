@@ -522,17 +522,16 @@ def main():
     # ("reference notebook, 1B: 0.73 → reproduces, not beats") is not a key and is not here; it is
     # an argument, and it belongs to the legend in the journal's voice.
     fig.text(0.5, Y(485.0),
-             # "Spearman" is not decoration. This paper uses ρ for TWO quantities: the share of
-             # pathogenic-benign pairs a score orders (Figures 2 and 4, defined in Methods as
-             # ρ = r₊r₋) and Spearman's rank correlation (here, and in Figure S3). A bare ρ
-             # beside an AUROC leaves a reader to guess which. The header names it once, and the
-             # three values below inherit it.
+             # The header names the statistic in words, Spearman's correlation, and the three values
+             # below inherit it. No ρ is set: ρ is the paper's pair coverage (Methods, ρ = r₊r₋). No
+             # rₛ either: Arial has no subscript s, and a mathtext subscript prints under the 7.0 pt
+             # floor. The legend and the Notes write the same statistic as rₛ.
              # No p-value on the plate: its exponent, set as a superscript, rendered at 5.2 pt, under the
              # 7.0 pt floor, and the interval beside it already carries the inference; Note S43 prints
              # it (p = 7 x 10^-24).
-             f"Per-residue rank agreement, Spearman ρ  (n = {len(ev)})\n"
-             f" RING ρ = {rho_ring:+.2f} (n = {n_ring})  ·  BRCT ρ = {rho_brct:+.2f} (n = {n_brct})\n"
-             f" Pooled ρ = {rho_all:+.2f}  [{rlo:+.2f}, {rhi:+.2f}]\n"
+             f"Per-residue Spearman correlation  (n = {len(ev)})\n"
+             f" RING {rho_ring:+.2f} (n = {n_ring})  ·  BRCT {rho_brct:+.2f} (n = {n_brct})\n"
+             f" Pooled {rho_all:+.2f}  [{rlo:+.2f}, {rhi:+.2f}]\n"
              f"Variant-level discrimination  (n = {n_lof + n_neg:,})\n"
              f" AUROC = {auroc_pt:.3f}  [{alo:.3f}, {ahi:.3f}]  ·  LOF ({n_lof:,}) vs FUNC+INT ({n_neg:,})\n"
              f"  95% CIs: site-clustered / residue bootstrap",

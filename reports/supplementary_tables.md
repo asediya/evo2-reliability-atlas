@@ -114,11 +114,11 @@ Observed pooled difference +0.0024 at the 1,001-bp single-token readout, on n = 
 | common | 5,596 | 0.12139 | 0.201 |
 | major | 5,598 | 0.38986 | 0.178 |
 
-Cattle (ARS-UCD1.2), 28,006 variants. Mean Evo 2-40B deleteriousness at the 1,001-bp single-token readout, by minor-allele-frequency bin; Spearman ρ = −0.099 [−0.111, −0.088], p = 2.9 × 10−62. The claim is the monotone gradient at this n, not the magnitude of ρ.
+Cattle (ARS-UCD1.2), 28,006 variants. Mean Evo 2-40B deleteriousness at the 1,001-bp single-token readout, by minor-allele-frequency bin; Spearman rs = −0.099 [−0.111, −0.088], p = 2.9 × 10−62. The claim is the monotone gradient at this n, not the magnitude of rs.
 Fold change, major-allele bin to ultra-rare bin: 4.33.
 **Table S6 (continued)**
 
-| phyloP quintile | phyloP range | n | Spearman ρ | 95% CI | p |
+| phyloP quintile | phyloP range | n | Spearman rs | 95% CI | p |
 |---|---|---|---|---|---|
 | 1 | −15.95 to −1.28 | 5,447 | −0.018 | [−0.044, +0.011] | 0.194 |
 | 2 | −1.28 to −0.38 | 5,442 | −0.054 | [−0.081, −0.028] | 7.79 × 10−5 |
@@ -127,7 +127,7 @@ Fold change, major-allele bin to ultra-rare bin: 4.33.
 | 5 | 0.39 to 9.85 | 5,459 | −0.118 | [−0.143, −0.093] | 2.25 × 10−18 |
 
 Conditioned on conservation (phyloP quintiles). The frequency–deleteriousness relationship survives at fixed conservation in 4 of 5 quintiles, and its interval crosses zero exactly where conservation itself has no signal, with no disease label anywhere in the analysis.
-Strata with negative ρ: 5 of 5; strata whose CI excludes zero: 4.
+Strata with negative rs: 5 of 5; strata whose CI excludes zero: 4.
 
 ## Table S7. Evo 2 versus GERP is readout-dependent (co-scorable variants)
 

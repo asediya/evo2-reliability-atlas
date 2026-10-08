@@ -406,7 +406,7 @@ def panel_d(axP, axS):
     # two loci, eight of them inside a 570-bp span, giving Kish's effective count of 1.2 independent
     # positives (Methods; Additional file 1: Note S29); Table 2 accordingly prints goat's AUROC as
     # "0.959 (no interval)" and calls it a descriptive point estimate. Drawing goat the same solid
-    # interval and the same *** as cattle asserted, on this plate, the significance the Methods
+    # interval and the same bold value as cattle asserted, on this plate, the significance the Methods
     # elsewhere refuse -- and half of the panel's own "2 of 9" count rested on it. The estimate is
     # still drawn, because it is the paper's estimate; what is withdrawn is the claim that its
     # interval means what the other eight intervals mean. The set is hard-coded rather than derived
@@ -430,10 +430,13 @@ def panel_d(axP, axS):
         # column's left edge fell at data 0.206 on a (-.16, .32) axis, inside chicken's upper
         # limit of 0.293, and the whisker and its cap printed through the digits of goat's,
         # chicken's and pig's differences. The 3 pt gap is in POINTS (see _dy below).
-        axS.annotate("%+.3f %s" % (r["delta"], "†" if weak else r["verdict"]),
+        # A difference whose interval excludes zero is set in bold ink and the others in the secondary grey; no
+        # asterisks, which a reader takes for a p-value threshold.
+        axS.annotate("%+.3f%s" % (r["delta"], " †" if weak else ""),
                      xy=(max(rr["hi"] for _, rr in rows), i), xycoords="data",
                      xytext=(3, 0), textcoords="offset points",
                      fontsize=ANNOT, va="center", ha="left", annotation_clip=False,
+                     fontweight=("bold" if strong else "normal"),
                      color=(SG.INK if strong else SG.MUTED))
     axS.axvline(0, color=SG.RULE, lw=.6, ls=(0, (2.5, 2)), zorder=2)
     axS.set_yticks(range(len(rows)))

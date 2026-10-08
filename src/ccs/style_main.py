@@ -89,10 +89,11 @@ REGIME_PALE = {FULL: FULL_P, PART: PART_P, LOW: LOW_P}
 REGIME_MID = {FULL: FULL_M, PART: PART_M, LOW: LOW_M}
 RHO_FULL, RHO_HALF = 0.999, 0.5
 REGIME_LABEL = {FULL: "ρ ≥ 0.999", PART: "½ ≤ ρ < 0.999", LOW: "ρ < ½"}
-# a pathogenic-benign pair of a predictor, as counted in a pair square: ranked right (blue), tied (half credit,
-# grey), ranked wrong (pale crimson), or not ranked (white with a RULE outline); lightness rises right -> tied ->
-# wrong, so the three stay in order in greyscale
-PAIR_RIGHT, PAIR_TIE, PAIR_WRONG = BLUE, N500, LOW_M
+# a pathogenic-benign pair of a predictor, as counted in a pair square: ranked right (sky blue), tied (half credit,
+# light grey), ranked wrong (rose), or not ranked (near-black). One rule runs through every figure that draws what a
+# predictor declines: light is what it sees, dark is what it declines. The four states part by at least 19 CAM02-UCS
+# units under normal, deutan, protan and tritan vision, and rose stays clear of the pathogenic vermilion.
+PAIR_RIGHT, PAIR_TIE, PAIR_WRONG, PAIR_NONE = "#56B4E9", "#C9CDD3", "#EE6677", "#0B1220"
 AUROC_TICKS = ([0, 0.25, 0.5, 0.75, 1.0], ["0", "0.25", "0.5", "0.75", "1"])
 # dbNSFP predictors as the figures print them: a conservation track keeps its alignment in the name (100-way
 # vertebrate, 17-way primate, 470-way mammalian) and loses dbNSFP's suffix; every other name is dbNSFP's own
@@ -133,6 +134,8 @@ DEPTH = LinearSegmentedColormap.from_list("depth", ["#FFFFFF"] + BLUES9[2:7])
 AUC_CMAP = LinearSegmentedColormap.from_list("auc", BLUES9[1:])
 SCORE_CMAP = LinearSegmentedColormap.from_list("score", BLUES9[1:])
 SHARE_CMAP = LinearSegmentedColormap.from_list("share", BLUES9[:8])
+# the share of a slice a predictor declines, from lit (answers all of it) to PAIR_NONE (declines all of it)
+DECLINE_CMAP = LinearSegmentedColormap.from_list("decline", ["#A9DCF6", PAIR_RIGHT, "#2C79AE", "#173C5C", PAIR_NONE])
 
 # ---------------------------------------------------------------- strokes, dashes and marks
 # Four stroke widths and no others (Canvas.save refuses any other); GigaScience asks for lines between 0.25 and
@@ -227,10 +230,60 @@ def lightness_monotonic(cmap, n=256):
     return bool((d <= 1e-9).all() or (d >= -1e-9).all())
 
 
-for _m in (DEPTH, AUC_CMAP, SCORE_CMAP, SHARE_CMAP):
+for _m in (DEPTH, AUC_CMAP, SCORE_CMAP, SHARE_CMAP, DECLINE_CMAP):
     assert lightness_monotonic(_m), _m.name
 for _c in (INK, MUTED, INK3, FULL, LOW, BLUE):
     assert contrast(_c) >= 4.5, _c
+
+
+def pair_space_rgb(rp, rn, step, px=300, ss=4):
+    """Every pathogenic-benign pair of a panel as one square image, px x px RGB, rows from the top.
+
+    Benign variants run across and pathogenic variants up, each in the score's order with its highest score at the
+    origin (bottom left) and its declined variants last, so the ranked pairs fill the rn x rp rectangle at the origin
+    and everything else is PAIR_NONE. Inside the rectangle a pair is ranked wrong, tied or right as its benign
+    variant's rank lies before, within or after the pathogenic variant's score level; the right/wrong boundary is the
+    covered ROC curve. step(v) gives, for pathogenic rank fractions v in [0, 1) (0 the highest score), the benign
+    rank fractions (FPR) before and after each one's score level. Computed at ss x ss supersampling and averaged.
+    Returns the image and the drawn shares of all pairs ranked right and tied."""
+    n = px * ss
+    c = (np.arange(n) + 0.5) / n
+    xs, ys = c[c < rn] / rn, c[c < rp] / rp
+    img = np.empty((n, n, 3))
+    img[:] = matplotlib.colors.to_rgb(PAIR_NONE)
+    right = tied = 0.0
+    if xs.size and ys.size:
+        fb, fa = step(ys)
+        lab = np.where(xs[None, :] < fb[:, None], 0, np.where(xs[None, :] < fa[:, None], 1, 2))
+        cols = np.array([matplotlib.colors.to_rgb(c_) for c_ in (PAIR_WRONG, PAIR_TIE, PAIR_RIGHT)])
+        img[:ys.size, :xs.size] = cols[lab]
+        right, tied = (lab == 2).sum() / n ** 2, (lab == 1).sum() / n ** 2
+    img = img[::-1].reshape(px, ss, px, ss, 3).mean(axis=(1, 3))
+    return img, right, tied
+
+
+def step_from_vertices(fc, tc):
+    """step() for pair_space_rgb from an ROC curve with a vertex at every distinct score value (a tied value is one
+    diagonal segment): the FPR before and after the level each pathogenic rank fraction falls in."""
+    fc, tc = np.asarray(fc, float), np.asarray(tc, float)
+
+    def step(v):
+        k = np.clip(np.searchsorted(tc, v, side="right"), 1, len(tc) - 1)
+        return fc[k - 1], fc[k]
+    return step
+
+
+def step_from_quantiles(fb, fa):
+    """step() for pair_space_rgb from the FPR before and after the score level at each of K equally spaced
+    pathogenic quantiles, (j + 0.5) / K: each rank fraction takes its quantile's values."""
+    fb, fa = np.asarray(fb, float), np.asarray(fa, float)
+
+    def step(v):
+        k = np.minimum((np.asarray(v) * len(fb)).astype(int), len(fb) - 1)
+        return fb[k], fa[k]
+    return step
+
+
 PART_TEXT = text_safe(PART)
 EVO_TEXT = text_safe(EVO)
 PATH_TEXT = text_safe(PATH)
