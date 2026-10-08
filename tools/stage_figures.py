@@ -58,12 +58,13 @@ FIGURES = [
     ("fig4_trust",           "Figure4_trust.pdf",        "Additional_file_1_FigureS4.pdf"),
     ("figS1_missing_panels", "figS1_missing_panels.pdf", "Additional_file_1_FigureS1.pdf"),
 ]
-# Submitted Figures 1 to 8 and Additional file 1's Figures S8 and S9 are NOT staged here: they are built by
+# Submitted Figures 1 to 8 and Additional file 1's Figures S8 to S12 are NOT staged here: they are built by
 # Additional file 3's own figures/build_*.py, which write beside themselves: build_concept.py builds
 # submitted Figure 1, build_fig2.py Figure 2, build_fig_bounds.py Figure 3, build_fig_decide.py
 # Figure 4, build_fig_frontier.py Figure 5, build_fig1.py Figure 6, build_fig_evidence.py Figure 7,
-# build_fig4.py Figure 8, build_fig_transfer.py Figure S8 and build_fig_plate.py Figure S9 (three keep internal
-# numbers). See FIGURES.md.
+# build_fig4.py Figure 8, build_fig_transfer.py Figure S8, build_fig_plate.py Figure S9, build_fig_map.py
+# Figure S10, build_fig_ranks.py Figure S11 and build_fig_audit.py Figure S12 (three keep internal numbers).
+# See FIGURES.md.
 #
 # H_MAX is the GRAPHIC height, not the journal's 225 mm. That 225 covers the figure AND the legend
 # set beneath it, and the legends here set to 23.7-47.4 mm, so a plate has to stop at 173 mm.

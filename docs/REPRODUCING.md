@@ -83,8 +83,8 @@ cannot be mistaken for one that passed.
 
 In the numbering of this submission: Figures 9 and 10 and Additional file 1's Figures S1, S2, S4 and S7
 rebuild from deposited artefacts. Additional file 1's Figures S3, S5 and S6 additionally
-read `data/` and exit non-zero without it; Figures 1 to 8 and Additional file 1's Figure S8 are built
-in Additional file 3 and need nothing from `data/`. `FIGURES.md` records which builder is in which
+read `data/` and exit non-zero without it; Figures 1 to 8 and Additional file 1's Figures S8 to S12 are
+built in Additional file 3 and need nothing from `data/`. `FIGURES.md` records which builder is in which
 tier and maps each builder-output filename to its figure number; its last column is this submission's
 numbering.
 

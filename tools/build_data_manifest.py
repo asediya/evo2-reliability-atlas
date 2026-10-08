@@ -126,7 +126,7 @@ def main():
         "here. The raw tree is needed to re-run Evo 2 scoring end-to-end (a GPU workload) and to "
         "rebuild Additional file 1's Figures S3, S5 and S6 (see FIGURES.md). Figures 9 and 10 "
         "and Additional file 1's Figures S1, S2, S4 and S7 rebuild from deposited artefacts, "
-        "and Figures 1 to 8 and Additional file 1's Figures S8 and S9 are built in Additional file 3 and "
+        "and Figures 1 to 8 and Additional file 1's Figures S8 to S12 are built in Additional file 3 and "
         "need nothing from `data/`.\n"
         % _data_dependent_counts())
     # Three deposited artefacts are read by deposited scripts but written by

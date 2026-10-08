@@ -7,7 +7,7 @@ Provenance (all on F:):
   GERP comparator  : reports/evo2_vs_conservation.parquet (paired Δ Evo2-GERP, conservation-matched set; CI+p)
   Panel B readout  : documented per-species deltas (COMPILED_RESULTS §2, CI-backed) anchored on the 8192 forest
   Panel C strata   : reports/type_matched_atlas.parquet (nested ascertainment strata, both readouts)
-Reference (not fitted): TimeTree median divergence-from-human (My), tree scaffold only.
+Reference (not fitted): TimeTree 5 median divergence-from-human (My; Kumar et al., Mol Biol Evol 2022, doi:10.1093/molbev/msac174), tree scaffold only.
 """
 import json, os, sys
 import numpy as np
@@ -22,7 +22,8 @@ if hasattr(sys.stdout, "reconfigure"):
 
 SPECIES = ["human", "cattle", "dog", "sheep", "goat", "pig", "horse", "cat", "chicken"]
 
-# TimeTree.org median divergence-from-human, My (public; SCAFFOLD ONLY, labelled not-fitted in the figure)
+# TimeTree 5 median divergence-from-human, My (timetree.org; Kumar et al., Mol Biol Evol 2022, doi:10.1093/molbev/msac174). SCAFFOLD ONLY, labelled
+# not-fitted in the figure; TimeTree's terms, not CC0, govern these values (LICENSING.md).
 DIVERGENCE_MY = {"human": 0, "chimp": 6.4, "cat": 94, "dog": 94, "horse": 94, "pig": 94,
                  "cattle": 94, "sheep": 94, "goat": 94, "chicken": 319}
 # Per-species and pooled readout gain, (8192 mean-LL AUROC) - (1001bp single-pos AUROC).

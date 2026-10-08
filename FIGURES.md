@@ -3,12 +3,15 @@
 Each figure is rendered by exactly one **live builder**, and no number is typed into a figure script by
 hand.
 
-**Figures 1 to 8 and Additional file 1's Figures S8 and S9 are built from Additional file 3** rather than
-from this repository, and their builders ship there, in its `figures/` directory. Six of them have a
+**Figures 1 to 8 and Additional file 1's Figures S8 to S12 are built from Additional file 3** rather than
+from this repository, and their builders ship there, in its `figures/` directory. Eight of them have a
 prep script beside them that recomputes what they draw from the deposited per-variant panels, and
-Figures 3 and 5 draw what Figure 2's prep script writes, Figure 5 with Additional file 3's tables; Figure S8
-reads Additional file 3's tables directly, and Figure 1 draws a constructed toy panel and reads no data. They are listed below for
-completeness but they are not in `src/ccs/`, and they need nothing from `data/`.
+Figures 3, 5 and S11 draw what Figure 2's prep script writes, Figure 5 with Additional file 3's tables and
+Figure S11 with Figure 4's verdicts; Figure S8 reads Additional file 3's tables directly, and Figure 1 draws a
+constructed toy panel and reads no data. They are listed below for completeness but they are not in `src/ccs/`,
+and they need nothing from `data/`. The values Figures 1 to 8 and S10 to S12 draw are tabulated by figure and
+panel in Additional file 3's `source_data/`, whose README maps every figure, main and supplementary, to its
+builder and the files it reads.
 
 The builders here read what the table below says. Three run from the archive as shipped
 (`fig3_rebuild`, `fig4_trust` and `figS1_missing_panels`), and three more, `fig7_atlas` (Figure 9),
@@ -64,7 +67,7 @@ Read this before matching any filename to any figure.
 1. **Project numbering** — what the builder module is called and what it writes into
    `reports/figures/`. `fig3_rebuild.py` emits `Figure3_blindspot.pdf`, which reads as "Figure 3"
    and is Additional file 1's Figure S2, not Figure 3 of the submission.
-2. **Submission numbering** — Figures 1 to 10 and Additional file 1's Figures S1 to S9.
+2. **Submission numbering** — Figures 1 to 10 and Additional file 1's Figures S1 to S12.
 
 Three builder output names carry their figure's number (`Figure2.pdf`, `figS1_missing_panels.pdf`
 and `FigureS7_measurement_supp.pdf`) and the rest do not, so the table below is the map.
@@ -93,6 +96,9 @@ need the undeposited `data/` tree (Figures S3, S5 and S6).
 | Additional file 1: Figure S7 | `FigureS7_measurement_supp.pdf` | `src/ccs/fig2_split.py` (panels from `src/ccs/fig2_measure.py`) | `reports/fig2_data.json`, and **Additional file 3** `tables/fig1_atlas_pervariant.parquet` | `Additional_file_1_FigureS7.pdf` |
 | Additional file 1: Figure S8 | `FigureTransfer.pdf` | **Additional file 3** `figures/build_fig_transfer.py` | `tables/atlas_missense_transfer.parquet`, joined to `tables/fig1_atlas_pervariant.parquet` by `scripts/recompute_atlas_strata.py` | `Additional_file_1_FigureS8.pdf` |
 | Additional file 1: Figure S9 | `FigurePlate.pdf` | **Additional file 3** `figures/build_fig_plate.py` | `figures/dbnsfp_49_pairspace.json`, from `tables/dbnsfp_reach_panel.parquet` and `tables/dbnsfp_predictors.csv` by `figures/prep_fig_plate.py` | `Additional_file_1_FigureS9.pdf` |
+| Additional file 1: Figure S10 | `FigureMap.pdf` | **Additional file 3** `figures/build_fig_map.py` | `figures/study_map.json`, from Additional files 4 to 6 and Additional file 3's tables by `figures/prep_fig_map.py`, with `figures/literature_audit.json` | `Additional_file_1_FigureS10.pdf` |
+| Additional file 1: Figure S11 | `FigureRanks.pdf` | **Additional file 3** `figures/build_fig_ranks.py` | `figures/dbnsfp_49.csv`, `dbnsfp_49_missense.csv`, `fig2_raster.json` and `fig_decide.json` | `Additional_file_1_FigureS11.pdf` |
+| Additional file 1: Figure S12 | `FigureAudit.pdf` | **Additional file 3** `figures/build_fig_audit.py` | `figures/literature_audit.json`, from `tables/literature_audit_papers.csv` and `literature_audit_predictors.csv` by `figures/prep_fig_audit.py` through `scripts/recompute_identification.py` | `Additional_file_1_FigureS12.pdf` |
 
 **Figures 9 and 10 each have their own builder, and Figure S7 comes from `fig2_split.py`.**
 `fig7_atlas.py` draws the three panels of Figure 9 and `fig8_readout.py` the four of Figure 10. Both read the
@@ -111,7 +117,7 @@ Figure S3.
 **`tools/stage_figures.py` applies the map in the table above for the figures built here.**
 It holds the builder-to-deliverable mapping and renames builder outputs to the staged names. Its
 `--check` mode reports any deliverable that is behind its builder without changing anything. It does
-not handle Figures 1 to 8 or Figures S8 and S9: those are built in Additional file 3 and copied in, and that
+not handle Figures 1 to 8 or Figures S8 to S12: those are built in Additional file 3 and copied in, and that
 archive's `figures/README.md` says how.
 
 ```bash

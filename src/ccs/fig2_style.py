@@ -20,7 +20,8 @@ CLADE_HUE = {"bird": "#009E73", "primate": "#CC79A7", "carnivore": "#E69F00",
 SP_CLADE = {"chicken": "bird", "human": "primate", "dog": "carnivore", "cat": "carnivore",
             "horse": "perissodactyl", "pig": "suid", "cattle": "ruminant", "sheep": "ruminant", "goat": "ruminant"}
 
-# vertebrate topology + approximate TimeTree divergence dates (My) for internal nodes (SCAFFOLD, not fitted)
+# vertebrate topology + approximate TimeTree 5 divergence dates (My) for internal nodes (SCAFFOLD, not fitted;
+# Kumar et al., Mol Biol Evol 2022, doi:10.1093/molbev/msac174; TimeTree's terms, not CC0, govern these values -- LICENSING.md)
 TREE = ("amniota", 319, [
     ("chicken", 0, None),
     ("mammalia", 94, [
