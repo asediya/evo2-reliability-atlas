@@ -255,7 +255,7 @@ def panel_c(ax):
     for r in F:
         grp.setdefault(r["divergence_my"], []).append(r)
     # CATEGORICAL SLOTS, NOT A NUMERIC AXIS. The nine species sit at three divergences only -- human
-    # 0 My, seven mammals 94 My, chicken 319 My -- and on a numeric divergence axis the seven had to be
+    # 0 My, seven mammals 92 My, chicken 319 My -- and on a numeric divergence axis the seven had to be
     # dodged across +/-45 My of x that carried no divergence, which read as seven different ages. Each
     # divergence is now a slot of its own, the seven mammals spread evenly inside theirs, and the axis
     # line is broken between slots so that no distance along it can be read as time.
@@ -267,7 +267,7 @@ def panel_c(ax):
         x0 += SLOT_W[my] + 1.0
     for my, rows in grp.items():
         # ALPHABETICAL, not by descending AUROC. Seven of the nine species -- cattle, dog, sheep,
-        # goat, horse, cat and pig -- share one divergence, 94 My. They have to be dodged apart or
+        # goat, horse, cat and pig -- share one divergence, 92 My. They have to be dodged apart or
         # their intervals overlap into one bar, but the dodge ORDER is arbitrary and the old one
         # was -auroc, which laid them out 0.974, 0.970, 0.962, 0.959, 0.941, 0.890, 0.863 from left
         # to right across +/-45 My of fabricated x. The panel therefore DREW a clean monotone fall
@@ -293,7 +293,7 @@ def panel_c(ax):
     # "mammals": the tick has to say that seven marks share this one x value, or the horizontal
     # spread still reads as seven different divergences. The names are a row of their own under the
     # numbers, the first set to the left of its tick and the second to the right of its own:
-    # centred, the two ticks sit 94 My apart and the names met as one phrase.
+    # centred, the two ticks sit 92 My apart and the names met as one phrase.
     ticks = slots
     ax.set_xticks([slot_x[t] for t in ticks])
     ax.set_xticklabels(["%d My" % t for t in ticks], fontsize=ANNOT)
@@ -322,7 +322,7 @@ def panel_c(ax):
     _mid = (slot_x[ticks[-2]] + SLOT_W[ticks[-2]] / 2 + slot_x[ticks[-1]]) / 2
     ax.text(_mid, P["auroc"] + .004, "Pooled", fontsize=ANNOT, color=S.EVO2, ha="center",
             va="bottom")
-    # The seven non-human mammals all sit at 94 My and are spread across x only so their intervals
+    # The seven non-human mammals all sit at 92 My and are spread across x only so their intervals
     # do not overlap; the tick says "7 mammals" and the legend says the spread carries no
     # divergence. A two-line note saying so on the canvas was wider than the panel and was crossed by
     # pig's interval, so the note lives in the legend, with the marker-area key.

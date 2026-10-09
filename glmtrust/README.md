@@ -1,6 +1,6 @@
 # glmtrust
 
-[![tests](https://img.shields.io/badge/tests-246%20passing-brightgreen.svg)](tests)
+[![tests](https://img.shields.io/badge/tests-247%20passing-brightgreen.svg)](tests)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 
@@ -77,7 +77,7 @@ table needs no column bookkeeping.
 - **Warnings are gated on effect size, not just significance.** On a million-variant panel a reach
   gap far too small to matter still excludes zero: CADD's +0.0006 on the 1.4-million-variant ClinVar
   panel. Every number is printed regardless; only the warnings are gated.
-- **It says so when nothing is wrong.** Two conservation tracks with matching 99.9% reach report an
+- **It says so when nothing is wrong.** Two conservation tracks with matching reach above 99.9% report an
   inflation of exactly 0.0000 — a tool that only ever reports problems carries no information when
   it stays quiet.
 - **It is fast enough for the panels that matter.** Head-to-head intervals use DeLong's closed form

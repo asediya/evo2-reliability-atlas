@@ -13,7 +13,7 @@
   "macro": {
     "auroc_1001": 0.8783,
     "auroc_8192": 0.9431,
-    "delta": 0.0647,
+    "delta": 0.0648,
     "ci95_species_clustered": [
       0.0398,
       0.0916

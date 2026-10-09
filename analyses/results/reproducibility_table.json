@@ -15,7 +15,7 @@
     },
     {
       "claim": "Readout effect on identical variants",
-      "value": "+0.0647",
+      "value": "+0.0648",
       "artefact": "reports/readout_effect_fullpanel.json",
       "bound_by": "verify_from_data.py, atlas"
     },

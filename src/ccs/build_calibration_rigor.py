@@ -1,5 +1,5 @@
-"""RIGOR BUNDLE for the calibration crown jewel — make the transfer result bulletproof against the three
-most likely reviewer attacks. Re-uses the leave-one-species-out (LOSO) isotonic transfer scaffold from
+"""Robustness bundle for the calibration-transfer result: debiased metrics, a formal calibration test and a
+size-stability curve. Re-uses the leave-one-species-out (LOSO) isotonic transfer scaffold from
 calibration_transfer.py; CPU-only, re-analyzes scores already on disk.
 
   (1) DEBIASED METRIC SUITE — retire bare equal-width ECE. Report, for transfer vs oracle vs no-cal:
@@ -68,8 +68,12 @@ def ece(p, y, bins=10, adaptive=False):
 
 def ks_cal(p, y):
     """Binning-free KS-calibration error (Gupta 2021): max gap between cumulative predicted and observed."""
-    o = np.argsort(p); ps, ys = p[o], y[o]; n = len(y)
-    return float(np.max(np.abs(np.cumsum(ps) - np.cumsum(ys))) / n)
+    # Tied probabilities are one step of the cumulative curves, so the sums are taken at the boundaries
+    # between distinct values. Sorting rows and summing within a tie would make the statistic depend on
+    # the order the rows arrive in: the transferred map has only 16-37 distinct values per species.
+    u, inv = np.unique(p, return_inverse=True); n = len(y)
+    sp, sy = np.bincount(inv, weights=p), np.bincount(inv, weights=y)
+    return float(np.max(np.abs(np.cumsum(sp) - np.cumsum(sy))) / n)
 
 
 def brier(p, y): return float(np.mean((p - y) ** 2))
@@ -169,7 +173,7 @@ def main():
     med_or = float(np.median([r["aece_oracle"] for r in rows if "aece_oracle" in r]))
     n_notreject = sum(1 for r in rows if r.get("ks_pval") is not None and r["ks_pval"] > 0.05)
     n_tested = sum(1 for r in rows if r.get("ks_pval") is not None)
-    lines = ["# Calibration RIGOR bundle (reviewer armor for the crown jewel)", "",
+    lines = ["# Calibration robustness bundle: debiased metrics, a formal calibration test, and a size-stability curve", "",
              f"Sources (label-rich): {rich} | label-poor targets: {poor}", "",
              "## (1) Debiased metric suite — transfer holds under EVERY metric, not just ECE",
              "| species | role | n | pos | ECE none→tr | **adaptive-ECE none→tr** | KS-cal none→tr | Brier none→tr | oracle aECE |",
@@ -201,7 +205,7 @@ def main():
               "",
               # The verdict is conditional on `stable`, like the sentence directly above it: a verdict
               # that cannot come out the other way is not a verdict.
-              ("**VERDICT:** the crown jewel survives all three reviewer attacks — debiased metrics, "
+              ("**VERDICT:** the calibration-transfer result holds under all three checks — debiased metrics, "
                "a formal calibration test, and a size-stability curve."
                if stable else
                "**VERDICT:** two of the three checks are met (debiased metrics and a formal "

@@ -1,5 +1,5 @@
 """PREVALENCE / prior-shift correction — answers the strongest foreseeable objection to the
-crown jewel: "your transferred probabilities are calibrated only to an artificial ~10:1 panel base-rate;
+calibration-transfer result: "your transferred probabilities are calibrated only to an artificial ~10:1 panel base-rate;
 at real deployment prevalence (1 pathogenic per 100-1000 candidate variants) they're meaningless."
 
 Fix = the Elkan(2001)/Saerens(2002) closed-form prior adjustment. A probability p calibrated at source

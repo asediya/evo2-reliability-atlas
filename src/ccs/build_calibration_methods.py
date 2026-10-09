@@ -7,7 +7,7 @@ isotonic for a panel of post-hoc calibrators, ranked by transferred ECE/Brier pe
   beta      : beta calibration (Kull 2017) — the natural family for bounded scores, documented to beat
               isotonic at small n; here = logistic on [ln(s), -ln(1-s)] over a min-max-squashed score
 
-If transfer holds/improves across all three (esp. beta on the label-poor targets), the crown jewel is
+If transfer holds/improves across all three (esp. beta on the label-poor targets), the calibration-transfer result is
 method-agnostic, not an isotonic quirk. CPU-only, re-analyzes scores on disk.
   python src/ccs/build_calibration_methods.py
 """
@@ -133,7 +133,7 @@ def main():
     med_tgt = {k: med(f"aece_{k}", "TARGET") for k in METHODS}; best_tgt = min(med_tgt, key=med_tgt.get)
     spread = max(med_all.values()) - min(med_all.values())
     lines += [f"**VERDICT:** transfer holds across ALL THREE methods (median aECE spread only {spread:.3f}) — "
-              f"the crown jewel is NOT an isotonic artifact. Best overall = **{best_all}**; best on label-poor targets = "
+              f"the result is not an isotonic-regression artefact. Best overall = **{best_all}**; best on label-poor targets = "
               f"**{best_tgt}** ({'beta beats isotonic at small n as documented' if best_tgt=='beta' else 'as expected'}). "
               "Report isotonic as the headline with this bake-off as robustness."]
     open(MD, "w", encoding="utf-8").write("\n".join(lines) + "\n")

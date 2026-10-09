@@ -189,7 +189,7 @@ def table3_reach(F5):
         "n_gap_significant": sum(1 for r in rows if r["gap_significant"]),
         "confound": {"n_matchable": C["n_matchable"], "n_sig_matched": C["n_sig_matched"],
                      "unmatchable": C["unmatchable_species"], "unannotated": C["unannotated_species"]},
-        "_note": ("Missingness in the GERP tracks is NaN, not null — notna() reports 100% reach and "
+        "_note": ("Missingness in the GERP tracks is NaN, not null — a null test (polars is_not_null, pyarrow is_valid) reports 100% reach and "
                   "deletes this entire result. 'Must-call cost' is the AUROC lost when every variant "
                   "must be answered, from the closed-form pairwise abstention null (a pair touching a "
                   "no-call contributes 0.5); it is NOT median imputation. THE CONFOUND IS NOT "

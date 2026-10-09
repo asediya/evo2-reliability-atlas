@@ -93,6 +93,10 @@ wolf on large ones.
   metadata.
 
 ### Fixed
+- Conformal set membership takes ties in exact arithmetic. A calibration map can return one probability as
+  two floats a unit in the last place apart (two isotonic levels of exactly 1/4 stored as 0.25 and
+  0.24999999999999994); a plain `<=` then left out a label whose score equals the threshold. Labels within
+  four units in the last place of the threshold are now admitted, which only ever enlarges a set.
 Every public entry point now reads input by one contract (`glmtrust._checks`): labels are 0/1 with
 every one present, a score is a real number per variant with NaN for a no-call, one value per
 variant, and anything else is refused by name with the recoding to apply.
@@ -177,8 +181,8 @@ variant, and anything else is refused by name with the recoding to apply.
   (`notebooks/quickstart.ipynb`). `benchmarks/reproduce_paper_trust_layer.py`, which fits each map on the
   whole training fold through `leave_one_group_out` and `group_selective_report`, reproduces the deposited
   numbers exactly.
-- 246 tests, including tests that check the documentation matches the code and one for each input a
-  stranger is likely to bring; `pytest --collect-only` reports 246, which is the number that ships.
+- 247 tests, including tests that check the documentation matches the code and one for each input a
+  stranger is likely to bring; `pytest --collect-only` reports 247, which is the number that ships.
 
 ## [0.1.0] - 2026-07-24
 
@@ -203,4 +207,4 @@ tested, installable package.
 - A command-line interface, `glmtrust evaluate | calibrate | transfer`; 0.1.1 adds `audit`, `reach` and
   `baseline`, and the `--card` report of `audit`.
 - Test suite covering coverage guarantees, calibration improvement, and selective lift; the
-  deposited suite collects 246.
+  deposited suite collects 247.

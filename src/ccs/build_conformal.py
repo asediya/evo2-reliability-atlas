@@ -63,15 +63,22 @@ def qhat(scores, alpha):
     return float("inf") if k > n else s[k - 1]
 
 
+def admits(a, q):
+    """a <= q with ties in exact arithmetic, as glmtrust.conformal does: the isotonic map can return one
+    probability as two floats a unit in the last place apart (0.25 and 0.24999999999999994), and a
+    plain <= would drop a label whose score equals the threshold. Only ever enlarges a set."""
+    return a <= q + 4 * np.spacing(abs(q)) if np.isfinite(q) else np.ones(np.shape(a), dtype=bool)
+
+
 def evaluate(p, y, qm, q0, q1):
     # MARGINAL construction: one shared threshold qm -> its OWN coverage AND its OWN set sizes.
-    inc1 = (1 - p) <= qm; inc0 = p <= qm                     # marginal set membership
+    inc1 = admits(1 - p, qm); inc0 = admits(p, qm)                    # marginal set membership
     cov = float(np.where(y == 1, inc1, inc0).mean())
     size_marg = inc0.astype(int) + inc1.astype(int)
     cov_ben_marg = float(inc0[y == 0].mean()) if (y == 0).any() else float("nan")
     cov_path_marg = float(inc1[y == 1].mean()) if (y == 1).any() else float("nan")
     # MONDRIAN construction: class-conditional thresholds q0/q1 -> its OWN coverage AND its OWN set sizes.
-    m1 = (1 - p) <= q1; m0 = p <= q0                          # Mondrian (class-conditional)
+    m1 = admits(1 - p, q1); m0 = admits(p, q0)                        # Mondrian (class-conditional)
     covm = float(np.where(y == 1, m1, m0).mean())
     size_mond = m0.astype(int) + m1.astype(int)
     cov_ben = float(m0[y == 0].mean()) if (y == 0).any() else float("nan")
@@ -153,14 +160,19 @@ def main():
         lines.append(f"| {s['alpha']} | {s['nominal']} | **{s['cov_mond']}** | {s['cov_path_mond']} | {s['abstain_mond']} "
                      f"| {s['cov_marg']} | {s['cov_path_marg']} | {s['abstain_marg']} |")
     ok = all(s["cov_mond"] >= s["nominal"] - 0.05 for s in sweep)
+    # the verdict's figures are read off the target rows above, not typed: it cannot drift from its own table
+    nt = sum(r["n"] for r in tgt)
+    ab = [r["abstain"] for r in tgt]
+    sing = sum(r["singleton_marg"] * r["n"] for r in tgt) / nt
+    pcm = [r["cov_path_marg"] for r in tgt]
     lines += ["", f"**VERDICT:** cross-species conformal coverage {'tracks the nominal target' if ok else 'is approximate'} "
-              f"on species with NO labels — Mondrian (class-conditional) holds ~0.97 coverage under the ~10:1 imbalance, "
-              "but ONLY by abstaining on ~50-66% of target variants (it OVER-covers = conservative, not free). "
+              f"on species with NO labels — Mondrian (class-conditional) holds {mean_cov_tgt:.2f} coverage under the ~10:1 imbalance, "
+              f"but ONLY by abstaining on {100 * min(ab):.1f}-{100 * max(ab):.1f}% of target variants (it OVER-covers = conservative, not free). "
               "The prediction SETS are interpretable: singleton = confident call, {both} = safe abstention. "
               "HONEST FRAMING: coverage under a STATED, empirically-tested cross-species exchangeability assumption "
               "— NOT a distribution-free finite-sample theorem (cross-species transport breaks exchangeability). "
-              "No single predictor gives both ~0.97 coverage AND ~99% singletons: the near-singleton (marginal) "
-              "construction drops positive-class coverage to ~0.22-0.57.",
+              f"No single predictor gives both {mean_cov_tgt:.2f} coverage AND {100 * sing:.1f}% singletons: the near-singleton (marginal) "
+              f"construction drops positive-class coverage to {min(pcm):.3f}-{max(pcm):.3f}.",
               "", "Honest caveat: exchangeability across species is imperfect, so coverage is approximate/assumption-"
               "conditional; Mondrian is reported because marginal coverage skews under class imbalance."]
     open(MD, "w", encoding="utf-8").write("\n".join(lines) + "\n")

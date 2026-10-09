@@ -293,8 +293,8 @@ def group_selective_report(probs, labels, groups, coverage: float = 0.85,
         # of hundred distinct values, so hundreds of variants sit exactly on the coverage boundary --
         # 597 of them on the 8,192-bp panel this package ships a fixture for. `argsort` would then
         # break the tie by position in the input array, and permuting the rows alone moved pooled
-        # capture over a range of 0.043 on that panel, twice the tolerance the reproduction benchmark
-        # applies to the same quantity. Two users with identical data in different row order would
+        # capture over a range of 0.053 across 399 row orders on that panel, more than twice the tolerance
+        # the reproduction benchmark applies to the same quantity. Two users with identical data in different row order would
         # get different refusal sets.
         #
         # Any secondary sort key derived from position has the same defect, including a stable sort

@@ -11,7 +11,7 @@ writes, which are not deposited; they are byte-for-byte the models the published
 
 | file | contents | source entry |
 |---|---|---|
-| `brca1_RING_1jm7_model1.pdb` | chain A 1-103 (BRCA1), chain B 26-122 (BARD1), 4 Zn | PDB **1JM7**, model 1 of the 20-model NMR ensemble |
+| `brca1_RING_1jm7_model1.pdb` | chain A 1-103 (BRCA1), chain B 26-122 (BARD1), 4 Zn | PDB **1JM7**, model 1 of the 14-model NMR ensemble |
 | `brca1_BRCT_1t29_model1.pdb` | chain A 1649-1859 (BRCA1 BRCT), chain B 1-12 (BACH1 phosphopeptide, SEP), 235 waters | PDB **1T29**, model 1 |
 
 These are model-1 extracts, not the deposited PDB entries. For the originals see

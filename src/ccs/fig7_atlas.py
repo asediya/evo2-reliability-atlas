@@ -431,9 +431,9 @@ def build(out, png):
     def ty(yidx):
         return Y0 + yidx * P                  # layout_tree's leaf index -> row centre (linear)
 
-    # Hairlines in N500 with butt ends: the tree is context, drawn lighter than any data mark. At 0.042 mm
-    # per My the 3-My internode between the laurasiatherian and the ungulate nodes is 0.13 mm, about one
-    # stroke, and the two verticals would fuse into one bar; so every internode is drawn at least
+    # Hairlines in N500 with butt ends: the tree is context, drawn lighter than any data mark. TimeTree
+    # places the laurasiatherian and the ungulate nodes at the same 74 My, so their internode is zero and the
+    # two verticals would fuse into one bar; so every internode is drawn at least
     # MIN_INTERNODE long (tips stay at their age, 0), which leaves a visible gap of MIN_INTERNODE - TREE_W
     # between two node verticals.
     TREE_W = F.LW_HAIR
@@ -467,9 +467,10 @@ def build(out, png):
            zorder=2)
     for nm, age, drawn in moved:
         print("tree: node %s (%g My) drawn at %.1f My, MIN_INTERNODE %.2f mm" % (nm, age, drawn, MIN_INTERNODE))
-    # the legend names one internode drawn at MIN_INTERNODE (the laurasiatherian-ungulate one); at this
-    # scale no other node may move, or the sentence would be false
-    assert [nm for nm, _, _ in moved] == ["ungulata"], moved
+    # the legend names the two nodes drawn MIN_INTERNODE from their parent: the ungulate node, which TimeTree
+    # dates with the laurasiatherian one, and the cetartiodactyl node that this pushes along; at this scale no
+    # other node may move, or the sentence would be false
+    assert [nm for nm, _, _ in moved] == ["ungulata", "cetartio"], moved
     # any two node verticals that share a stretch of y are at least MIN_INTERNODE apart
     spans_ = []
 

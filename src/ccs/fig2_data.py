@@ -24,8 +24,8 @@ SPECIES = ["human", "cattle", "dog", "sheep", "goat", "pig", "horse", "cat", "ch
 
 # TimeTree 5 median divergence-from-human, My (timetree.org; Kumar et al., Mol Biol Evol 2022, doi:10.1093/molbev/msac174). SCAFFOLD ONLY, labelled
 # not-fitted in the figure; TimeTree's terms, not CC0, govern these values (LICENSING.md).
-DIVERGENCE_MY = {"human": 0, "chimp": 6.4, "cat": 94, "dog": 94, "horse": 94, "pig": 94,
-                 "cattle": 94, "sheep": 94, "goat": 94, "chicken": 319}
+DIVERGENCE_MY = {"human": 0, "chimp": 6.3, "cat": 92, "dog": 92, "horse": 92, "pig": 92,
+                 "cattle": 92, "sheep": 92, "goat": 92, "chicken": 319}
 # Per-species and pooled readout gain, (8192 mean-LL AUROC) - (1001bp single-pos AUROC).
 #
 # Computed from the score files on every run rather than held as constants, so they cannot
@@ -129,7 +129,9 @@ def main():
                       # 3 dp, so subtracting it reintroduced up to 0.0005 and Table 1 printed
                       # sheep 0.902 where Table S8 and tables.md Table D4, which compute it
                       # directly, both printed 0.903 on the same 616 variants.
-                      "auroc_1001": round(READOUT_1001.get(s, f["auroc"] - READOUT_DELTA[s]), 4),
+                      # six places, not four: a reader rounds this to three, and 0.882531 stored as 0.8825
+                      # printed horse as 0.882 in tables.md where the value is 0.883
+                      "auroc_1001": round(READOUT_1001.get(s, f["auroc"] - READOUT_DELTA[s]), 6),
                       "readout_delta": READOUT_DELTA[s],
                       "divergence_my": DIVERGENCE_MY[s]})
     # distance-decoupling (exploratory, n=9, coarse divergence -> report as ns, not a mechanistic claim)

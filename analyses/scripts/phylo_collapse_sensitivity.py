@@ -12,7 +12,7 @@ This recomputes it from the per-species deltas the meta-analysis already deposit
 result. Nothing here is typed from memory; the numbers the manuscript quotes are replaced by
 whatever this produces.
 
-The concern is that seven of the nine species are placental mammals sitting at an identical 94 My
+The concern is that seven of the nine species are placental mammals sitting at an identical 92 My
 divergence from human, so treating nine tips as nine independent observations overstates the
 evidence. Two checks:
 
@@ -84,7 +84,7 @@ def main():
         "_question": "Does the macro Evo 2 minus GERP advantage at 8,192 bp survive treating "
                      "closely related species as non-independent?",
         "_why": "Seven of the nine species are placental mammals and TimeTree places seven of the "
-                "eight non-human species at an identical 94 My divergence from human, so nine tips "
+                "eight non-human species at an identical 92 My divergence from human, so nine tips "
                 "are not nine independent observations. This bounds how much that matters.",
         "_source": SRC,
         "_order_assignment": ORDER,

@@ -44,7 +44,7 @@ B = 2000
 SEED = 20260719
 
 # What the manuscript prints, so the build fails loudly if the recompute drifts from the text.
-PUBLISHED = {"nonsense (stop-gain)": 0.953, "missense": 0.896, "splicing": 0.774, "regulatory": 0.578}
+PUBLISHED = {"nonsense (stop-gain)": 0.953, "missense": 0.896, "splicing": 0.774, "regulatory": 0.579}
 TOL = 0.004
 
 

@@ -95,7 +95,7 @@ def build_supplement(N):
     # A species key for panel a. On the measurement plate its colours were named by the species
     # strip of the panel beside it; on a plate of its own the panel needs its own key. Entries run in
     # the order the points are drawn, left to right: by divergence, and alphabetically within the
-    # seven mammals that share 94 My, as panel_c dodges them. Words in ink, colour on the markers only.
+    # seven mammals that share 92 My, as panel_c dodges them. Words in ink, colour on the markers only.
     from matplotlib.lines import Line2D
     _rows = sorted(MEAS._load()[0]["forest"], key=lambda r: (r["divergence_my"], r["species"]))
     _h = [Line2D([], [], ls="none", marker="o", markersize=4.2, markerfacecolor=MEAS.S.species_color(r["species"]),

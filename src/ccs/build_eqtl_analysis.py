@@ -57,7 +57,7 @@ def main():
     # (mean k = 12.44 over the 1,430 eGenes that survive the single-class filter below, holding
     # 17,783 of the 20,000 variants -- NOT 20000/1430 = 13.99, which mismatches the full panel's
     # numerator with the kept-gene denominator) the analytic null is 0.4381, and a permutation returns
-    # 0.4379 (SD 0.0048). Printing "0.5 = chance" here understated the null by 0.062 and would
+    # 0.4379 (SD 0.0049). Printing "0.5 = chance" here understated the null by 0.062 and would
     # have made a below-chance result look merely mediocre. Higher is BETTER.
     #
     # precision@1 likewise needs its own null: with ~3.5 causal of ~14 variants per eGene,

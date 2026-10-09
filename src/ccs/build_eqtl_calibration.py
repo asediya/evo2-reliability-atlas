@@ -1,6 +1,6 @@
 """PLAN #2 — eQTL as CALIBRATION (regulatory reliability gap): does the calibration/reliability of Evo2
 transfer from CODING disease variants (OMIA) to REGULATORY variants (fine-mapped causal cis-eQTLs), or is
-there a regulatory reliability gap the trust-layer must flag? This is a NEW axis for the crown jewel —
+there a regulatory reliability gap the trust-layer must flag? This is a further axis for the calibration-transfer result —
 calibration transfer across VARIANT TYPE (coding->regulatory), distinct from the cross-SPECIES axis and
 distinct from TraitGym/LOL-EVE's discrimination benchmark.
 

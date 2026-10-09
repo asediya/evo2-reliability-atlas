@@ -133,7 +133,7 @@ def main():
     import json as _json
     _flow = _json.load(io.open("reports/fig4_matrix.json", encoding="utf-8"))["_meta"]["flow"]
     _sc, _pc = _flow["sensitivity_ci"], _flow["specificity_ci"]
-    W("\nPooled sensitivity %.3f [%.3f, %.3f], specificity %.3f [%.3f, %.3f] (deposited bootstrap, "
+    W("\nPooled sensitivity %.3f [%.3f, %.3f], specificity %.3f [%.3f, %.3f] (Wilson score intervals, "
       "`reports/fig4_matrix.json`), overall error rate %.4f. The %d errors are %d "
       "missed positives against only %d false alarms, so **%.1f%% of all errors are missed "
       "positives**. That is the asymmetry the selective layer does *not* fix, because "

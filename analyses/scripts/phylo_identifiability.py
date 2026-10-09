@@ -9,7 +9,7 @@ estimable at all?**
 Two facts make the answer likely to be no, and both come from our own deposit:
 
   1. `fig2_data.py` carries TimeTree divergence-from-human, and SEVEN of the eight non-human
-     species sit at exactly 94 My. The divergence axis has three distinct values (0, 94, 319),
+     species sit at exactly 92 My. The divergence axis has three distinct values (0, 92, 319),
      not nine, so the covariance structure is nearly block-constant.
   2. The deposited distance test already reports rho = -0.365, p = 0.334 for AUROC against
      divergence — no detectable relationship.
@@ -42,7 +42,7 @@ CLADE = {"human": "primate", "cat": "carnivore", "dog": "carnivore", "horse": "p
          "chicken": "bird"}
 SPECIES = list(CLADE)
 ROOT_AGE = 319.0            # chicken split, TimeTree, from fig2_data.py
-PLACENTAL = 94.0            # human vs every other mammal, TimeTree, from fig2_data.py
+PLACENTAL = 92.0            # human vs every other mammal, TimeTree, from fig2_data.py
 
 
 def vcv(d_inter, d_intra):
@@ -110,7 +110,7 @@ def main():
            "_tree": {"root_age_my": ROOT_AGE, "placental_split_my": PLACENTAL,
                      "source": "TimeTree medians as recorded in src/ccs/fig2_data.py",
                      "_note": "TimeTree gives seven of the eight non-human species an identical "
-                              "94 My divergence from human, so the two remaining depths — between "
+                              "92 My divergence from human, so the two remaining depths — between "
                               "mammal orders, and within an order — are varied over a grid rather "
                               "than assumed."},
            "grid": []}

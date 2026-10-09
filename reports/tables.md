@@ -15,7 +15,7 @@ Pooled at 8192 bp mean-LL: **0.973** [0.968, 0.978], n = 11,109. Readout lift 10
 | human | primate | 3,000 | 0.974 | [0.968, 0.979] | 0.825 | +0.149 | 2,880 | 0.825 | 0.874 | -0.048 | [-0.069, -0.028] | *** | +0.0351 |
 | dog | carnivore | 2,496 | 0.970 | [0.952, 0.984] | 0.888 | +0.082 | 2,278 | 0.895 | 0.886 | +0.009 | [-0.029, 0.048] | ns | +0.0514 |
 | cat | carnivore | 1,362 | 0.890 | [0.838, 0.938] | 0.848 | +0.043 | 1,037 | 0.859 | 0.846 | +0.013 | [-0.042, 0.069] | ns | +0.0330 |
-| horse | perissodactyl | 766 | 0.941 | [0.895, 0.978] | 0.882 | +0.059 | 379 | 0.882 | 0.915 | -0.033 | [-0.110, 0.042] | ns | +0.0415 |
+| horse | perissodactyl | 766 | 0.941 | [0.895, 0.978] | 0.883 | +0.059 | 379 | 0.882 | 0.915 | -0.033 | [-0.110, 0.042] | ns | +0.0415 |
 | pig | suid | 396 | 0.863 | [0.753, 0.957] | 0.848 | +0.015 | 168 | 0.814 | 0.751 | +0.063 | [-0.116, 0.233] | ns | +0.0239 |
 | cattle | ruminant | 2,067 | 0.974 | [0.958, 0.987] | 0.900 | +0.074 | 1,985 | 0.900 | 0.825 | +0.075 | [0.030, 0.121] | *** | +0.0863 |
 | sheep | ruminant | 616 | 0.962 | [0.917, 0.994] | 0.903 | +0.060 | 451 | 0.912 | 0.865 | +0.047 | [-0.045, 0.134] | ns | +0.0482 |
@@ -83,7 +83,7 @@ Pooled at 8192 bp mean-LL: **0.973** [0.968, 0.978], n = 11,109. Readout lift 10
 
 CI excludes zero in **4 of 9**. Consequence-matched control: significant in **0 of 5** matchable species; goat, chicken, pig, sheep have no matchable stratum.
 
-*Missingness in the GERP tracks is NaN, not null — notna() reports 100% reach and deletes this entire result. 'Must-call cost' is the AUROC lost when every variant must be answered, from the closed-form pairwise abstention null (a pair touching a no-call contributes 0.5); it is NOT median imputation. THE CONFOUND IS NOT RESOLVED: matched on consequence category no species keeps a positive gap separable from zero, and it reverses in dog.*
+*Missingness in the GERP tracks is NaN, not null — a null test (polars is_not_null, pyarrow is_valid) reports 100% reach and deletes this entire result. 'Must-call cost' is the AUROC lost when every variant must be answered, from the closed-form pairwise abstention null (a pair touching a no-call contributes 0.5); it is NOT median imputation. THE CONFOUND IS NOT RESOLVED: matched on consequence category no species keeps a positive gap separable from zero, and it reverses in dog.*
 
 
 ## Table D4. Baseline suite — conservation, a peer DNA-LM, a protein LM, and supervised models
@@ -110,7 +110,7 @@ Over the **9,532** variants both Evo 2 and conservation can score it is a tie: E
 | human | 0.635 | 0.545 | 0.482 | 0.825 |
 | dog | 0.716 | 0.711 | 0.748 | 0.888 |
 | cat | 0.713 | 0.721 | 0.755 | 0.848 |
-| horse | 0.789 | 0.792 | 0.663 | 0.882 |
+| horse | 0.789 | 0.792 | 0.663 | 0.883 |
 | pig | 0.683 | 0.763 | 0.821 | 0.848 |
 | cattle | 0.807 | 0.787 | 0.761 | 0.900 |
 | sheep | 0.868 | 0.840 | 0.855 | 0.903 |

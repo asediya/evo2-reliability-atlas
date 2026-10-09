@@ -44,7 +44,7 @@ def main():
     evo = dict(zip(rs["residue"].to_list(), rs["evo2_mean"].to_list()))
 
     sge = dict(zip(rs["residue"].to_list(), rs["sge_worst"].to_list()))
-    # strip to model 1 (1JM7 is a 20-model NMR ensemble) for SASA + rendering
+    # strip to model 1 (1JM7 is a 14-model NMR ensemble) for SASA + rendering
     struct = PDBParser(QUIET=True).get_structure("x", pdb)
     m1 = struct[0]
     pdb1 = "reports/figures/_brca1_model1.pdb"

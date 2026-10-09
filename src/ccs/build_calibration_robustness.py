@@ -100,7 +100,7 @@ def main():
                      f"| **{r['d']:+.3f}** [{r['d_lo']:+.3f}, {r['d_hi']:+.3f}] | {r['p']:.3f} | {'YES' if r['sig'] else 'no'} |")
     lines += ["", f"**Label-poor targets where transfer SIGNIFICANTLY beats no-calibration: {sig_poor}/{len(poor)}** "
               f"(95% CI of Δ excludes 0).",
-              "This is the statistical backbone of the crown jewel: transferred calibration is not just a lower point "
+              "This is the resampling backbone of the calibration-transfer arm: transferred calibration is not just a lower point "
               "estimate — the improvement survives resampling at small N."]
     open(MD, "w", encoding="utf-8").write("\n".join(lines) + "\n")
     pl.DataFrame(rows).write_parquet("data/processed/calibration_robustness.parquet")

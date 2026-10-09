@@ -61,3 +61,17 @@ def test_split_conformal_marginal_coverage(data):
         cal, te = idx[: len(y) // 2], idx[len(y) // 2:]
         covs.append(SplitConformal(alpha=alpha).fit(p[cal], y[cal]).evaluate(p[te], y[te])["coverage"])
     assert np.mean(covs) >= 1 - alpha - 0.02
+
+
+def test_a_score_equal_to_the_threshold_is_admitted_across_float_noise():
+    # A fitted map can store one probability as two floats a unit in the last place apart: isotonic levels of
+    # exactly 1/4 came back as 0.25 and 0.24999999999999994 on the paper's panel. A test probability equal to
+    # the threshold in exact arithmetic must be admitted whichever float it was stored as.
+    lo = 0.25 - np.spacing(0.25)                    # 0.24999999999999994
+    assert lo != 0.25
+    cal = np.array([0.01] * 18 + [lo, 0.9])        # negatives' nonconformity is p; the 1-alpha rank lands on `lo`
+    y = np.array([0] * 19 + [1])
+    mc = MondrianConformal(alpha=0.05).fit(cal, y)
+    assert mc.predict_set(np.array([0.25]))[0, 0]  # 0.25 <= threshold (1/4) in exact arithmetic
+    sc = SplitConformal(alpha=0.05).fit(cal, y)
+    assert sc.predict_set(np.array([lo]))[0, 0]

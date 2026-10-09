@@ -77,8 +77,8 @@ def test_refusal_set_is_stable_under_ties():
     # A stable sort makes the tie-break reproducible for one fixed input order, which is what the
     # earlier form of this test checked. It does not make it reproducible across input orders: the
     # position IS the row order, so permuting the rows moves the refused set. On the study's own
-    # 8,192-bp panel that moved pooled capture by 0.043, twice the reproduction benchmark's
-    # tolerance for the same quantity.
+    # 8,192-bp panel that moved pooled capture over a range of 0.053 across 399 row orders, more than
+    # twice the reproduction benchmark's tolerance for the same quantity.
     #
     # The default policy therefore refuses whole tie blocks and never part of one. Here indices
     # 0,1,2 share confidence |2p-1| = 0.1 and the 15% budget on n = 10 is k = 2, so the block does

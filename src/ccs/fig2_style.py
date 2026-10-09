@@ -20,19 +20,20 @@ CLADE_HUE = {"bird": "#009E73", "primate": "#CC79A7", "carnivore": "#E69F00",
 SP_CLADE = {"chicken": "bird", "human": "primate", "dog": "carnivore", "cat": "carnivore",
             "horse": "perissodactyl", "pig": "suid", "cattle": "ruminant", "sheep": "ruminant", "goat": "ruminant"}
 
-# vertebrate topology + approximate TimeTree 5 divergence dates (My) for internal nodes (SCAFFOLD, not fitted;
+# vertebrate topology + TimeTree 5 median divergence times (My), to the nearest My, for internal nodes (SCAFFOLD,
+# not fitted; TimeTree places the carnivore-ungulate and the horse-cetartiodactyl splits at the same 74 My;
 # Kumar et al., Mol Biol Evol 2022, doi:10.1093/molbev/msac174; TimeTree's terms, not CC0, govern these values -- LICENSING.md)
 TREE = ("amniota", 319, [
     ("chicken", 0, None),
-    ("mammalia", 94, [
+    ("mammalia", 92, [
         ("human", 0, None),
-        ("laurasia", 79, [
+        ("laurasia", 74, [
             ("carnivora", 54, [("dog", 0, None), ("cat", 0, None)]),
-            ("ungulata", 76, [
+            ("ungulata", 74, [
                 ("horse", 0, None),
-                ("cetartio", 62, [
+                ("cetartio", 59, [
                     ("pig", 0, None),
-                    ("ruminantia", 26, [("cattle", 0, None),
+                    ("ruminantia", 23, [("cattle", 0, None),
                                         ("caprine", 9, [("sheep", 0, None), ("goat", 0, None)])]),
                 ]),
             ]),

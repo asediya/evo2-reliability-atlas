@@ -42,7 +42,7 @@ Both columns are computed on the same variants, every variant carrying an 8,192-
 | Dog | 2,497 | 0.921 | 0.911 | +0.009 | −0.062 |
 | Human | 3,000 | 0.963 | 0.957 | +0.007 | −0.029 |
 
-Conservation scores are undefined where the alignment or track is unavailable, and missingness is marginally associated with class in these panels; the consequence-matched analysis does not establish its cause. Every per-species conservation AUROC computed this way is therefore computed on a class-skewed subset of the panel it is drawn from, whose full-panel value is unidentified without an assumption about the unscored variants; we establish that within our own nine panels and do not survey the published literature. The missingness is also spatially structured rather than random: a Wald–Wolfowitz runs test on the no-call pattern rejects randomly scattered no-calls in the three largest panels (human z = −13.87 negative and −13.94 positive, dog −10.86, cattle −7.31). That cuts both ways: it is independent evidence that the holes are structural, and it means the per-variant reach intervals of the Figure S5 legend assume an independence of missingness that the runs test rejects, so they understate uncertainty in exactly those three panels. The test only detects clustering on the scale of the spacing between sampled variants, which is 0.41 Mb in human, 0.58 Mb in dog and 0.97 Mb in cattle, and 2.42 Mb in pig and 2.43 Mb in horse. It has no power against kilobase-scale alignment gaps, so non-rejection in a panel is not evidence that the no-calls are unclustered. The penalty column above charges every ranking pair that touches a no-call at one half, following the full evaluation mode of the Critical Assessment of Functional Annotation (CAFA) in charging for silence, though CAFA itself assigns zero. That is a scoring convention and not a forecast of what conservation would emit if it were forced to answer, so we give the alternatives here. Under the paper's rule the penalty is −0.1019 by the unweighted species mean and −0.2448 in horse. Giving each no-call the conservation score's own median value and then taking AUROC over the whole panel gives −0.0235 and −0.0100. Drawing each no-call from the conservation score's own score distribution gives −0.0398 and −0.0650. The two alternatives are milder because the scored negatives sit at low conservation and the scored positives at high, so a filled-in value inherits information from that arrangement. We keep the first rule throughout this paper, and a reader who prefers a different one should take these figures in place of the tabulated ones.
+Conservation scores are undefined where the alignment or track is unavailable, and missingness is marginally associated with class in these panels; the consequence-matched analysis does not establish its cause. Every per-species conservation AUROC computed this way is therefore computed on a class-skewed subset of the panel it is drawn from, whose full-panel value is unidentified without an assumption about the unscored variants; we establish that within our own nine panels and do not survey the published literature. The missingness is also spatially structured rather than random: a Wald–Wolfowitz runs test on the no-call pattern rejects randomly scattered no-calls in the three largest panels (human z = −13.87 negative and −13.94 positive, dog −10.86, cattle −7.31). That cuts both ways: it is independent evidence that the holes are structural, and it means the per-variant reach intervals of the Figure S5 legend assume an independence of missingness that the runs test rejects, so they understate uncertainty in exactly those three panels. The test only detects clustering on the scale of the spacing between sampled variants, which is 0.41 Mb in human, 0.58 Mb in dog and 0.97 Mb in cattle, and 2.42 Mb in pig and 2.43 Mb in horse. It has no power against kilobase-scale alignment gaps, so non-rejection in a panel is not evidence that the no-calls are unclustered. The penalty column above charges every ranking pair that touches a no-call at one half, following the full evaluation mode of the Critical Assessment of Functional Annotation (CAFA) in charging for silence, though CAFA itself assigns zero. That is a scoring convention and not a forecast of what conservation would emit if it were forced to answer, so we give the alternatives here. Under the paper's rule the penalty is −0.1019 by the unweighted species mean and −0.2448 in horse. Giving each no-call the conservation score's own median value and then taking AUROC over the whole panel gives −0.0235 and −0.0100. Drawing each no-call from the conservation score's own score distribution gives, in expectation over the draws, −0.0400 and −0.0645. The two alternatives are milder because the scored negatives sit at low conservation and the scored positives at high, so a filled-in value inherits information from that arrangement. We keep the first rule throughout this paper, and a reader who prefers a different one should take these figures in place of the tabulated ones.
 
 ## Table S3. Baseline suite
 
@@ -382,7 +382,7 @@ Each control could have failed; the one that did not pass is set in bold.
 |---|---|---|---|
 | Macro AUROC across nine species, 8,192-bp readout | 0.9431 | reports/readout_effect_fullpanel.json | independent re-derivation, atlas |
 | Macro AUROC, 1,001-bp readout | 0.8783 | reports/readout_effect_fullpanel.json | independent re-derivation, atlas |
-| Readout effect on identical variants | +0.0647 | reports/readout_effect_fullpanel.json | independent re-derivation, atlas |
+| Readout effect on identical variants | +0.0648 | reports/readout_effect_fullpanel.json | independent re-derivation, atlas |
 | Variants carrying both readouts | 11,109 | reports/readout_effect_fullpanel.json | independent re-derivation, atlas |
 | Pooled errors at the 8,192-bp trust layer | 415 | reports/trust_layer_8192.json | independent re-derivation, trust layer |
 | Error capture at 15% refusal, 8,192-bp arm | 0.6096 | reports/trust_layer_8192.json | independent re-derivation, trust layer |
@@ -591,7 +591,7 @@ Human has the lowest lift of the nine while carrying 545 of the 893 errors, so t
 | **total** | 9,459 | 1,671 | 11,130 |
 
 At the 0.5 decision threshold on the calibrated probability, before any abstention. Recomputed from the deposited per-variant file on the same Platt posterior as Table S27, for the reason given there.
-Pooled sensitivity 0.674 [0.654, 0.693], specificity 0.982 [0.979, 0.984] (deposited bootstrap), overall error rate 0.0802. The 893 errors are 731 missed positives against only 162 false alarms, so 81.9% of all errors are missed positives. That is the asymmetry the selective layer does not fix, because refusal removes false alarms far more effectively than misses.
+Pooled sensitivity 0.674 [0.654, 0.693], specificity 0.982 [0.979, 0.984] (Wilson score intervals), overall error rate 0.0802. The 893 errors are 731 missed positives against only 162 false alarms, so 81.9% of all errors are missed positives. That is the asymmetry the selective layer does not fix, because refusal removes false alarms far more effectively than misses.
 
 ## Table S29. Per-species operating point at the 0.5 decision threshold
 
@@ -819,9 +819,9 @@ Assemblies are those each panel was built and verified on. GERP is read from the
 | M-CAP | rare missense | clinical assertions | indirect | 0.361 / 0.725 | 0.937 | 0.903 | 0.323 |
 | REVEL | missense | clinical assertions | no | 0.350 / 0.852 | 0.971 | 0.944 | 0.330 |
 | MutPred2 | missense | clinical assertions | no | 0.359 / 0.857 | 0.961 | 0.944 | 0.319 |
-| MVP | missense | clinical assertions | no | 0.357 / 0.837 | 0.949 | 0.912 | 0.315 |
+| MVP | missense | clinical assertions | no | 0.357 / 0.837 | 0.949 | 0.913 | 0.315 |
 | gMVP | missense | clinical assertions | no | 0.329 / 0.810 | 0.967 | 0.944 | 0.342 |
-| MisFit_D | missense | population data | no | 0.346 / 0.834 | 0.945 | 0.933 | 0.317 |
+| MisFit_D | missense | population data | no | 0.346 / 0.834 | 0.945 | 0.934 | 0.317 |
 | MisFit_S | missense | population data | yes | 0.346 / 0.834 | 0.880 | 0.928 | 0.271 |
 | MPC | missense | clinical assertions | no | 0.311 / 0.728 | 0.854 | 0.861 | 0.274 |
 | PrimateAI | missense | population data | no | 0.347 / 0.843 | 0.886 | 0.894 | 0.273 |
@@ -843,7 +843,7 @@ Assemblies are those each panel was built and verified on. GERP is read from the
 | CADD_raw | all SNVs | evolutionary proxy | no | 1.000 / 1.000 | 0.968 | 0.976 | 0.000 |
 | DANN | all SNVs | evolutionary proxy | no | 0.998 / 0.995 | 0.833 | 0.773 | 0.002 |
 | fathmm-XF_coding | coding SNVs | clinical assertions | no | 0.699 / 0.896 | 0.752 | 0.522 | 0.094 |
-| Eigen-raw_coding | coding SNVs | unsupervised | no | 0.917 / 0.858 | 0.947 | 0.923 | 0.095 |
+| Eigen-raw_coding | coding SNVs | unsupervised | no | 0.917 / 0.858 | 0.947 | 0.924 | 0.095 |
 | Eigen-PC-raw_coding | coding SNVs | unsupervised | no | 0.917 / 0.858 | 0.922 | 0.882 | 0.090 |
 | GERP++_RS | conservation track | none (conservation) | no | 0.998 / 0.994 | 0.801 | 0.693 | 0.002 |
 | GERP_92_mammals | conservation track | none (conservation) | no | 0.570 / 0.777 | 0.763 | 0.673 | 0.146 |

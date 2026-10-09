@@ -53,6 +53,18 @@ def conformal_quantile(scores, alpha: float) -> float:
     return float(np.sort(scores)[k - 1])
 
 
+def _admits(nonconformity, q):
+    """Admit a label when its nonconformity does not exceed the threshold ``q``, with ties taken in exact
+    arithmetic. A fitted calibration map can return one probability as two floats a unit in the last
+    place apart (two isotonic levels that are both exactly 1/4, say, stored as 0.25 and
+    0.24999999999999994); a plain ``<=`` would then exclude a label whose score equals the threshold.
+    Admitting within four units in the last place of ``q`` only ever enlarges a set, so the coverage
+    guarantee is untouched."""
+    if not np.isfinite(q):
+        return np.ones(np.shape(nonconformity), dtype=bool)
+    return nonconformity <= q + 4 * np.spacing(abs(q))
+
+
 class _BaseConformal:
     def __init__(self, alpha: float = 0.1):
         self.alpha = check_alpha(alpha)
@@ -116,7 +128,7 @@ class SplitConformal(_BaseConformal):
     def predict_set(self, probs, alpha=None):
         p, a = self._set_inputs(probs, alpha)
         q = conformal_quantile(self._cal, a)
-        return np.column_stack([p <= q, (1 - p) <= q])
+        return np.column_stack([_admits(p, q), _admits(1 - p, q)])
 
 
 class MondrianConformal(_BaseConformal):
@@ -133,4 +145,4 @@ class MondrianConformal(_BaseConformal):
         p, a = self._set_inputs(probs, alpha)
         q0 = conformal_quantile(self._cal[0], a)
         q1 = conformal_quantile(self._cal[1], a)
-        return np.column_stack([p <= q0, (1 - p) <= q1])
+        return np.column_stack([_admits(p, q0), _admits(1 - p, q1)])

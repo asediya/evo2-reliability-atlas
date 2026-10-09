@@ -48,7 +48,7 @@ def oriented(y, s):
 
 def build():
     rng = np.random.default_rng(SEED)
-    per, Y, S8, S1, deltas = {}, [], [], [], []
+    per, raw, Y, S8, S1 = {}, {}, [], [], []
     for sp in SPECIES:
         p8, p1 = S8192 % sp, S1001 % sp
         if not (os.path.exists(p8) and os.path.exists(p1)):
@@ -66,7 +66,7 @@ def build():
         per[sp] = {"n": int(len(y)), "n_pos": int(y.sum()),
                    "auroc_1001": round(float(a1), 4), "auroc_8192": round(float(a8), 4),
                    "delta": round(float(a8 - a1), 4)}
-        deltas.append(float(a8 - a1))
+        raw[sp] = (float(a1), float(a8))   # unrounded: every mean below is taken on these, and rounded once
         Y.append(y); S8.append(s8); S1.append(s1)
 
     if not Y:
@@ -92,7 +92,7 @@ def build():
     # mean's unit of analysis is the species. A variant-level interval here would be far too
     # narrow and would assert precision the nine-point design does not have.
     names = list(per)
-    dv = np.array([per[s]["delta"] for s in names], float)
+    dv = np.array([raw[s][1] - raw[s][0] for s in names], float)
     mb = [float(np.mean(rng.choice(dv, size=len(dv), replace=True))) for _ in range(NBOOT)]
     mlo, mhi = np.percentile(mb, [2.5, 97.5])
 
@@ -102,8 +102,8 @@ def build():
         "pooled": {"auroc_1001": round(float(p1), 4), "auroc_8192": round(float(p8), 4),
                    "delta": round(float(p8 - p1), 4),
                    "ci95": [round(float(lo), 4), round(float(hi), 4)]},
-        "macro": {"auroc_1001": round(float(np.mean([per[s]["auroc_1001"] for s in per])), 4),
-                  "auroc_8192": round(float(np.mean([per[s]["auroc_8192"] for s in per])), 4),
+        "macro": {"auroc_1001": round(float(np.mean([raw[s][0] for s in per])), 4),
+                  "auroc_8192": round(float(np.mean([raw[s][1] for s in per])), 4),
                   "delta": round(float(np.mean(dv)), 4),
                   "ci95_species_clustered": [round(float(mlo), 4), round(float(mhi), 4)]},
         "per_species": per,

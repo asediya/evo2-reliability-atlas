@@ -3,9 +3,9 @@
  "_question": "At nine tips with this tree shape, is Pagel's lambda estimable?",
  "_tree": {
   "root_age_my": 319.0,
-  "placental_split_my": 94.0,
+  "placental_split_my": 92.0,
   "source": "TimeTree medians as recorded in src/ccs/fig2_data.py",
-  "_note": "TimeTree gives seven of the eight non-human species an identical 94 My divergence from human, so the two remaining depths — between mammal orders, and within an order — are varied over a grid rather than assumed."
+  "_note": "TimeTree gives seven of the eight non-human species an identical 92 My divergence from human, so the two remaining depths — between mammal orders, and within an order — are varied over a grid rather than assumed."
  },
  "grid": [
   {
@@ -13,7 +13,7 @@
    "d_intra": 15.0,
    "truth": {
     "0.0": {
-     "mean": 0.08566,
+     "mean": 0.08566000000000001,
      "median": 0.0,
      "q05": 0.0,
      "q95": 0.8604999999999995,
@@ -21,7 +21,7 @@
      "frac_at_1": 0.022
     },
     "0.5": {
-     "mean": 0.20102,
+     "mean": 0.20108,
      "median": 0.0,
      "q05": 0.0,
      "q95": 0.98,
@@ -29,11 +29,11 @@
      "frac_at_1": 0.04
     },
     "1.0": {
-     "mean": 0.7260599999999999,
+     "mean": 0.72404,
      "median": 0.99,
      "q05": 0.0,
      "q95": 1.0,
-     "frac_at_0": 0.246,
+     "frac_at_0": 0.248,
      "frac_at_1": 0.47
     }
    }
@@ -43,28 +43,28 @@
    "d_intra": 35.0,
    "truth": {
     "0.0": {
-     "mean": 0.04978,
+     "mean": 0.048519999999999994,
      "median": 0.0,
      "q05": 0.0,
-     "q95": 0.6219999999999982,
-     "frac_at_0": 0.94,
+     "q95": 0.6209999999999991,
+     "frac_at_0": 0.942,
      "frac_at_1": 0.022
     },
     "0.5": {
-     "mean": 0.15588,
+     "mean": 0.15220000000000003,
      "median": 0.0,
      "q05": 0.0,
      "q95": 1.0,
-     "frac_at_0": 0.806,
-     "frac_at_1": 0.056
+     "frac_at_0": 0.81,
+     "frac_at_1": 0.054
     },
     "1.0": {
-     "mean": 0.48352000000000006,
-     "median": 0.605,
+     "mean": 0.4867,
+     "median": 0.65,
      "q05": 0.0,
      "q95": 1.0,
-     "frac_at_0": 0.484,
-     "frac_at_1": 0.296
+     "frac_at_0": 0.48,
+     "frac_at_1": 0.3
     }
    }
   },
@@ -73,15 +73,15 @@
    "d_intra": 55.0,
    "truth": {
     "0.0": {
-     "mean": 0.04368,
+     "mean": 0.04374,
      "median": 0.0,
      "q05": 0.0,
-     "q95": 0.5419999999999983,
+     "q95": 0.5424999999999978,
      "frac_at_0": 0.944,
      "frac_at_1": 0.014
     },
     "0.5": {
-     "mean": 0.16357999999999998,
+     "mean": 0.16386,
      "median": 0.0,
      "q05": 0.0,
      "q95": 1.0,
@@ -89,12 +89,12 @@
      "frac_at_1": 0.08
     },
     "1.0": {
-     "mean": 0.36928,
+     "mean": 0.36795999999999995,
      "median": 0.0,
      "q05": 0.0,
      "q95": 1.0,
-     "frac_at_0": 0.594,
-     "frac_at_1": 0.214
+     "frac_at_0": 0.596,
+     "frac_at_1": 0.212
     }
    }
   },
@@ -103,28 +103,28 @@
    "d_intra": 15.0,
    "truth": {
     "0.0": {
-     "mean": 0.09187999999999999,
+     "mean": 0.09006,
      "median": 0.0,
      "q05": 0.0,
-     "q95": 0.88,
-     "frac_at_0": 0.888,
+     "q95": 0.8704999999999995,
+     "frac_at_0": 0.89,
      "frac_at_1": 0.024
     },
     "0.5": {
-     "mean": 0.1735,
+     "mean": 0.17536000000000002,
      "median": 0.0,
      "q05": 0.0,
      "q95": 0.98,
-     "frac_at_0": 0.78,
+     "frac_at_0": 0.778,
      "frac_at_1": 0.038
     },
     "1.0": {
-     "mean": 0.7258399999999999,
-     "median": 0.99,
+     "mean": 0.7218,
+     "median": 0.985,
      "q05": 0.0,
      "q95": 1.0,
-     "frac_at_0": 0.248,
-     "frac_at_1": 0.468
+     "frac_at_0": 0.252,
+     "frac_at_1": 0.466
     }
    }
   },
@@ -133,28 +133,28 @@
    "d_intra": 35.0,
    "truth": {
     "0.0": {
-     "mean": 0.0589,
+     "mean": 0.06006,
      "median": 0.0,
      "q05": 0.0,
-     "q95": 0.71,
+     "q95": 0.7109999999999991,
      "frac_at_0": 0.926,
      "frac_at_1": 0.02
     },
     "0.5": {
-     "mean": 0.1575,
+     "mean": 0.15852000000000002,
      "median": 0.0,
      "q05": 0.0,
      "q95": 1.0,
-     "frac_at_0": 0.804,
+     "frac_at_0": 0.802,
      "frac_at_1": 0.064
     },
     "1.0": {
-     "mean": 0.5206,
-     "median": 0.765,
+     "mean": 0.52496,
+     "median": 0.785,
      "q05": 0.0,
      "q95": 1.0,
-     "frac_at_0": 0.446,
-     "frac_at_1": 0.36
+     "frac_at_0": 0.442,
+     "frac_at_1": 0.362
     }
    }
   },
@@ -163,28 +163,28 @@
    "d_intra": 55.0,
    "truth": {
     "0.0": {
-     "mean": 0.05584,
+     "mean": 0.055920000000000004,
      "median": 0.0,
      "q05": 0.0,
-     "q95": 0.74,
+     "q95": 0.7209999999999991,
      "frac_at_0": 0.936,
      "frac_at_1": 0.026
     },
     "0.5": {
-     "mean": 0.13886,
+     "mean": 0.13944,
      "median": 0.0,
      "q05": 0.0,
      "q95": 1.0,
-     "frac_at_0": 0.842,
-     "frac_at_1": 0.064
+     "frac_at_0": 0.84,
+     "frac_at_1": 0.068
     },
     "1.0": {
-     "mean": 0.39038,
+     "mean": 0.392,
      "median": 0.0,
      "q05": 0.0,
      "q95": 1.0,
-     "frac_at_0": 0.58,
-     "frac_at_1": 0.262
+     "frac_at_0": 0.578,
+     "frac_at_1": 0.264
     }
    }
   },
@@ -193,24 +193,24 @@
    "d_intra": 15.0,
    "truth": {
     "0.0": {
-     "mean": 0.10092,
+     "mean": 0.099,
      "median": 0.0,
      "q05": 0.0,
      "q95": 0.97,
-     "frac_at_0": 0.884,
-     "frac_at_1": 0.034
+     "frac_at_0": 0.886,
+     "frac_at_1": 0.032
     },
     "0.5": {
-     "mean": 0.18602000000000002,
+     "mean": 0.18506,
      "median": 0.0,
      "q05": 0.0,
      "q95": 0.99,
-     "frac_at_0": 0.77,
-     "frac_at_1": 0.044
+     "frac_at_0": 0.772,
+     "frac_at_1": 0.046
     },
     "1.0": {
-     "mean": 0.7504200000000001,
-     "median": 0.985,
+     "mean": 0.7502000000000001,
+     "median": 0.98,
      "q05": 0.0,
      "q95": 1.0,
      "frac_at_0": 0.224,
@@ -223,28 +223,28 @@
    "d_intra": 35.0,
    "truth": {
     "0.0": {
-     "mean": 0.06618,
+     "mean": 0.06609999999999999,
      "median": 0.0,
      "q05": 0.0,
-     "q95": 0.7804999999999995,
+     "q95": 0.78,
      "frac_at_0": 0.918,
      "frac_at_1": 0.024
     },
     "0.5": {
-     "mean": 0.18972,
+     "mean": 0.1885,
      "median": 0.0,
      "q05": 0.0,
      "q95": 1.0,
-     "frac_at_0": 0.78,
+     "frac_at_0": 0.782,
      "frac_at_1": 0.09
     },
     "1.0": {
-     "mean": 0.51734,
-     "median": 0.8,
+     "mean": 0.5145,
+     "median": 0.785,
      "q05": 0.0,
      "q95": 1.0,
-     "frac_at_0": 0.452,
-     "frac_at_1": 0.324
+     "frac_at_0": 0.454,
+     "frac_at_1": 0.32
     }
    }
   },
@@ -253,32 +253,32 @@
    "d_intra": 55.0,
    "truth": {
     "0.0": {
-     "mean": 0.05008,
+     "mean": 0.05006,
      "median": 0.0,
      "q05": 0.0,
-     "q95": 0.5614999999999987,
+     "q95": 0.5609999999999992,
      "frac_at_0": 0.94,
      "frac_at_1": 0.032
     },
     "0.5": {
-     "mean": 0.12976,
+     "mean": 0.13276,
      "median": 0.0,
      "q05": 0.0,
      "q95": 1.0,
-     "frac_at_0": 0.844,
-     "frac_at_1": 0.06
+     "frac_at_0": 0.84,
+     "frac_at_1": 0.062
     },
     "1.0": {
-     "mean": 0.40753999999999996,
+     "mean": 0.40876,
      "median": 0.0,
      "q05": 0.0,
      "q95": 1.0,
-     "frac_at_0": 0.562,
-     "frac_at_1": 0.266
+     "frac_at_0": 0.56,
+     "frac_at_1": 0.27
     }
    }
   }
  ],
- "median_separation_between_truth_0_and_1": 0.765,
+ "median_separation_between_truth_0_and_1": 0.785,
  "conclusion": "Across every tree shape tried, the ML estimate of lambda piles up at the boundaries and its 5-95%% range spans most of [0,1] whatever the truth. Nine tips with seven of them at an identical divergence depth cannot identify lambda, so a PGLS standard error computed from an estimated lambda would be reporting the boundary the optimiser hit, not a property of the data. The manuscript's position is correct."
 }

@@ -236,17 +236,16 @@ for sp in ORDER:
     ps = _fe["per_species"][sp]
     assert (len(g), int(g.label.sum())) == (ps["n"], ps["n_pos"]), sp
     assert (round(a1, 4), round(a8, 4)) == (ps["auroc_1001"], ps["auroc_8192"]), sp
-    assert round(a1, 4) == _forest[sp]["auroc_1001"] and abs(a8 - _forest[sp]["auroc"]) < 1e-12, sp
+    assert round(a1, 6) == _forest[sp]["auroc_1001"] and abs(a8 - _forest[sp]["auroc"]) < 1e-12, sp
     SPR[sp] = dict(a1=a1, a8=a8, n=len(g), pos=int(g.label.sum()))
 for sp in ORDER:
     assert F.signed(SPR[sp]["a8"] - SPR[sp]["a1"]) == "+%.3f" % _forest[sp]["readout_delta"], sp
 SP_M1 = float(np.mean([SPR[s]["a1"] for s in ORDER]))
 SP_M8 = float(np.mean([SPR[s]["a8"] for s in ORDER]))
 assert (round(SP_M1, 4), round(SP_M8, 4)) == (_fe["macro"]["auroc_1001"], _fe["macro"]["auroc_8192"])
-# the JSON's delta is the mean of the per-species deltas it stores rounded to four places (0.0647);
-# unrounded the mean is 0.06476, so the two agree to the rounding and no closer
-assert abs((SP_M8 - SP_M1) - _fe["macro"]["delta"]) <= 1e-4, (SP_M8 - SP_M1, _fe["macro"]["delta"])
-assert abs(np.mean([_fe["per_species"][s]["delta"] for s in ORDER]) - _fe["macro"]["delta"]) < 5e-5
+# the JSON's delta is the unrounded species mean rounded once to four places (0.06476 -> 0.0648); the mean
+# of its four-place per-species deltas (0.06474) would round to 0.0647, so it is not the check
+assert abs((SP_M8 - SP_M1) - _fe["macro"]["delta"]) <= 5e-5, (SP_M8 - SP_M1, _fe["macro"]["delta"])
 assert _fe["n_variants_both_readouts"] == N_BOTH
 published("species mean at 1,001 bp (Fig. 8b)", "0.878", F.fnum(SP_M1, 3))
 published("species mean at 8,192 bp (Fig. 8b)", "0.943", F.fnum(SP_M8, 3))

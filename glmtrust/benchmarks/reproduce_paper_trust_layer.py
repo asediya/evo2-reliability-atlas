@@ -121,7 +121,8 @@ def main():
     # tie_policy="rank" is the rule the published figures were computed under. The isotonic posterior
     # here takes 218 distinct values, so 597 variants sit exactly on the 15% boundary and a positional
     # tie-break decides which of them are refused; permuting the fixture's rows moves pooled capture
-    # over a range of 0.043, twice this benchmark's own 0.02 tolerance. The fixture ships in one fixed
+    # over a range of 0.053 across 399 row orders (analyses/scripts/tie_sensitivity.py in the study
+    # archive), more than twice this benchmark's own 0.02 tolerance. The fixture ships in one fixed
     # order, so the published numbers reproduce. The package default is "whole_block", which is
     # deterministic under any row order and is what a deployment should use.
     rep = group_selective_report(probs, labels, groups, coverage=0.85, tie_policy="rank")
