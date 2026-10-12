@@ -1020,7 +1020,7 @@ def panel_e_lattice(ax):
     ax.text(1.06, 0.70, "So the frequency floor is 1/AN: 0.05\nwith all ten called, 0.167 at AN = 6",
             transform=ax.transAxes, fontsize=FOOT, ha="left", va="top",
             color=INK, linespacing=1.35, clip_on=False)
-    ax.text(1.06, 0.40, "%d cells are not empty but impossible:\na minor allele count cannot exceed\n"
+    ax.text(1.06, 0.40, "%d cells are impossible rather than empty:\na minor allele count cannot exceed\n"
             "half the allele number" % n_imp, transform=ax.transAxes, fontsize=FOOT,
             ha="left", va="top", color=MUTED, linespacing=1.35, clip_on=False)
 

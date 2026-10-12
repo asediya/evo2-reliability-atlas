@@ -253,7 +253,7 @@ python glmtrust/benchmarks/reproduce_paper_trust_layer.py
 
 runs leave-one-species-out isotonic calibration and per-species 15% selective refusal through the
 public API and checks the result against the deposited numbers. It matches to four decimals: pooled
-capture 0.6096, pooled lift 4.07, macro ECE 0.0209, 415 errors. Those figures use `tie_policy="rank"`
+capture 0.6096, pooled lift 4.0676, macro ECE 0.0209, 415 errors. Those figures use `tie_policy="rank"`
 in the fixture's row order; because variants tied at the refusal boundary make capture depend on row
 order, the benchmark also checks that the published capture lies inside the range that 20 row-order
 permutations produce. The package's default, `tie_policy="whole_block"`, refuses whole tie blocks and

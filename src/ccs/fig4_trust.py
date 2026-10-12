@@ -681,7 +681,7 @@ def panel_dm(ax):
 
     The two disagree on the probability scale (mean absolute difference 0.052): the transfer lowers
     every call the sigmoid places between 0.1 and 0.5 and raises every call above 0.6, and only 68 of
-    11,130 variants -- 0.61 % -- cross the decision boundary, every one of them from
+    11,130 variants -- 0.61% -- cross the decision boundary, every one of them from
     sigmoid-positive to transfer-negative.
 
     NO ECE IS PRINTED ON THIS PANEL, and that is deliberate, for two reasons.

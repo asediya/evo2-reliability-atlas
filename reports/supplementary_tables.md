@@ -472,7 +472,7 @@ Both aggregations of the four formally tested estimators (eight cells). The pair
 Equal-width 10-bin ECE. The transferred Platt map and the trivial global sigmoid are arithmetically the same operation and are bit-identical here, which is why the substantive comparison in the main text is isotonic against that sigmoid.
 **Table S23 (continued)**
 
-| calibration set size (variants) | mean transferred adaptive ECE | sd |
+| calibration set size (variants) | mean transferred adaptive ECE | SD |
 |---|---|---|
 | 25 | 0.0578 | 0.0396 |
 | 50 | 0.0322 | 0.0159 |
@@ -482,7 +482,7 @@ Equal-width 10-bin ECE. The transferred Platt map and the trivial global sigmoid
 | 1,000 | 0.0410 | 0.0198 |
 | 10,327 | 0.0470 | 0.0146 |
 
-Calibration-set-size learning curve. Adaptive ECE is equal-mass ECE at 10 bins. Each calibration set is a random draw of that many variants from the six label-rich species (10,327 variants in all, the last row), and the isotonic map fitted on it is scored on goat, chicken and pig; mean and sd are over five draws per size and those three species. The unit is variants, not donor species. It answers whether the smallest panels (goat, n = 99) are overfitting: they are not, and equally, more calibration data does not close the gap to the in-species oracle.
+Calibration-set-size learning curve. Adaptive ECE is equal-mass ECE at 10 bins. Each calibration set is a random draw of that many variants from the six label-rich species (10,327 variants in all, the last row), and the isotonic map fitted on it is scored on goat, chicken and pig; mean and SD are over five draws per size and those three species. The unit is variants, not donor species. It answers whether the smallest panels (goat, n = 99) are overfitting: they are not, and equally, more calibration data does not close the gap to the in-species oracle.
 The learning curve is flat within noise.
 
 ## Table S24. Prevalence correction to the panel construction ratio
@@ -789,21 +789,21 @@ Seeds are recorded in each script. Intervals that treat variants as independent 
 
 | Species | Assembly | GERP track | Gene models / snpEff database | Negatives | Positives | Genes | OMIA phenotypes | Trait alleles |
 |---|---|---|---|---|---|---|---|---|
-| goat | ARS1 (GCA_001704415.1) | Ensembl 110, 91 mammals | Ensembl 112 / ARS1 | Ensembl variation 110 | 9 | 2 | 3 | 8 |
-| chicken | GRCg6a (GCA_000002315.5) | Ensembl 106, 27 sauropsids | Ensembl 105 / GRCg6a | Ensembl variation 104 | 28 | 21 | 25 | 20 |
-| pig | Sscrofa11.1 (GCA_000003025.6) | Ensembl 110, 91 mammals | Ensembl 112 / Sscrofa11.1 | PigGTEx v0 genotypes | 36 | 29 | 28 | 13 |
-| sheep | Oar_rambouillet_v1.0 (GCA_002742125.1) | Ensembl 110, 91 mammals | Ensembl 106 / Oar_rambouillet_v1.0 | Ensembl variation 109 | 56 | 37 | 50 | 27 |
-| horse | EquCab3.0 (GCA_002863925.1) | Ensembl 110, 91 mammals | Ensembl 112 / EquCab3.0 | Ensembl variation 110 | 71 | 33 | 43 | 44 |
-| cat | F.catus_Fca126_mat1.0 (GCA_018350175.1) | Ensembl 114, 91 mammals | Ensembl 114 / F.catus_Fca126_mat1.0 | Ensembl variation 114 | 125 | 76 | 86 | 39 |
-| cattle | ARS-UCD1.2 (GCA_002263795.2) | Ensembl 110, 91 mammals | Ensembl 99 / ARS-UCD1.2.99 (pre-built) | Ensembl variation 110 | 188 | 144 | 149 | 28 |
-| dog | CanFam3.1 (GCA_000002285.2) | Ensembl 104, 90 mammals | Ensembl 104 / CanFam3.1 | Ensembl variation 104 | 227 | 178 | 189 | 25 |
-| human | GRCh38 (GCA_000001405.15) | Ensembl 110, 91 mammals | Ensembl 112 / GRCh38 | ClinVar benign, 1:1 | 1,500 | 843 | – | – |
+| Goat | ARS1 (GCA_001704415.1) | Ensembl 110, 91 mammals | Ensembl 112 / ARS1 | Ensembl variation 110 | 9 | 2 | 3 | 8 |
+| Chicken | GRCg6a (GCA_000002315.5) | Ensembl 106, 27 sauropsids | Ensembl 105 / GRCg6a | Ensembl variation 104 | 28 | 21 | 25 | 20 |
+| Pig | Sscrofa11.1 (GCA_000003025.6) | Ensembl 110, 91 mammals | Ensembl 112 / Sscrofa11.1 | PigGTEx v0 genotypes | 36 | 29 | 28 | 13 |
+| Sheep | Oar_rambouillet_v1.0 (GCA_002742125.1) | Ensembl 110, 91 mammals | Ensembl 106 / Oar_rambouillet_v1.0 | Ensembl variation 109 | 56 | 37 | 50 | 27 |
+| Horse | EquCab3.0 (GCA_002863925.1) | Ensembl 110, 91 mammals | Ensembl 112 / EquCab3.0 | Ensembl variation 110 | 71 | 33 | 43 | 44 |
+| Cat | F.catus_Fca126_mat1.0 (GCA_018350175.1) | Ensembl 114, 91 mammals | Ensembl 114 / F.catus_Fca126_mat1.0 | Ensembl variation 114 | 125 | 76 | 86 | 39 |
+| Cattle | ARS-UCD1.2 (GCA_002263795.2) | Ensembl 110, 91 mammals | Ensembl 99 / ARS-UCD1.2.99 (pre-built) | Ensembl variation 110 | 188 | 144 | 149 | 28 |
+| Dog | CanFam3.1 (GCA_000002285.2) | Ensembl 104, 90 mammals | Ensembl 104 / CanFam3.1 | Ensembl variation 104 | 227 | 178 | 189 | 25 |
+| Human | GRCh38 (GCA_000001405.15) | Ensembl 110, 91 mammals | Ensembl 112 / GRCh38 | ClinVar benign, 1:1 | 1,500 | 843 | – | – |
 
 Assemblies are those each panel was built and verified on. GERP is read from the per-species Ensembl Compara bigWig track on that assembly; the release and alignment given are those of the track that reproduces the atlas's per-base values, value for value for all but two cat positives (build_gerp_windows.py, Additional file 3). Genes and OMIA phenotypes count distinct gene symbols and distinct phenotype strings among the positives; trait alleles are the positives classed as non-disease in atlas_positive_annotations.parquet (Additional file 3). Negatives are drawn from each species' population-variant pool rather than from the positives' genes, so the atlas supports no within-gene comparison; in sheep, chicken and pig the pool does not reach every chromosome (Note S62). The Negatives column names each species' pool and its release: Ensembl variation, at the release given, in seven species, the PigGTEx v0 genotypes in pig, and ClinVar's benign or likely-benign records, drawn 1:1, in human; in the eight non-human species the negatives are matched to the positives on trinucleotide context and alternate allele and not on GC (reports/atlas_controls.json, Additional file 2). Of the 27 positives that OMIA curates as coding but snpEff's first term calls non-coding (Note S62), 16 are in dog, 4 in cattle, 3 each in cat and horse and 1 in sheep; the gene-model releases run from Ensembl 99 (cattle) to 114 (cat).
 
 ## Table S40. Per-predictor provenance and accounting on the 49-predictor panel
 
-| Predictor | Scope | Training labels | Allele frequency input | Reach P / B | Covered AUROC | Within-gene AUROC | Penalty |
+| Predictor | Scope | Training labels | Allele-frequency input | Reach P / B | Covered AUROC | Within-gene AUROC | Penalty |
 |---|---|---|---|---|---|---|---|
 | SIFT | missense | unsupervised | no | 0.345 / 0.839 | 0.899 | 0.872 | 0.284 |
 | SIFT4G | missense | unsupervised | no | 0.348 / 0.834 | 0.897 | 0.897 | 0.282 |
