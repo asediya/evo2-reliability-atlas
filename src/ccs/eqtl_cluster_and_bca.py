@@ -116,12 +116,11 @@ def main():
           % (p, mcse))
 
     # ---- 3. BCa on the nine-species clustered macro difference (+0.108)
-    # these were eighteen AUROCs typed into the source at three decimals and
-    # read from no artifact, so the BCa interval on the headline macro difference and its jackknife
-    # acceleration were functions of hand-transcribed constants. That is the failure mode
-    # fig2_data.py records this project as having fixed elsewhere. Read from the artifact instead,
-    # which also restores full precision: the typed values give a macro delta of +0.108333 against
-    # the artifact's +0.108373.
+    # the eighteen AUROCs are read from the artifact, not typed into the source at three decimals:
+    # typed values would make the BCa interval on the headline macro difference and its jackknife
+    # acceleration functions of hand-transcribed constants, which is the failure mode
+    # fig2_data.py guards against. Reading the artifact also keeps full precision: the typed
+    # three-decimal values give a macro delta of +0.108333 against the artifact's +0.108373.
     _hh = json.load(io.open("reports/readout_headtohead.json", encoding="utf-8"))
     _per = _hh["per_species"]
     _sp = list(_per.keys())

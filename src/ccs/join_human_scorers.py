@@ -158,8 +158,8 @@ def _join_bigwig(panel, path, name):
     if missing_chroms:
         # Report the panel name, the key tried and how many variants it cost, and STOP if a single
         # absent contig accounts for a large block. A contig genuinely outside a primary-assembly
-        # track loses a handful of variants; losing hundreds means the key was wrong, and printing
-        # that quietly is how 1,725 mitochondrial variants were lost to "chrMT" in the first place.
+        # track loses a handful of variants; losing hundreds means the key is wrong, and printing
+        # that quietly can lose a whole contig (1,725 mitochondrial variants under "chrMT", for one).
         print("  contigs not found in the track:")
         for raw, key, n in sorted(missing_chroms, key=lambda t: -t[2]):
             print("    panel %-14s tried %-16s %s variant(s)" % (raw, key, format(n, ",")))

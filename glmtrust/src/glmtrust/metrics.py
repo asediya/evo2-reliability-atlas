@@ -69,7 +69,7 @@ def ece(y_true, y_prob, n_bins: int = 10, strategy: str = "uniform") -> float:
     y_true = y_true.astype(float)
     # The equal-width branch fixes its edges at [0, 1], so anything outside that range falls into no
     # bin and is dropped from the weighted sum without being subtracted from n. Percent-scale input
-    # (0-100) therefore returned 0.0005 where its honest ECE is 0.1679, and partial NaN scaled the
+    # (0-100) would therefore return 0.0005 where its honest ECE is 0.1679, and partial NaN would scale the
     # answer by the finite fraction. The equal-mass branch is loud in both cases because its edges
     # are quantiles of the data. TrustLayer.fit already refuses non-finite scores at some length; a
     # public metric should not be quieter than the pipeline that calls it.

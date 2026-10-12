@@ -88,12 +88,10 @@ def main():
 
     # ---------------- S1 atlas ----------------
     W("\n## Table S1. The readout effect on identical variants\n")
-    # This preamble used to name specific residuals against Table 1: sheep "matching exactly at
-    # 0.902", horse "0.882 here against 0.880 in Table 1", and five species losing 21 variants
-    # between them. Every one of those figures was hardcoded, and every one had been superseded.
-    # Table 1 is now built from this same panel, so the two agree for all nine species at identical
-    # n, and sheep reads 0.903 in both. The agreement is COUNTED here rather than asserted, so it
-    # cannot go stale the way a hardcoded residual list did.
+    # The preamble names no specific residuals against Table 1: hardcoded residual figures go
+    # stale as the panel changes. Table 1 is built from this same panel, so the two agree for all
+    # nine species at identical n, and sheep reads 0.903 in both. The agreement is COUNTED here
+    # rather than asserted, so it cannot go stale the way a hardcoded residual list would.
     _n_sp = len(F2["forest"])
     _have = sum(1 for r in F2["forest"] if r.get("auroc_1001") is not None)
     assert _have == _n_sp, ("Table S1 lacks a 1,001-bp value for %d of %d species, so the claim "
@@ -104,11 +102,11 @@ def main():
       "variant-for-variant and isolate the readout effect: %s AUROC by the species mean, %s pooled "
       "%s. Before the 8,192-bp panel was completed these columns covered only 3,506 variants, and "
       "the 1,001-bp values here differed materially from those in Table 1. "
-      # The caption used to assert "identical n for all 9" and "reproduces Table 1's exactly". Its
-      # own first sentence refutes that: Table 1 is the full 11,130-variant panel and this table the
+      # The caption does not assert "identical n for all 9" or that it "reproduces Table 1's
+      # exactly": Table 1 is the full 11,130-variant panel and this table the
       # 11,109 carrying an 8,192-bp score. Five species lose a variant at a contig end and three of
       # them move at three decimals. Claiming a match the n column disproves is the exact failure
-      # this paper is about, so the residual is now named instead of denied.
+      # this paper is about, so the residual is named instead of denied.
       "Table 1 is computed on the full 11,130-variant panel and this table on the %s carrying an "
       "8,192-bp score, so n differs in the five species that lose a variant at a contig end "
       "(horse 15, cat 3, and one each in goat, cattle and dog; Note S38), and the 1,001-bp AUROC "
@@ -151,8 +149,8 @@ def main():
         W("|---|--:|--:|")
         for sp, v in eb.items():
             W("| %s | %d | %d |" % (sp.capitalize(), v.get("mass10", 0), v.get("mass15", 0)))
-        # Note S2 supersedes the degeneracy explanation for the SIGN disagreement; this caption used
-        # to assert the opposite of the note it sits beside.
+        # Note S2 rules out degeneracy as the source of the SIGN disagreement, and this caption
+        # says the same as the note it sits beside.
         W("\nThis degeneracy is real, but it is **not** the source of the sign disagreement above: "
           "under equal-mass rules the isotonic advantage over the trivial sigmoid strengthens "
           "monotonically as the requested bin count rises, which a binning degeneracy would not "
@@ -271,9 +269,9 @@ def main():
         W("|---|--:|--:|--:|")
         # The random-refusal control is abstention.isotonic_LOSO.macro_random -- the error when the
         # SAME fraction of calls is refused at random. It must stay flat (~0.057) as coverage falls;
-        # that flatness is the evidence the selective predictor is doing real work. A previous version
-        # of this table printed trivial_sigmoid_LOSO.macro_error here, which is the sigmoid
-        # calibrator's OWN selective curve (it declines), making the table contradict the main text.
+        # that flatness is the evidence the selective predictor is doing real work. The column is not
+        # trivial_sigmoid_LOSO.macro_error, which is the sigmoid calibrator's OWN selective curve
+        # (it declines) and would make the table contradict the main text.
         rnd = ab.get("macro_random", [])
         for i, c in enumerate(ab["coverage"]):
             W("| %.0f%% | %s | %s | %s |" % (
@@ -339,10 +337,10 @@ def main():
                 f(r.get("auroc_evo2")), f(r.get("cnn_loso"))))
     plm = F5.get("protein_lm", {})
     if plm:
-        # The single n column did not apply to the GERP cell. ESM-2 and Evo 2 are measured on all n
-        # variants; GERP is measured only on the subset it can score -- 881 of 912 in human -- which
-        # is the same selection artefact this figure exists to indict, applied by the table to its own
-        # comparison. GERP now carries its own n, and the abstention value from the recompute layer is
+        # A single n column does not apply to the GERP cell. ESM-2 and Evo 2 are measured on all n
+        # variants; GERP is measured only on the subset it can score -- 881 of 912 in human -- and
+        # one shared n would apply the selection artefact this figure exists to indict to the table's
+        # own comparison. GERP therefore carries its own n, and the abstention value from the recompute layer is
         # shown beside the covered one so the reader can see what the missing variants cost.
         W("\n**Protein language model**, runnable on only the panels with annotated missense variants.\n")
         W("| Species | n | n pos | ESM-2 | Evo 2-40B | GERP (n scoreable) | GERP covered | "
@@ -365,9 +363,9 @@ def main():
     # but fig3_data.py bootstraps the whole vector from a module-level RNG (so class counts wander
     # between resamples and the result depends on call order), while fig3_stats.py resamples
     # positives and negatives separately from a per-call seed. The stratified one is what the
-    # Methods describe and what the manuscript quotes. They disagreed by 0.001 on the 40B lower
-    # bound, so this table printed [+0.472, +0.523] against the text's [0.473, 0.523] in four
-    # places. Row set and order still follow fig3_data so the table's content is unchanged.
+    # Methods describe and what the manuscript quotes. They disagree by 0.001 on the 40B lower
+    # bound ([+0.472, +0.523] against the text's [0.473, 0.523]), so reading fig3_data here would
+    # put that mismatch in four places. Row set and order still follow fig3_data.
     SC = F3S["scale"]["eqtl"]
     W("| Model | whole-atlas macro AUROC (n = 11,109) | eQTL AUROC | 95% CI | n (eQTL) |")
     W("|---|--:|--:|:--|--:|")
@@ -467,7 +465,7 @@ def main():
         # differs slightly from Table 1's GERP column, which uses every finite-GERP variant. For cat
         # the two sets are 1,034 and 1,037 variants and the AUROCs are 0.8565 and 0.8460: three
         # variants move it by 0.0105. The two can be read as contradicting each other,
-        # so the difference is now stated rather than left for a reader to reconcile.
+        # so the difference is stated rather than left for a reader to reconcile.
         W("On the variants both methods can score, Evo 2 scored at the 1,001-bp single-position "
           "readout and at the 8,192-bp mean-log-likelihood readout, against the same fixed GERP "
           "baseline, per species. Moving Evo 2 from the single-position to the mean-log-likelihood "
@@ -515,10 +513,9 @@ def main():
               "scores below are evaluated on exactly the same variants** (the intersection of the "
               "8,192-bp-scored, GERP-scorable and phyloP-scorable sets; cattle n = 1,921), "
               "so every comparison is like-for-like. Two things follow. First, phyloP is a **stronger** "
-              # Methods review finding 6: a weaker comparator makes the model's margin larger, so GERP
+              # A weaker comparator makes the model's margin larger, so GERP
               # being the weaker of the two makes every Evo 2-versus-conservation margin an UPPER
-              # bound, not a conservative one. The old sentence had the inference backwards and the
-              # same error stood in the Methods.
+              # bound, not a conservative one.
               "baseline than GERP in all three species, so every Evo 2-versus-conservation margin "
               "reported against GERP is an upper bound rather than a conservative one; GERP is kept "
               "as the primary comparator for uniformity across all nine assemblies, not for strength. "
@@ -587,8 +584,8 @@ def main():
         ev = J("fig3_consequence")["classes"]
         W("\n## Table S26. The consequence gradient is not the model's alone: GERP through the "
           "identical analysis\n")
-        # This said "the same positives, the same per-species negatives". It is
-        # not: GERP is defined only where its track returns a finite value, so the GERP arm runs on
+        # Not "the same positives, the same per-species negatives":
+        # GERP is defined only where its track returns a finite value, so the GERP arm runs on
         # different positives in all four classes (110/67/310/21 against Evo 2's 112/70/324/18), a
         # different species set (cattle enters every GERP class and carries none in the Evo 2 arm;
         # goat leaves nonsense) and a strictly smaller negative pool. The difference column therefore

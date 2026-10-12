@@ -3,7 +3,7 @@
 
 Why this file exists. Scripts under src/ and tools/ read ~120
 distinct paths under data/. That tree is large (genome FASTAs, per-species window files, and
-the 8,192-bp score parquets), so it cannot travel inside Additional file 2. It was flagged that the deposit therefore contained scripts that abort on missing inputs with no
+the 8,192-bp score parquets), so it cannot travel inside Additional file 2, and without a manifest the deposit would contain scripts that abort on missing inputs with no
 statement of what the inputs are or where they come from. This manifest is that statement: it lists
 every data/ path the deposited code references, records the total size, and points to the public
 sources and to the recompute layers (JSON + small parquets, both deposited) from which every
@@ -69,13 +69,13 @@ def collect_paths():
 def _data_dependent_counts():
     """(scripts under src/ that reference a data/ path, total scripts under src/).
 
-    The manifest named three scripts as the exception to "reproduces without
-    touching data/". The exception is the majority, so the count is measured rather than asserted.
+    Scripts that need data/ are the majority, not a named exception to "reproduces without
+    touching data/", so the count is measured rather than asserted.
 
-    this counted every file in the WORKING tree, and the code deposit excludes
-    the superseded figure modules, so the shipped manifest quoted a denominator larger than the
-    tree a reader holds -- in the one file whose header says it cannot drift. Count what ships,
-    using the deposit's own exclusion rule.
+    Count what ships, using the deposit's own exclusion rule: the code deposit excludes
+    the superseded figure modules, so counting every file in the WORKING tree would quote a
+    denominator larger than the tree a reader holds -- in the one file whose header says it
+    cannot drift.
     """
     srcs = [f for f in glob.glob("src/**/*.py", recursive=True)
             if "_superseded_" not in f.replace("\\", "/")]
@@ -133,9 +133,9 @@ def main():
         "need nothing from `data/`.\n"
         % _data_dependent_counts())
     # Three deposited artefacts are read by deposited scripts but written by
-    # none, so a reproducibility referee finds a hole in the provenance chain and cannot tell a
+    # none, so a reproducibility referee would find a hole in the provenance chain and could not tell a
     # deliberate deposited input from a leftover. The numbers themselves all reproduce; only the
-    # origin was undocumented. Stated here because this file is where a reader looks for provenance.
+    # origin needs documenting. Stated here because this file is where a reader looks for provenance.
     out.append(
         "\n## Deposited `reports/` artefacts with no in-deposit writer\n\n"
         "Six artefacts in the deposit are inputs rather than outputs: deposited scripts read "

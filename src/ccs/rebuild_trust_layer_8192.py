@@ -4,8 +4,8 @@
 The paper argues the 8,192-bp mean-log-likelihood readout is the right one and that the 1,001-bp
 single-position readout understates the model by +0.065 AUROC. Every component of the deployable
 contribution — calibration transfer, the selective layer, the confusion matrix, the 15%/35% headline
-— is nonetheless computed at 1,001 bp. The review's objection is blunt and fair: "reviewers will
-assume the layer was not rebuilt because it does not survive."
+— is nonetheless computed at 1,001 bp, and a layer left unrebuilt invites the reading that it was not
+rebuilt because it does not survive.
 
 So rebuild it. Same leave-one-species-out isotonic calibration, same confidence functional |2p-1|,
 same 15% per-species refusal, same 0.5 threshold — only the score changes.
@@ -133,10 +133,10 @@ def main():
     print("  macro lift              %.2f" % macro_lift)
     print("  macro ECE (width10)     %.4f" % macro_ece)
     print("  macro error-detection   %.3f" % macro_ed)
-    # The published 1,001-bp figures, printed for comparison with the 8,192-bp layer above. They
-    # were stale in three places: 1,669 is the round-to-nearest boundary, not the published one, and
-    # the lifts were a rounding off. The layer as published refuses 1,674 by the ceiling rank rule,
-    # pooled lift 2.35, macro lift 3.42 (reports/fig4_leak.json, fig4_reconciliation.json).
+    # The published 1,001-bp figures, printed for comparison with the 8,192-bp layer above.
+    # 1,669 is the round-to-nearest boundary, not the published one: the layer as published
+    # refuses 1,674 by the ceiling rank rule, pooled lift 2.35, macro lift 3.42
+    # (reports/fig4_leak.json, fig4_reconciliation.json).
     #
     print("\n1,001-bp layer as published: 893 errors (8.02%), 1,674 refused (15.04%), "
           "316 removed (35.4%), pooled lift 2.35, macro lift 3.42")

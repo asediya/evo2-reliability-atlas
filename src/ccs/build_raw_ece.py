@@ -3,9 +3,9 @@
 
 WHY THIS FILE EXISTS. Table 1 prints 'ECE none -> transfer' for all nine species.
 The 'transfer' side sources cleanly to reports/fig4_reconciliation.json (ece_grid.width10.
-isotonic_LOSO). The 'none' side appeared in NO deposited artefact and the estimator behind it was
-defined nowhere in the paper, so half a main-text table column could not be checked against the
-deposit. A referee classed it as regenerable only from the absent data/ tree.
+isotonic_LOSO). Without this file the 'none' side would appear in NO deposited artefact, with the
+estimator behind it defined nowhere in the paper, so half a main-text table column could not be checked
+against the deposit and would look regenerable only from the absent data/ tree.
 
 It is not. It regenerates from reports/_recon_pervariant_trust.parquet, which IS deposited:
 min-max scale each species' raw score to [0, 1], then take the equal-width 10-bin ECE against the

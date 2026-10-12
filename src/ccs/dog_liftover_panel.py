@@ -1,6 +1,6 @@
 """Build the dog OMIA positives panel on ROS_Cfam_1.0.
 Dog OMIA is build-heterogeneous: 227/282 on CanFam3.1, 3 native ROS_Cfam_1.0 (+55 on other
-builds, skipped for now). We liftOver the CanFam3.1 majority CanFam3.1(canFam3) -> ROS_Cfam(canFam6)
+builds, skipped). We liftOver the CanFam3.1 majority CanFam3.1(canFam3) -> ROS_Cfam(canFam6)
 with pyliftover, reverse-complementing ref/alt on strand flips, and add the ROS_Cfam natives.
 ref-allele verification against the genome happens downstream (extract_windows_local).
 

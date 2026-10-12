@@ -28,9 +28,9 @@ os.chdir(ROOT)
 OUT = "analyses/results/strand_ladder.json"
 W = 8192
 # Two margins, because a shift measured at one readout has to be compared with the margin at the
-# same readout. An earlier version divided the 8,192-bp strand shift by MARGIN_1001 and so compared
+# same readout. Dividing the 8,192-bp strand shift by MARGIN_1001 would compare
 # an effect measured at one readout on 327 variants against a margin measured at another readout on
-# 9,532. It read as 3.3x when the like-for-like figure is 8% of the margin.
+# 9,532. It would read as 3.3x when the like-for-like figure is 8% of the margin.
 MARGIN_1001 = 0.0024   # Evo 2 minus GERP, 1,001-bp single-position readout, 9,532 co-scorable variants
 MARGIN_8192 = 0.0960   # Evo 2 minus GERP, 8,192-bp readout, pooled random effects (meta_8192.json)
 MARGIN = MARGIN_8192   # this panel is 8,192 bp, so this is the commensurable one

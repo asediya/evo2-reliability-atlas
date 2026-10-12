@@ -48,7 +48,7 @@ def main():
         if not os.path.exists(scf):
             continue
         if sp not in POS:  # human has no OMIA positives file (ClinVar-sourced); skip gracefully
-            continue       # (was an implicit skip when the human score file did not yet exist -> KeyError once it did)
+            continue       # (explicit: an implicit skip raises KeyError once a human score file exists)
         posf = f"data/interim/{POS[sp]}.parquet"
         if not os.path.exists(posf):
             continue

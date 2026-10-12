@@ -8,7 +8,7 @@ except ImportError:
 """FIGURE 5 — "Reach is not competence."
 
 Composes the punched-plate sieve hero with four supports, each in a DIFFERENT idiom and each checked
-against the skeleton ban list derived from Figs 1-4 (memory: figure-skeleton-ban-list, `wf_25bf26fa-27b`).
+against the skeleton ban list derived from Figs 1-4.
 
   a  SIEVE            ten variant-resolution plates, holes = no-calls   [area partition + lattice]
   b  SUBSIDENCE       two skylines over a no-call COUNT axis            [step/staircase family]
@@ -17,10 +17,10 @@ against the skeleton ban list derived from Figs 1-4 (memory: figure-skeleton-ban
   e  LEDGER           typographic set-membership, mostly struck out     [document, not a plot]
 
 BAN CHECKS PERFORMED BEFORE BUILDING, NOT AFTER
-  * The originally specified panel d -- a three-rail strand bundle, eight series across three
-    categorical stations -- is BAN 7 (few-station slopegraph/trajectory: Fig2 H, Fig3 b, Fig3 d).
+  * Panel d is not a three-rail strand bundle (eight series across three
+    categorical stations): that is BAN 7 (few-station slopegraph/trajectory: Fig2 H, Fig3 b, Fig3 d).
     Ban 1 establishes that changing the mark does not rescue a skeleton, so eight series instead of
-    four is the same gestalt. Replaced with a categorical x categorical value matrix, which ban 9
+    four is the same gestalt. Panel d is a categorical x categorical value matrix, which ban 9
     explicitly leaves free: "a raster whose BOTH axes are categorical, and only if it carries no
     marginal profile track". No marginal track is drawn.
   * No panel gets a right-margin per-entity value column (ban 2), no panel is sorted by a derived
@@ -116,9 +116,9 @@ R = {r["species"]: r for r in J["per_species"]}
 def _sig_gap(r):
     """A plate is flagged only when the class gap's CI EXCLUDES zero.
 
-    The previous rule was `class_gap > 0.02`, a bare threshold on a point estimate. It painted goat
+    A bare threshold on a point estimate, such as `class_gap > 0.02`, would paint goat
     (+0.089 on 9 positives, CI [-0.24,+0.22]) in the same alarm red as horse (+0.489, CI [+0.40,+0.54]),
-    so a reader counted six red species and reported the phenomenon as near-universal. It is four.
+    so a reader would count six red species and report the phenomenon as near-universal. It is four.
     """
     ci = r.get("class_gap_ci")
     return bool(ci and ci[0] is not None and np.isfinite(ci[0]) and ci[0] > 0)
@@ -177,10 +177,10 @@ def _plab(ax, letter, text=None, left=False):
 def plate_cells(sp):
     """1 = material, 0 = hole, ordered by GENOMIC POSITION.
 
-    Uses fig5_stats.order_by_position, which parses the id FROM THE RIGHT. The left-anchored regex this
-    replaced could not cross the underscore inside a RefSeq accession (NC_058368.1_...), so it returned
-    None and assigned one constant key to every unparsed variant -- 100% of cat's and horse's pathogenic
-    cells and ~89% of dog's were then positioned by numpy's internal sort state. A literal dither, on
+    Uses fig5_stats.order_by_position, which parses the id FROM THE RIGHT. A left-anchored regex
+    cannot cross the underscore inside a RefSeq accession (NC_058368.1_...), so it returns
+    None and assigns one constant key to every unparsed variant -- 100% of cat's and horse's pathogenic
+    cells and ~89% of dog's would then be positioned by numpy's internal sort state. A literal dither, on
     exactly the half the thesis rests on.
     """
     d = pl.read_parquet(ROOT / "data" / "processed" / "conservation" / f"{BUILD[sp]}_gerp.parquet")
@@ -192,15 +192,15 @@ def plate_cells(sp):
 def plate_grid(ax, n_max, w, ylim_span):
     """One cell size for BOTH halves of a plate, derived from the rendered box.
 
-    THE GRAIN CONFOUND THIS FIXES. The halves used to be EQUAL AREA while holding ~10:1 different
-    counts, so a cell on the pathogenic side was ~10x larger than one on the benign side. Identical
-    missingness then rendered as ~10x fewer, chunkier holes on the right, and the reader compared two
-    textures that differ for a reason that is not the data. The proof is sheep: its class gap is exactly
-    +0.000 and both halves are 73% reachable, yet the old plate drew fine speckle on the left against
-    coarse blocks on the right, so the one species that should have looked self-identical looked split.
+    THE GRAIN CONFOUND. Halves of EQUAL AREA holding ~10:1 different
+    counts would make a cell on the pathogenic side ~10x larger than one on the benign side. Identical
+    missingness would then render as ~10x fewer, chunkier holes on the right, and the reader would compare
+    two textures that differ for a reason that is not the data. The proof is sheep: its class gap is exactly
+    +0.000 and both halves are 73% reachable, yet equal-area halves draw fine speckle on the left against
+    coarse blocks on the right, so the one species that should look self-identical looks split.
 
-    Now the cell is square and the SAME SIZE everywhere in a plate, so a half's HEIGHT is proportional to
-    its variant count and hole texture is directly comparable across the divider. Sheep must now look
+    The cell is square and the SAME SIZE everywhere in a plate, so a half's HEIGHT is proportional to
+    its variant count and hole texture is directly comparable across the divider. Sheep must look
     self-similar; that is the acceptance test.
 
     Returns (ncol, row_h) in data units, sized so the LARGER half exactly fills the plate's 0..1 band.
@@ -217,9 +217,9 @@ def plate_grid(ax, n_max, w, ylim_span):
 def draw_half(ax, v, x0, w, colour, ncol, row_h):
     """Draw one half BOTTOM-ALIGNED at the shared cell size. Returns the height used, in data units.
 
-    NO PADDING. The grid used to be padded up to nrow*ncol -- first with NaN + set_bad(alpha=0), which
-    composited to page white inside the frame and read as punched holes, then with material, which
-    invented reachable variants. Neither is acceptable once ncol is shared between the halves, because
+    NO PADDING up to nrow*ncol. Padding with NaN + set_bad(alpha=0) composites to page white inside
+    the frame and reads as punched holes; padding with material invents reachable variants. Neither
+    is acceptable once ncol is shared between the halves, because
     the smaller half can then be up to ncol-1 cells short: goat's 9 positives would take 3
     invented material cells and print 8/12 = 67% against a true 89%. The remainder row is drawn as its
     own short strip spanning only the columns it actually fills, so every drawn cell is exactly one
@@ -272,9 +272,9 @@ def panel_a(fig, gs_slice):
         if k == 0:
             axes0 = ax
         if sp == "Evo2":
-            # The real 11,130 at the true 8,890 | 2,240 class split, all material. This used to be
-            # np.ones(600) per half -- a 1,200-cell placeholder at a 1:1 split that no panel has,
-            # captioned "11,130 cells". Drawing the real counts makes the label true and lets the
+            # The real 11,130 at the true 8,890 | 2,240 class split, all material -- not a placeholder
+            # such as np.ones(600) per half, a 1,200-cell 1:1 split that no panel has, under the caption
+            # "11,130 cells". Drawing the real counts makes the label true and lets the
             # reference plate's class-size ratio be read like every other plate's.
             nb = sum(R[s]["n_neg"] for s in TREE); npo = sum(R[s]["n_pos"] for s in TREE)
             ncol, row_h = plate_grid(ax, max(nb, npo), HW, span)
@@ -306,11 +306,10 @@ def panel_a(fig, gs_slice):
                 fontweight=("bold" if _sig_gap(R.get(sp, {})) else "normal"))
         ax.text(2 * HW + GAP, Y_LAB, gap_s, fontsize=FOOT, color=col, ha="right", va="top",
                 fontweight="bold")
-        # The Wilson/Newcombe range is PRINTED, not whiskered (ban 4). It was computed and assigned to a
-        # dead variable in the previous version while the docstring claimed panel a carried "printed
-        # ranges" -- goat's 89% came from 8 of 9 variants with no interval anywhere on the plate.
+        # The Wilson/Newcombe range is PRINTED, not whiskered (ban 4): goat's 89% comes from 8 of 9
+        # variants and must not stand with no interval anywhere on the plate.
         # No italic on the Evo 2 row: it is already set in CODING blue here and in its species
-        # name and gap, so the slant was a fourth channel for a fact already carried three times.
+        # name and gap, so a slant would be a fourth channel for a fact already carried three times.
         # Italic is reserved in this set for a taxon name (Figure 6's clade), not for emphasis.
         ax.text(2 * HW + GAP, Y_CI, ci_s, fontsize=FOOT,
                 color=(CODING if sp == "Evo2" else MUTED), ha="right", va="top")
@@ -326,13 +325,13 @@ def panel_a(fig, gs_slice):
 def panel_b(ax):
     """What the conservation track's silence actually IS, drawn as a set rather than a staircase.
 
-    The old panel was a nine-step cumulative staircase of no-calls against AUROC: nine steps for
-    11,130 variants, and it could not say WHICH variants were missing or whether missing them
-    mattered. Here the whole atlas is one area-true block, split by species (column width is the
+    Not a nine-step cumulative staircase of no-calls against AUROC: nine steps for
+    11,130 variants cannot say WHICH variants are missing or whether missing them
+    matters. Here the whole atlas is one area-true block, split by species (column width is the
     species' share) and by whether GERP returns a value (row height is the share of that species
     it scores). Cell fill is the share of the cell that is a catalogued disease allele.
 
-    Three facts the staircase could not carry come out of the geometry. GERP is silent on 1,598 of
+    Three facts a staircase cannot carry come out of the geometry. GERP is silent on 1,598 of
     the 11,130. That silence is not evenly spread -- horse, cat and pig lose 402, 328 and 228 -- and
     it is not random with respect to the outcome: the silent set is 7.0 % catalogued alleles against
     22.3 % among the variants it does score. And Evo 2 still separates the silent set, which is why
@@ -391,7 +390,7 @@ def panel_b(ax):
     SG_label_row(ax, [(xc, "{:,}".format(n), INK) for xc, n in silent_n], 1.0 + 7.0 * _dyp, FOOT,
                  y_from=1.0, rotation=0, ha="center", va="bottom", gap_pt=2.5, lead_color="#B4B4B4")
     # No head for the count row: the "GERP silent" row label right under it names what is counted,
-    # and a head set beside it met that label's first line.
+    # and a head set beside it would meet that label's first line.
     ax.set_xticks([]); ax.set_yticks([])
     for sp_ in ax.spines.values():
         sp_.set_visible(False)
@@ -426,10 +425,10 @@ def panel_c(ax):
     hypotenuse tilt IS the estimand, thickened into a fan by the SPECIES-RESAMPLED 95% interval.
     Deliberately not a series-across-stations (ban 7) and not a dot+CI (ban 4).
 
-    The fan used to be the leave-one-species-out range (+0.101 to +0.139). A jackknife spread is not a
+    The fan is not the leave-one-species-out range (+0.101 to +0.139). A jackknife spread is not a
     confidence interval: it is ~4x narrower than the species bootstrap, while a pale fan tapering around
-    a heavy line is the universal grammar of a confidence band. A reader took away a precision the nine
-    non-independent species do not support. The honest band is what fig5_stats already computed.
+    a heavy line is the universal grammar of a confidence band, so a reader would take away a precision
+    the nine non-independent species do not support. The honest band is the one fig5_stats computes.
     """
     G = J["regime"]
     c = G["contrast"]
@@ -459,26 +458,26 @@ def panel_c(ax):
 # ---------------------------------------------------------------- d. condition matrix
 def panel_d(ax):
     """8 species x 3 conditions, BOTH axes categorical, no marginal track -- the carve-out ban 9 leaves
-    open. Replaces the specified three-rail strand bundle, which was ban 7."""
+    open. Not a three-rail strand bundle, which is ban 7."""
     rows = [r for r in J["supervised"]["rows"]]
     order = [s for s in TREE if s in {r["species"] for r in rows}]
     by = {r["species"]: r for r in rows}
     conds = [("CNN\ntrained here", "auroc_cnn"), ("CNN\nspecies held out", "cnn_loso"),
              ("Evo 2\nzero-shot", "auroc_evo2")]
     M = np.array([[by[s][k] for _, k in conds] for s in order])
-    # SEQUENTIAL, not diverging. The old ramp ran red -> cream -> blue over vmin 0.45 to vmax 0.95,
-    # which puts its neutral colour at AUROC 0.70 -- a value with no meaning. The natural centre for
+    # SEQUENTIAL, not diverging. A red -> cream -> blue ramp over vmin 0.45 to vmax 0.95
+    # puts its neutral colour at AUROC 0.70 -- a value with no meaning. The natural centre for
     # an AUROC is chance, 0.50, and only ONE of these 24 cells is below it (human, CNN held out, at
     # 0.482). The quantity is one-sided in this panel, so a diverging form invents a midpoint and,
     # worse, is non-monotone in lightness: two different AUROCs an equal distance either side of
-    # 0.70 printed at the same grey. Below-chance is still marked, and marked without colour -- a
+    # 0.70 print at the same grey. Below-chance is still marked, and marked without colour -- a
     # FAIL-coloured outline and a bold numeral, both below.
     #
     # The stop POSITIONS are solved against the 24 values this panel actually holds, not chosen by
     # eye. Black-or-white ink on a mid-tone bottoms out at 4.16:1 (at cell luminance 0.202), so a
     # ramp that lingers there loses the 4.5:1 small-text floor; these positions carry the ramp
-    # across that band where no datum sits. Worst numeral contrast is 5.92:1 against the old ramp's
-    # 4.54:1, so this is monotone in lightness AND more legible.
+    # across that band where no datum sits. Worst numeral contrast is 5.92:1 against the diverging
+    # ramp's 4.54:1, so this is monotone in lightness AND more legible.
     cmap = LinearSegmentedColormap.from_list(
         # DESATURATED 30%, to keep this table's saturated ink in line with the rest of the set.
         # The stops are pulled toward the neutral
@@ -493,8 +492,8 @@ def panel_d(ax):
     for i in range(M.shape[0]):
         for j in range(M.shape[1]):
             v = M[i, j]
-            # Ink chosen by MEASURED luminance, not by hand-picked cutoffs. The old rule
-            # (white if v < 0.58 or v > 0.87) put white 5 pt numerals on light blue at 3.1-3.8:1 in 5 of
+            # Ink chosen by MEASURED luminance, not by hand-picked cutoffs. A cutoff rule such as
+            # (white if v < 0.58 or v > 0.87) puts white 5 pt numerals on light blue at 3.1-3.8:1 in 5 of
             # 24 cells -- below the 4.5:1 small-text floor, and on the Evo2 column the caption is about.
             rgb = cmap((v - vmin) / (vmax - vmin))[:3]
             lum = 0.2126 * _lin(rgb[0]) + 0.7152 * _lin(rgb[1]) + 0.0722 * _lin(rgb[2])
@@ -522,14 +521,14 @@ def panel_e(ax):
     """NOT CALLED: this panel is not on the plate. Kept only so the
     numbers it carries can be traced; main() does not reference it.
 
-    Evaluability ledger. THREE facts that were previously collapsed into two:
+    Evaluability ledger. THREE facts, not two:
       (1) whether a panel's consequence annotation EXISTS at all -- a species with no consequence file
           must not have its counts defaulted to 0 and drawn as the biological claim "no missense at
           all". A missing input file must never render as a result;
       (2) whether a panel CAN host a protein LM (>=10 missense of both classes);
       (3) whether ESM-2 was actually scored on it AT USABLE SIZE -- cattle has an ESM file with 15 rows
-          against the 155 missense the same row advertises, so "scored" from os.path.exists overstated
-          coverage tenfold and made the header's "barely overlap" false.
+          against the 155 missense the same row advertises, so "scored" from os.path.exists would
+          overstate coverage tenfold and make the header's "barely overlap" false.
     """
     P = J["protein_lm"]
     cen = {c["species"]: c for c in P["census"]}
@@ -552,10 +551,10 @@ def panel_e(ax):
 
     stat = {c["species"]: _status(c) for c in rows}
 
-    # COLUMN GRID IS MEASURED, NOT TYPED. At 5.3 pt the hand-set x of 0.40/0.50 happened to clear;
-    # at 6 pt "path" and "benign" set solid and came back from the PDF as the single span
+    # COLUMN GRID IS MEASURED, NOT TYPED. A hand-set x of 0.40/0.50 clears at 5.3 pt, but
+    # at 6 pt "path" and "benign" set solid and come back from the PDF as the single span
     # "pathbenign" -- a Text-vs-Text overlap audit cannot see two labels that merged into one. The
-    # five columns are now laid out from their own measured widths with equal gutters, so the grid
+    # five columns are laid out from their own measured widths with equal gutters, so the grid
     # follows the type size instead of the type having to fit a frozen grid.
     fig = ax.figure; rend = fig.canvas.get_renderer()
     axw = ax.get_window_extent(rend).width
@@ -596,10 +595,10 @@ def panel_e(ax):
         txt, (tc, fw, st) = stat[c["species"]]
         ax.text(X_ST, i, txt, fontsize=FOOT, color=tc, ha="left", va="center",
                 fontweight=fw, style=st)
-    # Strike the NAME ONLY, sized to the MEASURED glyph box. A full-width rule used to run through the
-    # numerals of every excluded row -- a 0.55 pt line across 5.3 pt digits, so "20 17 3" and "56 48 8"
-    # were struck out in the literal sense. It was invisible to the overlap audit because that compared
-    # Text to Text and Text to bbox patch only; a Line2D was never in the comparison set at all.
+    # Strike the NAME ONLY, sized to the MEASURED glyph box. A full-width rule would run through the
+    # numerals of every excluded row -- a 0.55 pt line across 5.3 pt digits, striking "20 17 3" and
+    # "56 48 8" out in the literal sense -- and the overlap audit would not see it, because it compares
+    # Text to Text and Text to bbox patch only; a Line2D is not in the comparison set at all.
     # Measuring rather than guessing a fixed width keeps "cat" and "pig" from trailing a leader line.
     ax.figure.canvas.draw()
     inv = ax.transData.inverted()
@@ -611,7 +610,7 @@ def panel_e(ax):
             f"{P['n_evaluable']} of {P['n_annotated']} annotated panels can host a protein LM;\n"
             f"ESM-2 has a file for {P['n_esm_file']} but is scored at usable size on only "
             f"{P['n_esm_usable']}",
-            # Bold was emphasis, not encoding. These four counts are the panel's own summary
+            # No bold: it would be emphasis, not encoding. These four counts are the panel's own summary
             # and are not in the legend (which is at 291 words against a 300-word cap), so the
             # sentence stays as a data annotation -- set in the same neutral ink as every other
             # count on the plate.
@@ -670,16 +669,16 @@ def main():
     # host a protein LM; ESM-2 has a file for 6 but is scored at usable size on only 1" are
     # in reports/fig5_reach.json["protein_lm"] and belong in the legend.
 
-    # TITLE AND SUBTITLE MOVED TO THE MANUSCRIPT LEGEND (house style, src/ccs/style_gb.py).
-    # The canvas carried a bold title and a six-line italic paragraph that argued the figure's
+    # TITLE AND SUBTITLE ARE IN THE MANUSCRIPT LEGEND (house style, src/ccs/style_gb.py).
+    # A bold title and an italic paragraph arguing the figure's
     # claim (the co-scorable tie, the per-species win/loss/tie counts, Nucleotide Transformer's
-    # reach and its 0.595 atlas mean). A journal figure states none of that on the plate: the
-    # legend does, set in the journal's own face. Every number in the deleted paragraph is in
-    # the legend text. The 22 mm it occupied goes to the panels.
+    # reach and its 0.595 atlas mean) do not belong on the plate: the
+    # legend states them, set in the journal's own face, and
+    # the 22 mm they would occupy goes to the panels.
     C = J["coding_confound"]
-    # The species NAMES that carry the extremes are looked up, not typed. The footer this replaces
-    # hardcoded "z = -25.3 (human) to -2.1 (pig)" -- values that existed nowhere in the data and named
-    # the wrong species. Typing the label next to a computed number reintroduces exactly that bug.
+    # The species NAMES that carry the extremes are looked up, not typed. A typed label such as
+    # "z = -25.3 (human) to -2.1 (pig)" can quote values that exist nowhere in the data and name
+    # the wrong species; typing the label next to a computed number invites exactly that bug.
     _zpairs = [(z, r["species"]) for r in J["per_species"]
                for z in (r.get("runs_z_benign"), r.get("runs_z_pathogenic")) if z is not None]
     (_zmin, _zmin_sp), (_zmax, _zmax_sp) = min(_zpairs), max(_zpairs)
@@ -704,8 +703,8 @@ def main():
     fig.savefig(base + ".pdf", dpi=600, bbox_inches=mpl.transforms.Bbox(
         [[0.0, _y0], [fig.get_figwidth(), fig.get_figheight()]]), metadata={"CreationDate": None})
     fig.savefig(base + ".png", dpi=600)
-    # The 4k screen export is produced HERE so it has a producer in the repo. It previously existed in
-    # reports/figures with no script anywhere in src/ or scripts/ that could have made it -- an orphan
+    # The 4k screen export is produced HERE so it has a producer in the repo: an export in
+    # reports/figures with no script anywhere in src/ or scripts/ that could have made it is an orphan
     # a reviewer could mistake for the figure of record.
     fig.savefig(base + "_4k.png", dpi=4096 / (W_MM * MM))
     return fig

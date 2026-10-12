@@ -125,9 +125,9 @@ class SelectivePredictor:
         keep = self.keep_mask(p)
         err = pred != y
         # Every operating-point number below is derived from ONE decision mask: `keep`, the rule
-        # this predictor actually applies. The previous version took coverage and selective_error
-        # from `keep` but capture and lift from a RANK set sized by the TARGET coverage, so on a
-        # tied posterior -- the isotonic case fit() warns about -- the same dict could report zero
+        # this predictor actually applies. Taking coverage and selective_error
+        # from `keep` but capture and lift from a RANK set sized by the TARGET coverage would let the
+        # same dict, on a tied posterior -- the isotonic case fit() warns about -- report zero
         # observations refused alongside capture 1.0 and lift 2.0. The rank-rule figures are still
         # available, under names that say so, because the rank curve is a legitimate diagnostic;
         # it is simply not this predictor's operating point.

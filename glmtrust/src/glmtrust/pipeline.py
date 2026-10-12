@@ -129,7 +129,7 @@ class TrustLayer:
             raise ValueError("no variants supplied: TrustLayer.%s needs a non-empty panel" % where)
         if not np.isfinite(scores).any():
             raise ValueError("no finite scores supplied")
-        # PARTIAL missingness used to fall straight through to scikit-learn, which answered
+        # PARTIAL missingness is refused here rather than passed to scikit-learn, which would answer
         # "Input X contains NaN. LogisticRegression does not accept missing values" -- an error
         # about somebody else's estimator, in a package whose whole subject is that missingness is
         # class-dependent and must be a stated decision rather than a silent drop.
@@ -170,7 +170,7 @@ class TrustLayer:
         m = np.isfinite(oof)
         # Leave-one-group-out skips a group whose training pool or own slice holds a single class.
         # If EVERY group is skipped -- two groups, one a singleton, is enough -- the out-of-fold
-        # vector is all NaN and the conformal quantile died on an empty array with
+        # vector is all NaN and the conformal quantile would die on an empty array with
         # "IndexError: index -1 is out of bounds for axis 0 with size 0".
         if not m.any():
             raise ValueError(
@@ -235,12 +235,12 @@ class TrustLayer:
         for tr, te in self._splits(scores, labels, groups):
             if len(np.unique(labels[tr])) < 2:
                 continue
-            # Split conformal needs a calibration set the CALIBRATOR HAS NOT SEEN. This used to
-            # fit the calibrator on all of `tr` and then fit the conformal quantile on that same
-            # fold's in-sample probabilities and the same outcomes, which is not split conformal
+            # Split conformal needs a calibration set the CALIBRATOR HAS NOT SEEN. Fitting the
+            # calibrator on all of `tr` and then the conformal quantile on that same
+            # fold's in-sample probabilities and the same outcomes is not split conformal
             # and carries none of its guarantee: in-sample conformity scores are optimistically
-            # small, so the quantile is too tight. It also contradicted this module's own
-            # docstring, which promises out-of-fold probabilities. An inner split fixes it.
+            # small, so the quantile is too tight, and this module's own docstring promises
+            # out-of-fold probabilities. Hence the inner split.
             rs = np.random.default_rng(None if self.seed is None else self.seed + 1)
             idx = rs.permutation(tr)
             cut = max(1, len(idx) // 2)
@@ -302,12 +302,12 @@ class TrustLayer:
                           "coverage_benign": float(cset[m][y == 0, 0].mean()) if (y == 0).any() else float("nan"),
                           "coverage_pathogenic": float(cset[m][y == 1, 1].mean()) if (y == 1).any() else float("nan"),
                           "abstention_rate": float(abstain.mean())},
-            # Runnability report T5, second observation. These were computed on the POOLED
+            # The selective figures are not computed on the POOLED
             # confidence ordering, which is refusal applied GLOBALLY. The paper's deliverable is
             # each group refusing its own least-confident share, and the two differ materially on
             # the paper's own panel: within-species gives capture 0.354 and lift 2.35, global gives
-            # 0.383 and 2.56. The tool was printing the global numbers under the within-species
-            # heading. When groups are supplied the threshold is now applied within each group,
+            # 0.383 and 2.56, so global numbers must not print under the within-species
+            # heading. When groups are supplied the threshold is applied within each group,
             # which is the shipped deliverable; the global figures remain available beside them.
             "selective": dict(_selective_block(y, pred, conf_val, self.coverage, g_eval),
                           coverage=self.coverage,
@@ -328,9 +328,9 @@ class TrustLayer:
             "glmtrust report  (n={n}, prevalence={prev:.3f})\n"
             + self._report_warnings(d, s) +
             "  discrimination : AUROC {auc:.3f} [{lo:.3f}, {hi:.3f}]   AUPRC {ap:.3f}\n"
-            # Runnability report T6: the first figure was unlabelled and is the equal-WIDTH
-            # estimator, which collapses on a coarse posterior. It printed 0.0041 where the paper
-            # reports ECE around 0.05: twelvefold apart, smaller first, so a reader quoting the tool
+            # The equal-WIDTH estimator collapses on a coarse posterior: unlabelled and printed
+            # first, it would show 0.0041 where the paper
+            # reports ECE around 0.05 -- twelvefold apart, smaller first -- so a reader quoting the tool
             # would conclude the layer is a hundredth as miscalibrated as the paper says. The paper's
             # own rule is to name the estimator beside each figure rather than nominate one as
             # canonical, so both are named and the equal-mass one leads.
@@ -349,13 +349,13 @@ class TrustLayer:
 
     @staticmethod
     def _report_warnings(d, s):
-        """Runnability report T4.
+        """Warnings that lead the evaluate summary.
 
-        A constant score printed "capture 1.000, lift 6.67" at exit 0 with no warning: the best
-        selective-prediction result the tool can produce, off a scorer carrying no information.
-        Selective error ROSE at the same time (0.1000 -> 0.1176) while capture read 1.000, so the
-        two numbers on one line pointed in opposite directions and nothing said so. The `audit`
-        subcommand already prints a warnings block gated on effect size; `evaluate` printed none.
+        Without them a constant score prints "capture 1.000, lift 6.67" at exit 0 with no warning: the
+        best selective-prediction result the tool can produce, off a scorer carrying no information.
+        Selective error RISES at the same time (0.1000 -> 0.1176) while capture reads 1.000, so the
+        two numbers on one line point in opposite directions and nothing says so. The `audit`
+        subcommand prints a warnings block gated on effect size; this gives `evaluate` one too.
         """
         w = []
         lo, hi = d["auroc_ci"]
@@ -392,8 +392,8 @@ class TrustLayer:
     def _splits(self, scores, labels, groups):
         if groups is not None:
             groups = np.asarray(groups).ravel()
-            # Runnability report T2: with one level, ~te is empty, the empty training fold reached
-            # sklearn, and it raised "Found array with 0 sample(s)" — a message naming neither the
+            # With one level, ~te is empty, the empty training fold would reach
+            # sklearn, and it would raise "Found array with 0 sample(s)" — a message naming neither the
             # group column nor the cause. That is the paper's own first-use case: a user working in
             # ONE label-poor species, running the documented command with their single species in
             # --group-col. Refuse it here, in the caller's vocabulary.

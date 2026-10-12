@@ -22,8 +22,8 @@ import numpy as np
 import polars as pl
 
 sys.stdout.reconfigure(encoding="utf-8")
-# this hard-coded the author's drive, so the script could not run
-# from a clean extraction of the deposit. Resolve the repository root from this file instead.
+# Resolve the repository root from this file rather than a hard-coded path, so the script
+# runs from a clean extraction of the deposit.
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, "src/ccs")
 from fig5_stats import SP                                              # noqa: E402

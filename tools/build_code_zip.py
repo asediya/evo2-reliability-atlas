@@ -4,7 +4,7 @@
 The manuscript's Availability statement commits the deposit to contain "all scripts under src/ and
 tools/, together with the recompute-layer JSON files that carry all 211 traced published
 values", under the MIT License. This assembles exactly that, so the zip cannot silently drift from what the paper
-promises (an earlier hand-built zip was missing new scripts and every JSON). Sorted entries and a
+promises (a hand-built zip can miss new scripts and every JSON). Sorted entries and a
 fixed timestamp make the archive byte-reproducible.
 
     python tools/build_code_zip.py
@@ -18,11 +18,11 @@ import zipfile
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
-# reports/submission/ is frozen while the rewrite is in progress, so the destination is an
+# reports/submission/ is frozen, so the destination is an
 # argument. It also follows $CCS_SUBMISSION_OUT, which is what every other stage of
-# finalize_submission.sh honours. Leaving that out made the documented rebuild command write into
-# the frozen v1 directory and fail check_submission_frozen on its own output: the one gate whose
-# whole job is to prove the previous submission has not moved was broken by running the build.
+# finalize_submission.sh honours. Without that, the documented rebuild command would write into
+# the frozen directory and fail check_submission_frozen on its own output: running the build would
+# break the one gate whose whole job is to prove the frozen submission has not moved.
 OUT = (sys.argv[1] if len(sys.argv) > 1 and sys.argv[1].endswith(".zip")
        else os.path.join(os.environ.get("CCS_SUBMISSION_OUT", "reports/submission"),
                          "Additional_file_2_Code.zip"))
@@ -68,14 +68,14 @@ def collect():
     files.update(glob.glob("analyses/results/*.json"))
     files.update(glob.glob("analyses/results/*.parquet"))
     files.update(glob.glob("reports/*.tsv"))           # the cattle sample table the Methods cite
-    files.update(glob.glob("reports/*.parquet"))       # small recompute parquets (fig4_pervariant, etc.) — R4
-    # 40 scripts write their results to logs/, which was absent from the deposit, so
-    # Notes S5 and S6 quoted values a reader could not open. Ship the log outputs that carry reported
+    files.update(glob.glob("reports/*.parquet"))       # small recompute parquets (fig4_pervariant, etc.)
+    # 40 scripts write their results to logs/, and Notes S5 and S6 quote values from it that a
+    # reader must be able to open. Ship the log outputs that carry reported
     # numbers, and the superseded-artifact directory the README and COMPILED_RESULTS point at.
-    # those two globs also swept in material that is not an analysis
-    # output -- working notes rather than results. (An earlier tree held reports/_superseded/; it is
-    # this manuscript plus an old abstract, ~800 kB, and those drafts state older declarations than
-    # the manuscript now makes, which an editor would read as a discrepancy.
+    # Those globs can also sweep in material that is not an analysis
+    # output -- working notes rather than results -- and draft copies of the manuscript or its
+    # abstract state declarations that differ from the manuscript's, which an editor would read as
+    # a discrepancy.
     #
     # Excluded by name, not by directory. logs/*.md is present so Notes S5 and S6
     # would resolve, and the other 34 files there are genuine analysis output; that directory is
@@ -85,30 +85,30 @@ def collect():
     files.update(f for f in glob.glob("logs/*.md")
                  if f.replace("\\", "/") not in INTERNAL)
     for top in ("README.md", "LICENSE", "glmtrust/LICENSE",
-                "requirements.txt",                                    # R2: README's install step needs it
+                "requirements.txt",                                    # README's install step needs it
                 ".zenodo.json",                                        # Zenodo release metadata
-                "FIGURES.md",                                          # E107: figure-to-script manifest
-                "reports/COMPILED_RESULTS.md", "reports/tables.md",    # R2: README references these directly
-                                # E66: the manuscript-integrity tools need these to run without tripping their guards
+                "FIGURES.md",                                          # figure-to-script manifest
+                "reports/COMPILED_RESULTS.md", "reports/tables.md",    # README references these directly
+                                # the manuscript-integrity tools need these to run without tripping their guards
                 "reports/supplementary_prose.md", "reports/supplementary_tables.md",
-                "reports/DATA_MANIFEST.md"):                           # R6: what data/ is needed and where it lives
+                "reports/DATA_MANIFEST.md"):                           # what data/ is needed and where it lives
         if os.path.exists(top):
             files.add(top)
     # Exclusions:
     #  - __pycache__/.venv: never ship caches
-    #  - _superseded_*: shipped-but-superseded figure code, ambiguous provenance (E86)
+    #  - _superseded_*: shipped-but-superseded figure code, ambiguous provenance
     #  - repro_state.json: the reproduction log is the stale 3,506-variant record and carries internal
-    #    planning notes; Note S7 documents the harness instead (E48/E61/E65)
-    #  - PROJECT_ROADMAP.md: planning doc with positioning strategy + external agent-memory refs (E87)
+    #    planning notes; Note S7 documents the harness instead
+    #  - PROJECT_ROADMAP.md: planning doc with positioning strategy and internal notes
     #  - figure-screening/QC JSONs: internal design records that describe earlier figure versions, carry
-    #    a working-directory absolute path, and are not authoritative for the submitted figures
-    #    (E99/E100/E101/E106/E107); FIGURES.md documents the live builders instead
+    #    a working-directory absolute path, and are not authoritative for the submitted figures;
+    #    FIGURES.md documents the live builders instead
     SCREEN = ("fig4_panelA_screening.json", "fig4_panelA_research.json", "fig3_fleet_result.json",
               "fig6_screen_raw.json", "fig2_rework_spec.json")
-    # the submitted manuscript and supplementary were shipped INSIDE the code deposit,
-    # which guarantees a future divergence between the two copies. The in-deposit cross-references
-    # that needed them are satisfied by COMPILED_RESULTS.md, tables.md and supplementary_tables.md.
-    # tools/ shipped 47 files including a bundled snpEff distribution and the
+    # the submitted manuscript and supplementary do not ship INSIDE the code deposit:
+    # two copies are guaranteed to diverge. The in-deposit cross-references
+    # that need them are satisfied by COMPILED_RESULTS.md, tables.md and supplementary_tables.md.
+    # tools/ also holds a bundled snpEff distribution and the
     # submission-tooling directory, neither of which is analysis code.
     # three reports/ artefacts are read by no deposited script, written by no
     # deposited script and quoted in no text, table or figure legend (verified by grep over
@@ -127,8 +127,8 @@ def collect():
 
     # Packaging output directories. `python -m build` writes a verbatim copy of every module into
     # glmtrust/build/lib/glmtrust/, and because collect() globs the filesystem rather than asking git,
-    # those copies were swept into the deposit even though glmtrust/.gitignore lists build/. A referee
-    # unzipping it found two audit.py files with no way to tell which one produced the results, and
+    # those copies would be swept into the deposit even though glmtrust/.gitignore lists build/. A referee
+    # unzipping it would find two audit.py files with no way to tell which one produced the results, and
     # the build copy is a snapshot that goes stale the moment the source is edited. Anything gitignored
     # is by definition not source and must not ship.
     BUILD_DIRS = ("/build/", "/dist/", ".egg-info/")
@@ -140,16 +140,15 @@ def collect():
                 and f not in DROP
                 and not f.startswith("tools/se52/")
                 # tools/snpEff/ is the same third-party distribution under its other directory
-                # name. Twelve Python-2 scripts were shipping: they fail `compileall` on any
+                # name, and holds twelve Python-2 scripts: they fail `compileall` on any
                 # modern interpreter, they are not analysis code, and redistributing them under
-                # this deposit's blanket MIT with no attribution is not ours to do. The comment
-                # above about removing "a bundled snpEff distribution" described a fix that had
-                # only ever been applied to se52/.
+                # this deposit's blanket MIT with no attribution is not ours to do. Both directory
+                # names, se52/ and snpEff/, are excluded.
                 and not f.startswith("tools/snpEff/")
                 # Note S7 names consistency_check.py as one of three legs certifying
                 # that the manuscript carries no contradictions, and calls that certification
-                # "deposited". The blanket tools/manuscript/ exclusion meant a referee could not run the very
-                # check the paper cites as its guarantee. The rest of that plugin is authoring
+                # "deposited". A blanket tools/manuscript/ exclusion would leave a referee unable to run the
+                # very check the paper cites as its guarantee. The rest of that plugin is authoring
                 # toolchain and stays out; the cited checker ships.
                 and not (f.startswith("tools/manuscript/")
                          and not f.endswith("scripts/consistency_check.py"))

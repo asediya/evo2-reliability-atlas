@@ -4,9 +4,9 @@ Built only from reports/fig4_reconciliation.json + reports/fig4_pervariant.parqu
 (src/ccs/fig4_reconcile.py). No float is typed by hand in this module.
 
 WHY THIS FIGURE LOOKS THE WAY IT DOES
-A 50-agent fleet generated 14 candidate designs and killed all 14, because the deposited calibration
-numbers flipped verdict with the estimator/aggregation choice. The reconciliation settled it:
-  * MACRO aggregation only. Pooled ECE is unstable (pooled width10 said transfer won by 10x) because
+The deposited calibration numbers flip verdict with the estimator/aggregation choice, so the
+figure follows the reconciliation:
+  * MACRO aggregation only. Pooled ECE is unstable (pooled width10 says transfer wins by 10x) because
     human (n=3,000, 50% prevalence) dominates eight species at ~9% and per-species errors cancel.
   * The verdict is a PAIRED bootstrap on delta-ECE, not a comparison of point estimates. Under macro,
     all four estimators straddle zero -> "statistically indistinguishable" is the robust claim.
@@ -101,13 +101,12 @@ def _below(ax, y_guess):
 
 
 def _fit(ax, txt, width=1.0, **kw):
-    """Wrap txt to the axes width by MEASURING it. The old character-width estimate (0.52 em/char) was
+    """Wrap txt to the axes width by MEASURING it. A character-width estimate (0.52 em/char) is
     wrong often enough to push captions off the canvas, so measure the real string instead of guessing.
 
-    The measurement is now CHECKED. textwrap.fill takes a character count, and the count derived from
-    one measurement is still an estimate: it left panel e's caption 7 mm past the grid's right edge
-    and, before the red paragraph under panel a was deleted, 0.5 mm past the page edge itself. Narrow
-    the wrap until the RENDERED box is inside the budget."""
+    The measurement is CHECKED. textwrap.fill takes a character count, and the count derived from
+    one measurement is still an estimate: it can leave panel e's caption 7 mm past the grid's right
+    edge. Narrow the wrap until the RENDERED box is inside the budget."""
     fig = ax.figure; r = fig.canvas.get_renderer()
     avail = ax.get_window_extent(r).width * width
 
@@ -152,8 +151,8 @@ def _mark(place, x_letter, y, letter, right=None, x_right=1.0, va="baseline"):
 
     `place` is ax.text or fig.text with the matching transform already bound, so panel a
     (figure coords) and b-e (axes coords) render the same marker rather than two lookalikes
-    that drift apart. Gone with the old header: the reversed white-on-black letter chip, the
-    bold sentence-length panel title, and the hairline rule that underlined them. `right` is
+    that drift apart. There is no reversed white-on-black letter chip, no bold sentence-length
+    panel title and no hairline rule under them. `right` is
     the one thing that may keep the letter company -- a small grey provenance note (an n, a
     readout), which is style_gb.count(), not a heading.
     """
@@ -167,18 +166,18 @@ def _plab_top(ax):
     """House style: a bold lower-case letter and nothing else.
 
     The `text` argument is accepted and IGNORED -- see src/ccs/fig3_rebuild.py:_plab, the
-    worked example this follows. Every panel used to carry a sentence-length heading in bold
-    ("No robust gain over a pooled sigmoid", "Why it fails, and what it would cost to fix"),
-    which either repeated the legend's per-panel sentence or stated the finding the legend is
-    there to state in the journal's own voice. The call sites keep their strings as
-    documentation of what each panel is; the canvas no longer prints them.
+    worked example this follows. No panel carries a sentence-length heading in bold
+    ("No robust gain over a pooled sigmoid", "Why it fails, and what it would cost to fix"):
+    such a heading either repeats the legend's per-panel sentence or states the finding the
+    legend is there to state in the journal's own voice. The call sites keep their strings as
+    documentation of what each panel is; the canvas does not print them.
     """
-    # WHERE THE LETTER SITS IS MEASURED, NOT TYPED. It was pinned at y = 1.075 -- a fraction of the
+    # WHERE THE LETTER SITS IS MEASURED, NOT TYPED. A pinned y such as 1.075 is a fraction of the
     # axes height, so it means a different number of points in every row, and nothing in it knows
-    # how tall the letter is. At the corrected 11 pt panel size the letter's box grew past what
-    # 0.075 of a 66 pt panel buys and landed on the two labels that already own the axes' top-left
+    # how tall the letter is. At the 11 pt panel size the letter's box outgrows what
+    # 0.075 of a 66 pt panel buys and lands on the two labels that already own the axes' top-left
     # corner: panel c's top y tick ("0.08") and panel d's "Δlogit π" column header. The letter is
-    # now lifted until its own RENDERED box clears whatever occupies that corner, with the letter's
+    # lifted until its own RENDERED box clears whatever occupies that corner, with the letter's
     # BOTTOM (not its baseline) as the anchor, so the clearance is the one the PDF will show.
     fig = ax.figure
     fig.canvas.draw()
@@ -237,11 +236,11 @@ FLD = json.load(open("reports/fig4_field.json", encoding="utf-8"))
 def panel_a(fig, gs_slice):
     """LAYERED RISK FIELD. Local error rate over (signed log-odds x species) as a raster whose COLOUR is
     the measured rate and whose OPACITY is the denominator behind it, so thinly-evidenced regions fade
-    rather than asserting structure -- the failure of the staircase this replaces, which drew goat's six
+    rather than asserting structure -- the failure of a staircase plot, which draws goat's six
     errors as seven crisp steps. Every one of the 893 individual errors is drawn on top, and the refusal
     corridor each species would actually apply is outlined."""
     from matplotlib.colors import LinearSegmentedColormap
-    # matplotlib.patheffects is no longer imported here: nothing on this canvas is haloed.
+    # matplotlib.patheffects is not imported here: nothing on this canvas is haloed.
     M = FLD["_meta"]; RW = FLD["rows"]
     LO, HI, NB = M["lo"], M["hi"], M["nbins"]
     inner = gs_slice.subgridspec(2, 1, height_ratios=[0.78, 3.30], hspace=0.14)
@@ -258,20 +257,20 @@ def panel_a(fig, gs_slice):
     # designed to avoid. Mask, do not clip: clipping turns those spikes into a saturated flat shelf.
     pr = np.where(pc >= MIN_N, pr, np.nan)
     ctr = (np.array(M["edges"][:-1]) + np.array(M["edges"][1:])) / 2
-    # Fill only where the rate is DEFINED. nan_to_num dropped the fill to zero at the mask boundary and
-    # drew a spurious spike where the masked bins ended.
+    # Fill only where the rate is DEFINED. nan_to_num would drop the fill to zero at the mask
+    # boundary and draw a spurious spike where the masked bins end.
     axm.fill_between(ctr, 0, pr, where=np.isfinite(pr), color="#A8201A", alpha=0.22, lw=0, zorder=2)
     axm.plot(ctr, pr, color="#A8201A", lw=0.9, zorder=3)
-    # Headroom for the band label, and no more. The old 2.70x was sized for a three-line red
-    # paragraph; the neutral two-line label needs less, and the profile curve gets the difference.
+    # Headroom for the band label, and no more. The neutral two-line label needs 2.20x, not the
+    # 2.70x a three-line paragraph would, and the profile curve gets the difference.
     axm.set_xlim(LO, HI); axm.set_ylim(0, np.nanmax(pr) * 2.20)
     axm.set_xticks([]); axm.set_yticks([])
     for sname in ("top", "right", "left", "bottom"):
         axm.spines[sname].set_visible(False)
     # The strip is 2.4 mm tall and cannot carry both its own caption and the hot-zone callout; the
-    # caption moves to the block below, where there is room.
+    # caption sits in the block below, where there is room.
     # Mark where risk actually concentrates: the LONGEST CONTIGUOUS run above twice the cohort rate.
-    # Taking min/max of every qualifying bin spanned almost the whole populated axis and said nothing.
+    # Taking min/max of every qualifying bin would span almost the whole populated axis and say nothing.
     base = M["n_err"] / M["n"]
     over = (pc >= MIN_N) & (pr > 2 * base)
     runs, st = [], None
@@ -287,8 +286,8 @@ def panel_a(fig, gs_slice):
         h0, h1 = M["edges"][a_], M["edges"][b_]
         axm.axvspan(h0, h1, color=FAIL, alpha=0.11, lw=0, zorder=1)
         # Report the MEASURED rate in the band, not `2 * base` -- that is the inequality used to SELECT
-        # the bins, so printing it asserted only that bins chosen for exceeding 16% exceed 16%, and
-        # understated the real figure by 2.07x.
+        # the bins, so printing it would assert only that bins chosen for exceeding 16% exceed 16%,
+        # and would understate the real figure by 2.07x.
         _p = np.clip(PV["p"].to_numpy(), 1e-6, 1 - 1e-6)
         _lg = np.log(_p) - np.log(1 - _p)
         _y, _pd = PV["label"].to_numpy(), PV["pred"].to_numpy()
@@ -296,13 +295,13 @@ def panel_a(fig, gs_slice):
         _rate = float((_pd != _y)[_in].mean())
         _miss_out = int(((_y == 1) & (_pd == 0) & (_lg < h0)).sum())
         _miss_all = int(((_y == 1) & (_pd == 0)).sum())
-        # A NEUTRAL LABEL for the shaded band, not an argument about it. What this used to say --
+        # A NEUTRAL LABEL for the shaded band, not an argument about it. A label reading
         # "highest local error ... BUT 82% of missed positives sit LEFT of it, out in
-        # confidently-negative territory" -- was two claims in red bold: it named the band and then
-        # argued with the reader about what the band means. The naming stays, with every number it
-        # carried; the argument goes to the legend and Additional file 1 Note S45.
+        # confidently-negative territory" would make two claims: it would name the band and then
+        # argue with the reader about what the band means. The label names the band, with every
+        # number; the argument belongs to the legend and Additional file 1 Note S45.
         # Grey, unbolded, and set in the strip's own headroom rather than haloed over the profile
-        # curve: the halo was there only because the caption was sitting on the line it described.
+        # curve, so the caption does not sit on the line it describes.
         axm.annotate(f"Band: logit {h0:+.1f} to {h1:+.1f} — {_rate:.0%} local error, "
                      f"{_rate / base:.1f}× the cohort rate",
                      xy=(h0, np.nanmax(pr) * 0.55), xytext=(LO + 0.2, np.nanmax(pr) * 2.13),
@@ -366,8 +365,8 @@ def panel_a(fig, gs_slice):
                            color=col, alpha=0.85, linewidths=0.12, edgecolors='white', zorder=7,
                            rasterized=True)
         lab = r["species"][:1].upper() + r["species"][1:] + (" *" if r["target_only"] else "")
-        # The asterisk and the colour carry "never trained on"; the bold was emphasis on top of an
-        # encoding that already worked, so it goes (style_gb rule: bold is for the panel letter).
+        # The asterisk and the colour carry "never trained on"; bold would be emphasis on top of an
+        # encoding that already works, so the label is not bold (style_gb rule: bold is for the panel letter).
         ax.text(-0.371, i + 0.50, lab, transform=ax.get_yaxis_transform(),
                 ha="right", va="center", fontsize=TICK,
                 color=(FAIL if r["target_only"] else INK))
@@ -394,16 +393,16 @@ def panel_a(fig, gs_slice):
                 color=(CODING if res else MUTED), zorder=9)
     ax.axvline(0, color="#8E8880", lw=0.5, zorder=5)
 
-    # ---- COLUMN HEADERS. Three marks in this panel carried no key anywhere -- not on the plate and
-    # not in the legend -- and the journal's rule puts keys in the graphic. They were: the red bar
+    # ---- COLUMN HEADERS. Three marks in this panel need a key, and the journal's rule puts keys
+    # in the graphic: the red bar
     # beside each species name (its error rate, the only mark here comparable across rows), the
     # right-hand "x" column (the selective lift), and the "n.s." that appears beside some of those
-    # multipliers. A significance marker with no stated test is the worst of the three. They sit in
-    # the empty band above row 0, left of and right of the existing "band: logit ..." guide, which
-    # occupies x 168-355 pt and is not touched.
-    # TWO LINES, both ending short of the marginal profile. As one line the key ran on under the
+    # multipliers. A significance marker with no stated test would be the worst of the three. The keys
+    # sit in the empty band above row 0, left of and right of the existing "band: logit ..." guide,
+    # which occupies x 168-355 pt and is not touched.
+    # TWO LINES, both ending short of the marginal profile. As one line the key would run on under the
     # profile curve, which rises from the left edge of the field at this height, and the white plate
-    # behind the words cut the curve in two.
+    # behind the words would cut the curve in two.
     ax.text(-0.350, -2.35, "Bar = that species' error rate", transform=ax.get_yaxis_transform(),
             ha="left", va="center", fontsize=FOOT, color=MUTED, clip_on=False, zorder=9)
     ax.text(-0.350, -1.15, "* = never in the 1,001-bp training pool",
@@ -413,18 +412,18 @@ def panel_a(fig, gs_slice):
     # coordinates too. Passing get_yaxis_transform() here would read HI - 0.12 as an AXES FRACTION
     # -- roughly 800 % of the axes width -- and put both lines off the right edge of the page,
     # where they vanish from the PDF entirely rather than failing any bounds check.
-    # ONE line, in axes fractions, in the only band above this panel that is clear of ink. The
-    # first attempt used two lines right-aligned over the column itself; both sat under the marginal
-    # density curve, which is a PATH, so the span-collision gate scored them clean while the render
-    # showed the curve running through the type. Measured on the plate, the band y 19-28 pt is free
+    # ONE line, in axes fractions, in the only band above this panel that is clear of ink. Two
+    # lines right-aligned over the column itself would sit under the marginal
+    # density curve, which is a PATH, so the span-collision gate would score them clean while the
+    # render shows the curve running through the type. Measured on the plate, the band y 19-28 pt is free
     # of ink from x 60 to 351 pt -- 291 pt, and this line sets to 266 pt at 6.8 pt.
     # x = -0.350, the same axes fraction the error-rate bar and its key already use, so the header
-    # starts at page x 60 pt and the 268 pt line ends at 328 -- inside the clear 60-351 run. (An
-    # earlier -0.03 put it at 155-423 and straight through the "band: logit ..." guide: this axes
+    # starts at page x 60 pt and the 268 pt line ends at 328 -- inside the clear 60-351 run. (A
+    # fraction of -0.03 would put it at 155-423 and straight through the "band: logit ..." guide: this axes
     # has a left rail, so its fraction 0 is at page x 164, not at the gridspec's left edge.)
-    # The asterisk on goat, chicken and pig was printed with no key anywhere on the plate, so the
-    # legend had to spend eighteen words saying what it meant -- the same rule violation as the
-    # three marks above. It goes at the right end of the same clear band (x 335-470 pt is free
+    # The asterisk on goat, chicken and pig needs a key on the plate; without one the
+    # legend would have to spend eighteen words saying what it means -- the same rule as the
+    # three marks above. The key sits at the right end of the same clear band (x 335-470 pt is free
     # there; the "n = ..." subtitle sits a line higher, at y 11-19).
     ax.text(-0.350, 1.368, "\u00d7 = errors caught by refusing that species' least-confident 15%, "
             "vs random; n.s. spans 1\u00d7", transform=ax.transAxes,
@@ -457,41 +456,40 @@ def panel_a(fig, gs_slice):
         ax.spines[sname].set_visible(False)
     ax.spines["bottom"].set_color("#8C8C8C")
 
-    # Everything below the axis is laid out by MEASURED height, not by hand-tuned offsets -- the offsets
-    # collided every time a caption's wording changed length.
+    # Everything below the axis is laid out by MEASURED height, not by hand-tuned offsets -- such
+    # offsets collide every time a caption's wording changes length.
     n_over = sum(1 for r in RW for c, v in zip(r["count"], r["rate"])
                  if c >= MIN_N and v is not None and v > VMAX)
     n_thin = sum(1 for r in RW for c in r["count"] if 0 < c < MIN_N)
     C = R["staircase"]["census"]
     y = _below(ax, -0.05)                                     # clears the x-axis label
 
-    # The colour-key sentence, the mark key ("dark dots = ...") and the ramp swatch were all
-    # legend prose: they defined the encoding rather than reporting a measurement, and they carried
-    # the smallest type on the canvas. They move to the manuscript legend verbatim. What stays here
+    # The colour-key sentence, the mark key ("dark dots = ...") and the ramp swatch are
+    # legend prose: they define the encoding rather than report a measurement, and they would carry
+    # the smallest type on the canvas, so they are in the manuscript legend verbatim. What stays here
     # is the pair of MEASURED statements -- every number below is read from the artefact.
     del n_over, n_thin
-    # The red bold paragraph that stood second here ("but refusal is not class-neutral: 731 of 893
-    # errors are MISSED positives and only 26% of those are caught, against 77% of the 162 harmless
-    # over-calls") argued the finding, in colour, in bold, and -- at 170 mm -- ran 0.5 mm PAST the
-    # right page edge. The argument belongs to the legend and Additional file 1 Note S45. Its five
+    # The argument that refusal is not class-neutral ("731 of 893 errors are MISSED positives and
+    # only 26% of those are caught, against 77% of the 162 harmless over-calls") belongs to the
+    # legend and Additional file 1 Note S45, not to the canvas in red bold. Its five
     # numbers do not: they are the census of the dots this panel draws, so they stay as one plain
     # grey line that counts the marks rather than interpreting them.
     # The wrap width is DERIVED from the axes box so the block cannot reach past the grid's right
-    # edge again; it used to be the hand-set 1.310 that caused the overflow.
+    # edge; a hand-set width such as 1.310 overflows it.
     _bx = ax.get_position()
     # Wrapped at the LEFT COLUMN's right edge, not at the grid's. Panel a is full width but the
     # block that hangs under it is not: panel c's letter sits in the middle gutter at x = 0.5715,
-    # and a single 94-character line reached 0.5865, so the caption's last line and that letter
-    # overlapped by 2.7 pt on the 173 mm canvas. Wrapping at 0.494 puts 37 pt of clear paper
+    # and a single 94-character line reaches 0.5865, so the caption's last line and that letter
+    # would overlap by 2.7 pt on the 173 mm canvas. Wrapping at 0.494 puts 37 pt of clear paper
     # between the block and the letter whatever the two rows' heights become; the line it costs
     # is paid for by the tightened leading below.
     _wmax = (0.494 - _bx.x0) / _bx.width + 0.310
 
-    # ---- MARK KEY. Three marks on this panel had no key anywhere on the page: the two error
-    # classes (whose mapping was moved to the manuscript legend) and the hairline underscore that
-    # marks a thinly-sampled bin. With the error classes now carrying shape as well as hue the
-    # mapping has to be legible from the figure itself, and the underscore -- which is the only
-    # thing distinguishing "sampled, too few to rate" from "nothing here at all" -- has never been
+    # ---- MARK KEY. Three marks on this panel need a key on the page: the two error
+    # classes (whose mapping is also in the manuscript legend) and the hairline underscore that
+    # marks a thinly-sampled bin. With the error classes carrying shape as well as hue the
+    # mapping has to be legible from the figure itself, and the underscore is the only
+    # thing distinguishing "sampled, too few to rate" from "nothing here at all", so it must be
     # named. A key that labels a mark is canvas text under style_gb; it is not commentary.
     _pb = ax.text(0.0, 0.0, "Hg", transform=ax.transAxes, fontsize=FOOT)
     fig.canvas.draw()
@@ -511,12 +509,12 @@ def panel_a(fig, gs_slice):
     ax.text(_kx(50.3), _yk, f"Bin holds 1\u2013{MIN_N - 1} calls: too few to rate",
             transform=ax.transAxes, ha="left", va="center", fontsize=FOOT, color=INK,
             clip_on=False, zorder=9)
-    # 2.6 -> 1.0 pt here and 2.6 -> 1.4 pt on the two caption lines below. On the 173 mm canvas
-    # this block's last line sat 2.7 pt into panel c's letter: the block hangs from panel a's foot
-    # in POINTS while the row beneath it moved up in millimetres. hspace is not the lever -- raising
+    # 1.0 pt here and 1.4 pt on the two caption lines below, not 2.6. On the 173 mm canvas 2.6 pt
+    # puts this block's last line 2.7 pt into panel c's letter: the block hangs from panel a's foot
+    # in POINTS while the row beneath it is placed in millimetres. hspace is not the lever -- raising
     # it shrinks the axes as fast as it opens the gap, so the letters barely move (1.06 -> 1.22
-    # bought 0.5 pt and cost enough axes height to collide eight of panel a's own cell labels).
-    # The 4 pt comes out of leading that was never needed: at 2.6 pt the pitch was 1.38x the type
+    # buys 0.5 pt and costs enough axes height to collide eight of panel a's own cell labels).
+    # The 4 pt comes out of leading that is not needed: at 2.6 pt the pitch is 1.38x the type
     # size, and 1.4 pt still leaves 1.32x.
     y = y - _lh - _axfrac(ax, 1.0 / 72.0 * fig.dpi)
 
@@ -584,12 +582,12 @@ def panel_b(ax):
     fig_ = ax.figure; fig_.canvas.draw()
     y_cap = (lgb.get_window_extent(fig_.canvas.get_renderer())
              .transformed(ax.transAxes.inverted()).y0) - 0.035
-    # Emitted last, wrapped to the panel's own width. COUNTED, not asserted: "all four straddle zero" was
-    # true only while ece_mass split tied scores on row order. With ties binned by value, mass15 leaves
+    # Emitted last, wrapped to the panel's own width. COUNTED, not asserted: "all four straddle zero" holds
+    # only if ece_mass splits tied scores on row order. With ties binned by value, mass15 leaves
     # the null and favours transfer -- state it rather than let a referee find it.
     #
-    # What this line no longer does is argue. It read "... — 88% of the pooled mass favours transfer,
-    # A COIN-FLIP RATHER THAN AN EFFECT", in bold: the reading of the posteriors, not the posteriors.
+    # This line does not argue. A clause such as "... — 88% of the pooled mass favours transfer,
+    # A COIN-FLIP RATHER THAN AN EFFECT" is the reading of the posteriors, not the posteriors.
     # That clause is the legend's and Note S48's to make. The three counts stay, because they measure
     # the four densities drawn above and appear nowhere else on the canvas.
     NR = R["null_robustness"]
@@ -600,7 +598,7 @@ def panel_b(ax):
     # bootstrap densities of one contrast. And spell the dissenter with the key's own label:
     # "mass15" is a raw dict key matching none of the four labels drawn in the key below the axes.
     dis = ", ".join(lab[k] for k in NR["dissenting"]) or "none"
-    _ = (n_ind, n_est, frac, dis)   # stated in the Results; no longer set on the canvas
+    _ = (n_ind, n_est, frac, dis)   # stated in the Results; not set on the canvas
 
 
 # ---------------------------------------------------------------- c. what abstention buys
@@ -761,10 +759,10 @@ def panel_dm(ax):
 def panel_e(ax):
     """POSITIVE-CLASS coverage under BOTH split-conformal constructions, nominal 90%.
 
-    The earlier version plotted only the MARGINAL arm and titled its pathogenic collapse as the finding.
-    That is indefensible: build_conformal.py states "Mondrian is reported because marginal coverage skews
+    Plotting only the MARGINAL arm and titling its pathogenic collapse as the finding would be
+    indefensible: build_conformal.py states "Mondrian is reported because marginal coverage skews
     under class imbalance", so the collapse is the documented artifact of the construction the pipeline
-    itself rejects -- and abstain_marg is 0.000 for all nine species, i.e. the plotted predictor never
+    itself rejects -- and abstain_marg is 0.000 for all nine species, i.e. the marginal predictor never
     abstains at all, inside a figure whose thesis is that abstention is the deliverable.
 
     The real finding is the TRADE, and it is the stronger result: the class-conditional construction does
@@ -781,15 +779,15 @@ def panel_e(ax):
     for x, a_, b_ in zip(xs, p_marg, p_mond):
         ax.plot([x, x], [a_, b_], color="#C9C4BC", lw=0.9, zorder=2, solid_capstyle="round")
     ax.scatter(xs, p_marg, s=20, color=FAIL, marker="v", zorder=5, edgecolors="white", lw=0.4,
-               # "— abstains on 0%" is dropped from the KEY: it is a finding, it reads like a
-               # bug beside a series name, and the legend now states it. Every class-conditional
+               # "— abstains on 0%" is not in the KEY: it is a finding, it reads like a
+               # bug beside a series name, and the legend states it. Every class-conditional
                # point already prints its own abstention rate along the bottom of the panel.
                label="Marginal")
     ax.scatter(xs, p_mond, s=18, color=CODING, zorder=5, edgecolors="white", lw=0.4,
-               # No range in the label. Every Mondrian point now carries its OWN abstention rate
-               # along the bottom of the panel, which is the whole point of finding 39; a min-max
+               # No range in the label. Every Mondrian point carries its OWN abstention rate
+               # along the bottom of the panel; a min-max
                # in the legend re-summarises what is already priced per species, and at 113 pt it
-               # made the legend wide enough to start at x 343 and run into the "nominal 90%
+               # would make the legend wide enough to start at x 343 and run into the "nominal 90%
                # target" annotation at 354. Without it the widest entry is the marginal one, 83 pt,
                # and the legend starts at 373.
                label="Class-conditional")
@@ -804,15 +802,14 @@ def panel_e(ax):
     HELD_OUT = ("goat", "chicken", "pig")
     ho = [i for i, s_ in enumerate(sp) if s_.lower() in HELD_OUT]
     n_ho_ok = int((p_mond[ho] >= 0.90).sum())
-    # rotation_mode="anchor": without it matplotlib rotates each label about its centre and
-    # then right-aligns the ROTATED box, which slid "goat" and "chicken" into each other by
-    # 15 pt^2 -- the one text collision this figure carried, in the shipped render as well.
-    # Anchoring rotates about the alignment point instead, so each label hangs from its own tick.
+    # At a 42-degree rake matplotlib rotates each label about its centre and then right-aligns the
+    # ROTATED box, which slides "goat" and "chicken" into each other by 15 pt^2; anchoring rotates
+    # about the alignment point instead, so each label hangs from its own tick.
     ax.set_xticks(xs)
     # 90 degrees, not 42. Nine species names under a half-width panel do not fit on a 42-degree
-    # rake: "goat" and "chicken" overlapped by 15 pt^2 in the shipped render and still touched
+    # rake: "goat" and "chicken" overlap by 15 pt^2 and still touch
     # once anchored. Set vertical they hang cleanly from their own ticks at any panel width.
-    # rotation_mode="anchor" applies the alignment BEFORE the rotation, which pushed the
+    # rotation_mode="anchor" applies the alignment BEFORE the rotation, which would push the
     # vertical labels up into the axes and over the panel's shaded field. Default mode
     # rotates first and then aligns the rotated box, so the labels hang below the axis.
     _tl = ax.set_xticklabels([s_[:1].upper() + s_[1:] + (" *" if s_.lower() in HELD_OUT else "") for s_ in sp],
@@ -854,16 +851,15 @@ def panel_e(ax):
 
 
 # ---------------------------------------------------------------- footer
-# panel_foot() DELETED, together with the bottom-anchored methods paragraph it returned.
-# The "Claim" / "Caveats" card and the methods sentence were nine and three lines of
-# explanatory prose respectively -- legend copy printed on the canvas at the smallest type in
-# the figure. They are reproduced verbatim in the manuscript legend; deleting the whole footer
-# row is what buys panels a-e the vertical room to be legible at 6 pt.
+# No footer. A "Claim" / "Caveats" card and a methods sentence are explanatory prose --
+# legend copy that would be printed on the canvas at the smallest type in the figure. They are
+# reproduced verbatim in the manuscript legend; leaving out a footer row is what buys panels a-e
+# the vertical room to be legible at 6 pt.
 
 
 def main():
     fig = plt.figure(figsize=(W_MM * MM, H_MM * MM))
-    # Three rows, not four: the footer prose row is gone. Positions below are set in MILLIMETRES
+    # Three rows, not four: there is no footer prose row. Positions below are set in MILLIMETRES
     # off the canvas edges so the panel marks keep their printed size on the taller page.
     def _fy(mm_from_top):
         return 1.0 - mm_from_top / H_MM
@@ -903,9 +899,9 @@ def main():
     # cross-species disease variants..."), set by the typesetter in the journal's own face.
     os.makedirs("reports/figures", exist_ok=True)
     base = "reports/figures/Figure4_trust"
-    # Nothing on this canvas carries a path effect any more (style_gb: no strokes behind text), so
-    # every string is already in the PDF text layer and this call now adds zero twins. Kept as the
-    # guard it is: if a halo is ever reintroduced, the string does not silently leave the text layer.
+    # Nothing on this canvas carries a path effect (style_gb: no strokes behind text), so
+    # every string is already in the PDF text layer and this call adds zero twins. It is a
+    # guard: if a halo is ever introduced, the string does not silently leave the text layer.
     restore_text_layer(fig)
     fig.savefig(base + ".png", dpi=600, facecolor="white")
     # GB: figures are "closely cropped to minimise the amount of white space surrounding the

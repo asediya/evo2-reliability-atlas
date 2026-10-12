@@ -14,9 +14,9 @@ import numpy as np
 import polars as pl
 from scipy.stats import spearmanr
 
-# The verification table prints Greek deltas. Under Windows' cp1252 console default that raised
-# UnicodeEncodeError *after* fig2_data.json had already been written, so the script exited 1 while
-# its output was correct -- a referee re-running it saw a failure that was not one.
+# The verification table prints Greek deltas. Under Windows' cp1252 console default that raises
+# UnicodeEncodeError *after* fig2_data.json has been written, so the script would exit 1 while
+# its output is correct -- a referee re-running it would see a failure that is not one.
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
@@ -50,17 +50,17 @@ def _readout_effect():
     rng = np.random.default_rng(READOUT_SEED)
 
     def oriented(y, s, negate, what):
-        # This chose the sign of the score FROM THE LABELS, returning
-        # whichever orientation exceeded 0.5. That is what the deposit's own rule forbids
+        # The sign of the score is NOT chosen FROM THE LABELS by returning
+        # whichever orientation exceeds 0.5. That is what the deposit's own rule forbids
         # (tools/verify_from_data.py): "Orientation is asserted, never inferred. Auto-flipping a
         # score to whichever side exceeds 0.5 turns a null arm into a positive one."
         #
-        # The two deposited Evo 2 columns genuinely differ in convention, which is why the flip
-        # was masking a real inconsistency rather than doing nothing: evo2_meanll_delta is a
+        # The two deposited Evo 2 columns genuinely differ in convention, which is why such a flip
+        # would mask a real inconsistency rather than do nothing: evo2_meanll_delta is a
         # likelihood delta, so a deleterious variant LOWERS it (raw AUROC 0.026-0.137 across the
         # nine species), while evo2_40b_neg is already signed higher-is-deleterious (raw
-        # 0.825-0.950). The sign is now fixed per column and the outcome asserted, so the numbers
-        # are unchanged and a future column with the wrong convention stops the run.
+        # 0.825-0.950). The sign is fixed per column and the outcome asserted, so a
+        # column with the wrong convention stops the run.
         s = -s if negate else s
         a = roc_auc_score(y, s)
         if a < 0.5:

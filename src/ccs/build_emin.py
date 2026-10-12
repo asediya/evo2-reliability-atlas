@@ -77,8 +77,8 @@ def main():
     for k, v in sorted(vals.items(), key=lambda kv: kv[1]):
         print(f"  {k:8s} emin={v:.4f}  at coverage {out['per_species'][k]['emin_at_coverage']:.2f}")
     print(f"\neight non-human species: {out['summary']['eight_species_range']}   human: {vals.get('human')}")
-    # this printed a comparison against a claim that appears in
-    # neither the manuscript nor the supplement, and the computed maximum is 0.0275.
+    # No comparison against a manuscript claim: none appears in
+    # the manuscript or the supplement, and the computed maximum is 0.0275.
     print("no manuscript claim is asserted here; compare against reports/fig4_emin.json")
 
 

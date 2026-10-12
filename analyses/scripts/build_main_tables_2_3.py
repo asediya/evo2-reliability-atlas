@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 """Generate main-text Tables 2 and 3 from artefacts.
 
-The manuscript currently embeds exactly one table. These are the two the rewrite adds: the coverage
-comparison that R4 carries in place of a figure, and the per-class head-to-head that R5 uses.
+Table 2 is the coverage comparison that the Results carry in place of a figure, and Table 3 the
+per-class head-to-head they use.
 
 They are numbered 2 and 3, not 5 and 6. The four tables in `tables.md` are deposit tables D1 to D4,
-a separate generated deliverable that the article does not embed, and an earlier plan mistook them
-for main-text tables.
+a separate generated deliverable that the article does not embed; they are not main-text tables.
 
-At assembly these belong in `src/ccs/build_tables.py` alongside the deposit tables, so that the
-no-hand-typed-numbers rule covers them too. They live here until the rewrite is merged, because
-`src/ccs/build_tables.py` writes into the frozen submission tree.
+They are built here rather than in `src/ccs/build_tables.py` alongside the deposit tables, because
+`src/ccs/build_tables.py` writes into the frozen submission tree; every number is still read from an
+artefact, so the no-hand-typed-numbers rule holds for them.
 
     python analyses/scripts/build_main_tables_2_3.py
 """

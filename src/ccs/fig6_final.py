@@ -72,10 +72,10 @@ MUTED = _SG.MUTED
 
 mpl.rcParams.update({
     "font.family": "sans-serif", "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans"],
-    # This was the only figure of the seven embedding DejaVuSans alongside
+    # Without this the figure embeds DejaVuSans alongside
     # Arial, and the cause is not a missing glyph in Arial: it is matplotlib's mathtext engine,
     # which renders $10^{-4}$ in its own DejaVu font whatever the text family is. Panel b's log
-    # tick labels are the only mathtext in the figure, so five spans were arriving in a second
+    # tick labels are the only mathtext in the figure, so five spans would arrive in a second
     # family. Point mathtext at the same face as everything else.
     "mathtext.fontset": "custom", "mathtext.rm": "Arial", "mathtext.it": "Arial:italic",
     "mathtext.bf": "Arial:bold", "mathtext.default": "regular",
@@ -114,8 +114,8 @@ def _pitched_ticks(ax, lo, hi, size=None, gap_pt=2.4, steps=(0.05, 0.10, 0.20, 0
 
     Tick spacing is a layout quantity, not a taste: a step is legible only if the distance it
     occupies on the page exceeds the height of the label set in it. Hard-coding the step couples
-    the figure to one type size, which is exactly how six colliding label pairs appeared in
-    panel b the moment the type scale was raised to the journal's measured norm. Given the axes'
+    the figure to one type size: at the journal's measured type scale a hard-coded step puts six
+    colliding label pairs in panel b. Given the axes'
     rendered height, this returns the densest step that leaves `gap_pt` of clear air.
     """
     fig = ax.figure
@@ -293,17 +293,16 @@ def _resid_grid(lx, dv, nx, ny):
 def panel_a_resid(ax, ax_cb=None):
     """HERO — the dependence no curator drew, as an ASSOCIATION RASTER.
 
-    THIS REPLACES A REJECTED CONTOUR SURFACE. The first build drew log2(observed/expected) as a filled
-    contour field; the user's verdict was that it "doesn't look scientific" and that is correct --
-    contouring a 10x8 table interpolates between cells that have no intermediate values, so it implies
+    NOT A FILLED CONTOUR SURFACE. Contouring log2(observed/expected) over a 10x8 table
+    interpolates between cells that have no intermediate values, so it implies
     a continuity the data does not have, renders as a pale wash, shows no counts, and carries no
     uncertainty. See the kill list in reports/fig6_plan.md.
 
-    What is drawn now is the same contingency table with NO smoothing: discrete cells, Pearson
+    What is drawn is the contingency table with NO smoothing: discrete cells, Pearson
     standardised residuals, and the residual printed wherever |r| > 2. That reports the STRENGTH of the
     evidence, not just its direction -- residuals reaching |r| ~ 9 say the dependence is decisively
     detectable at n = 28,006 even though the effect size (rho = -0.099) is small. Both facts are true
-    and the panel now shows both.
+    and the panel shows both.
     """
     S = J["selection"]
     maf, dele = load_selection()
@@ -377,18 +376,18 @@ def panel_a_resid(ax, ax_cb=None):
 def panel_a(ax, ax_cb=None):
     """SUPERSEDED — the rejected contour surface. Kept only so the kill list has a referent.
 
-    WHY NOT A RAW SCATTER OR A COUNT-DENSITY FIELD. Both were built and both were rejected on the
+    WHY NOT A RAW SCATTER OR A COUNT-DENSITY FIELD. Both fail on the
     render. The deleteriousness score spans -7 to +8 while the whole effect is a 0.36-unit shift in the
     conditional median (0.414 at singletons -> 0.059 at major alleles, a 7x ratio but only ~5% of any
     axis that can hold the distribution). A count-density hexbin therefore draws one large blob with a
-    sub-pixel tilt: it is honest and it is unreadable, and worse, an earlier draft of this panel put a
-    MEAN-derived annotation ("singletons 0.772") on a MEDIAN curve, which is a different statistic.
+    sub-pixel tilt: it is honest and it is unreadable. And a MEAN-derived annotation ("singletons
+    0.772") does not belong on a MEDIAN curve, which is a different statistic.
 
     WHAT THIS PLOTS INSTEAD. log2(observed / expected) over a grid whose bins are QUANTILES of each
     margin, so every row and every column holds the same number of variants and the expectation is the
     exact independence product (row_sum * col_sum / total) -- no density estimation, no bandwidth, no
-    area approximation. A KDE-product version on hexagonal geometry was tried and is noisy (sd 0.60,
-    range -2.96..+1.69, corners wrong); the exact-marginal version is clean and is what ships.
+    area approximation. A KDE-product version on hexagonal geometry is noisy (sd 0.60,
+    range -2.96..+1.69, corners wrong); the exact-marginal version is clean.
 
     This is the dependence that rho = -0.099 measures, rendered so a real-but-small marginal effect is
     visible as STRUCTURE rather than as a tilt. It is drawn as a filled contour surface, not as cells:
@@ -441,8 +440,8 @@ def panel_a(ax, ax_cb=None):
 
     # ---- readability annotations. BOTH deleterious corners are named, because the two that matter
     # are the TOP ones: bottom-right is common-and-tolerated, which is also enriched and is the
-    # mirror of the argument, not a counterexample. An earlier draft put "under-represented" on the
-    # bottom-right, which is red -- the label contradicted the ink it sat on.
+    # mirror of the argument, not a counterexample. "under-represented" therefore does not go on the
+    # bottom-right, which is red -- the label would contradict the ink it sits on.
     ax.text(0.025, 0.955, "RARE  ·  DELETERIOUS", transform=ax.transAxes, fontsize=FOOT - 0.4,
             color=FAIL, fontweight="bold", ha="left", va="top")
     ax.text(0.025, 0.900, "over-represented — the signature\nof purifying selection",
@@ -512,14 +511,14 @@ def panel_b(fig, gs_slice):
         # against the floor in exactly the two most-conserved quintiles — the cells that carry the
         # panel's headline.
         _lo = min(min(cc["lo"]) for cc in cells[:6]); _hi = max(max(cc["hi"]) for cc in cells[:6])
-        # headroom raised 0.075 -> 0.105 so the three-line stat block in the
+        # headroom of 0.105 so the three-line stat block in the
         # top-right corner clears the curve's left shoulder at 6 pt.
         ax.set_ylim(_lo - 0.012, _hi + 0.105)
         ax.set_xticks([-4, -3, -2, -1])
-        # TICK DENSITY IS SOLVED, NOT TYPED. The hard-coded [0.45, 0.50, 0.55, 0.60] put four
-        # labels on an 18 mm cell: at the corrected type scale that is a 7.05 pt pitch under a
-        # 7.3 pt label, so EVERY adjacent pair overlapped -- six of this figure's seven collisions.
-        # The step is now chosen from the cell's own rendered height so the labels cannot touch,
+        # TICK DENSITY IS SOLVED, NOT TYPED. A hard-coded [0.45, 0.50, 0.55, 0.60] puts four
+        # labels on an 18 mm cell: at this type scale that is a 7.05 pt pitch under a
+        # 7.3 pt label, so EVERY adjacent pair would overlap.
+        # The step is chosen from the cell's own rendered height so the labels cannot touch,
         # and it widens by itself if the cell is ever made shorter. Shrinking the labels instead
         # would put them under the 6.5 pt floor.
         _yt = _pitched_ticks(ax, *ax.get_ylim())
@@ -559,9 +558,9 @@ def panel_b(fig, gs_slice):
         ax.text(0.955, 0.955, _title,
                 transform=ax.transAxes, fontsize=MINPT, color=col, fontweight="bold",
                 ha="right", va="top")
-        # Print the statistic the VERDICT is made on. The previous version printed only the endpoint
-        # "drop", which ranks q0 (drawn as flat) ABOVE q1 (counted as surviving) — so the panel's own
-        # numbers contradicted its own colouring. rho and its CI are what decide it.
+        # Print the statistic the VERDICT is made on. The endpoint "drop" alone
+        # ranks q0 (drawn as flat) ABOVE q1 (counted as surviving) -- so the panel's own
+        # numbers would contradict its own colouring. rho and its CI are what decide it.
         rc = (_strata[c["key"]]["ci"] if c["key"] in _strata else c.get("rho_ci")) or [float("nan"), float("nan")]
         # 0.955 / 0.807 / 0.659 is a 6 pt stack on an 18 mm cell: the pitch is
         # set from the type size, not guessed, so the three lines cannot touch.
@@ -572,10 +571,10 @@ def panel_b(fig, gs_slice):
         ax.text(0.955, 0.659, f"[{rc[0]:+.3f}, {rc[1]:+.3f}]", transform=ax.transAxes,
                 fontsize=MINPT, color=(CODING if flat else MUTED), ha="right", va="top",
                 fontweight=("bold" if flat else "normal"))
-        # The q0 gloss "CI spans zero — no gradient detectable" is dropped from
-        # the canvas: the interval printed directly above it already spans zero
-        # and is set in the CODING colour, so the sentence restated the datum it
-        # sat under. It is legend material.
+        # No q0 gloss ("CI spans zero — no gradient detectable") on
+        # the canvas: the interval printed directly above already spans zero
+        # and is set in the CODING colour, so the sentence would restate the datum it
+        # sits under. It is legend material.
     axes0.set_ylabel("P(deleteriousness > stratum median)", fontsize=AXIS)
     return axes0
 
@@ -845,10 +844,10 @@ def main():
     81 negatives at 94.6% positive, so the miscalibration there is a base-rate artifact. The defensible
     ClinVar result is a labelled-benchmark generality claim and belongs with the trust layer, not in a
     figure whose subject is evidence that needs no curator. See COMPILED_RESULTS 10e."""
-    # The mm budget below is authored from the ORIGINAL top edge, which carried a title at
-    # 4 mm and a standfirst at 10-20 mm. Both moved to the legend (house style), so the whole
+    # The mm budget below is authored from a top edge that reserves 4 mm for a title and
+    # 10-20 mm for a standfirst. House style sets both in the legend, so the whole
     # stack lifts by HEAD_MM and the canvas loses the same amount: every panel keeps its
-    # authored size in millimetres, and the plate no longer opens with 20 mm of white paper.
+    # authored size in millimetres, and the plate does not open with 20 mm of white paper.
     HEAD_MM = 16.0
     # Canvas height (src/ccs/style_gb.py): the journal's 225 mm ceiling covers the figure AND its
     # legend, and a 300-word legend sets to 25-35 mm, so a full-width graphic has to stop near
@@ -887,8 +886,8 @@ def main():
     axb0.set_ylabel("")
     fig.text(0.038, T(105.0), "P(deleteriousness > stratum median)", fontsize=AXIS,
              color=INK, ha="center", va="center", rotation=90)
-    # panel b had NO x-axis label anywhere — on the panel COMPILED_RESULTS §10b calls the strongest
-    # result in the figure. One shared label under the lattice. The ticks are now
+    # panel b needs an x-axis label -- it is the panel COMPILED_RESULTS §10b calls the strongest
+    # result in the figure. One shared label under the lattice. The ticks are
     # plain log10 exponents, so the label names the log10 axis.
     fig.text(0.542, T(132.9), "log10 minor allele frequency in cattle   (equal-count bins)",
              fontsize=AXIS, color=INK, ha="center", va="top")
@@ -903,10 +902,10 @@ def main():
     panel_e_lattice(ax_e)
 
     S = J["selection"]; C = J["selection_conditioned"]; D = J["decomposition"]
-    # TITLE AND STANDFIRST MOVED TO THE MANUSCRIPT LEGEND (house style, src/ccs/style_gb.py).
-    # "Signal without a curator" and the three-line italic paragraph beneath it were the
-    # figure arguing its own claim on the plate. The legend makes that argument, in the
-    # journal's face, and already opens "Score is associated with allele frequency without
+    # TITLE AND STANDFIRST ARE IN THE MANUSCRIPT LEGEND (house style, src/ccs/style_gb.py).
+    # A title and an italic paragraph on the plate would be the
+    # figure arguing its own claim. The legend makes that argument, in the
+    # journal's face, and opens "Score is associated with allele frequency without
     # curated labels, and the limits of that signal."
 
     for x_, y_mm, letter, title, note in (
@@ -921,8 +920,8 @@ def main():
         # is kept in the table above as documentation of what each panel is; the legend
         # states it for the reader.
         # x_ is None for the left column: those letters take the SHARED margin (style_gb.
-        # letter_x) rather than a figure fraction typed to this plate's own rail, which put them
-        # at 50.9 pt while half the set put theirs at 5.8 pt.
+        # letter_x) rather than a figure fraction typed to this plate's own rail, which would put
+        # them at 50.9 pt while other figures in the set put theirs at 5.8 pt.
         from .style_gb import letter_x as _letter_x
         _lx, _ha = (_letter_x(fig), "left") if x_ is None else (x_, "center")
         fig.text(_lx, y_, letter, fontsize=PANEL, fontweight="bold", ha=_ha, va="bottom",

@@ -50,8 +50,8 @@ def qhat(scores, alpha):
     """Split-conformal quantile: the ceil((n+1)(1-alpha))-th smallest nonconformity score.
 
     When k > n the finite-sample-valid threshold is +inf (admit the label always), which is what
-    glmtrust.conformal returns. This function used to clamp to the largest observed nonconformity
-    score, which is anti-conservative and forfeits the coverage guarantee for any class with n < 9
+    glmtrust.conformal returns. Clamping to the largest observed nonconformity score instead
+    would be anti-conservative and forfeit the coverage guarantee for any class with n < 9
     at alpha = 0.10. The branch is inert for every published number here,
     because the Mondrian quantiles are calibrated on the pooled rich set and every per-class
     calibration set holds hundreds of variants, but the two implementations should not disagree.

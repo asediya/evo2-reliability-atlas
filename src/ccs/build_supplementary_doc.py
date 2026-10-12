@@ -27,9 +27,9 @@ def main():
     prose = io.open(PROSE, encoding="utf-8").read().strip()
     tables = io.open(TABLES, encoding="utf-8").read().strip()
 
-    # Additional file 1 shipped carrying the SUPERSEDED manuscript title on its own
-    # header line, so an editor comparing the two files saw two differently-named papers. The title
-    # lives in two places and nothing tied them together; this does.
+    # The title lives in two places -- the manuscript H1 and Additional file 1's own header
+    # line -- and if nothing ties them together an editor comparing the two files can see two
+    # differently-named papers. This ties them.
     import re as _re
     _ms = io.open("reports/manuscript.md", encoding="utf-8").read()
     _title = _re.search(r"(?m)^#\s+(.*)$", _ms).group(1).strip()

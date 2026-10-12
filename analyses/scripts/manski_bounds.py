@@ -89,10 +89,10 @@ def main():
         n_ident_1001 += v1 == "Evo 2 leads, identified"
         n_mono_8192 += vm != "NOT IDENTIFIED"
         out["per_species"][sp] = {
-            # These AUROCs sat under bare names that also appear in other
+            # These AUROCs carry bare names that also appear in other
             # artefacts on other panels -- cattle auroc_evo2_8192 is 0.9740 here on the
             # GERP-co-scorable set and 0.9777 in phylop_crosscheck.json on the phyloP-matched
-            # one, both correct and neither key saying which. The panel travels with them now.
+            # one, both correct and neither key saying which. So the panel travels with them.
             "panel": "per-species GERP-co-scorable subset (the variants both Evo 2 and the "
                      "deposited GERP track can score); NOT the full species panel and NOT the "
                      "phyloP-matched subset of reports/phylop_crosscheck.json",
@@ -158,7 +158,7 @@ def main():
     rn = np.array([p["reach_neg"] for p in P])
     rho = rp * rn
     J = rp - rn
-    # MATERIALITY MATTERS HERE. A first pass counted 7 clashing pairs, but every one was a
+    # MATERIALITY MATTERS HERE. A bare sign test counts 7 clashing pairs, but every one is a
     # complete-coverage predictor with J of +0.0000 against another at +0.0001: numpy makes
     # sign(0.0) = 0, so a zero and a tiny positive register as "opposite". They are not opposite,
     # they are both zero. The test requires a materially non-zero asymmetry on BOTH sides, using

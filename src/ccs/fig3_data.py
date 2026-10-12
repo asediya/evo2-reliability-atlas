@@ -3,7 +3,7 @@ Every number recomputed from on-disk scores and reconciled against reports/compi
 Score orientation = 'causal-ness' matching the canonical deleteriousness convention:
   - mean-LL delta columns  -> negate (causal = lower delta), matches compiled ladder_eqtl.
   - '_neg' columns          -> use as-is (already causal-oriented), matches compiled global/NT.
-No Evo2 compute (pod retired); all recomputable from saved scores.
+No Evo2 compute; all recomputable from saved scores.
 """
 import polars as pl, numpy as np, json, os
 from scipy.stats import rankdata
@@ -108,11 +108,11 @@ D["C_null"]["matched2k_auroc"] = {"auroc": round(auroc(y2, s2), 3), "ci": [round
 
 # ---------- D. ROBUSTNESS (window x readout) ----------
 rob = {"coding_ref": round(coding["40B"], 3), "cells": []}
-# The window label of the eqtl_evo2_40b cell was wrong: that file is scored on the 1,002-bp windows
+# The eqtl_evo2_40b cell is scored on the 1,002-bp windows
 # in data/interim/eqtl_windows.parquet (ref_seq is 1002 characters for all 20,000 rows), not on
-# 8,192-bp windows. Registering it as 8192 made the window arm read as an increase 2,049 -> 8,192 bp
-# when it was really 1,002 -> 2,049, and made the readout arm vary the window at the same time. The
-# matched 1,002-bp mean-LL arm below fixes the second problem: readout can now be compared at a
+# 8,192-bp windows. Registering it as 8192 would make the window arm read as an increase 2,049 -> 8,192 bp
+# when it is really 1,002 -> 2,049, and make the readout arm vary the window at the same time. The
+# matched 1,002-bp mean-LL arm below lets readout be compared at a
 # fixed window, and window at a fixed readout, which is what the control claims to do.
 for win, rd, path, col, neg in [(8192, "mean-LL", "data/processed/scores_cloud/eqtl_abl_8192_ll.parquet", "evo2_meanll_delta", True),
                                 (1002, "mean-LL", "data/processed/scores/eqtl_abl_1002_ll.parquet", "evo2_meanll_delta", True),

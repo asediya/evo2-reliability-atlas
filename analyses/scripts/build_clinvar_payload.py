@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 """Build a consequence-stratified ClinVar panel and extract 1,001-bp windows for Evo 2 scoring.
 
-Two things this fixes, and the first matters more than the second.
+Two things this addresses, and the first matters more than the second.
 
-**Evo 2 is currently the auditor and never a participant.** The paper charges CADD, REVEL and
-AlphaMissense a must-answer penalty on 1.4 M ClinVar variants and never charges itself on the same
-panel. A referee sees that asymmetry immediately. Scoring Evo 2 here puts it into the league table
+**Evo 2 must be a participant, not only the auditor.** The paper charges CADD, REVEL and
+AlphaMissense a must-answer penalty on 1.4 M ClinVar variants; leaving Evo 2 uncharged on the same
+panel is an asymmetry a referee sees immediately. Scoring Evo 2 here puts it into the league table
 it critiques, with its own reach, its own class gap and its own identified interval beside the
 other 49.
 
 **The regulatory rung of the consequence gradient is n = 18**, with a minimum detectable difference
-of 0.28 — that rung could never have resolved anything smaller than a quarter of the AUROC scale.
+of 0.28 — that rung cannot resolve anything smaller than a quarter of the AUROC scale.
 ClinVar carries tens of thousands of variants in each regulatory class.
 
 Sampling is balanced by (consequence x label) so no cell can dominate, and every window is
@@ -96,10 +96,10 @@ def main():
         refs.append(seq)
         alts.append(alt)
         # `off`, not `off + 1`. Two lines above, `off = HALF` is the index the window was actually
-        # built at, and `alt` is constructed by substituting there. Recording off + 1 contradicted
-        # the construction on the very next line: the scorer then read a flanking base for both ref
-        # and alt and returned exactly zero for every variant. The "atlas convention" this claimed
-        # to match belongs to the 1,002-bp atlas windows, not to these 1,001-bp ones.
+        # built at, and `alt` is constructed by substituting there. Recording off + 1 would contradict
+        # the construction on the very next line: the scorer would then read a flanking base for both
+        # ref and alt and return exactly zero for every variant. The off + 1 "atlas convention"
+        # belongs to the 1,002-bp atlas windows, not to these 1,001-bp ones.
         offs.append(off)                            # 0-based index of the variant in the window
         labs.append(int(r["label"]))
         cons.append(r["consequence"])

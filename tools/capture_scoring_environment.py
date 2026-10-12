@@ -231,7 +231,7 @@ def check_fixture(fixture_path, scored_path):
     # A fixture is provenance, not a number pair. Every row must carry the coordinates and
     # alleles that define the variant, and the fixture must name the checkpoint, readout,
     # precision, batch policy and window it was scored under -- otherwise a "PASS" only says
-    # that two floats matched, which is exactly the false assurance a referee flagged.
+    # that two floats matched, which is false assurance.
     ROW_REQ = ("variant_id", "species", "chrom", "pos", "ref", "alt", "expected_score")
     POL_REQ = ("checkpoint", "checkpoint_sha256", "window_bp", "readout", "precision",
                "batch_size", "scorer_command")
@@ -296,8 +296,8 @@ def self_test():
         ("null policy only", {}, good_row, {"v1": -1.234567}, 2),
         ("null coordinates only", good_pol, {**good_row, "pos": None}, {"v1": -1.234567}, 2),
         ("same ref and alt", good_pol, {**good_row, "alt": "A"}, {"v1": -1.234567}, 2),
-        # Multi-base alleles. The original test was `x in "ACGT"`, a substring test that
-        # accepted every one of these; the suite covered only ref == alt, so it passed.
+        # Multi-base alleles. A substring test such as `x in "ACGT"` accepts every one of these,
+        # and a suite covering only ref == alt would pass it.
         ("multi-base ref AC", good_pol, {**good_row, "ref": "AC"}, {"v1": -1.234567}, 2),
         ("multi-base alt CG", good_pol, {**good_row, "alt": "CG"}, {"v1": -1.234567}, 2),
         ("multi-base ref ACGT", good_pol, {**good_row, "ref": "ACGT"}, {"v1": -1.234567}, 2),

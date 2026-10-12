@@ -1,8 +1,8 @@
 """Figure 6 recompute layer — LABEL-FREE VALIDATION.
 
 Everything Figure 6 draws is computed here and written to reports/fig6_free.json. No float is typed by
-hand in the figure module. Same contract as fig5_stats.py, for the same reason: the Fig 4 and Fig 5
-screens both found captions describing estimators that had been killed, and numbers that existed nowhere
+hand in the figure module. Same contract as fig5_stats.py, for the same reason: a hand-typed float lets a
+caption describe an estimator the code does not compute, or quote a number that exists nowhere
 in the data.
 
 WHAT THIS FIGURE IS FOR
@@ -221,9 +221,9 @@ def decomposition_arm(rng, out):
         Y.append(yz); C.append(cz); F.append(fz); S += [sp] * int(m.sum())
         # ESTIMATOR-CONSISTENT per-species values, recomputed here. The deposited parquet's a_c and
         # a_f are RAW single-feature rank AUROCs (verified: bit-exact to roc_auc_score with no model and
-        # no CV) while its a_cf is a 5-fold CV logistic. Plotting a_cf − a_c from that file makes every
-        # stick a difference of two DIFFERENT estimators, and the stated method reproduces none of the
-        # x-positions. All three terms are now the same estimator.
+        # no CV) while its a_cf is a 5-fold CV logistic. Plotting a_cf − a_c from that file would make every
+        # stick a difference of two DIFFERENT estimators, and the stated method would reproduce none of the
+        # x-positions. All three terms here are the same estimator.
         per.append({"sp": sp, "n": int(m.sum()), "pos": int(yz.sum()),
                     "a_c": _cv_auc(cz.reshape(-1, 1), yz),
                     "a_f": _cv_auc(fz.reshape(-1, 1), yz),
@@ -280,10 +280,10 @@ def decomposition_arm(rng, out):
         "estimator": "5-fold CV logistic (StratifiedKFold shuffle, random_state=0) for ALL THREE of "
                      "a_c, a_f, a_cf — see the comment in decomposition_arm",
         "species": [r["sp"] for r in per],
-        # Derived, not hardcoded. This previously read ["goat"] with a note asserting "8 species,
-        # not 9", which described the DEPOSITED parquet (where goat is genuinely missing) while the
-        # recomputed per_species below contains a goat row. The file therefore claimed goat was
-        # absent and reported its numbers in the same breath. Compute the difference instead.
+        # Derived, not hardcoded. Goat is genuinely missing from the DEPOSITED parquet but has a row
+        # in the recomputed per_species below, so a hardcoded ["goat"] (with a note asserting
+        # "8 species, not 9") would claim goat absent and report its numbers in the same breath.
+        # Compute the difference instead.
         "species_absent": [s for s in SP if s not in {r["sp"] for r in per}],
         "species_absent_from_deposited": [s for s in SP
                                           if s not in {r.get("sp", r.get("species")) for r in rows}],

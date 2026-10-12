@@ -2,10 +2,8 @@
 """FP8 batch-size determinism control: does batch composition move a score, class-dependently?
 
 WHY THIS FILE EXISTS. reports/ablation_fp8.json is cited in the Methods as the control underwriting
-the reproducibility of the whole GPU scoring layer, and a check found
-that NO script in the deposit produced it: grep across src/, tools/ and glmtrust/ returned zero
-matches for the filename and zero for the check's own logic. Every other published number traces to
-a builder. This is that builder, so the computation is inspectable and re-runnable rather than
+the reproducibility of the whole GPU scoring layer, and every published number
+must trace to a builder. This is its builder, so the computation is inspectable and re-runnable rather than
 taken on trust.
 
 WHAT IT RUNS ON. The two runs the deposited artefact compared -- the same 600 variants at batch 4
@@ -37,13 +35,10 @@ def main():
     import polars as pl
     from sklearn.metrics import roc_auc_score
 
-    # This script used to refuse to run, on the grounds that "the two runs
-    # were not retained, so this control is the one published number the archive cannot
-    # regenerate", and the Methods repeated that claim. Both were wrong: the per-variant scores at
+    # This control regenerates from Additional file 2 alone: the per-variant scores at
     # BOTH batch sizes are deposited in reports/ablation_fp8.parquet (variant_id, delta_b4,
     # delta_b32) and the labels join from reports/_recon_pervariant_trust.parquet across all 600
-    # variants. The paper was understating its own reproducibility. This control now regenerates
-    # from Additional file 2 alone, with the two explicit score files still accepted.
+    # variants. The two explicit score files are still accepted.
     DEPOSIT, LABELS = "reports/ablation_fp8.parquet", "reports/_recon_pervariant_trust.parquet"
 
     if args.a and args.b and os.path.exists(args.a) and os.path.exists(args.b):

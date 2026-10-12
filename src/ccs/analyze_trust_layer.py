@@ -8,7 +8,7 @@ selective prediction, consequence-stratified calibration). Three parts:
   (2) CONSEQUENCE-STRATIFIED CALIBRATION (human ClinVar, coding vs non-coding): Evo2's competence is
       class-heterogeneous (high on coding, low on non-coding), so a single global calibrator is mis-
       specified. Does a coding-conditional calibrator beat the global one, especially on non-coding?
-      -> the positive-method hook (resurrecting the trust layer the naive global calibrator killed).
+      -> the positive-method hook.
 
   (3) CONFORMAL / SELECTIVE PREDICTION (pooled atlas): risk-coverage -- abstaining on low-confidence
       calls trades coverage for accuracy.
@@ -157,9 +157,9 @@ def part3_riskcov(data):
     for cov in [1.0, 0.9, 0.8, 0.7, 0.6, 0.5]:
         k = int(len(y) * cov)
         # The posterior above is an IN-SPECIES 5-fold isotonic fit, which is an upper bound and is
-        # not attainable cross-species. Shipped with three bare columns, this curve read as though
-        # it were the transferred arm the paper deploys, and its monotonically falling error was
-        # taken as contradicting that arm's trajectory: they are different arms. The label travels with the numbers now.
+        # not attainable cross-species. With three bare columns, this curve would read as though
+        # it were the transferred arm the paper deploys, and its monotonically falling error as
+        # contradicting that arm's trajectory: they are different arms. The label travels with the numbers.
         rows.append({"arm": "oracle_isotonic_in_species_5fold",
                      "coverage": cov, "n_retained": k,
                      "error": float(np.mean(yo[:k] != po[:k]))})

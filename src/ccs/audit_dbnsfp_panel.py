@@ -2,9 +2,9 @@
 """Reach audit of 49 dbNSFP predictors on ClinVar, with gene-clustered intervals throughout.
 
 DELIBERATELY NOT A LEADERBOARD. With 49 predictors there are 1,176 possible head-to-heads, and every
-one is exposed to the between-gene composition artefact that retracted this project's earlier
-two-scorer comparison: pooled across genes, the matched delta between AlphaMissense and REVEL read
--0.0096, and within gene it read +0.0124 -- the sign flipped. A 1,176-cell ranking table built on the
+one is exposed to the between-gene composition artefact that can reverse a
+two-scorer comparison: pooled across genes, the matched delta between AlphaMissense and REVEL reads
+-0.0096, and within gene it reads +0.0124 -- the sign flips. A 1,176-cell ranking table built on the
 pooled statistic would be 1,176 instances of a known error, and it would look far more authoritative
 than it is.
 
@@ -63,7 +63,7 @@ def _one_predictor(args):
     #
     # Materialising 2,000 draws over a 328,328-row panel is a 5 GB list of index arrays, and
     # ProcessPoolExecutor pickles every argument to every worker: 5 GB x 48 workers of serialisation
-    # before any arithmetic starts. The first attempt at this ran past ten minutes without finishing
+    # before any arithmetic starts, which runs past ten minutes without finishing
     # a single predictor. A seed plus the gene codes is a few megabytes, and every worker draws the
     # identical resamples from it, so the parallel result is bit-identical to the serial one.
     name, s, y, gene_codes, n_gene, n_boot, seed = args

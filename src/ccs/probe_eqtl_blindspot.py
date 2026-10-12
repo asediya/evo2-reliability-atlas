@@ -116,8 +116,8 @@ def main():
                 refs[name] = {"auroc": float(a), "n": int(mask.sum())}
                 print("  %-26s AUROC %.4f  (n=%d)" % (name, a, mask.sum()))
         except FileNotFoundError:
-            # Say WHICH path was missing. A bare `except Exception` here also swallowed schema and
-            # column errors as "n/a", so a wrong column name read as an absent file.
+            # Say WHICH path is missing. A bare `except Exception` here would also swallow schema and
+            # column errors as "n/a", so a wrong column name would read as an absent file.
             print("  %-26s n/a (not deposited: %s)" % (name, path))
         except Exception as e:
             print("  %-26s ERROR %s: %s" % (name, type(e).__name__, e))
@@ -141,10 +141,10 @@ def main():
         v = ("A gene-grouped linear probe of Evo 2-1B embeddings reaches AUROC %.2f, a little above "
              "zero-shot but well below the 0.651 TSS baseline." % best_probe)
     else:
-        # This branch used to say the probe "does not separate" the classes. It does separate
-        # them, by a negligible amount: the best probe's gene-grouped interval is [0.508, 0.531]
-        # and excludes 0.5. The Methods say so and this artefact contradicted them, which is the
-        # wrong way round for a deposit. Report the effect and its size.
+        # The probe does separate the classes, by a negligible amount: the best probe's
+        # gene-grouped interval is [0.508, 0.531] and excludes 0.5, as the Methods say. Saying it
+        # "does not separate" them would contradict the Methods, which is the wrong way round for a
+        # deposit. Report the effect and its size.
         _ci = res[max(res, key=lambda k: res[k]["auroc_gene_grouped"])]["ci"]
         v = ("A gene-grouped linear probe of Evo 2-1B embeddings separates causal from "
              "non-causal eQTLs by a negligible margin: best AUROC %.2f, 95%% CI [%.3f, %.3f]. "

@@ -91,13 +91,13 @@ def main():
         vid.append("%s:%s:%d:%s>%s" % (r.assay, r.chrom, r.pos, r.ref, r.alt))
         refs.append(win)
         alts.append(win[:HALF] + r.alt + win[HALF + 1:])
-        # HALF, not HALF + 1. This read "1-based, matching the atlas convention", and the atlas
-        # convention does not transfer: the atlas scoring windows are 1,002 bp with the variant at
+        # HALF, not HALF + 1. A "1-based, matching the atlas convention" offset does not
+        # transfer: the atlas scoring windows are 1,002 bp with the variant at
         # index 501, while these are genuinely 1,001 bp (HALF left, the variant, HALF right) with
-        # the variant at index HALF = 500. Carrying 501 over made var_off point one base to the
-        # RIGHT of the substitution, so the scorer compared a flanking base against itself and
-        # every delta came out exactly zero. The two window constructions share the label
-        # "1,001 bp" and differ by one base; that is the whole bug.
+        # the variant at index HALF = 500. Carrying 501 over would make var_off point one base to the
+        # RIGHT of the substitution, so the scorer would compare a flanking base against itself and
+        # every delta would come out exactly zero. The two window constructions share the label
+        # "1,001 bp" and differ by one base.
         offs.append(HALF)                           # 0-based index of the variant in the window
         labs.append(r.label)
         cls.append(r.variant_class)

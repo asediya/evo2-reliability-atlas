@@ -33,8 +33,8 @@ from .audit import (AuditReport, PairAudit, ReachReport, ReachScorer, Scorer, Sc
                     missingness_auroc, must_answer_auroc, reach_audit, wilson_interval)
 from .baseline import sequence_blind
 # docs/api.md says "import everything from the top level" and names these
-# four, and `from glmtrust import wilson_interval` raised ImportError. The documentation is right
-# about what a caller should be able to reach; the package was the thing that was wrong.
+# four, so `from glmtrust import wilson_interval` must work: the documentation defines
+# what a caller should be able to reach.
 from .delong import delong_auroc_variance, delong_delta_ci, midrank
 from .calibration import (Calibrator, IsotonicCalibrator, PlattCalibrator,
                           cross_conformal_calibrate, make_calibrator)

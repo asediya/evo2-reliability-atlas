@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """Re-run every CPU analysis registered in CASES and check its artefact is byte-reproducible.
 
-This project has twice shipped a number that came from an artefact older than its own input, and
-both times every other gate passed because they read the stale file rather than rebuilding it. The
+A number can come from an artefact older than its own input while every other gate passes,
+because those gates read the stale file rather than rebuilding it. The
 defence is to rebuild and compare, not to inspect.
 
 Each analysis is re-run into a temporary copy of its output, then compared with what is on disk. A
@@ -81,8 +81,8 @@ def main():
                 if r.returncode != 0:
                     blob = (r.stdout or "") + "\n" + (r.stderr or "")
                     tail = [ln.strip() for ln in blob.splitlines() if ln.strip()]
-                    # The old form was `... % r.stderr.strip().splitlines()[-1:] or ""`, which printed a
-                    # LIST (and "[]" whenever stderr was empty), hiding the reason on four of six cases.
+                    # Not `... % r.stderr.strip().splitlines()[-1:] or ""`, which prints a
+                    # LIST (and "[]" whenever stderr is empty) and hides the reason.
                     why = tail[-1][:100] if tail else "no output"
                     if any(m in blob for m in MISSING_INPUT):
                         print("  NEEDS %-46s cannot re-run: %s" % (art, why))

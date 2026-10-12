@@ -9,8 +9,8 @@ already reports.
 Compares against reports/fig5_reach.json, the tracked recompute-layer artifact. NOT against
 COMPILED_RESULTS.md, which is not canonical.
 
-A VACUOUS PASS IS A FAILURE. The first version of this script assumed the wrong JSON shape, matched
-no keys, and printed "CLEAN -- every published reach number still reproduces" having checked
+A VACUOUS PASS IS A FAILURE. A script that assumes the wrong JSON shape matches
+no keys and can print "CLEAN -- every published reach number still reproduces" having checked
 exactly zero quantities. Every check below therefore has to be seen to fire: the script exits
 non-zero unless it verified EXACTLY EXPECT_CHECKS quantities across all nine species -- an exact
 count, not a floor, so that a quantity vanishing from the artifact fails the gate rather than

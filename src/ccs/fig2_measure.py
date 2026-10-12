@@ -12,7 +12,7 @@ through this module; panel_a, panel_b and panel_headtohead are not called.
     c  the head-to-head the section heading claims: per species, Evo 2 minus GERP on the
        variants all three scores cover, at both readouts, each with a two-sample locus-bootstrap
        interval, and the species mean with its t interval.
-  supplementary plate (panel_c, panel_d) -- the two panels the measurement plate used to carry
+  supplementary plate (panel_c, panel_d)
     a  no detectable grading with divergence -- with the interval on every point and the
        pooled band behind them.
     b  the conservation plane -- GERP against Evo 2 at 1,001 bp -- with the paired interval on
@@ -255,9 +255,9 @@ def panel_c(ax):
     for r in F:
         grp.setdefault(r["divergence_my"], []).append(r)
     # CATEGORICAL SLOTS, NOT A NUMERIC AXIS. The nine species sit at three divergences only -- human
-    # 0 My, seven mammals 92 My, chicken 319 My -- and on a numeric divergence axis the seven had to be
-    # dodged across +/-45 My of x that carried no divergence, which read as seven different ages. Each
-    # divergence is now a slot of its own, the seven mammals spread evenly inside theirs, and the axis
+    # 0 My, seven mammals 92 My, chicken 319 My -- and on a numeric divergence axis the seven would have
+    # to be dodged across +/-45 My of x that carries no divergence, which reads as seven different ages.
+    # Each divergence is a slot of its own, the seven mammals spread evenly inside theirs, and the axis
     # line is broken between slots so that no distance along it can be read as time.
     slots = sorted(grp)
     SLOT_W = {my: (0.0 if len(grp[my]) == 1 else 0.42 * (len(grp[my]) - 1)) for my in slots}
@@ -268,12 +268,12 @@ def panel_c(ax):
     for my, rows in grp.items():
         # ALPHABETICAL, not by descending AUROC. Seven of the nine species -- cattle, dog, sheep,
         # goat, horse, cat and pig -- share one divergence, 92 My. They have to be dodged apart or
-        # their intervals overlap into one bar, but the dodge ORDER is arbitrary and the old one
-        # was -auroc, which laid them out 0.974, 0.970, 0.962, 0.959, 0.941, 0.890, 0.863 from left
-        # to right across +/-45 My of fabricated x. The panel therefore DREW a clean monotone fall
+        # their intervals overlap into one bar, but the dodge ORDER is arbitrary, and ordering by
+        # -auroc would lay them out 0.974, 0.970, 0.962, 0.959, 0.941, 0.890, 0.863 from left
+        # to right across +/-45 My of fabricated x. The panel would then DRAW a clean monotone fall
         # of discrimination with divergence -- which is exactly the grading its own Spearman test
         # reports as absent (rho = -0.365, p = 0.334, n = 9), stated in the legend two lines later.
-        # A reader who looks at the picture and a reader who reads the test got opposite answers.
+        # A reader who looks at the picture and a reader who reads the test would get opposite answers.
         # Alphabetical gives 0.890, 0.974, 0.970, 0.959, 0.941, 0.863, 0.962: visibly non-monotone,
         # so no trend can be read off an ordering that carries no information.
         rows = sorted(rows, key=lambda r: r["species"])
@@ -308,8 +308,8 @@ def panel_c(ax):
                 color=SG.INK, clip_on=False)
     ax.set_xlabel("Divergence from human (TimeTree), one slot per divergence", fontsize=SG.AXIS,
                   labelpad=16.0)
-    # The default labelpad: this panel was pulled in to 1.0 on the measurement plate, where panel
-    # b's nine-species key ran up to its y-label. On the supplementary plate nothing sits to its left.
+    # The default labelpad: on the supplementary plate nothing sits to this panel's left, so the
+    # y-label needs no pulled-in pad.
     ax.set_ylabel("AUROC, 8,192 bp", fontsize=SG.AXIS)
     SG.spines(ax)
     # The broken x axis: one spine segment under each slot, none between them.
@@ -352,19 +352,19 @@ def panel_d(axP, axS):
     # THE READOUT MUST MATCH THE COMPARISON. The deposited GERP block in fig2_data.json is computed
     # at the 1,001-bp single-position readout -- verified against every one of the nine species to
     # four decimals -- so the strip beside this plane is a 1,001-bp comparison. Drawing the cloud at
-    # 8,192 bp put two different readouts in one panel under one axis label.
+    # 8,192 bp would put two different readouts in one panel under one axis label.
     y = 100.0 * m.groupby("species").evo2_1001.rank(method="average", pct=True).to_numpy()
     lab = m.label.to_numpy()
     XL, XH, YL, YH = 0.0, 100.0, 0.0, 100.0
     k = (x >= XL) & (x <= XH) & (y >= YL) & (y <= YH)
     # The hexbin's greys are TRUNCATED at [0.08, 0.45] of the ramp instead of running to black.
     # The catalogued alleles drawn on top are S.PATHO, whose relative luminance is 0.158 -- which
-    # sat INSIDE the full ramp's range, 1.04 against Greys(0.65). In greyscale a single catalogued
-    # allele was invisible over any mid-density cell, which is the one comparison this panel exists
-    # to make. Truncating is necessary but NOT sufficient: the marks carry alpha .40, so a lone
+    # sits INSIDE the full ramp's range, 1.04 against Greys(0.65). In greyscale a single catalogued
+    # allele would be invisible over any mid-density cell, which is the one comparison this panel exists
+    # to make. Truncating is necessary but NOT sufficient: at alpha .40 a lone
     # allele composites over white to (230,180,178), L 0.527 -- still inside the hexbin's rendered
-    # 0.918..0.439 band: 1.67 against a count-1 cell and 1.18 against the densest. The 2.05 this
-    # comment used to claim was measured on opaque #C1443E, which is not what prints. Shape is the
+    # 0.918..0.439 band: 1.67 against a count-1 cell and 1.18 against the densest. A contrast of 2.05
+    # measured on opaque #C1443E does not apply, because opaque is not what prints. Shape is the
     # fix -- an open ring is never a filled hexagon -- and dropping alpha takes the worst pair to
     # 2.35 and the count-1 pair to 4.63 without adding a hue.
     _greys = plt.get_cmap("Greys")
@@ -717,12 +717,12 @@ def panel_composition(ax):
     / 2, which atlas_skill() asserts, so the gap between each pair of bars here IS the black square
     in panel a, read in another unit.
 
-    This panel used to be an area-true mosaic, a column per species with width proportional to its
-    panel size and the coding share as a solid band inside it. Width made the three smallest panels
-    -- goat (99 variants), chicken (308) and pig (396) -- 0.9 to 3.6 % of the axis, too narrow to
-    carry a label, so the plate stated the headline contrast for six species and left the reader to
-    guess it for three. Panel size is printed in panel b ("positives/negatives" per row) and belongs
-    there; here every species gets the same width and every share is printed.
+    This panel is not an area-true mosaic (a column per species with width proportional to its
+    panel size and the coding share as a solid band inside it). Width would make the three smallest
+    panels -- goat (99 variants), chicken (308) and pig (396) -- 0.9 to 3.6 % of the axis, too narrow
+    to carry a label, so the plate would state the headline contrast for six species and leave the
+    reader to guess it for three. Panel size is printed in panel b ("positives/negatives" per row) and
+    belongs there; here every species gets the same width and every share is printed.
 
     Colour is the CLASS, in the pair panel b uses (positives ember, negatives slate). The two measure
     1.15:1 in greyscale as opaque fills, so the negatives are drawn at 0.55 alpha, 2.4:1 apart

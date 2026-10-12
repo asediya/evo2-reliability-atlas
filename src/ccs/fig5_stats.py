@@ -199,11 +199,11 @@ def main():
         auc_cov = float(roc_auc_score(y[fin], gerp[fin]))
         # ...and on the FULL panel under the correct abstention null.
         #
-        # An earlier version imputed no-calls to the covered median and called that "uninformative".
-        # It is not: 91-100% of no-calls are BENIGN in every species but human, and the covered median
+        # Imputing no-calls to the covered median is not "uninformative".
+        # 91-100% of no-calls are BENIGN in every species but human, and the covered median
         # sits near the 55th percentile of covered benigns, so an imputed variant lands almost exactly
         # where a benign belongs. That REWARDS GERP for having class-shaped holes -- the very thing
-        # panel a indicts -- and drew horse's true cost of +0.245 as +0.010, cattle's as a GAIN.
+        # panel a indicts -- and draws horse's true cost of +0.245 as +0.010, cattle's as a GAIN.
         #
         # The honest null: a pair touching a no-call is uninformative and contributes 0.5. AUROC is the
         # probability a random pathogenic outranks a random benign, so that is a closed form and needs
@@ -237,8 +237,8 @@ def main():
             "reach_neg_ci": _wilson(k_neg, n_neg), "reach_pos_ci": _wilson(k_pos, n_pos),
             "reach_all": float(fin.mean()), "nocall_rate": float(1 - fin.mean()),
             "class_gap": reach_pos - reach_neg,
-            # Newcombe CI on the gap. Panel a colours a plate red only when this EXCLUDES zero -- an
-            # earlier version reddened any gap > 0.02, which flagged goat (+0.089, CI [-0.17,+0.27] on
+            # Newcombe CI on the gap. Panel a colours a plate red only when this EXCLUDES zero -- a
+            # fixed cut such as gap > 0.02 would flag goat (+0.089, CI [-0.17,+0.27] on
             # 9 positives) in the same alarm colour as horse (+0.489, CI [+0.42,+0.55]).
             "class_gap_ci": _newcombe(k_pos, n_pos, k_neg, n_neg),
             "auroc_gerp_covered": auc_cov, "auroc_gerp_full_abstain": auc_full,
@@ -273,9 +273,9 @@ def main():
         """PAIRED permutation on the per-species difference.
 
         OLS is linear, so slope(a) - slope(b) IS slope(a - b): the contrast is the slope of the
-        per-species difference, and the null to test is that this slope is zero. An earlier version
-        permuted the METHOD LABEL within each species, which is wrong here -- swapping a and b leaves
-        |a-b| unchanged and only flips its sign, so it tests a different null and gave p = 0.208
+        per-species difference, and the null to test is that this slope is zero. Permuting
+        the METHOD LABEL within each species is wrong here -- swapping a and b leaves
+        |a-b| unchanged and only flips its sign, so it tests a different null and gives p = 0.208
         against the correct 0.013.
         """
         d = a - b
@@ -299,8 +299,8 @@ def main():
         bands.append(k_ * gx + c_)
     bands = np.array(bands)
 
-    # Species-resampled CI on the CONTRAST ITSELF. Panel c used to draw only the leave-one-species-out
-    # range as its uncertainty mark; a jackknife spread is not a confidence interval and that wedge is
+    # Species-resampled CI on the CONTRAST ITSELF. Panel c does not use the leave-one-species-out
+    # range as its uncertainty mark: a jackknife spread is not a confidence interval and that wedge is
     # ~4x too narrow, while reading as the universal grammar of a confidence band. The nine species are
     # the resampling unit.
     cboot = []
@@ -352,7 +352,7 @@ def main():
                             "_note": "pooled over every variant BOTH methods can score"}
 
     # ---------------- REACH IS NOT UNIQUE TO Evo2 ----------------
-    # The subtitle used to say full reach is what Evo2 "uniquely offers". It is not: it is a property of
+    # Full reach is not something Evo2 "uniquely offers": it is a property of
     # DNA language models as a class. Nucleotide Transformer scores the same GERP-blind variants, and it
     # does so at near-chance accuracy -- which is the figure's own title, not a concession. Measured here
     # so the claim cannot be asserted from memory.
@@ -376,9 +376,9 @@ def main():
                                  "AUROC is 0.595 (COMPILED_RESULTS), which is the point of the title.")}
 
     # ---------------- consistency with Fig 2F ----------------
-    # The subtitle used to say Evo2 "loses outright twice", counting horse's -0.033 (CI spans zero) as a
-    # loss. Fig 2F already published horse as a tie. Read Fig 2's own verdicts so the two figures cannot
-    # disagree about the same nine numbers.
+    # Evo2 does not "lose outright twice": counting horse's -0.033 (CI spans zero) as a
+    # loss would contradict Fig 2F, which reports horse as a tie. Read Fig 2's own verdicts so the two
+    # figures cannot disagree about the same nine numbers.
     if os.path.exists("reports/fig2_data.json"):
         f2 = json.load(open("reports/fig2_data.json", encoding="utf-8"))["gerp"]
         wins = [s for s, v in f2.items() if v["verdict"] != "ns" and v["delta"] > 0]
@@ -398,11 +398,11 @@ def main():
     m = w.join(l, on="species", how="inner").sort("n")
 
     # The Evo 2 column must be measured on the SAME variants as the baselines, because Table S8's
-    # caption says it is. cnn_baseline.py never computed it: it looked the value up from
-    # reports/local_bootstrap_ci.parquet, which is the FULL panel. For six species the two sets
-    # coincide and the numbers agreed, which hid the substitution; for the two that lose variants to
-    # the 8,192-bp window requirement they did not -- horse 0.8805 against 0.8825, cat 0.8465 against
-    # 0.8476 -- so the table asserted like-for-like while carrying a value from a different panel.
+    # caption says it is. cnn_baseline.py does not compute it, and
+    # reports/local_bootstrap_ci.parquet holds the FULL panel. For six species the two sets
+    # coincide and the numbers agree, which would hide a substitution; for the two that lose variants to
+    # the 8,192-bp window requirement they do not -- horse 0.8805 against 0.8825, cat 0.8465 against
+    # 0.8476 -- so a value looked up there would assert like-for-like while coming from a different panel.
     #
     # fig2_data's forest IS that reduced set: its n matches the baseline n in all eight species. Its
     # 1,001-bp value is therefore the like-for-like number. The n agreement is asserted rather than
@@ -471,7 +471,7 @@ def main():
         _gd.append(float(roc_auc_score(yy, ge[fg][s_])) - float(roc_auc_score(yy, ev_v[fg][s_])))
     esm_v["delta_gerp_matched_ci"] = [float(np.percentile(_gd, 2.5)), float(np.percentile(_gd, 97.5))]
     # 912 ESM-scored vs the 752 the ledger tabulates as missense: the evaluability criterion and the
-    # evaluation set are not the same set, and the caption used to assert they were.
+    # evaluation set are not the same set, and the caption must not assert they are.
     if os.path.exists("data/processed/consequence_human.parquet"):
         _mis = set(pl.read_parquet("data/processed/consequence_human.parquet")
                    .filter(pl.col("consequence").str.contains("missense"))["variant_id"].to_list())
@@ -487,8 +487,8 @@ def main():
     esm_v["delta_esm_minus_evo2"] = esm_v["auroc_esm"] - esm_v["auroc_evo2"]
     esm_v["delta_ci"] = [float(np.percentile(dd, 2.5)), float(np.percentile(dd, 97.5))]
     # THE CENSUS. Counted from the deposited CONSEQUENCE annotation, not from which ESM files happen to
-    # exist. An earlier version counted data/processed/scores/esm/*.parquet and reported "1 of 9", which
-    # conflated "ESM was never run here" with "ESM cannot be run here" -- dog and cattle both carry
+    # exist. Counting data/processed/scores/esm/*.parquet would report "1 of 9", which
+    # conflates "ESM was never run here" with "ESM cannot be run here" -- dog and cattle both carry
     # enough missense of both classes to be evaluable. The honest number is 3 of 9.
     #
     # THREE states, not two. A MISSING annotation file is not a measured zero: an `npos = nneg = 0`

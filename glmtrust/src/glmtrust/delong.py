@@ -8,9 +8,7 @@ not get used on the panels where the question matters most.
 
 DeLong's method gives the variance of an AUROC difference in closed form, using the structural
 components of the Mann-Whitney statistic, and needs a fixed three sorts per scorer rather than one
-per bootstrap draw. (An earlier version of this sentence said "one sort per scorer"; it is three --
-midrank over the positives, over the negatives, and over the pooled sample. The complexity claim,
-O(n log n) against DeLong's original O(n^2), is unaffected; only the constant was misstated.)
+per bootstrap draw: midrank over the positives, over the negatives, and over the pooled sample.
 The implementation is the O(n log n) form of Sun & Xu (2014) rather than DeLong's original O(n^2),
 which would itself be too slow here.
 
@@ -137,10 +135,10 @@ def delong_delta_ci(labels, score_a, score_b, alpha: float = 0.05):
     L = np.array([1.0, -1.0])
     var = float(L @ cov @ L)
 
-    # NaN and zero are NOT the same condition, and collapsing them was a real defect. When a class
+    # NaN and zero are NOT the same condition, and collapsing them is a real defect. When a class
     # holds a single member, np.cov(ddof=1) divides by zero and the whole covariance matrix is NaN --
-    # the variance is UNDEFINED. The earlier guard tested `var > 0 and isfinite(var)`, which is False
-    # for NaN exactly as it is for 0.0, so an undefined variance returned the zero-width interval
+    # the variance is UNDEFINED. A guard of `var > 0 and isfinite(var)` is False
+    # for NaN exactly as it is for 0.0, so an undefined variance would return the zero-width interval
     # (delta, delta): a claim of infinite precision where nothing at all is known. Zero variance is a
     # real answer (identical scorers have no sampling spread); NaN is the absence of one.
     if math.isnan(var):
@@ -158,7 +156,7 @@ def must_answer_placements(labels, score):
 
     The must-answer AUROC is usually presented as a closed form in the reach, which gives a point
     estimate but no interval, so the decision-relevant comparison -- which scorer is better over the
-    whole panel it will actually be run on -- had no inference attached to it.
+    whole panel it will actually be run on -- is left with no inference attached to it.
 
     It does have one, because must-answer AUROC is still a Mann-Whitney statistic. Each
     (positive, negative) pair contributes 1 if correctly ordered, and 1/2 if it is tied OR if either

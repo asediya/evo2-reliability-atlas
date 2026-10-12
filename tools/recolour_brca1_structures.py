@@ -79,9 +79,9 @@ def recolour(path_in, path_out, dry=False):
 
     # THE RENDERS ARE SHADED, so a flat nearest-colour match is not enough: a pixel in shadow is
     # the ramp colour scaled down by illumination and can sit 60+ sRGB units from the flat locus.
-    # Matching on distance alone caught only 16-42 % of content and would have produced a two-tone
-    # panel -- lit surfaces on the new ramp, shaded ones still on the old -- which is worse than
-    # leaving the figure as it was. So the model is MULTIPLICATIVE: solve
+    # Matching on distance alone catches only 16-42 % of content and would produce a two-tone
+    # panel -- lit surfaces on the target ramp, shaded ones still on the source -- which is worse than
+    # leaving the figure as it is. So the model is MULTIPLICATIVE: solve
     #     px  ~=  k * src(t),        k in [0, 1.25]
     # for both the ramp position t and the shade k, then re-emit k * dst(t), which carries the
     # illumination through unchanged. For a fixed t the optimal k is the projection
@@ -122,10 +122,10 @@ def recolour(path_in, path_out, dry=False):
     print("  %-22s content %7d px | remapped %6.2f%% | untouched %6.2f%% | crop box stable %s"
           % (os.path.basename(path_in), int(vis.sum()), pct, 100 - pct, b_in == b_out))
     if not dry:
-        # Written through a temp file and renamed. An earlier run was interrupted between taking
-        # the backup and writing the output, which left one panel with a backup on disk and its
-        # original still live -- and the "backup exists, skip" guard below then declared that panel
-        # already done. os.replace is atomic on POSIX, so the pair is now all-or-nothing.
+        # Written through a temp file and renamed. A run interrupted between taking
+        # the backup and writing the output would leave a panel with a backup on disk and its
+        # original still live -- and the "backup exists, skip" guard below would then declare that
+        # panel already done. os.replace is atomic on POSIX, so the pair is all-or-nothing.
         tmp = path_out + ".tmp.png"
         Image.fromarray(im2, mode="RGBA").save(tmp)
         os.replace(tmp, path_out)

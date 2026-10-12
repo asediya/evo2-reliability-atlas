@@ -53,12 +53,12 @@ SELF_CONTAINED = [
 # Reads the undeposited raw tree. Expected to stop at a missing path from a clone.
 NEEDS_DATA = [
     # Reads BUILT figure PDFs, which appear only after a builder has run, so a clean extraction
-    # has none. It used to sit in SELF_CONTAINED, where it globbed an absent directory, printed
-    # "every panel title clears 6.0 pt" over zero files and was recorded as PASS. It now exits 3
+    # has none. In SELF_CONTAINED it would glob an absent directory, print
+    # "every panel title clears 6.0 pt" over zero files and be recorded as PASS. It exits 3
     # on an empty set, which belongs here as NODATA rather than as a phantom pass.
     "tools/check_figure_clearance.py",
-    # Examined zero species from a clean extraction and still exited 0, which the runner recorded
-    # as a PASS over no data. It now exits 3 when it finds no consequence table.
+    # Examines zero species from a clean extraction; it exits 3 when it finds no consequence
+    # table, so the runner cannot record a PASS over no data.
     "tools/verify_species_gene_structure.py",
     "tools/verify_from_data.py",
     "tools/verify_bh_seed_stability.py",
@@ -110,8 +110,8 @@ FAILURE_SIGNALS = (
 
 
 # A gate that must be told what to enforce is not a gate until it is told. check_figure_clearance.py
-# PRINTS the smallest live type it measures and reaches its `return 1` only under --min-font, which
-# the runner never passed -- so it was recorded as PASS whatever it measured, and said so itself:
+# PRINTS the smallest live type it measures and reaches its `return 1` only under --min-font;
+# without it the runner would record PASS whatever it measured, as the tool itself says:
 # "Pass --min-font PT to turn the column above into a gate." 7.0 pt is this paper's shipped floor.
 GATE_ARGS = {
     "tools/check_figure_clearance.py": ["--min-font", "7.0"],

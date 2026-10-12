@@ -145,8 +145,8 @@ def main():
                    "abs_dev_eqtl": abs(c["global_auroc"] - 0.5),
                    "n": c.get("n")}
     # The coding deviation must be measured at the SAME readout as the eQTL one it is divided by.
-    # It was taken from coding_ref["Evo2-40B"] = 0.943, which is the 8,192-bp mean-log-likelihood
-    # figure, while the eQTL AUROC above is the 1,001-bp single-position one. That mismatch printed a
+    # coding_ref["Evo2-40B"] = 0.943 is the 8,192-bp mean-log-likelihood
+    # figure, while the eQTL AUROC above is the 1,001-bp single-position one. That mismatch would print a
     # 37-fold ratio on the figure -- a readout-mismatched comparison inside the one control whose
     # argument is that readouts must be matched, and contradicting the manuscript's 31-fold. The
     # matched coding reference is the nine-species 1,001-bp mean from the deposited table layer.
@@ -163,11 +163,10 @@ def main():
     # ---------- 6. ROBUSTNESS: is context or readout the bottleneck? (from deposited D_robustness) ----------
     cells = {(c["window"], c["readout"]): c["auroc"] for c in D0["D_robustness"]["cells"]}
     rob = {"cells": D0["D_robustness"]["cells"], "untested": D0["D_robustness"].get("untested", [])}
-    # Each factor is now varied on its own. Previously the window arm compared (8192, single-pos)
-    # against (2048, single-pos) and the readout arm compared (8192, mean-LL) against
-    # (8192, single-pos) -- but the cell then labelled 8192/single-pos is scored on 1,002-bp windows
-    # (data/interim/eqtl_windows.parquet), so the window arm ran in the wrong direction and the
-    # readout arm moved the window at the same time. The matched pairs below fix both.
+    # Each factor is varied on its own. The cell labelled 8192/single-pos is scored on 1,002-bp
+    # windows (data/interim/eqtl_windows.parquet), so comparing it with (2048, single-pos) would run
+    # the window arm in the wrong direction, and comparing (8192, mean-LL) with it would make the
+    # readout arm move the window at the same time. The matched pairs below avoid both.
     if (1002, "single-pos") in cells and (2048, "single-pos") in cells:
         rob["window_effect_fixed_readout"] = abs(cells[(2048, "single-pos")] - cells[(1002, "single-pos")])
         rob["window_from"], rob["window_to"] = 1002, 2048

@@ -2,7 +2,7 @@
 """Assemble the negative-controls table: the checks that would have invalidated us and did not.
 
 Scattered through the work are controls designed to find an effect whose presence would break a
-claim. Each is currently a clause inside the subsection it belongs to, where a reader meets it once
+claim. In the text each is a clause inside the subsection it belongs to, where a reader meets it once
 and cannot see the pattern. Collected into one table they say something no individual result says:
 that the time went into trying to falsify the paper.
 
@@ -68,12 +68,12 @@ def main():
         % (m["models"]["1b"]["ref_likelihood_alone"], m["models"]["7b"]["ref_likelihood_alone"]),
         "analyses/results/mfass_evo2_vs_specialists.json"))
 
-    # This row previously reported "TSS proximity falls from 0.6510 to 0.5165 once matched" and sat
-    # among the passes. Both numbers are right and the conclusion drawn from them was not. The
+    # This row is not a pass. "TSS proximity falls from 0.6510 to 0.5165 once matched" is right on
+    # both numbers, but the conclusion that the control passed is not. The
     # artefact carries its own falsification criterion -- "If the matching worked, the positional
     # baseline MUST fall to chance" -- and records `tss_baseline_collapsed_to_chance: false` for
     # BOTH arms. 0.5165 is not chance: its interval excludes 0.5. Reporting the point estimate alone
-    # let a control that failed its written criterion be read as one that passed. The row now states
+    # would let a control that failed its written criterion be read as one that passed. The row states
     # the criterion, both arms, both intervals, and what does and does not survive.
     e = load("analyses/results/eqtl_tss_matched.json")
     a1, a2 = e["arm1_within_egene_plus_distance"], e["arm2_within_chromosome_with_caliper"]
@@ -160,10 +160,10 @@ def main():
         rows.append((
             "Interval stability at 200,000 resamples",
             "The published intervals are Monte Carlo noise at the precision printed",
-            # The maximum was taken over the splicing block alone and printed to five decimals,
-            # which reported "0.00007" for a value of 7.073e-05 -- above the figure quoted -- and
-            # silently dropped clinvar_by_consequence, whose 3' UTR cell is larger still. Both
-            # blocks are certified by this row, so both belong in the maximum.
+            # The maximum covers both blocks, at full precision: over the splicing block alone and
+            # printed to five decimals it would report "0.00007" for a value of 7.073e-05 -- above the
+            # figure quoted -- and silently drop clinvar_by_consequence, whose 3' UTR cell is larger
+            # still. Both blocks are certified by this row, so both belong in the maximum.
             ("largest endpoint standard error %.2e, in %s; one skewed cell needs BCa"
              % (max(mc.values()), max(mc, key=mc.get))
              if _key == "mc_se" else

@@ -159,11 +159,11 @@ def _verdicts(rep):
                         "%+.4f AUROC over the missingness pattern alone (%s %s), so an accuracy "
                         "quoted for this scorer is carried by where it answers."
                         % (s.lex_gain, _level(rep), _ci(s.lex_gain_ci, 4))))
-        # These two were missing, and their absence was an honesty defect rather than an omission:
-        # with none of the three conditions above met, the page fell through to a banner asserting
-        # that no reach gap and no penalty were material -- two things it had never checked. The
-        # missense card shipped saying "no must-answer penalty is material" directly above a
-        # reported penalty of 0.0399 and a class gap whose interval excluded zero.
+        # These two branches are a matter of honesty, not completeness:
+        # with none of the three conditions above met, the page would fall through to a banner asserting
+        # that no reach gap and no penalty are material -- two things it has not checked -- and a
+        # missense card could say "no must-answer penalty is material" directly above a
+        # reported penalty of 0.0399 and a class gap whose interval excludes zero.
         elif s.reach_is_class_dependent:
             out.append(("%s reaches the two classes unequally" % s.name,
                         "It scores %.1f%% of positives against %.1f%% of negatives (gap %+.3f, "

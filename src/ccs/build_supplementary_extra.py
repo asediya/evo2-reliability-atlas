@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 """Tables S14, S15 and the Figure S1 legend, appended to reports/supplementary_tables.md.
 
-WHY THIS FILE EXISTS. These three blocks were written by hand into supplementary_tables.md in
-commits 4235a15 and 77f8e88, and were destroyed in e64e7b8 when that file was regenerated from
-build_supplementary.py, a script that had never known how to produce them. The result was a
-manuscript citing Tables S14 and S15 three times, and Figure S1 five times, against a supplement
-that ended at S13 and had no figure legend at all.
+WHY THIS FILE EXISTS. build_supplementary.py regenerates supplementary_tables.md and does not
+produce these three blocks, so blocks written into that file by hand are destroyed by the next
+regeneration, leaving a manuscript that cites Tables S14 and S15 three times, and Figure S1 five
+times, against a supplement that ends at S13 with no figure legend at all.
 
 Anything not produced by a script does not survive the next regeneration, so these are recomputed
 from reports/fig4_pervariant.parquet rather than restored as text.
@@ -203,16 +202,16 @@ def per_species_operating_point():
                    % (s.capitalize(), format(len(y), ","), tp + fn, tp / (tp + fn), sci,
                       tn / (tn + fp) if tn + fp else float("nan"),
                       tp / (tp + fp) if tp + fp else float("nan")))
-    # this summary row used to give ONLY tp_nh/pos_nh, the positive-count-weighted mean,
-    # unlabelled, in a paper whose primary aggregation is the unweighted species mean. Give both, and
-    # say which is which, so the row cannot be read as a species summary.
+    # tp_nh/pos_nh alone is the positive-count-weighted mean, and unlabelled it would be read as a
+    # species summary in a paper whose primary aggregation is the unweighted species mean. Give
+    # both, and say which is which.
     sens_macro = float(np.mean(sens_nh))
     sens_weighted = tp_nh / pos_nh
     out.append("| **Eight non-human (species mean)** | | **%d** | **%.3f** | | | |"
                % (pos_nh, sens_macro))
     out.append("| **Eight non-human (positive-weighted)** | | **%d** | **%.3f** | | | |"
                % (pos_nh, sens_weighted))
-    # the closing sentence used to pair the 8,192-bp macro AUROC with a 1,001-bp
+    # the closing sentence must not pair the 8,192-bp macro AUROC with a 1,001-bp
     # sensitivity as properties of one predictor, which is the readout conflation this paper's whole
     # argument forbids. Name the readout on each figure.
     out.append("\nSpecificity is high everywhere and sensitivity is not. Across the eight "
@@ -334,19 +333,19 @@ def readout_decomposition():
     aggf = mac["auroc"]["d_cen1001"]["mean"] - mac["auroc"]["A_1001_single"]["mean"]  # aggregation-first
     ctxs = mac["auroc"]["d_full_8192"]["mean"] - mac["auroc"]["d_cen1001"]["mean"]     # context second
     # Factorial interaction: total minus the two MAIN effects, each measured from the single-position
-    # 1-kb cell (aggregation alone = aggf, context alone = ct). The previous expression subtracted a
-    # main effect from a path term and returned +0.0349, which is the difference between the two
-    # single-factor conditions, not an interaction, and carried the opposite sign.
+    # 1-kb cell (aggregation alone = aggf, context alone = ct). Subtracting a main effect from a
+    # path term would return +0.0349, which is the difference between the two
+    # single-factor conditions, not an interaction, and carries the opposite sign.
     #
     # All four cells must come off the 2x2 design itself: A_1001_single, d_single_8192, d_cen1001 and
     # d_full_8192. B_8192_mean is NOT one of them. It is the deposited 8,192-bp score, carried here
     # only as the correctness check below, and it sits 0.0008 above d_full_8192 on the macro scale.
-    # Taking the total from B while the main effects come from the d_ cells printed a total of +0.0668
-    # beside an interaction of -0.0391 that no single basis produces -- the two disagree by exactly
-    # that 0.0008. The justification recorded here for doing so, that `tt["mean"]` is a macro mean of
-    # per-species differences while the others are differences of macro cell means, is false: on this
+    # Taking the total from B while the main effects come from the d_ cells would print a total of
+    # +0.0668 beside an interaction of -0.0391 that no single basis produces -- the two disagree by
+    # exactly that 0.0008. Nor does it help that `tt["mean"]` is a macro mean of
+    # per-species differences while the others are differences of macro cell means: on this
     # artefact the two agree to 5.6e-17, because the per-species panels enter the macro mean unweighted.
-    # The difference was never the aggregation. It was the cell.
+    # The difference is the cell, not the aggregation.
     _A = mac["auroc"]["A_1001_single"]["mean"]
     inter = ((mac["auroc"]["d_full_8192"]["mean"] - _A)
              - (mac["auroc"]["d_cen1001"]["mean"] - _A)
@@ -510,9 +509,9 @@ def calibration_comparison():
            "Expected calibration error on the operating-point estimator (`reports/fig4_matrix.json`): "
            "`trivial` is the two-parameter global sigmoid, `transfer` the leave-one-species-out isotonic "
            "map (the paper's method), `oracle` in-species calibration. Under this estimator transfer is "
-           # these three were typed as 0.0569/0.0564/+0.0005 and are the mean of the
-           # column printed directly beneath them, which averages to 0.0560/0.0553/+0.0007. Derive
-           # them so the caption cannot disagree with its own table.
+           # these three are the mean of the column printed directly beneath them
+           # (0.0560/0.0553/+0.0007). Derive them rather than type them, so the caption
+           # cannot disagree with its own table.
            "worse than the trivial sigmoid in six of nine species (macro transfer %.4f against trivial "
            "%.4f, a difference of %+.4f) and better in the other three (sheep, cattle, human), which "
            % (sum(r["ece_transfer"] for r in MX.values()) / len(MX),

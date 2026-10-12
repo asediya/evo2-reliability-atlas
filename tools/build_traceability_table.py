@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Turn the traceability map into a validated, machine-checkable table.
 
-The map in logs/number_traceability.json was written by reading agents. Generating checks straight
+The map in logs/number_traceability.json was compiled by reading the manuscript. Generating checks straight
 from it would assert whatever the map claims, which is verification theatre: a check that agrees with
 its own source proves nothing. So every entry is RESOLVED against the artifact it names and compared
 with the value as the manuscript prints it. Only entries that resolve AND agree become checks.
@@ -131,9 +131,9 @@ def aggregate(obj, fn, expr):
 def walk(obj, key):
     """Resolve one prose-flavoured key path, trying progressively looser readings of it.
 
-    Order matters, and the literal reading comes first. An earlier version normalised
-    unconditionally, splitting on "and" and commas before trying anything, and it BROKE keys that
-    had worked: the resolved count fell from 206 to 192. A normalisation that can only help is one
+    Order matters, and the literal reading comes first. Normalising
+    unconditionally -- splitting on "and" and commas before trying anything -- BREAKS keys that
+    resolve literally: the resolved count falls from 206 to 192. A normalisation that can only help is one
     you reach for after the literal reading fails, never instead of it.
     """
     base = re.split(r"\s{2,}|\s--\s|\s#\s", key.strip())[0].strip()

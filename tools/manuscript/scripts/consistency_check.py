@@ -37,10 +37,10 @@ FILES = [
 # name -> (list of regexes, expected distinct values or None)
 # A quantity legitimately taking >1 value must declare the full set, so a NEW stray value still fails.
 QUANTITIES = {
-    # The second pattern used to be `eQTL[^.]{0,80}?AUROC[^.]{0,20}?(0\.\d{3})`, which also caught
+    # The second pattern is not `eQTL[^.]{0,80}?AUROC[^.]{0,20}?(0\.\d{3})`, which would also catch
     # sentences reporting a CHANGE in AUROC rather than a level: "on the eQTL subpanel a 2x window
-    # at a fixed readout moves AUROC by 0.002" registered 0.002 as a second value for this quantity
-    # and failed the gate on a sentence that is not about it. Requiring reads/of/at/is in front of
+    # at a fixed readout moves AUROC by 0.002" would register 0.002 as a second value for this quantity
+    # and fail the gate on a sentence that is not about it. Requiring reads/of/at/is in front of
     # the number keeps it to statements of a level.
     "eQTL AUROC (20,000-variant panel, 1,001 bp)": (
         [r"0\.488",

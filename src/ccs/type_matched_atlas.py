@@ -29,11 +29,11 @@ SP = ["goat", "chicken", "pig", "sheep", "horse", "cattle", "dog", "human", "cat
 # panel, and fails loudly if either is edited alone.
 #
 # The set holds BARE splice_donor_variant / splice_acceptor_variant, not the compound
-# `...&intron_variant` forms it used to hold. Both now classify identically, because the test is
-# on the first term; the earlier whole-string membership silently filed a bare
+# `...&intron_variant` forms. Both classify identically, because the test is
+# on the first term; whole-string membership would silently file a bare
 # splice_donor_variant as non-coding, which is how the ClinVar consequence panel's 500
-# splice-donor and 500 splice-acceptor variants would have been misread had this rule ever been
-# applied to it (it was not -- that panel is stratified term by term and computes no aggregate).
+# splice-donor and 500 splice-acceptor variants would be misread if this rule were
+# applied to it (it is not -- that panel is stratified term by term and computes no aggregate).
 CODING = {"missense_variant", "synonymous_variant", "stop_gained", "stop_lost", "start_lost",
           "frameshift_variant", "initiator_codon_variant",
           "splice_donor_variant", "splice_acceptor_variant"}

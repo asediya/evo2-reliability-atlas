@@ -4,7 +4,7 @@ Why: snpEff's database repository (snpeff.blob.core.windows.net) is unreachable 
 `snpEff download` cannot work. But Ensembl's FTP IS reachable, and `snpEff build` makes a database from
 (genes.gtf + sequences.fa). This bypasses the blocked host entirely AND lets us pin the EXACT assembly
 each of our variant sets is on (incl. archived builds: chicken GRCg6a r105, dog CanFam3.1 r104,
-sheep Oar_rambouillet_v1.0 r106) -- the same build-matching that killed the Ensembl-VEP/ESM route.
+sheep Oar_rambouillet_v1.0 r106) -- the same build-matching that rules out the Ensembl-VEP/ESM route.
 
 Assemblies verified from GERP bigWig chrom lengths + build_atlas8192.py genome paths.
 cattle: DB already local (ARS-UCD1.2.99). cat: F.catus_Fca126_mat1.0 is on Ensembl from release 114.

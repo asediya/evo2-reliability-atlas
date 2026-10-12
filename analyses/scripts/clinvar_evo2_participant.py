@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Put Evo 2 into the ClinVar league table it currently audits from outside.
+"""Put Evo 2 into the ClinVar league table rather than auditing it from outside.
 
-The manuscript charges CADD, REVEL and AlphaMissense a must-answer penalty on ClinVar and never
-charges itself. This computes, on one balanced panel, the three things needed to close that
+The manuscript charges CADD, REVEL and AlphaMissense a must-answer penalty on ClinVar; Evo 2 has to
+be charged the same way. This computes, on one balanced panel, the three things needed to close that
 asymmetry:
 
 1. **Evo 2's own reach.** Evo 2 scores every window it is given, so its covered and must-answer
@@ -166,9 +166,9 @@ def main():
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     # Keep every rung that has been scored, keyed by checkpoint, with the newest also at the top
-    # level so readers expecting the old shape still work. Writing only the newest rung silently
-    # replaced the 1B numbers the manuscript quotes the moment the 7B run finished, which is the
-    # overwritten-artefact failure this project has hit before.
+    # level so readers expecting the single-rung shape still work. Writing only the newest rung would
+    # silently replace the 1B numbers the manuscript quotes the moment the 7B run finished -- an
+    # overwritten-artefact failure.
     merged = {}
     if os.path.exists(OUT):
         try:

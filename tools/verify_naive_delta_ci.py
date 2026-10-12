@@ -6,8 +6,8 @@ The record shows a naive column with no interval anywhere, and immediately after
 shown -- but the sentence follows a claim about the naive column, where at the 2-star floor the delta
 is +0.0001 and cannot plausibly be distinguishable from zero.
 
-Computing the missing intervals so the text can be corrected against numbers rather than reasoning.
-Gene-clustered, because that is what this project learned to use.
+Computes the missing intervals, so the text rests on numbers rather than reasoning.
+Gene-clustered: variants within one gene are not independent.
 """
 import gzip
 import os
@@ -18,8 +18,8 @@ import polars as pl
 from sklearn.metrics import roc_auc_score
 
 sys.stdout.reconfigure(encoding="utf-8")
-# this hard-coded the author's drive, so the script could not run
-# from a clean extraction of the deposit. Resolve the repository root from this file instead.
+# Resolve the repository root from this file rather than a hard-coded path, so the script
+# runs from a clean extraction of the deposit.
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 panel = pl.read_parquet("data/processed/clinvar_panel.parquet")

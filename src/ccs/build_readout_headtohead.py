@@ -59,9 +59,9 @@ def main():
             continue
         ev = d["evo2_meanll_delta"].to_numpy().astype(float)
         ge = d["gerp"].to_numpy().astype(float)
-        # both signs were chosen FROM THE LABELS, which the deposit's own
+        # Neither sign is chosen FROM THE LABELS, which the deposit's own
         # rule forbids ("Orientation is asserted, never inferred", tools/verify_from_data.py). The
-        # conventions differ by column and are now fixed rather than inferred: evo2_meanll_delta is
+        # conventions differ by column and are fixed rather than inferred: evo2_meanll_delta is
         # a likelihood delta, so a deleterious variant LOWERS it and it is negated here (raw AUROC
         # 0.026-0.137 across the nine species); gerp is already higher-is-more-constrained. Note
         # the ARRAY is negated, not just the scalar, because ev feeds the pooled estimate below.
@@ -109,9 +109,9 @@ def main():
                           if per[s]["auroc_evo2_1001_same_variants"] is not None
                           and per[s]["auroc_evo2_1001_same_variants"] > per[s]["auroc_gerp"]))
 
-    # Every species is skipped when data/ is absent, and this reached
-    # np.concatenate on empty lists and died on "need at least one array to concatenate", which
-    # names neither data/ nor a missing file. The nine SKIP lines above help; the traceback did not.
+    # Every species is skipped when data/ is absent, and np.concatenate on empty lists
+    # would die on "need at least one array to concatenate", which
+    # names neither data/ nor a missing file. The nine SKIP lines above help; that traceback would not.
     if not Y:
         sys.exit("build_readout_headtohead: every species was skipped, so there is nothing to "
                  "compare.\nThis build reads the per-species score and conservation parquets under "

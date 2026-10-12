@@ -1,9 +1,8 @@
 """Figure 4 RECONCILIATION — settle the calibration analysis before any figure is designed.
 
 WHY THIS EXISTS
-A 50-agent review of 14 candidate Figure-4 designs killed all 14, every one on the same root cause:
-the deposited calibration numbers do not survive contact with their own estimator and aggregation choices.
-Verified problems this script resolves:
+The deposited calibration numbers must survive contact with their own estimator and aggregation
+choices. Problems this script resolves:
   (1) The transfer-vs-trivial verdict FLIPS with (binning x aggregation): pooled equal-width says isotonic
       transfer wins by ~10x; pooled equal-mass, macro equal-width and macro equal-mass all say the trivial
       sigmoid wins. A headline a referee can invert by rebinning is not a headline.
@@ -128,9 +127,9 @@ def fit_apply(kind, xt, yt, xe):
 
 def build_posteriors(data, rich):
     """Per-species posteriors for every method. All transferable methods are LOSO-consistent."""
-    # With data/ absent every species is skipped, and this reached np.concatenate
-    # on an empty list and died on "need at least one array to concatenate", naming neither data/
-    # nor a missing file, so a referee could not tell the disclosed data boundary from a bug.
+    # With data/ absent every species is skipped, and np.concatenate on an empty list would die
+    # on "need at least one array to concatenate", naming neither data/ nor a missing file, so a
+    # referee could not tell the disclosed data boundary from a bug.
     if not data:
         sys.exit("fig4_reconcile: no species could be loaded, so there is nothing to reconcile.\n"
                  "This build reads the per-species score parquets under data/processed/, which are "
@@ -275,13 +274,13 @@ def main():
         P = np.concatenate([post[s][0][m] for s in sps])
         conf = np.abs(2 * P - 1)
         per_sp = {s: int(np.unique(np.abs(2 * post[s][0][m] - 1)).size) for s in sps}
-        # `pct_in_tie_blocks` used to be 100*(1 - n_distinct/n). That is a distinct-value
+        # 100*(1 - n_distinct/n) is a distinct-value
         # deficit, NOT the share of observations sitting in a non-singleton tie block, and the
         # two differ: on the deposited isotonic posterior the deficit is 97.83% while the true
         # tie-block share is 99.63%. The selective layer sorts by confidence and breaks ties by
         # row order, so the tie-block share is the quantity that says how much of the ordering
         # is decided by position rather than by confidence. Both are emitted, under names that
-        # say what they are; the old key is retired rather than silently redefined.
+        # say what they are; the ambiguous name `pct_in_tie_blocks` is not used for either.
         _, _counts = np.unique(conf, return_counts=True)
         diag[m] = {"distinct_confidence_values_cohort": int(np.unique(conf).size),
                    "n_variants": int(P.size), "distinct_per_species": per_sp,
@@ -350,13 +349,13 @@ def main():
         "survives_all_estimators": sorted(s for s in drows if drows[s]["prior_fix_helps_all_estimators"]),
     }
 
-    # BOTH conformal arms. Carrying only the marginal columns meant the figure could not see the
+    # BOTH conformal arms. Carrying only the marginal columns would leave the figure unable to see the
     # class-conditional (Mondrian) arm at all -- and build_conformal.py says in terms: "Mondrian is
     # reported because marginal coverage skews under class imbalance". Plotting the marginal arm alone
-    # presented a known artifact of the inferior construction as the finding.
+    # would present a known artifact of the inferior construction as the finding.
     # ---- 5b3. how many MACRO estimators actually leave the null intact, and how many bins equal-mass
-    # can really deliver on this posterior. Both were previously assumed rather than measured, and the
-    # figure asserted "all four straddle zero" from that assumption.
+    # can really deliver on this posterior. Both are measured rather than assumed, so the figure does
+    # not assert "all four straddle zero" from an assumption.
     mac = {k: v for k, v in verdicts.items() if k.endswith("__macro")}
     R["null_robustness"] = {
         "n_macro_estimators": len(mac),

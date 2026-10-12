@@ -266,9 +266,9 @@ def missingness_auroc(labels, observed) -> float:
         return float("nan")          # one outcome class: no AUROC is defined
     if np.unique(o).size < 2:
         # Constant reach is not an undefined AUROC, it is chance. Under midranks every pair ties,
-        # so the statistic is exactly 0.5. Returning NaN here had a second cost: _stratified_reach
-        # skips non-finite strata, so a COMPLETE-COVERAGE stratum silently left the size-weighted
-        # mean -- two equal strata at 0.9 and (constant) 0.5 reported 0.9 instead of 0.7, which
+        # so the statistic is exactly 0.5. Returning NaN here would have a second cost: _stratified_reach
+        # skips non-finite strata, so a COMPLETE-COVERAGE stratum would silently leave the size-weighted
+        # mean -- two equal strata at 0.9 and (constant) 0.5 would report 0.9 instead of 0.7, which
         # exaggerates the diagnostic in exactly the direction that flatters it.
         return 0.5
     return float(_auroc(y, o))
@@ -719,7 +719,7 @@ def _stratified_reach(y, fin, strata, min_stratum, min_class, min_gap=0.02, z=_Z
 
     Strata are screened on BOTH classes, not on total size. A stratum of 184 variants carrying a
     single positive passes any total-size gate and yields a confident-looking reach gap of +0.585
-    estimated from one variant -- which is how an earlier version of this function produced a
+    estimated from one variant -- a
     within-stratum number worth nothing. `min_class` is the gate that matters.
     """
     out, num, den, dropped = [], 0.0, 0.0, 0
@@ -859,8 +859,8 @@ def audit(labels, scorers, strata=None, n_boot: int = 2000, seed: int = 0,
 
         # The missingness AUROC is exactly 0.5 + class_gap/2, so its interval is the Newcombe
         # interval on the gap pushed through that same monotone map -- exact, instant, and better
-        # behaved at the boundary than the percentile bootstrap this replaces. Bootstrapping it was
-        # both slower and worse: on a million-variant panel it cost minutes per scorer to
+        # behaved at the boundary than a percentile bootstrap, which is
+        # both slower and worse: on a million-variant panel it costs minutes per scorer to
         # re-estimate a quantity available in closed form.
         miss_a = missingness_auroc(y, fin)
 
@@ -1012,8 +1012,8 @@ def audit(labels, scorers, strata=None, n_boot: int = 2000, seed: int = 0,
             # JOIN INTEGRITY. If two scorers were merged onto the panel on mismatched keys -- a
             # different build, a chr-prefix difference, a table built on another variant set -- the
             # result is a plausible-looking AUROC computed on a handful of rows. Overlap far below
-            # what the two reaches imply is the signature. Caught exactly this on a real panel where
-            # two conservation tables had been built on different variant sets.
+            # what the two reaches imply is the signature: two conservation tables built on
+            # different variant sets produce exactly this.
             exp = float(fa.mean()) * float(fb.mean()) * y.size
             if exp >= 1.0 and both.sum() < 0.5 * exp:
                 rep.warnings.append(

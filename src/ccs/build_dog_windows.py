@@ -40,15 +40,15 @@ def main():
             if s is None or len(s) != W:
                 dropped += 1; continue
             g = s[HALF]; r, al = r.upper(), al.upper()
-            # Deep-layer review, finding D3. The previous form of this branch tested `g in (r, al)`
-            # and then wrote `r` over the genome base regardless of which of the two matched. When
+            # Testing `g in (r, al)` and then writing `r` over the genome base regardless of which
+            # of the two matched is not enough. When
             # the genome carries OMIA's ALTERNATE allele -- a reference/alternate swap relative to
-            # CanFam3.1 -- that produced a "wild-type" window that does not occur in the assembly
-            # and scored the substitution in the wrong direction, while `ok.append(True)` recorded
-            # the build as verified. Swaps are now detected, counted and dropped, and ref_ok records
+            # CanFam3.1 -- that produces a "wild-type" window that does not occur in the assembly
+            # and scores the substitution in the wrong direction, while a constant `ok.append(True)`
+            # records the build as verified. Swaps are detected, counted and dropped, and ref_ok records
             # the genuine result instead of a constant.
             #
-            # Blast radius on the deposited panel: at most one variant. build_atlas8192.py rejects
+            # Effect on the deposited panel: at most one variant. build_atlas8192.py rejects
             # reference mismatches independently, and dog loses exactly one variant between the
             # 1,001-bp panel (2,497) and the 8,192-bp panel (2,496). The 8,192-bp arm, which carries
             # every headline number, cannot contain a swapped record at all.

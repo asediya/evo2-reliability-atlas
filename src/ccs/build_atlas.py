@@ -100,8 +100,8 @@ def build_species(sp, cfg):
                 row[f"auroc_{col}"] = None
                 row[f"cov_{col}"] = cov
 
-    # conservation baseline = GERP (sole baseline; phyloP dropped as fabricated). Kept the
-    # `auroc_best_cons` key name for downstream compatibility, but it is now exactly GERP.
+    # conservation baseline = GERP (sole baseline; phyloP is excluded as fabricated). The
+    # `auroc_best_cons` key name is kept for downstream compatibility, but it is exactly GERP.
     row["auroc_best_cons"] = row.get("auroc_gerp")
 
     # paired deltas (only where both scores present on the same variants)

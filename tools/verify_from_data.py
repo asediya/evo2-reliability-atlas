@@ -305,10 +305,10 @@ def sec_reach():
 def ece_equal_mass(p, y, nbin=10):
     """Equal-mass ECE binned BY VALUE, so ties cannot be split by row order.
 
-    three equal-mass definitions were in the deposit and disagreed by up to
-    21% relative on the isotonic posterior. This one previously lexsorted and split the order, which
+    Equal-mass definitions can disagree by up to
+    21% relative on the isotonic posterior. A lexsort that splits the order
     is stable against permutation but still splits blocks of tied scores across bins. Value bins with
-    duplicate edges collapsed is the definition the rest of the deposit now uses.
+    duplicate edges collapsed is the definition the rest of the deposit uses.
     """
     p = np.asarray(p, dtype=float)
     y = np.asarray(y, dtype=float)
@@ -393,8 +393,8 @@ def sec_human():
     check("human", "predictors audited", len(cols), 49, tol=0)
 
     # dbNSFP's column names are not the display names: CADD's rank score is CADD_raw_rankscore.
-    # An earlier version of this block looked up "CADD" and silently found nothing, so the five
-    # checks below did not run and the section still reported a clean pass.
+    # Looking up "CADD" would silently find nothing, so the five
+    # checks below would not run and the section would still report a clean pass.
     got = {}
     for name, col in (("CADD", "CADD_raw_rankscore"), ("REVEL", "REVEL_rankscore")):
         if col not in d.columns:
@@ -413,10 +413,10 @@ def sec_human():
         check("human", "CADD-REVEL must-answer gap",
               got["CADD"][1] - got["REVEL"][1], 0.3273, tol=0.002)
 
-    # 0.9678 and 0.9706 are each predictor's OWN covered AUROC, over 328,328 and 196,403 variants.
-    # The manuscript once presented them as a co-scorable pair and called them indistinguishable.
+    # 0.9678 and 0.9706 are each predictor's OWN covered AUROC, over 328,328 and 196,403 variants,
+    # not a co-scorable pair, and they do not show the two are indistinguishable.
     # On the 196,403 both actually score, CADD is 0.9302 and REVEL 0.9706: a margin of +0.0404,
-    # fourteen times the 0.0028 implied by the wrong pairing and twice the paper's own 0.02 SESOI.
+    # fourteen times the 0.0028 implied by pairing the covered values and twice the paper's own 0.02 SESOI.
     # The auditor never intersects two predictors' covered sets, so nothing else would catch this.
     cs = np.isfinite(d["CADD_raw_rankscore"].to_numpy().astype(float)) & \
         np.isfinite(d["REVEL_rankscore"].to_numpy().astype(float))
@@ -433,14 +433,14 @@ def sec_human():
 
     pw = jload("reports/pairwise_clustering_stability.json")
     if pw:
-        # The sweep runs on the missense subset, and the manuscript now says so. Pinned, because the
-        # two n's differ by 38% and the text quoted the wrong one.
+        # The sweep runs on the missense subset, as the manuscript says. Pinned, because the
+        # two n's differ by 38% and quoting the wrong one is an easy error.
         check("human", "pairwise sweep n_variants", pw["_meta"]["n_variants"], 202643, tol=0)
         check("human", "pairs compared", pw["summary"]["n_pairs"], 1176, tol=0)
-        # The AlphaMissense/REVEL exemplar. The manuscript once quoted the ClinVar-panel figures
-        # (-0.0096 / +0.0124 / 3,156 genes) inside a sentence declaring the dbNSFP panel, and those
-        # came from a working record that is not deposited, so a referee could not trace them. Pinned
-        # to the deposited pair record, with the sign convention made explicit.
+        # The AlphaMissense/REVEL exemplar. The ClinVar-panel figures
+        # (-0.0096 / +0.0124 / 3,156 genes) do not belong in a sentence declaring the dbNSFP panel,
+        # and they come from a working record that is not deposited, so a referee could not trace them.
+        # Pinned to the deposited pair record, with the sign convention made explicit.
         pr = [q for q in pw["pairs"] if {q.get("a"), q.get("b")} == {"REVEL", "AlphaMissense"}]
         if pr:
             q = pr[0]
@@ -465,10 +465,10 @@ def sec_human():
                 check("human", "REVEL missingness alone", s["miss_auroc"], 0.6116)
             if s["name"] == "cadd":
                 check("human", "CADD whole-panel reach", s["reach"], 0.9988, tol=0.0002)
-            # The manuscript once said these two "return one for all of it and pay exactly zero".
-            # They do neither: reach is 99.997% and the penalty is ~2e-5. The claim read as
-            # rounding but was a statement about exactness, and the supplement's own table
-            # contradicted it. Pinned so the overstatement cannot come back.
+            # These two do not "return one for all of it and pay exactly zero":
+            # reach is 99.997% and the penalty is ~2e-5. That phrasing reads as
+            # rounding but is a statement about exactness, and the supplement's own table
+            # contradicts it. Pinned so the overstatement cannot appear.
             if s["name"] in ("phylop", "phastcons"):
                 check("human", "%s reach is not 1.0" % s["name"], s["reach"], 0.99997, tol=1e-5)
                 check("human", "%s penalty under 2e-5" % s["name"],
@@ -476,11 +476,11 @@ def sec_human():
 
     # A predictor with genuinely complete coverage has a CONSTANT missingness indicator, so its
     # missingness AUROC is undefined, not one half. Exactly one of the five near-complete dbNSFP
-    # predictors is in that regime; the manuscript claimed all five returned exactly 0.5000.
-    # The falsification claim is orientation-dependent and the manuscript once rested on the signed
+    # predictors is in that regime, so they do not all return exactly 0.5000.
+    # The falsification claim is orientation-dependent and must not rest on the signed
     # form alone. Pooled, miss_auroc is the identity 0.5 + class_gap/2, so a negative gap puts it
     # below one half and the signed test cannot fire; 34 of 49 have a negative gap on this panel, so
-    # "0 of 49" was near-guaranteed by composition. Both counts are pinned, and the identity itself
+    # "0 of 49" is near-guaranteed by composition. Both counts are pinned, and the identity itself
     # is checked, because if it ever stops holding the whole argument changes.
     dbj = jload("reports/dbnsfp_reach_audit.json")
     if dbj:
@@ -582,7 +582,7 @@ def sec_matched():
     """Table 1's conservation-matched column, which had no artifact at all until now.
 
     build_conservation_matched.py wrote only logs/conservation_matched.md, so every value in that
-    column and the macro 0.834 the Abstract quotes sat outside the recompute layer and outside every
+    column and the macro 0.834 the paper quotes sat outside the recompute layer and outside every
     gate, while the paper states that all published numbers are regenerated by it. The script now
     also emits reports/conservation_matched.json and this section pins it against the printed table.
     """

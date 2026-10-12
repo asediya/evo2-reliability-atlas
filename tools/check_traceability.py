@@ -32,7 +32,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_traceability_table import load, walk, printed, match      # noqa: E402
 
 TABLE = "reports/traceability_table.json"
-MIN_ROWS = 180          # exact-ish floor: the table stood at 206; a large drop means silent shrinkage
+MIN_ROWS = 180          # exact-ish floor: the table holds 206; a large drop means silent shrinkage
 
 
 def main():

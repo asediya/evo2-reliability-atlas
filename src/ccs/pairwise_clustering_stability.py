@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """How often does a head-to-head verdict reverse when gene is held fixed? All 1,176 pairs.
 
-This project retracted a headline for exactly this reason. AlphaMissense against REVEL on ClinVar
-missense read -0.0096 pooled across genes and +0.0124 within gene on the ClinVar panel, and
--0.0100 / +0.0101 on the dbNSFP panel this script sweeps: the sign flipped both times, because ClinVar
-puts both classes in the same disease genes, both scorers use gene-level features, and pooling let
+A headline comparison can reverse for exactly this reason. AlphaMissense against REVEL on ClinVar
+missense reads -0.0096 pooled across genes and +0.0124 within gene on the ClinVar panel, and
+-0.0100 / +0.0101 on the dbNSFP panel this script sweeps: the sign flips both times, because ClinVar
+puts both classes in the same disease genes, both scorers use gene-level features, and pooling lets
 coverage pass for skill.
 
 One reversal is an anecdote. The question a reader should ask is how often it happens, and that is

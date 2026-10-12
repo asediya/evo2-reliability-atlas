@@ -3,10 +3,10 @@
 
 The atlas contrasts curated disease alleles, which are overwhelmingly rare, against Ensembl
 population variants with no minor-allele-frequency threshold applied. The paper separately shows
-(Figure S3) that Evo 2 deleteriousness rises as allele frequency falls. So the reviewer's objection is
-that some of the 0.943 could be the model reading frequency rather than pathogenicity, and the paper
-controls for trinucleotide context, for conservation and for consequence class but never for
-frequency.
+(Figure S3) that Evo 2 deleteriousness rises as allele frequency falls. So a reader can object
+that some of the 0.943 could be the model reading frequency rather than pathogenicity: the paper
+controls for trinucleotide context, for conservation and for consequence class, and none of those
+controls addresses frequency.
 
 We can test this properly in cattle, the one species where a 44.5 M-variant allele-frequency panel
 is on disk (data/interim/geno_pgen/*.afreq, PLINK2 ALT_FREQS over 7,394 individuals). The atlas

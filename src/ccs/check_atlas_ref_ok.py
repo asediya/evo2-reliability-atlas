@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """Reference-allele concordance gate for the nine-species atlas.
 
-The Methods previously disclosed that the atlas carried no `ref_ok` gate and nominated it as "the
-first thing a reader should want re-run". An external editorial review made that its single
-strongest reason for not sending the paper out: every headline AUROC is computed on windows whose
+Without a `ref_ok` gate, every headline AUROC would be computed on windows whose
 central base was never confirmed against the allele the variant record describes, and OMIA deposits
 coordinates against several assembly versions, so a ref/alt swap would invert the sign of
 logP(ref) - logP(alt) for the affected variants.

@@ -8,9 +8,8 @@ comparison the reach argument actually rests on -- when both methods must answer
 in the panel, is Evo 2 ahead, and by how much -- is stated as two numbers side by side rather than
 as a tested contrast.
 
-It could not easily have been otherwise before: the must-answer AUROC was a closed form in the
-reach with no inference attached, and a bootstrap over nine panels was affordable but was never the
-quantity anyone had asked for. glmtrust.delong.must_answer_delta_ci now supplies it exactly, using
+The must-answer AUROC is a closed form in the reach with no inference attached.
+glmtrust.delong.must_answer_delta_ci supplies the inference exactly, using
 the placement-value representation (an unreachable variant wins half of every pair it touches), so
 this is a closed-form contrast rather than a resampled one.
 

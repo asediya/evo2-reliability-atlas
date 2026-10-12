@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""Is the trust layer's selective lift real, or sampling noise? (pre-submission hardening)
+"""Is the trust layer's selective lift real, or sampling noise?
 
-Referee concern: the selective-prediction lift is concentrated in small non-human panels and the
+The concern: the selective-prediction lift is concentrated in small non-human panels and the
 paper concedes it "cannot be separated from sampling variability." This settles it with the deposited
 per-variant 8,192-bp trust-layer output, three ways:
 

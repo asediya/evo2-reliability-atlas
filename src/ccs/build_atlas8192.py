@@ -82,11 +82,11 @@ def main():
         idx = load_fai(genome + ".fai")
         vid, rs, alts, vo, lab = [], [], [], [], []
         npos_in = 0
-        # Methods review, finding 3: this filter collapsed three exclusion causes into one
-        # `continue`, so the claim that the excluded variants sit at contig ends was not recoverable
-        # from the code, and the downstream 100%-reference-concordance check reads this filter's own
-        # output and therefore cannot fail. Counting the causes separately makes both statements
-        # checkable. The filter itself is unchanged, so the panels it writes are unchanged.
+        # Three exclusion causes are counted separately rather than collapsed into one
+        # `continue`: otherwise the claim that the excluded variants sit at contig ends would not be
+        # recoverable from the code, and the downstream 100%-reference-concordance check, which reads
+        # this filter's own output, could not fail. Counting the causes separately makes both
+        # statements checkable; it does not change which variants the filter keeps.
         n_no_seq = n_bad_len = n_ref_mismatch = 0
         with open(genome, "rb") as fh:
             for v, c, p, rf, al, l in variants(stem, posfile):

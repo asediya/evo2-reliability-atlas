@@ -43,8 +43,8 @@ def boot_ci(y, s, nboot, jobs):
 # this file is advertised as the machine-readable atlas, and its BRCA1 interval
 # ([0.862, 0.886]) is narrower than the published one ([0.858, 0.889]) because boot_ci resamples
 # variants independently while the paper resamples genomic SITES. Both are correct for what they
-# are; the row did not say which, so a reader checking the manuscript against the parquet found a
-# mismatch with no explanation. Every row now carries the estimator that produced its interval.
+# are; a row that did not say which would leave a reader checking the manuscript against the
+# parquet with an unexplained mismatch, so every row carries the estimator that produced its interval.
 CI_METHOD = ("variant-level percentile bootstrap (unclustered); the manuscript quotes a "
              "site-clustered bootstrap where a clustered interval is reported")
 

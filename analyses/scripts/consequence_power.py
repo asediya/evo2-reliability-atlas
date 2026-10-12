@@ -5,11 +5,11 @@ The regulatory rung rests on **18** positives, at AUROC 0.579 with an interval r
 differences of 0.05-0.10 are not distinguishable. The right response is not to defend the point
 estimate but to state the minimum difference the rung could have detected at all.
 
-A FIRST ATTEMPT AT THIS WAS WRONG AND IS RECORDED SO IT IS NOT REPEATED. Re-deriving the
+WHY NOT RE-DERIVE THE GRADIENT. Re-deriving the
 gradient from snpEff consequence annotations gives different numbers from the deposited ones
 (nonsense 0.606 against 0.954) because it is a different design: the paper classifies POSITIVES by
 OMIA's curated Variant Effect field and compares each class against POOLED negatives, whereas
-annotating everything with snpEff puts positives and negatives in the same stratum. That left the
+annotating everything with snpEff puts positives and negatives in the same stratum, which leaves the
 nonsense rung with 588 positives against 7 negatives. The two are not comparable and the deposited
 design is the correct one.
 

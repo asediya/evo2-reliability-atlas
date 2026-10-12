@@ -183,8 +183,8 @@ def main():
 
     os.makedirs("logs", exist_ok=True)
     open("logs/decision_panel.md", "w", encoding="utf-8").write("\n".join(lines) + "\n")
-    # this result used to exist only as logs/decision_panel.md, which is not part of
-    # the code deposit, so nothing a reader could open carried it. Deposit it as JSON too.
+    # logs/decision_panel.md is not part of the code deposit, so on its own nothing a reader
+    # could open would carry this result. Deposit it as JSON too.
     os.makedirs("reports", exist_ok=True)
     with open("reports/decision_panel.json", "w", encoding="utf-8") as fh:
         json.dump({"cost_matrix": {"C_FN": C_FN, "C_FP": C_FP, "C_AB": C_AB},

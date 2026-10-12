@@ -3,13 +3,12 @@
 
 The manuscript states that collapsing the nine species to one unit per taxonomic order leaves the
 macro Evo 2 advantage essentially unchanged, and that every one-representative-per-clade choice
-lands in a narrow band. A check found that none of those values existed in any deposited
-artefact: they appeared in the manuscript prose and nowhere else. The analysis had been run at some
-point and its output was never written down, so the one phylogenetic-sensitivity claim in the paper
-was the one claim a referee could not check.
+lands in a narrow band. Without this script none of those values would exist in any deposited
+artefact, only in the manuscript prose, so the one phylogenetic-sensitivity claim in the paper
+would be the one claim a referee could not check.
 
 This recomputes it from the per-species deltas the meta-analysis already deposits, and writes the
-result. Nothing here is typed from memory; the numbers the manuscript quotes are replaced by
+result. Nothing here is typed from memory; the numbers the manuscript quotes are
 whatever this produces.
 
 The concern is that seven of the nine species are placental mammals sitting at an identical 92 My

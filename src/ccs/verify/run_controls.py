@@ -2,15 +2,15 @@
 """Run the five adversarial panel-level controls and deposit their output.
 
 It was noted that the five `check_*.py` scripts in this directory had no deposited
-output and were never reported; E80/E81 asked specifically for the composition and spatial controls
-to be run and reported. This runner executes all five against the current `verify_table.parquet`,
+output and were never reported, and the composition and spatial controls in particular
+needed to be run and reported. This runner executes all five against the current `verify_table.parquet`,
 writes the raw stdout to `reports/verify_controls.txt`, and parses the headline numbers into
 `reports/verify_controls.json` so the manuscript can cite them.
 
 Note on scope: `check_leakage/gain/permutation` were written for an exploratory
 evo2+phylop *ensemble* (out-of-fold AUROC ~0.969) that is NOT a result in the manuscript — the paper
 reports Evo 2-40B alone. Their value here is as PANEL-level controls: the composition-matching and
-spatial-proximity checks (E80/E81) bear directly on the atlas panel the paper does use, since the
+spatial-proximity checks bear directly on the atlas panel the paper does use, since the
 panel is shared. The ensemble numbers are reported as provenance, not as a manuscript claim.
 
     python src/ccs/verify/run_controls.py

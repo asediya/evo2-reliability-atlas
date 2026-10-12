@@ -3,7 +3,7 @@
 No model inference. Reads Additional file 3's atlas table and its curated disease-or-trait class for every
 positive (tables/atlas_positive_annotations.parquet; set CCS_TABLES to the folder holding both, as for
 fig2_split.py). The class is curated from each positive's OMIA phenotype string, with the rules stated in
-Additional file 3's provenance/build_atlas_positive_annotations.py; it replaces a phenotype-string pattern that
+Additional file 3's provenance/build_atlas_positive_annotations.py; a phenotype-string pattern would
 misread some strings in both directions. AUROC is recomputed at the 8,192-bp readout on the same variants.
 The disease-only mean is taken over the species that keep at least five disease alleles.
 """

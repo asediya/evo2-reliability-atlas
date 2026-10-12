@@ -12,16 +12,16 @@ Reference amino-acid identities come from the literature/canonical numbering, ne
 
 Type, colour and canvas come from src/ccs/style_gb.py. Nothing here sets a font size of its own.
 
-WHAT MOVED TO THE LEGEND (this pass). Three blocks of prose left the canvas; the legend has to
+WHAT THE LEGEND CARRIES. Three blocks of prose are not on the canvas; the legend has to
 carry them, and none of them is data:
-  1. "reference notebook, 1B: 0.73  ->  reproduces, not beats" -- editorial commentary, and the
-     one true bbox collision in the submitted file (it ran through "res 1837 . max Evo 2").
-  2. the three-line italic note under panel b about independent min/max scaling.
+  1. "reference notebook, 1B: 0.73  ->  reproduces, not beats" -- editorial commentary, which on
+     the canvas runs through "res 1837 . max Evo 2" (a true bbox collision).
+  2. the three-line note about independent min/max scaling of the panel b maps.
   3. the PDB composition line ("RING 1JM7 . BRCA1 1-103 + BARD1 (gray) + 2 Zn2+ / BRCT 1T29 .
      tandem BRCT + BACH1 phosphopeptide"). The PDB accessions themselves stay on the canvas as
-     the column subtitles; only the composition detail moved.
-Two numeric values leave the canvas with them -- 0.73 (the 1B notebook AUROC) and 103 (the RING
-construct's last residue) -- and both are stated in the proposed legend text.
+     the column subtitles; only the composition detail is in the legend.
+Two numeric values are therefore not on the canvas -- 0.73 (the 1B notebook AUROC) and 103 (the RING
+construct's last residue) -- and the legend text has to state both.
 """
 import sys, os
 import json
@@ -76,10 +76,10 @@ ZINC_LIG = [24, 27, 39, 41, 44, 47, 61, 64]   # C3HC4 RING zinc cage: 7 Cys + Hi
 
 # Multi-line labels need a leading TALLER than the glyph box, or consecutive lines of the same
 # label overlap each other by a fraction of a point. At matplotlib's default 1.2 the advance for
-# an 8 pt Arial line is 8.71 pt against a 8.94 pt glyph box, and four such pairs were reported as
-# collisions in the submitted PDF: the two-line y-label, the two-line colour-bar label and both
+# an 8 pt Arial line is 8.71 pt against a 8.94 pt glyph box, so four pairs would register as
+# collisions in the PDF: the two-line y-label, the two-line colour-bar label and both
 # panel-b row labels. Not visible at print size, but a bbox scan cannot tell them from a real
-# overlap, and the fix costs a fraction of a millimetre.
+# overlap, and a taller leading costs a fraction of a millimetre.
 LEAD = 1.45
 
 
@@ -233,31 +233,30 @@ def main():
     rmap = {int(r): (float(md), float(e)) for r, md, e in zip(res, mdel, ev)}   # residue -> (measured, predicted)
 
     INK_ = SG.INK
-    # 208 -> 195 mm (SG.H_MM_MAX). Genome Biology's 225 mm cap is for FIGURE PLUS LEGEND, and this
-    # legend is long, so the graphic has to stop short of it. The 13 mm came out of the three prose
-    # blocks that moved to the legend and a small trim of panel a, whose three stacked tracks were
-    # taller than the type in them needs.
+    # SG.H_MM_MAX. Genome Biology's 225 mm cap is for FIGURE PLUS LEGEND, and this
+    # legend is long, so the graphic has to stop short of it: the prose blocks are in the legend,
+    # and panel a's three stacked tracks are no taller than the type in them needs.
     H_PT = SG.H_MM_MAX * 72.0 / 25.4
     W_PT = SG.W_MM * 72.0 / 25.4
     PT = 1.0 / H_PT                # one point as a figure fraction, vertically
-    # The absolute y anchors below (TOP_PT, BOT_PT, 474, 477, 484) were authored as points
-    # measured down from the top of a 195 mm plate. The plate is now 173 mm
-    # (style_gb.H_MM_MAX: a 300-word legend measures 47 mm, so 195 + legend broke the
-    # 225 mm ceiling). Reading them through PT after the change put the six-line panel-c
-    # statistics block at 484-541 pt on a 490 pt page: five of its six lines fell off the
+    # The absolute y anchors below (TOP_PT, BOT_PT, 474, 477, 484) are authored as points
+    # measured down from the top of a 195 mm plate. The plate is 173 mm
+    # (style_gb.H_MM_MAX: a 300-word legend measures 47 mm, so 195 + legend would break the
+    # 225 mm ceiling). Reading the anchors through PT would put the six-line panel-c
+    # statistics block at 484-541 pt on a 490 pt page: five of its six lines would fall off the
     # sheet entirely, and a fully off-page span does not appear in PyMuPDF extraction at
-    # all, so the gate reported one 1.2 pt overhang rather than five missing lines.
+    # all, so the gate would report one 1.2 pt overhang rather than five missing lines.
     # Y() maps an authored point to its PROPORTION of the authored plate, so the whole
     # stack scales 173/195 and every band keeps its share. PT stays a true point and is
     # still what the type-relative offsets below (marker pitch, letter rise) are built from:
-    # those are sized against glyph boxes, which did not shrink.
+    # those are sized against glyph boxes, which do not shrink.
     AUTH_PT = 195.0 * 72.0 / 25.4
     def Y(y_pt):
         return 1.0 - y_pt / AUTH_PT
     fig = plt.figure(figsize=(SG.W_MM / 25.4, SG.H_MM_MAX / 25.4))
     TOP_PT, BOT_PT = 22.0, 454.0   # first ink; foot of the panel b / panel c axes
-    # left 0.085 -> 0.093: the "experiment" track label is the left-most ink on the page and at
-    # SG.ANNOT it ended 1.3 mm from the trim, inside a printer's tolerance rather than outside it.
+    # left 0.093, not 0.085: the "experiment" track label is the left-most ink on the page, and at
+    # 0.085 and SG.ANNOT it ends 1.3 mm from the trim, inside a printer's tolerance rather than outside it.
     GS_LEFT = 0.093
     gs = GridSpec(7, 2, height_ratios=[0.20, 0.12, 0.12, 0.58, 0.30, 0.66, 0.66], width_ratios=[1.06, 1],
                   hspace=0.0, wspace=0.30, left=GS_LEFT, right=0.895,
@@ -332,8 +331,8 @@ def main():
     for s in axH.spines.values(): s.set_edgecolor("#CCC")
 
     # The right-hand margin is 17 mm at 170 mm wide and every key in it is pinned to the track it
-    # explains. Pinned to the AXES, not to hand-tuned figure fractions: the canvas lost 13 mm in
-    # this pass, and every one of those fractions would otherwise have had to be re-tuned by hand.
+    # explains. Pinned to the AXES, not to hand-tuned figure fractions, which would have to be
+    # re-tuned by hand whenever the canvas height changes.
     pD, pS, pH = axD.get_position(), axSg.get_position(), axH.get_position()
     KX, KX2 = 0.905, 0.918          # swatch column, label column
     # 0.44 -> 0.36 of the quilt height. The bar is pinned to the quilt's foot and grows upward,
@@ -414,12 +413,12 @@ def main():
         fig.text(colc[j], grid_top + 1.5 * PT, pdbid[j], ha="center", va="bottom",
                  fontsize=SG.ANNOT, color=CAP)
     # The structures' composition — BARD1 partner (gray), the two Zn2+, the BACH1 phosphopeptide
-    # cleft, the 1–103 construct bounds — is legend material and no longer set under the colour cue.
+    # cleft, the 1–103 construct bounds — is legend material and is not set under the colour cue.
     # The accessions stay: they are what a reader needs to fetch the same coordinates.
     fig.text(SG.letter_x(fig), grid_top + 10 * PT, "b", fontsize=SG.PANEL, fontweight="bold", color=INK_,
              va="bottom", ha="left")
     # shared blue->red deleteriousness cue under panel b (each map scaled independently; that fact
-    # is now stated in the legend rather than in three lines of italic prose on the canvas)
+    # is stated in the legend rather than in italic prose on the canvas)
     cueax = fig.add_axes([0.205, Y(474.0), 0.15, 8 * PT])
     cueax.imshow(np.linspace(0, 1, 256)[None, :], aspect="auto", cmap=SG.tol_del_cmap())
     cueax.set_xticks([]); cueax.set_yticks([])
@@ -443,25 +442,24 @@ def main():
     def _tag(r, text, xytext, col, arrow="-", rad=0.0, ha="left"):
         x, y = rmap[r]
         axV.scatter([x], [y], s=36, facecolors="none", edgecolors=col, linewidths=1.0, zorder=6)
-        # Two things printed over these labels and no text-vs-text scan could see either: cloud
-        # markers sitting on the glyphs (which made "start-loss" read as "stad-loss"), and the
-        # leader itself running through "max Evo 2" like a strike-through. A white halo masks the
-        # markers, a high zorder puts the text above the cloud, and shrinkA holds the leader off
-        # the text box instead of letting it start inside it.
-        # NO PATH EFFECT. The white halo that used to be here (withStroke, 2.4 pt) made matplotlib
+        # Two things can print over these labels and no text-vs-text scan can see either: cloud
+        # markers sitting on the glyphs (which make "start-loss" read as "stad-loss"), and the
+        # leader itself running through "max Evo 2" like a strike-through. Placement in bands the
+        # scatter does not enter keeps the markers off the glyphs, a high zorder puts the text above
+        # the cloud, and shrinkA holds the leader off the text box instead of letting it start inside it.
+        # NO PATH EFFECT. A white halo (withStroke, 2.4 pt) would make matplotlib
         # render these three strings as vector PATHS and leave only an alpha-0 copy in the PDF text
         # layer -- so pdfcheck could not measure their type size, could not test them for
-        # collisions, and reported bboxes that do not correspond to the painted glyphs. The halo
-        # was added to mask cloud markers sitting on the glyphs; the labels were subsequently moved
-        # into bands the scatter does not enter (nothing above 0.0129 except residue 1837, and the
-        # 0.0105-0.0120 band is empty between x 1.0 and 2.4) and shrinkA now holds the leader off
+        # collisions, and would report bboxes that do not correspond to the painted glyphs. The
+        # labels sit in bands the scatter does not enter (nothing above 0.0129 except residue 1837,
+        # and the 0.0105-0.0120 band is empty between x 1.0 and 2.4) and shrinkA holds the leader off
         # the text box, so nothing is left to mask. style_gb's rule is no strokes behind text.
         axV.annotate(text, xy=(x, y), xytext=xytext, fontsize=SG.ANNOT, color=col, ha=ha,
                      va="center", zorder=10,
                      arrowprops=dict(arrowstyle=arrow, color=col, lw=0.7, shrinkA=3,
                                      connectionstyle=f"arc3,rad={rad}"))
-    # With the statistics card gone from the top of the panel these two labels move UP into the
-    # space it used to cover, beside the residues they name. Both are right-anchored so the leader
+    # With no statistics card at the top of the panel, these two labels sit high, in the
+    # space above the cloud, beside the residues they name. Both are right-anchored so the leader
     # leaves the text's right edge and travels away from the type instead of across it, and both
     # sit in bands the scatter does not enter (nothing lies above 0.0129 except residue 1837, and
     # the 0.0105–0.0120 band is empty between x 1.0 and 2.4).
@@ -486,10 +484,10 @@ def main():
     # label and the block.
     axV.set_xlabel("Measured deleteriousness   (SGE, −function score)", fontsize=SG.AXIS, labelpad=3)
     # The default locator emits a −0.002 y-tick that lies OUTSIDE ylim; matplotlib still draws its
-    # label, pinned at the axes corner, where it collided with the x-axis label. Pin the ticks inside
+    # label, pinned at the axes corner, where it collides with the x-axis label. Pin the ticks inside
     # the range instead — and carry the top one to 0.015, because the data really does reach 0.0149.
-    # The old 0.012 top tick, with the statistics card floating over everything above 0.0098, is why
-    # the top third of this panel read as empty: it was not empty, it was covered.
+    # A top tick at 0.012, with anything floating over the scatter above 0.0098, makes the top third
+    # of this panel read as empty when it is not empty, only covered.
     axV.set_yticks([0.000, 0.005, 0.010, 0.015])
     axV.set_ylabel("Evo 2 predicted deleteriousness   (per residue)", fontsize=SG.AXIS)
     pe = int(np.floor(np.log10(p_all))) if p_all > 0 else -300
@@ -521,15 +519,15 @@ def main():
              va="bottom", ha="left")
 
     # ---- panel c's statistics, off the data and onto empty canvas ----
-    # Genome Biology wants the key in the graphic, so every number stays on the page; what changed
-    # is where. The nine-line card this replaces floated at the top-left of the scatter at alpha
-    # 0.72 and covered the four most deleterious residues in the study — 1837 among them, the very
-    # point the "max Evo 2" leader points at — which is why the panel appeared to top out at 0.0098
+    # Genome Biology wants the key in the graphic, so every number stays on the page, beneath the
+    # scatter rather than on it. A card at the top-left of the scatter (alpha
+    # 0.72) would cover the four most deleterious residues in the study — 1837 among them, the very
+    # point the "max Evo 2" leader points at — and make the panel appear to top out at 0.0098
     # against a real maximum of 0.01486. It cannot simply be made smaller and kept inside: the
     # largest marker-free rectangle in the scatter is about 60 × 68 pt (x < 0.7, y > 0.0105) and the
-    # widest line below is 209 pt. So it moves to the empty strip beneath the panel, left edge
-    # aligned with panel c's own letter. The editorial line that used to close it
-    # ("reference notebook, 1B: 0.73 → reproduces, not beats") is not a key and is not here; it is
+    # widest line below is 209 pt. So it sits in the empty strip beneath the panel, left edge
+    # aligned with panel c's own letter. An editorial line such as
+    # "reference notebook, 1B: 0.73 → reproduces, not beats" is not a key and is not here; it is
     # an argument, and it belongs to the legend in the journal's voice.
     fig.text(0.5, Y(485.0),
              # The header names the statistic in words, Spearman's correlation, and the three values
@@ -548,8 +546,8 @@ def main():
              fontsize=SG.ANNOT, color=INK_, ha="left", va="top", linespacing=1.40)
 
     # TITLE AND STANDFIRST LIVE IN THE MANUSCRIPT LEGEND (house style, src/ccs/style_gb.py).
-    # The plate carried a two-line bold title and a two-line italic provenance block; the legend
-    # opens with the same title and names the panel, the assay, the 3,893 substitutions, the
+    # No bold title or italic provenance block on the plate: the legend
+    # opens with the title and names the panel, the assay, the 3,893 substitutions, the
     # Findlay reference, the readout and the 0.874 AUROC. Panel c prints that AUROC with its
     # interval below the panel as well, so no number leaves the figure for it.
     os.makedirs("reports/figures", exist_ok=True)

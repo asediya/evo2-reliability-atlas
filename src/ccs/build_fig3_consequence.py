@@ -7,7 +7,7 @@ largest verifiability gap in the submission: the values appeared in the Results 
 artifact behind them, because the producing scripts wrote to `logs/`, which is not part of the code
 deposit.
 
-Estimator, stated explicitly because the referee had to reverse-engineer it. For each consequence
+Estimator, stated explicitly so that no reader has to reverse-engineer it. For each consequence
 class, each species' positives of that class are scored against that same species' population
 negatives, and the per-species AUROCs are combined as a positive-count-weighted mean. Negatives are
 never pooled across species, so no cross-species composition difference enters the comparison.

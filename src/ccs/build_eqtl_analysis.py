@@ -47,11 +47,11 @@ def main():
     # within-eGene: for genes with >=1 causal and >=1 non-causal, does causal top the local ranking?
     #
     # Scored on the SIGNED, causal-oriented column, matching fig3_data.py, which is the
-    # source of every eQTL number in the paper. This script previously ranked on |LLR| and
-    # took the MAX percentile among a gene's causal variants while printing "0.5 = chance".
-    # Both were wrong: the null of a max over k causal variants is k/(k+1) (~0.78 here, at
-    # ~3.5 causal per eGene), not 0.5, so the old 0.649 read as above-chance when it was not.
-    # We now average over every causal variant. The null is NOT 0.5: the statistic is
+    # source of every eQTL number in the paper. It does not rank on |LLR|, and it does not take
+    # the MAX percentile among a gene's causal variants against a "0.5 = chance" null:
+    # the null of a max over k causal variants is k/(k+1) (~0.78 here, at
+    # ~3.5 causal per eGene), not 0.5, so a max of 0.649 would read as above-chance when it is not.
+    # The statistic averages over every causal variant. Its null is NOT 0.5 either: the statistic is
     # mean(sgn < sgn[causal]), whose denominator counts every cis-variant including the causal
     # one, so a variant cannot score below itself and E[.] = (k-1)/2k < 0.5. For this panel
     # (mean k = 12.44 over the 1,430 eGenes that survive the single-class filter below, holding

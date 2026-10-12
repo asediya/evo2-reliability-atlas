@@ -7,7 +7,7 @@ p-value  p = 1 - P(delta > 0)  for ALL 9 species and apply Benjamini-Hochberg FD
 report how many species survive.
 
 Conservation baseline = GERP (the atlas's sole conservation baseline; the on-disk *_gerp_phylop tracks
-were byte-identical copies of GERP and are no longer used). We read the atlas directly so this stays
+are byte-identical copies of GERP and are not used). We read the atlas directly so this stays
 consistent with build_atlas.py.
 
   python src/ccs/build_beats_conservation_ci.py   -> logs/beats_conservation_ci.md

@@ -31,7 +31,7 @@ def post(url, body, tries=4):
 def main():
     w = pl.read_parquet("data/interim/brca1_windows.parquet")
     # field-standard 8192-bp mean-LL readout (matches the saturation quilt + variant AUROC 0.874);
-    # deleteriousness = -delta. (The old 1001-bp evo2_40b_neg readout is weak, ~0.66 -- do NOT use here.)
+    # deleteriousness = -delta. (The 1001-bp evo2_40b_neg readout is weak, ~0.66 -- do NOT use here.)
     s = pl.read_parquet("data/processed/scores_cloud/brca1_evo2_40b_meanll_8192.parquet")
     d = w.join(s, on="variant_id", how="inner")
     recs = []

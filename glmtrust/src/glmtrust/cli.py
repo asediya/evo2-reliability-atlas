@@ -220,8 +220,8 @@ def _check_out(*paths):
 def _write_rows(path, header, rows):
     """Write rows to path, honouring the extension.
 
-    This always wrote CSV whatever the filename said, so `--out foo.parquet` produced a CSV named
-    .parquet that every parquet reader then refused to open. Silently writing a different format
+    Writing CSV whatever the filename says would make `--out foo.parquet` produce a CSV named
+    .parquet that every parquet reader refuses to open. Silently writing a different format
     from the one requested is worse than refusing: the file exists, looks right in a listing, and
     fails only when someone tries to read it.
     """
@@ -908,10 +908,10 @@ def _common(sub, groups=True, group_required=False):
                          help="group column, e.g. species: %s" % (
                              "each group is calibrated from the others" if group_required else
                              "evaluate each group with a map fitted on the others"))
-    # Runnability report T5: this defaulted to isotonic while the Methods state the per-variant
-    # deliverable is the two-parameter Platt posterior, so the documented command handed a reader
-    # a different arm from the paper. The two differ materially on the paper's own panel (AUROC
-    # 0.820 against 0.847, lift 2.37 against 2.56). The tool now ships what the paper reports.
+    # The default is platt because the Methods state the per-variant deliverable is the
+    # two-parameter Platt posterior; an isotonic default would hand a reader of the documented
+    # command a different arm from the paper. The two differ materially on the paper's own panel
+    # (AUROC 0.820 against 0.847, lift 2.37 against 2.56).
     sub.add_argument("--calibration", default="platt", choices=["isotonic", "platt"],
                      help="probability map (default platt)")
     sub.add_argument("--seed", type=int, default=0, help="random seed (default 0)")

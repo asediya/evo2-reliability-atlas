@@ -84,11 +84,10 @@ def main():
     print("  class composition by MAF quintile (%% of bin):")
     classes = sorted(set(cls))
     print("    %-6s %s" % ("class", "  ".join("Q%d" % (i+1) for i in range(5))))
-    # Only the swing (max - min) used to be stored, so the Methods printed the
+    # Store the per-quintile fractions, not only the swing (max - min): the Methods print the
     # per-quintile fractions themselves ("C>T falls from 41.4% of the rarest quintile to 34.7% of
-    # the commonest while T>C rises from 25.3% to 32.5%") and no deposited artefact carried them.
-    # The derived swing reconciled; the operands could not be checked. They are computed here
-    # anyway, so store them.
+    # the commonest while T>C rises from 25.3% to 32.5%"), and with only the swing deposited the
+    # derived value would reconcile while the operands could not be checked.
     comp_var, comp_by_quintile = {}, {}
     for c in classes:
         fr = [100.0 * np.mean(cls[binned == b] == c) for b in range(5)]

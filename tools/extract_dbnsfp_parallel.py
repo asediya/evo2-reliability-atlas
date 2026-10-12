@@ -8,7 +8,7 @@ can be decompressed out of order, and a single `gzip -dc` pipeline cannot exploi
 
 Columns kept: chr/pos/ref/alt (the join key), genename and Ensembl_geneid, and every *_score column.
 The gene columns are the point of using dbNSFP rather than the per-scorer files: the between-gene
-composition artefact that retracted this project's earlier missense head-to-head can only be
+composition artefact that can reverse a missense head-to-head can only be
 controlled if gene travels with the scores, and here it does.
 
     python tools/extract_dbnsfp_parallel.py --jobs 48
@@ -205,9 +205,8 @@ def main():
     # assembly, not a workaround -- but it is counted and reported, because a rising count would mean
     # the boundary logic had drifted.
     #
-    # The previous version counted repeated KEYS and called them a boundary bug. That check was
-    # written for CADD, which has exactly one row per variant, and is simply the wrong question for
-    # dbNSFP.
+    # Repeated KEYS are not a boundary bug. A repeated-key check suits CADD, which has exactly
+    # one row per variant, and is simply the wrong question for dbNSFP.
     os.makedirs(os.path.dirname(a.out), exist_ok=True)
     total, seen_rows, exact_dup, keys = 0, set(), 0, set()
     with open(a.out, "w", encoding="utf-8", newline="\n") as fh:

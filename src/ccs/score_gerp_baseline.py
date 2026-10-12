@@ -1,6 +1,6 @@
 """Proper conservation baseline: Evo2-40B vs GERP (+ phyloP) per species, on the IDENTICAL variant set,
-with paired bootstrap CIs on the AUROC difference. Replaces a bare win count with an
-interval-carrying Evo 2 versus conservation table, computed where both methods return a value. All data already on disk
+with paired bootstrap CIs on the AUROC difference: an interval-carrying Evo 2 versus conservation table rather
+than a bare win count, computed where both methods return a value. All data already on disk
 (data/processed/conservation/*_gerp.parquet); pure CPU.
 
   python src/ccs/score_gerp_baseline.py --jobs 50 --nboot 20000
@@ -71,8 +71,8 @@ def main():
         if lo > 0:
             beats += 1
         au_p = roc_auc_score(y, ph) if ph is not None and np.isfinite(ph).all() else float("nan")
-        # this column came out null in all nine rows and nothing in the file
-        # said why, so a table named for the paper's central head-to-head shipped an entirely empty
+        # this column is null in all nine rows, and if nothing in the file
+        # said why, a table named for the paper's central head-to-head would show an entirely empty
         # comparator. It is empty by construction: a genuine phyloP track exists for three species
         # only (cattle bosTau9, chicken galGal6, human hg38) and those comparisons live in
         # reports/phylop_crosscheck.json. The status column says so on every row.

@@ -7,7 +7,7 @@ Two of the new results are read class by class, and each is a family of tests re
 - the ClinVar panel asks whether each of eight consequence rungs separates pathogenic from benign
 
 Reporting five or eight bootstrap intervals side by side and reading the pattern is exactly the
-practice that produces a per-class story from noise. Nothing in the paper currently controls for
+practice that produces a per-class story from noise. Uncorrected, nothing controls for
 that, and a referee is entitled to ask. This applies Westfall and Young's max-T permutation, which
 controls the family-wise error rate while respecting the strong correlation between classes rather
 than assuming independence as Bonferroni would.
@@ -71,7 +71,7 @@ def _splice_chunk(args):
     The swap is performed on within-class ranks, not on raw scores. Evo 2's readout spans roughly
     -22 to +107 and SpliceAI's spans 0 to 1, so swapping raw values between predictors produces a
     mixture of two scales, and the resulting null describes that mixture instead of the hypothesis.
-    A first version of this script did exactly that and reported every class non-significant with a
+    Done that way, the test reports every class non-significant with a
     null 95th percentile of 0.265, larger than four of the five observed differences. Ranks make the
     two exchangeable under the null, which is what the test requires; AUROC depends only on ranks,
     so the observed statistic is unchanged.

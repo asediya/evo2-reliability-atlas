@@ -26,9 +26,9 @@ if hasattr(sys.stdout, "reconfigure"):
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BUILT = os.path.join(ROOT, "reports", "figures")
-# v2 stages into its own directory. The v1 set is locked and must not be written to; honouring the
+# Staging goes into its own directory: the frozen submission set must not be written to. Honouring the
 # same CCS_SUBMISSION_OUT the docx builder uses keeps every stage of the pipeline pointed at one
-# version, which is what went wrong when the figures and the manuscript came from different ones.
+# version, so the figures and the manuscript cannot come from different ones.
 SUB = os.path.join(ROOT, os.environ.get("CCS_SUBMISSION_OUT", os.path.join("reports", "submission")))
 
 # (builder module, built filename, shipped filename). One builder may emit two figures.

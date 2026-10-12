@@ -208,7 +208,7 @@ def label_row(ax, items, y, fontsize, y_from, rotation=0, gap_pt=2.5, va="top", 
               lead_color="#B4B4B4", lead_lw=0.4, zorder=3):
     """Seat a row of labels on ONE baseline under the columns they name.
 
-    Replaces the two-rank stagger both mosaic panels used. A stagger is what you fall back on when
+    One baseline, not a two-rank stagger. A stagger is what you fall back on when
     labels are placed at their columns' centres and left to collide; it costs a second rank of
     height, doubles the leader lengths, and makes the reader's eye zig-zag to read nine names in
     order. Measuring each label and nudging it the minimum distance keeps one baseline.
@@ -350,7 +350,7 @@ def text_safe(c, target=4.5):
     """Darken `c` along its OWN hue until it clears `target`:1 against white.
 
     A category's colour is often set as type as well as ink -- the key label beside its swatch,
-    a coloured tick label, a species name. Measured across the ten plates, that produced label
+    a coloured tick label, a species name. Measured across the ten plates, undarkened colours set label
     text at 1.63:1 (#FDBE85), 1.79 (#EDBA47), 3.06 (#CC79A7) and 3.42 (#009E73): washed out at
     6.8 pt, which is most of what reads as unfinished in a figure. Hue and saturation are held,
     so the word still matches the swatch it names; only lightness moves, and only downward.

@@ -53,9 +53,9 @@ def _fh(fig, pt):
 def _letter(fig, ax, letter, x=None, pad_pt=4.5):
     """House style (src/ccs/style_gb.py): a bold lower-case letter over `ax` and nothing else, in INK.
 
-    Every panel used to carry a sentence-length heading beside its letter, set bold in the Evo 2
-    blue; each either repeated the legend's per-panel sentence or stated the finding the legend
-    exists to state, and the blue was emphasis, not data. The call sites keep those strings as
+    No panel carries a sentence-length heading beside its letter: such a heading either repeats the
+    legend's per-panel sentence or states the finding the legend exists to state, and setting it bold
+    in the Evo 2 blue is emphasis, not data. The call sites keep those strings as
     documentation of what each panel is; the canvas prints the letter only.
 
     x is the SHARED letter margin (SG.letter_x) for a LEFT-column panel and the axes' own left edge
@@ -109,9 +109,9 @@ def build_supplement(N):
         pos = ax.get_position()
         fig.text(_LX, min(pos.y1 + 0.016, SG.letter_top(fig, margin_pt=0.4)), letter,
                  fontsize=SG.PANEL, fontweight="bold", va="bottom", ha="left", color=SG.INK)
-    # The note panel a carried on the measurement plate, right-aligned over the panel it measures.
+    # The note for panel a, right-aligned over the panel it measures.
     # The species count is the number of points the panel draws, not a typed 9.
-    # The pooled value only. The Spearman test of AUROC against divergence it used to print beside it
+    # The pooled value only. The Spearman test of AUROC against divergence
     # runs over nine points of which seven share one divergence, and the legend itself calls it
     # uninformative; a statistic that cannot inform does not belong on the plate.
     pos = axA.get_position()
@@ -133,10 +133,10 @@ def _save(fig, stem):
     import fitz
     os.makedirs("reports/figures", exist_ok=True)
     pdf = f"reports/figures/{stem}.pdf"
-    # Kept as a guard rather than as a fix. Haloed text renders as vector outlines and drops out
-    # of the PDF text layer, so every haloed string used to need a transparent extractable twin.
-    # House style has since removed the last path effect from text in both figures, so this now
-    # adds nothing -- and it will go on adding nothing unless a halo comes back.
+    # A guard rather than a fix. Haloed text renders as vector outlines and drops out
+    # of the PDF text layer, so every haloed string needs a transparent extractable twin.
+    # House style sets no path effect on text in either figure, so this adds nothing
+    # -- and it will go on adding nothing unless a halo is introduced.
     restore_text_layer(fig)
     # GB: figures are "closely cropped to minimise the amount of white space surrounding the
     # illustration". Crop the PAGE at the save, to the drawn extent plus 3 mm, and only ever

@@ -7,8 +7,8 @@ this whole project documents.
 1. PER-TRANSCRIPT AGGREGATION. dbNSFP stores most scores as a ';'-separated list, one entry per
    transcript, with '.' where that transcript has no value: "0.0;." or ".;0.113;.". A single number
    per variant therefore requires a choice. MAX is used, and it is the choice that flatters a
-   scorer, so it is recorded rather than inherited -- an earlier analysis in this project took max
-   for one scorer and a canonical-transcript file for another, and the asymmetry favoured one of
+   scorer, so it is recorded rather than inherited, and it is applied to every scorer alike --
+   taking max for one scorer and a canonical-transcript file for another would favour one of
    them by about 0.0025 AUROC.
 
 2. MULTI-GENE-MODEL ROWS. A variant annotated against several gene models appears several times.

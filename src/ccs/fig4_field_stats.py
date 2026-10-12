@@ -1,7 +1,7 @@
 """Panel-a risk field: local error rate over (signed log-odds x species), with the evidence behind
 every cell carried alongside it.
 
-The staircase this replaces drew goat's six errors as seven crisp steps. Here the colour of a cell is its
+A staircase draws goat's six errors as seven crisp steps. Here the colour of a cell is its
 measured error rate and the OPACITY is its denominator, so thinly-evidenced regions fade out instead of
 asserting structure. The individual errors are kept so they can be drawn on top of the field.
 

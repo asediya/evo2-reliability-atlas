@@ -80,8 +80,8 @@ def block_offsets(path, every=1):
 def _iter_blocks(path, start, end):
     """Yield the decompressed payload of each BGZF block whose header starts in [start, end).
 
-    A generator rather than a concatenation. The first version of this returned the whole range as
-    one bytes object, which is fine for a few blocks and fatal at scale: with the file split 48 ways
+    A generator rather than a concatenation. Returning the whole range as
+    one bytes object is fine for a few blocks and fatal at scale: with the file split 48 ways
     each worker holds roughly 6 GB of decompressed text, and the pool dies with BrokenProcessPool
     long before the machine's memory is genuinely exhausted. Streaming keeps each worker at one
     block plus a partial line.

@@ -115,8 +115,8 @@ BOX_B = Box(30.0, 86.0, 76.0, 108.0)         # the matched-pair plane
 BOX_CT = Box(115.0, 166.0, 76.0, (76.0 + 108.0 - CGAP) / 2)
 BOX_CB = Box(115.0, 166.0, (76.0 + 108.0 + CGAP) / 2, 108.0)
 BOX_D = Box(42.0, 158.0, 125.0, 163.0)       # the scorer / other-signal ledger
-# 3.0 mm -> 2.05 mm: 2.05 mm IS style_gb.LETTER_X_PT (5.8 pt), the one left margin the whole set
-# now uses. 88.0 is this plate's right column and stays -- that letter marks its own panel corner.
+# 2.05 mm IS style_gb.LETTER_X_PT (5.8 pt), the one left margin the whole set
+# uses. 88.0 is this plate's right column -- that letter marks its own panel corner.
 LETTER_X = (2.05, 88.0)        # panel letters align in two columns, at the panel bounding box
 
 

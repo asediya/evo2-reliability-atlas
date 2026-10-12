@@ -34,15 +34,15 @@ import fitz
 
 # Panel titles carry Greek and typographic characters. When this gate's output is captured rather
 # than sent to a terminal, Windows selects cp1252 and the first Delta raises UnicodeEncodeError, so
-# the gate dies part-way through the figure list. It had already reported four figures and never
-# reached the other four, which in a summary reads as a pass for everything it never checked.
+# the gate would die part-way through the figure list, having reported some figures and never
+# reached the rest, which in a summary reads as a pass for everything it never checked.
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-# This module used to leave SUB as a bare relative path with no anchoring, so its input set
-# depended on the caller's cwd. Run from anywhere but the repo root it globbed nothing, printed
-# "every panel title clears 6.0 pt" over an empty file list, and exited 0 -- and run_all_gates.py
-# recorded that as PASS. A gate that reports a pass while checking zero figures is worse than no
-# gate, so this now anchors itself and refuses to pass over an empty set (see main()).
+# SUB is anchored, not left as a bare relative path whose input set
+# depends on the caller's cwd: run from anywhere but the repo root, an unanchored glob finds nothing,
+# prints "every panel title clears 6.0 pt" over an empty file list and exits 0 -- which run_all_gates.py
+# would record as PASS. A gate that reports a pass while checking zero figures is worse than no
+# gate, so this anchors itself and refuses to pass over an empty set (see main()).
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(ROOT)
 

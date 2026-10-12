@@ -46,8 +46,8 @@ def _ink_only(path, dpi):
     full = fitz.open(path)[0].get_pixmap(dpi=dpi)
     b = np.frombuffer(full.samples, dtype=np.uint8).reshape(full.height, full.width, full.n)
     # RGB is kept for the visibility test and only collapsed for the coverage/texture ones.
-    # min-over-channels was wrong for visibility: dark ink (min 21) on a yellow cell (min 30)
-    # differs by 9, so two perfectly legible cells in Figure 1 were reported as painted over.
+    # min-over-channels is wrong for visibility: dark ink (min 21) on a yellow cell (min 30)
+    # differs by 9, so it would report two perfectly legible cells in Figure 1 as painted over.
     return a[..., :3], b[..., :3], dpi / 72.0
 
 

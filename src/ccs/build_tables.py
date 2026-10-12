@@ -109,9 +109,9 @@ def table2_trust(F4):
             row[est] = blk.get("macro") if isinstance(blk, dict) else None
         cal.append(row)
 
-    # "a" and "b" are the two sides of isotonic_LOSO_vs_trivial, so a bare "a_better" reached the
+    # "a" and "b" are the two sides of isotonic_LOSO_vs_trivial, so a bare "a_better" would reach the
     # rendered table as an untranslated enum while its three neighbours read "indistinguishable" --
-    # a reader had no way to tell which side "a" was, on the one row where the comparison is not
+    # a reader would have no way to tell which side "a" is, on the one row where the comparison is not
     # null. ECE is an error, so a negative delta means the first-named method is the lower-error one;
     # the direction is asserted against the sign below rather than trusted.
     VERDICT = {"a_better": "isotonic transfer better",

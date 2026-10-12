@@ -185,8 +185,8 @@ def main():
         if not os.path.exists(a):
             sys.exit("not found: " + a)
     # Propagate the refusal. export_supplement() returns 4 when it declines to overwrite a
-    # complete export with an empty one, but that value used to be discarded here, so the tool
-    # printed "REFUSING" and exited 0 -- a message contradicting its own exit code, which any
+    # complete export with an empty one; discarding that value here would make the tool
+    # print "REFUSING" and exit 0 -- a message contradicting its own exit code, which any
     # calling script reads as success.
     rc = 0
     for a in args:

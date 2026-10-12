@@ -10,7 +10,7 @@ species called significant on every seed, or on none, is stable. One near half i
 an interval.
 
 Parallel over (species, seed) pairs: 9 x 40 = 360 independent jobs, which is what the machine is for.
-The first version of this ran single-threaded and took long enough to look stalled.
+Single-threaded, it takes long enough to look stalled.
 
     python tools/verify_seed_stability.py --seeds 40 --n-boot 2000 --jobs 48
 """

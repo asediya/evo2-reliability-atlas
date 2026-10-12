@@ -108,7 +108,7 @@ def main():
                              auroc=round(auc, 3), ece_raw=round(e_raw, 3), ece_cal=round(e_cal, 3),
                              cov=round(cov, 3), abstain=round(abst, 2), bss=round(bss, 3)))
 
-    # --- HONEST NULL BASELINES (audit fix): prove the ECE-collapse is isotonic regression, not skill ---
+    # --- HONEST NULL BASELINES: prove the ECE-collapse is isotonic regression, not skill ---
     y_all = df["y"].to_numpy().astype(int)
     n_all = len(y_all); base = float(y_all.mean())
     rng = np.random.default_rng(0)

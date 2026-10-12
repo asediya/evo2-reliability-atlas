@@ -42,10 +42,10 @@ SPECIES = {
 EV = "logs/status/events.log"; ST = "logs/status/decomposition.status"; MD = "logs/decomposition.md"
 
 
-# logs/status/ is not in the code deposit (the zip ships logs/*.md only), so this
-# script died on FileNotFoundError writing its status file BEFORE reaching any data/ read. That is
-# a packaging omission, not the disclosed data boundary, and it made a referee's first failure the
-# wrong one. Create the directory instead of assuming it.
+# logs/status/ is not in the code deposit (the zip ships logs/*.md only), so without this the
+# script would die on FileNotFoundError writing its status file BEFORE reaching any data/ read. That
+# is a packaging omission, not the disclosed data boundary, and it would make a referee's first
+# failure the wrong one. Create the directory instead of assuming it.
 os.makedirs(os.path.dirname(EV), exist_ok=True)
 
 
