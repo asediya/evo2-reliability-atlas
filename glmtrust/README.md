@@ -85,7 +85,7 @@ table needs no column bookkeeping.
   the full ClinVar audit takes 42 seconds rather than half an hour.
 - **Missing means NaN.** A scorer that imputes its own no-calls before reaching this module cannot
   be audited for reach, which is the point.
-- **Intervals are variant-level unless you name a cluster.** Where variants share a gene or locus
+- **Intervals are variant-level unless you name a cluster.** Where variants share a gene or locus,
   that is too narrow: on the dbNSFP panel gene-resampled intervals run several times wider.
   `cluster=` (CLI `--cluster-col`) makes every whole-panel interval a bootstrap over whole groups
   (the within-stratum intervals stay variant-level), and the report states which kind it printed.

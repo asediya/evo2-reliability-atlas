@@ -243,7 +243,7 @@
    ],
    "_provenance": "Both the point estimate and the CI of the pooled dFM are recomputed here from the per-variant scores."
   },
-  "_note": "The 8192 bp columns and the GERP-comparable columns are DIFFERENT PANELS with different n. The readout is worth +0.092 AUROC pooled, so the two must never be compared across columns. dFM is the estimator-consistent value (all three AUROC terms from one 5-fold CV logistic), not the deposited decomposition table's."
+  "_note": "The 8,192-bp columns and the GERP-comparable columns are DIFFERENT PANELS with different n. The readout is worth +0.092 AUROC pooled, so the two must never be compared across columns. \u0394FM is the estimator-consistent value (all three AUROC terms from one 5-fold CV logistic), not the deposited decomposition table's."
  },
  "T2": {
   "id": "T2",
@@ -463,7 +463,7 @@
     "abstain_mondrian": 0.434
    }
   ],
-  "_note": "Aggregation is MACRO throughout: pooling lets human (n=3,000 at 50% prevalence) dominate a cohort otherwise near 9%. The abstention arm is the honest LOSO one \u2014 NOT the in-species oracle, which is an unattainable bound. Any conformal claim is the MONDRIAN arm; the marginal arm under-covers the positive class and is a documented artifact. Platt transfer and the trivial global sigmoid are ONE estimator, bit-identical here under every binning rule and in every species \u2014 transferring a Platt map across species IS fitting two global parameters."
+  "_note": "Aggregation is MACRO throughout: pooling lets human (n = 3,000 at 50% prevalence) dominate a cohort otherwise near 9%. The abstention arm is the honest LOSO one \u2014 NOT the in-species oracle, which is an unattainable bound. Any conformal claim is the MONDRIAN arm; the marginal arm under-covers the positive class and is a documented artefact. Platt transfer and the trivial global sigmoid are ONE estimator, bit-identical here under every binning rule and in every species \u2014 transferring a Platt map across species IS fitting two global parameters."
  },
  "T3": {
   "id": "T3",

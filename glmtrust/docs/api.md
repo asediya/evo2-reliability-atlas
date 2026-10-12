@@ -161,7 +161,7 @@ The building blocks are public too, in `glmtrust.baseline`:
   `sequence_blind`, it refuses more folds than either class has variants.
 - `oof_group_within_class(groups, classes, labels, folds=5, alpha=1.0, seed=0, fold_ids=None)` — the
   hierarchical gene-within-consequence prior.
-- `midrank_auroc(labels, scores)` — the Mann-Whitney AUROC with ties counted ½.
+- `midrank_auroc(labels, scores)` — the Mann–Whitney AUROC with ties counted ½.
 
 `benchmarks/reproduce_paper_baseline.py --panel <Additional file 4>` prints the paper's gene-identity,
 consequence-class and gene-and-consequence baselines, 0.880, 0.837 and 0.974.
@@ -238,7 +238,7 @@ matters.
   `macro` refusal figures, each group refusing its own least-confident share (by default in whole tie
   blocks, never part of one). A NaN probability is left out with a warning and counted as
   `n_without_probability`.
-- `precision_lower_bound(k_correct, n, confidence=0.9)` — Clopper-Pearson lower bound.
+- `precision_lower_bound(k_correct, n, confidence=0.9)` — Clopper–Pearson lower bound.
 - `margin_confidence(probs)` — the `|2p − 1|` confidence functional.
 
 ## `glmtrust.transfer`

@@ -2,12 +2,12 @@
 
 Built by `src/ccs/build_tables.py` from the figure recompute layers; headline values are asserted against literals in build_tables.py at build time. Regenerate rather than patch.
 
-**These are the deposit's own tables, D1-D4, and they are not the tables printed in the manuscript.** They present the same recompute layer more fully -- Table D1 carries the 8,192-bp panel with fourteen columns; the manuscript's eight-column Table 2 reports the same nine species at both readouts against GERP, on slightly different per-species panels, so its 8,192-bp and GERP point estimates agree with D1 at three decimals while its 1,001-bp column, on the full 11,130-variant panel, differs in the third decimal for goat, horse and cat, and its locus-clustered intervals agree with D1's only for human and cattle.
+**These are the deposit's own tables, D1–D4, and they are not the tables printed in the manuscript.** They present the same recompute layer more fully — Table D1 carries the 8,192-bp panel with fourteen columns; the manuscript's eight-column Table 2 reports the same nine species at both readouts against GERP, on slightly different per-species panels, so its 8,192-bp and GERP point estimates agree with D1 at three decimals while its 1,001-bp column, on the full 11,130-variant panel, differs in the third decimal for goat, horse and cat, and its locus-clustered intervals agree with D1's only for human and cattle.
 
 
 ## Table D1. Cross-species reliability atlas for Evo 2-40B
 
-Pooled at 8192 bp mean-LL: **0.973** [0.968, 0.978], n = 11,109. Readout lift 1001 bp → 8192 bp: **+0.092** [+0.083, +0.101]. Pooled ΔFM **+0.0202** [+0.0132, +0.0279].
+Pooled at 8,192-bp mean-LL: **0.973** [0.968, 0.978], n = 11,109. Readout lift 1,001 bp → 8,192 bp: **+0.092** [+0.083, +0.101]. Pooled ΔFM **+0.0202** [+0.0132, +0.0279].
 
 | species | clade | 8192 bp panel n | AUROC @8192 | 95% CI (AUROC @8192) | AUROC @1001 | readout Δ | GERP panel n | Evo 2 | GERP | Δ vs GERP | 95% CI (Δ vs GERP) | verdict | ΔFM |
 |---|---|--:|--:|:--|--:|--:|--:|--:|--:|--:|:--|:--|--:|
@@ -21,7 +21,7 @@ Pooled at 8192 bp mean-LL: **0.973** [0.968, 0.978], n = 11,109. Readout lift 10
 | sheep | ruminant | 616 | 0.962 | [0.917, 0.994] | 0.903 | +0.060 | 451 | 0.912 | 0.865 | +0.047 | [-0.045, 0.134] | ns | +0.0482 |
 | goat | ruminant | 98 | 0.959 | [0.907, 0.994] | 0.950 | +0.009 | 80 | 0.953 | 0.780 | +0.173 | [0.079, 0.274] | *** | +0.1797 |
 
-*The 8192 bp columns and the GERP-comparable columns are DIFFERENT PANELS with different n. The readout is worth +0.092 AUROC pooled, so the two must never be compared across columns. dFM is the estimator-consistent value (all three AUROC terms from one 5-fold CV logistic), not the deposited decomposition table's.*
+*The 8,192-bp columns and the GERP-comparable columns are DIFFERENT PANELS with different n. The readout is worth +0.092 AUROC pooled, so the two must never be compared across columns. ΔFM is the estimator-consistent value (all three AUROC terms from one 5-fold CV logistic), not the deposited decomposition table's.*
 
 
 ## Table D2. What the trust layer delivers, and what it costs
@@ -64,7 +64,7 @@ Pooled at 8192 bp mean-LL: **0.973** [0.968, 0.978], n = 11,109. Readout lift 10
 | dog | 2,497 | 0.648 | 0.00 | 0.943 | 0.62 |
 | human | 3,000 | 0.679 | 0.00 | 0.978 | 0.43 |
 
-*Aggregation is MACRO throughout: pooling lets human (n=3,000 at 50% prevalence) dominate a cohort otherwise near 9%. The abstention arm is the honest LOSO one — NOT the in-species oracle, which is an unattainable bound. Any conformal claim is the MONDRIAN arm; the marginal arm under-covers the positive class and is a documented artifact. Platt transfer and the trivial global sigmoid are ONE estimator, bit-identical here under every binning rule and in every species — transferring a Platt map across species IS fitting two global parameters.*
+*Aggregation is MACRO throughout: pooling lets human (n = 3,000 at 50% prevalence) dominate a cohort otherwise near 9%. The abstention arm is the honest LOSO one — NOT the in-species oracle, which is an unattainable bound. Any conformal claim is the MONDRIAN arm; the marginal arm under-covers the positive class and is a documented artefact. Platt transfer and the trivial global sigmoid are ONE estimator, bit-identical here under every binning rule and in every species — transferring a Platt map across species IS fitting two global parameters.*
 
 
 ## Table D3. Reach — what conservation can be run on, and what the silence costs
@@ -88,7 +88,7 @@ CI excludes zero in **4 of 9**. Consequence-matched control: significant in **0 
 
 ## Table D4. Baseline suite — conservation, a peer DNA-LM, a protein LM, and supervised models
 
-Over the **9,532** variants both Evo 2 and conservation can score it is a tie: Evo 2 **0.8805** vs GERP **0.8780**. Nucleotide Transformer scores **1,598/1,598** of the GERP-blind variants — full reach is a DNA-LM class property, not an Evo 2 one.
+Over the **9,532** variants both Evo 2 and conservation can score, it is a tie: Evo 2 **0.8805** vs GERP **0.8780**. Nucleotide Transformer scores **1,598/1,598** of the GERP-blind variants — full reach is a DNA-LM class property, not an Evo 2 one.
 
 | species | n | Evo 2 (covered) | GERP (covered) | GERP (must answer) | Evo 2 (full panel) |
 |---|--:|--:|--:|--:|--:|

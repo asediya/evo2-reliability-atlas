@@ -181,7 +181,7 @@ Both readouts are accounting choices, not results. The +0.065 species-mean advan
 
 The total recovered here (+0.0668 species mean) reproduces the readout effect of Figure 10a (+0.065), evidence that the effect size is representative even though the subset is not class-balanced: it retains every positive in seven species and keeps at most 200 positives and 200 negatives in each, so dog and human are held at 200 positives and the per-species positive fraction runs from about 9% in goat, whose whole panel is kept, to 50% in dog (human's full panel is already 1:1). The split into context and aggregation is path-dependent. Taking context first (single-token readout, window 1 kb to 8 kb) then aggregation (single to window-mean at 8 kb) gives context +0.0359 and aggregation +0.0309; taking aggregation first (single to window-mean at 1 kb) then context (window-mean 1 kb to 8 kb) gives aggregation +0.0708 and context −0.0040. The total minus the two first steps, each measured from the single-token 1-kb cell, is −0.0399. That residual is not a factorial interaction and does not show that the two factors overlap: the fourth cell of a complete two-by-two, a window mean at 1,001-bp conditioning context, is not part of the design, so the aggregation-first path substitutes the central-1-kb mean of the 8,192-bp pass, which moves conditioning context as well as aggregation. The +0.0349 gap between the two single-factor conditions is likewise a difference between conditions rather than an interaction term. A 'roughly equal halves' reading holds only under the first ordering. What is robust across orderings is that the averaged window can stop at 1 kb: the central 1-kb window-mean exceeds the full 8-kb window-mean in six of nine species (dog's two values tie at the printed precision; species mean 0.946 against 0.942), so extending the averaged window past 1 kb adds nothing. As a correctness check the full-window mean recomputed here reproduces the deposited 8,192-bp mean-log-likelihood to within 0.0003 pooled AUROC.
 
-## Table S10. Precision-recall (AUPRC) at the 8,192-bp readout
+## Table S10. Precision–recall (AUPRC) at the 8,192-bp readout
 
 | Species | n | base rate | AUROC | AUPRC | AUPRC / base rate |
 |---|---|---|---|---|---|
@@ -288,7 +288,7 @@ The same positive-count-weighted estimator as the Evo 2 gradient, with GERP in p
 | ClinVar B/LB, non-coding only | 12,999 | 0.865 | [0.850, 0.879] |
 
 The human arm's 1,500 negatives are a matched sample from ClinVar's benign half; every one of them is a Benign/Likely_benign record, so human is the one species whose negatives are clinically adjudicated rather than catalogued population variation. This rescores the same 1,500 positives against a larger and differently composed sample of the same catalogue, at the identical 1,001-bp readout on GRCh38. Both draws are ClinVar B/LB, so what this bounds is sampling and composition sensitivity, not the population-versus-adjudicated question, which the human arm cannot pose.
-Against the atlas panel's own 1,500 benign negatives the same positives give 0.825, so the human figure moves by −0.014 (coding-only) to +0.040 (non-coding-only) with the benign draw; the range is asymmetric, the non-coding draw is the larger move, and it is not a ±0.03 band, within a single catalogue.
+Against the atlas panel's own 1,500 benign negatives the same positives give 0.825, so the human figure moves by −0.014 (coding-only) to +0.040 (non-coding-only) with the benign draw; the range is asymmetric and the non-coding draw is the larger move, within a single catalogue.
 
 ## Table S16. Splicing benchmark by assay: Evo 2-1B, summed over a 1,001-bp window, against SpliceAI
 
@@ -503,7 +503,7 @@ Calibrated probabilities were mapped from the donor-pool prevalence to the held-
 
 ## Table S25. Mondrian versus marginal conformal prediction
 
-| Species | n | pos | Mondrian cov. | Mondrian cov. (pos.) | Mondrian abstain | marginal cov. | marginal cov. (pos.) | marginal abstain |
+| Species | n | pos. | Mondrian cov. | Mondrian cov. (pos.) | Mondrian abstain | marginal cov. | marginal cov. (pos.) | marginal abstain |
 |---|---|---|---|---|---|---|---|---|
 | Goat | 99 | 9 | 0.970 | 1.000 | 0.505 | 0.929 | 0.222 | 0.000 |
 | Chicken | 308 | 28 | 0.984 | 0.964 | 0.627 | 0.961 | 0.571 | 0.000 |
@@ -643,7 +643,7 @@ The layer is better at the readout the paper argues for, on every axis, and ever
 
 ## Table S31. The selective layer's confidence ordering is not sampling noise
 
-| Species | n | errors | error-detection AUROC | 95% CI | leave-one-out pooled lift |
+| Species | n | errors | error-detection AUROC | 95% CI | leave-one-species-out pooled lift |
 |---|---|---|---|---|---|
 | Goat | 98 | 7 | 0.929 | [0.849, 0.985] | 4.04 |
 | Chicken | 308 | 9 | 0.743 | [0.557, 0.896] | 4.11 |
@@ -667,7 +667,7 @@ Whether the 15%-refusal lift (4.07 pooled) reflects genuine selectivity or the s
 At this readout, error-detection ordering was above chance in eight of nine species, taking above chance to mean a bootstrap interval excluding 0.5, and the pooled permutation result was inconsistent with random ordering. The effect was nevertheless heterogeneous: pig's interval spans chance, human is near chance at the 1,001-bp readout and two of the nine species are worse than random there when the whole risk–coverage curve is summarised, and the 15% operating point was selected on these panels. We therefore describe a pooled selective-prediction signal at this operating point, not a validated transfer guarantee for a label-free species.
 The same test at the 1,001-bp readout, which is the layer Note S66 reports. Observed pooled lift 2.36 (the same 316 errors removed over 1,669 refusals, each species' 15% rounded to the nearest variant, against the 1,673 refusals behind the 2.35 of Tables S27 and S30); permutation null mean 1.00, p < 0.0001, again with no permuted lift reaching it; pooled error-detection AUROC 0.586, species-clustered 95% CI [0.510, 0.768]; leave-one-species-out lift range 2.19 to 3.37; errors detected above chance in seven of the nine species. The permutation rejects sampling variability at both readouts and both pooled intervals clear 0.5, but error detection is markedly weaker at 1,001 bp, which is why the two arms are never quoted interchangeably.
 
-## Table S32. Class-asymmetry of the abstention layer, per species
+## Table S32. Class asymmetry of the abstention layer, per species
 
 | Species | negative-class errors | positive-class errors | protects negatives | protects positives |
 |---|---|---|---|---|

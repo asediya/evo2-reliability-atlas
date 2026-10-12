@@ -75,9 +75,9 @@ def table1_atlas(F2, F6):
         "rows": rows,
         "pooled_8192": F2["pooled"], "readout_pooled": F2["readout_pooled"],
         "d_fm_pooled": F6["decomposition"]["pooled"],
-        "_note": ("The 8192 bp columns and the GERP-comparable columns are DIFFERENT PANELS with "
+        "_note": ("The 8,192-bp columns and the GERP-comparable columns are DIFFERENT PANELS with "
                   "different n. The readout is worth +0.092 AUROC pooled, so the two must never be "
-                  "compared across columns. dFM is the estimator-consistent value (all three AUROC "
+                  "compared across columns. ΔFM is the estimator-consistent value (all three AUROC "
                   "terms from one 5-fold CV logistic), not the deposited decomposition table's."),
     }
 
@@ -146,11 +146,11 @@ def table2_trust(F4):
         "id": "T2", "title": "What the trust layer delivers, and what it costs",
         "calibration_macro_ece": cal, "paired_null_macro": null,
         "abstention": absten, "conformal": conf,
-        "_note": ("Aggregation is MACRO throughout: pooling lets human (n=3,000 at 50% prevalence) "
+        "_note": ("Aggregation is MACRO throughout: pooling lets human (n = 3,000 at 50% prevalence) "
                   "dominate a cohort otherwise near 9%. The abstention arm is the honest LOSO one — "
                   "NOT the in-species oracle, which is an unattainable bound. Any conformal claim is "
                   "the MONDRIAN arm; the marginal arm under-covers the positive class and is a "
-                  "documented artifact. Platt transfer and the trivial global sigmoid are ONE "
+                  "documented artefact. Platt transfer and the trivial global sigmoid are ONE "
                   "estimator, bit-identical here under every binning rule and in every species — "
                   "transferring a Platt map across species IS fitting two global parameters."),
     }
@@ -269,8 +269,8 @@ def _md(T1, T2, T3, T4):
     # the locus-clustered panels (goat 99, horse 781, cat 1,365, cattle 2,068, dog 2,497) against
     # D1's (98, 766, 1,362, 2,067, 2,496), so the point estimates coincide at 3 dp while the
     # intervals do not. Do not describe them as the same column.
-    L.append("**These are the deposit's own tables, D1-D4, and they are not the tables printed in the "
-             "manuscript.** They present the same recompute layer more fully -- Table D1 carries the "
+    L.append("**These are the deposit's own tables, D1–D4, and they are not the tables printed in the "
+             "manuscript.** They present the same recompute layer more fully — Table D1 carries the "
              "8,192-bp panel with fourteen columns; the manuscript's eight-column Table 2 reports "
              "the same nine species at both readouts against GERP, on slightly different "
              "per-species panels, so its 8,192-bp and GERP point estimates agree with D1 at three decimals "
@@ -279,8 +279,8 @@ def _md(T1, T2, T3, T4):
 
     L.append(f"\n## Table D1. {T1['title']}\n")
     p = T1["pooled_8192"]; rp = T1["readout_pooled"]; dp = T1["d_fm_pooled"]
-    L.append(f"Pooled at 8192 bp mean-LL: **{p['auroc']:.3f}** [{p['lo']:.3f}, {p['hi']:.3f}], "
-             f"n = {p['n']:,}. Readout lift 1001 bp → 8192 bp: **{rp['delta']:+.3f}** "
+    L.append(f"Pooled at 8,192-bp mean-LL: **{p['auroc']:.3f}** [{p['lo']:.3f}, {p['hi']:.3f}], "
+             f"n = {p['n']:,}. Readout lift 1,001 bp → 8,192 bp: **{rp['delta']:+.3f}** "
              f"[{rp['ci'][0]:+.3f}, {rp['ci'][1]:+.3f}]. Pooled ΔFM **{dp['d_fm']:+.4f}** "
              f"[{dp['d_fm_ci'][0]:+.4f}, {dp['d_fm_ci'][1]:+.4f}].\n")
     # The two "95% CI" columns belong to different quantities measured on different panels: the
@@ -347,7 +347,7 @@ def _md(T1, T2, T3, T4):
 
     L.append(f"\n## Table D4. {T4['title']}\n")
     ps = T4["pooled_shared"]; nt = T4["nt_reach"]; P = T4["protein_lm"]
-    L.append(f"Over the **{ps['n']:,}** variants both Evo 2 and conservation can score it is a tie: "
+    L.append(f"Over the **{ps['n']:,}** variants both Evo 2 and conservation can score, it is a tie: "
              f"Evo 2 **{ps['auroc_evo2']:.4f}** vs GERP **{ps['auroc_gerp']:.4f}**. Nucleotide "
              f"Transformer scores **{nt['nt_scored_total']:,}/{nt['gerp_blind_total']:,}** of the "
              f"GERP-blind variants — full reach is a DNA-LM class property, not an Evo 2 one.\n")

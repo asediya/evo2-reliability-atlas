@@ -23,7 +23,7 @@ wolf on large ones.
   which scorer is better over the whole panel, each carrying its own no-calls — previously had no
   inference attached at all.
 - `glmtrust.delong` — DeLong's method in the O(n log n) form of Sun & Xu (2014), plus
-  `must_answer_placements`, which expresses must-answer AUROC as a Mann-Whitney statistic in which an
+  `must_answer_placements`, which expresses must-answer AUROC as a Mann–Whitney statistic in which an
   unreachable variant has placement value exactly ½.
 - `glmtrust.card` — an audit report as one self-contained HTML page: no external assets, no scripts,
   light and dark, printable. It leads with whether the audit *changed* the verdict, and states
