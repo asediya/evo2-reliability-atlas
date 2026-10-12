@@ -11,7 +11,8 @@ Run from the study repository root (it reads the study's data and results):
     python glmtrust/benchmarks/reproduce_paper_trust_layer.py
 
 Exit code 0 means the order-invariant figures (total errors, macro ECE) reproduced within tolerance and the
-published pooled capture lies inside its row-order permutation range; the other figures are printed beside it.
+published pooled capture and pooled lift lie inside their row-order permutation ranges; the macro lift is printed
+beside them.
 """
 import json
 import os
@@ -172,7 +173,7 @@ def main():
              "inside" if min(lifts) <= ref["pooled_lift"] <= max(lifts) else "OUTSIDE"))
     print("    tie_policy=\"whole_block\" (deterministic under any row order): capture %.4f, lift %.4f"
           % (wb["capture"], wb["lift"]))
-    ok = ok and min(caps) <= ref["capture"] <= max(caps)
+    ok = ok and min(caps) <= ref["capture"] <= max(caps) and min(lifts) <= ref["pooled_lift"] <= max(lifts)
 
     print("\n%s" % ("REPRODUCED - the order-invariant figures match and the published capture and "
                     "lift lie inside the row-order range"

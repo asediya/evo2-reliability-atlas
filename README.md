@@ -119,7 +119,7 @@ top of this page; its first cell fetches this repository and installs `glmtrust`
 python glmtrust/benchmarks/reproduce_paper_trust_layer.py
 ```
 
-Reproduces the published trust-layer numbers from that fixture and exits zero when they match.
+Reproduces the published trust-layer numbers from that fixture and exits zero when the order-invariant ones match and the pooled capture and lift lie inside their row-order range.
 
 ## Analysis code
 

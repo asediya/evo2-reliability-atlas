@@ -849,6 +849,6 @@
    "n_annotated": 9,
    "n_esm_usable": 1
   },
-  "_note": "Every GERP AUROC here is measured on the subset GERP can score \u2014 see Table D3. The 'abstain' column is the same AUROC once unscorable variants must be answered. Supervised rows are point estimates only: the baseline scripts retain no per-variant predictions, so paired intervals are not computable from the deposit. Goat has no CNN run."
+  "_note": "Every GERP AUROC here is measured on the subset GERP can score \u2014 see Table D3. The 'GERP (must answer)' column is the same AUROC once unscorable variants must be answered. Supervised rows are point estimates only: the baseline scripts retain no per-variant predictions, so paired intervals are not computable from the deposit. Goat has no CNN run."
  }
 }

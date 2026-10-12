@@ -168,9 +168,9 @@ def main():
     # (8192, single-pos) -- but the cell then labelled 8192/single-pos is scored on 1,002-bp windows
     # (data/interim/eqtl_windows.parquet), so the window arm ran in the wrong direction and the
     # readout arm moved the window at the same time. The matched pairs below fix both.
-    if (1002, "single-pos") in cells and (2049, "single-pos") in cells:
-        rob["window_effect_fixed_readout"] = abs(cells[(2049, "single-pos")] - cells[(1002, "single-pos")])
-        rob["window_from"], rob["window_to"] = 1002, 2049
+    if (1002, "single-pos") in cells and (2048, "single-pos") in cells:
+        rob["window_effect_fixed_readout"] = abs(cells[(2048, "single-pos")] - cells[(1002, "single-pos")])
+        rob["window_from"], rob["window_to"] = 1002, 2048
     if (1002, "single-pos") in cells and (1002, "mean-LL") in cells:
         rob["readout_effect_fixed_window"] = abs(cells[(1002, "mean-LL")] - cells[(1002, "single-pos")])
         rob["readout_window_fixed_at"] = 1002

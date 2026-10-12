@@ -1,8 +1,8 @@
-# GATE TEST (Idea 2) - transported pathogenic-FNR certificate
+# GATE TEST (Idea 2) - transported positive-class-FNR certificate
 
-Control E[missed-pathogenic rate] <= alpha; calibrate lambda on label-rich species via Conformal Risk Control; transport to each held-out species. VALID if achieved FNR <= alpha + 0.02 (a 0.02 tolerance on the nominal level; the strict count is in the verdict); NON-TRIVIAL if it still calls a real fraction benign (benign-rate > 0.15).
+Control E[missed-positive rate] <= alpha; calibrate lambda on label-rich species via Conformal Risk Control; transport to each held-out species. VALID if achieved FNR <= alpha + 0.02 (a 0.02 tolerance on the nominal level; the strict count is in the verdict); NON-TRIVIAL if it still calls a real fraction benign (benign-rate > 0.15).
 
-## alpha = 0.05 (guarantee: <= 5% of true pathogenics missed)
+## alpha = 0.05 (guarantee: <= 5% of true positives missed)
 | held-out species | role | n | pos | achieved FNR | <=alpha+0.02? | benign-call rate | informative? |
 |---|---|---|---|---|---|---|---|
 | goat | TARGET | 99 | 9 | 0.111 | no | 0.72 | yes |
@@ -15,7 +15,7 @@ Control E[missed-pathogenic rate] <= alpha; calibrate lambda on label-rich speci
 | dog | source | 2497 | 227 | 0.216 | no | 0.85 | yes |
 | human | source | 3000 | 1500 | 0.075 | no | 0.12 | no |
 
-## alpha = 0.1 (guarantee: <= 10% of true pathogenics missed)
+## alpha = 0.1 (guarantee: <= 10% of true positives missed)
 | held-out species | role | n | pos | achieved FNR | <=alpha+0.02? | benign-call rate | informative? |
 |---|---|---|---|---|---|---|---|
 | goat | TARGET | 99 | 9 | 0.111 | YES | 0.72 | yes |
@@ -28,7 +28,7 @@ Control E[missed-pathogenic rate] <= alpha; calibrate lambda on label-rich speci
 | dog | source | 2497 | 227 | 0.216 | no | 0.85 | yes |
 | human | source | 3000 | 1500 | 0.151 | no | 0.26 | yes |
 
-## alpha = 0.2 (guarantee: <= 20% of true pathogenics missed)
+## alpha = 0.2 (guarantee: <= 20% of true positives missed)
 | held-out species | role | n | pos | achieved FNR | <=alpha+0.02? | benign-call rate | informative? |
 |---|---|---|---|---|---|---|---|
 | goat | TARGET | 99 | 9 | 0.111 | YES | 0.82 | yes |

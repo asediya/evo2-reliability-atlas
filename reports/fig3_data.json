@@ -747,13 +747,13 @@
         "n": 2000
       },
       {
-        "window": 2049,
+        "window": 2048,
         "readout": "single-pos",
         "auroc": 0.487,
         "n": 2000
       },
       {
-        "window": 4097,
+        "window": 4096,
         "readout": "single-pos",
         "auroc": 0.484,
         "n": 2000

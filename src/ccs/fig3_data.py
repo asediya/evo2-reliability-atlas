@@ -117,8 +117,8 @@ rob = {"coding_ref": round(coding["40B"], 3), "cells": []}
 for win, rd, path, col, neg in [(8192, "mean-LL", "data/processed/scores_cloud/eqtl_abl_8192_ll.parquet", "evo2_meanll_delta", True),
                                 (1002, "mean-LL", "data/processed/scores/eqtl_abl_1002_ll.parquet", "evo2_meanll_delta", True),
                                 (1002, "single-pos", "data/processed/scores/eqtl_evo2_40b.parquet", "evo2_40b_neg", False),
-                                (2049, "single-pos", "data/processed/scores/eqtl_abl_2048_sp.parquet", "evo2_40b_neg", False),
-                                (4097, "single-pos", "data/processed/scores/eqtl_abl_4096_sp.parquet", "evo2_40b_neg", False)]:
+                                (2048, "single-pos", "data/processed/scores/eqtl_abl_2048_sp.parquet", "evo2_40b_neg", False),
+                                (4096, "single-pos", "data/processed/scores/eqtl_abl_4096_sp.parquet", "evo2_40b_neg", False)]:
     if path.endswith("eqtl_evo2_40b.parquet"):
         y, s = y2 * 0, None  # placeholder; use full-20k below
         yy = pl.read_parquet(path); dd = lab2k.join(yy, on="variant_id", how="inner")

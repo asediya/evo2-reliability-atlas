@@ -33,8 +33,10 @@ profile: the tolerated arm ends at a MEDIUM blue instead of a dark one, so
 i.e. it is better in greyscale AND better under both simulated dichromacies.
 
 Run:  python3 tools/recolour_brca1_structures.py [--dry-run]
-The originals are kept beside the outputs as *_rdbu.png and the script is idempotent: it refuses
-to run twice by checking for that backup first.
+The originals are kept beside the outputs as *_rdbu.png and the script is idempotent: it skips a
+render whose backup is present, and a render that is byte-identical to the re-mapped one this archive
+ships (the RdBu_r originals and their backups are not deposited, so a clean extraction carries only
+the re-mapped renders and the backup check alone would re-map them a second time).
 """
 import os
 import sys
@@ -45,9 +47,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from PIL import Image
 
-from ccs.style_gb import TOL_DEL_NODES
-
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(HERE, "src"))
+from ccs.style_gb import TOL_DEL_NODES  # noqa: E402  (src/ is on the path from the line above)
 FIGDIR = os.path.join(HERE, "reports", "figures")
 PANELS = ("brca1_ring_evo2", "brca1_ring_sge", "brca1_brct_evo2", "brca1_brct_sge")
 RESID = 12.0           # max residual of the shading fit below; 95-97 % of content sits inside it
@@ -130,7 +132,17 @@ def recolour(path_in, path_out, dry=False):
     return pct
 
 
+# SHA-256 of the four re-mapped renders as deposited in reports/figures/
+SHIPPED_REMAPPED = {
+    "brca1_ring_evo2": "45b12db884527efc853597743edab96acfbadf611fb885ef55bd4d220ba9356a",
+    "brca1_ring_sge": "3cd672c35252b6d9dfa804303382a1109d96760188f600cec84b17db4de5b169",
+    "brca1_brct_evo2": "51fae45ec983eff0553ae2d039dbe8489b051b8410b874ad1840d690b2cbe7fe",
+    "brca1_brct_sge": "5bbcfe71876bc9ebd5f49d92c71e110740818e0875903a27bd0a62b017fe189b",
+}
+
+
 def main():
+    import hashlib
     dry = "--dry-run" in sys.argv
     for name in PANELS:
         live = os.path.join(FIGDIR, name + ".png")
@@ -139,6 +151,9 @@ def main():
             raise SystemExit("missing render: %s" % live)
         if os.path.exists(keep):
             print("  %-22s already re-mapped (backup present); skipping" % (name + ".png"))
+            continue
+        if hashlib.sha256(open(live, "rb").read()).hexdigest() == SHIPPED_REMAPPED[name]:
+            print("  %-22s already re-mapped (the deposited render); skipping" % (name + ".png"))
             continue
         if dry:
             recolour(live, live, dry=True)
@@ -151,5 +166,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.path.insert(0, os.path.join(HERE, "src"))
     main()

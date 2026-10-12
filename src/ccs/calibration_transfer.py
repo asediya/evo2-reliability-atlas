@@ -216,13 +216,19 @@ def baseline_report(data, rich):
 
     dog = next((r for r in recs if r["species"] == "dog"), None)
     dogtxt = "" if dog is None else (f" e.g. dog {dog['prev09']}@9% -> {dog['prev50']}@50%.")
+    # Species by species against the ~9% reading, so the sentence below states what the grid shows.
+    up25 = [r["species"] for r in recs if r["prev25"] > r["prev09"]]
+    down25 = [r["species"] for r in recs if r["prev25"] <= r["prev09"]]
+    up50 = sum(1 for r in recs if r["prev50"] > r["prev09"])
     L += ["", "## Verdict (honest)", "",
           f"- Global sigmoid is **on par with** isotonic transfer: sigmoid wins {sig_wins}/{len(both)} species "
           f"on equal-width ECE (median ECE sigmoid={med_sig:.3f} vs isotonic={med_iso:.3f}).",
           f"- Brier is effectively tied (median sigmoid={med_br_sig:.3f} vs isotonic={med_br_iso:.3f}); "
           "a 2-param sigmoid buys the same reliability as the nonparametric transfer.",
           f"- The base-rate constant is a genuine floor and both calibrators clear it.",
-          f"- Transfer ECE is **prevalence-SENSITIVE only toward 50%** (non-monotone: FINE near the ~9% deployment prevalence, can even improve at 25%, rises only toward a balanced 50%).{dogtxt}",
+          f"- Transfer ECE is **prevalence-SENSITIVE** and non-monotone: FINE near the ~9% deployment prevalence; at 25% it improves in "
+          f"{len(down25)} species ({', '.join(down25)}) and already rises in {len(up25)} ({', '.join(up25)}); at a balanced 50% it rises in "
+          f"{up50} of {len(recs)}.{dogtxt}",
           "- Takeaway: the calibration-transfer win is real but NOT better than a trivial global sigmoid, "
           "and it is only trustworthy near the prevalence it was measured at."]
 

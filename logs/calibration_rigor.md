@@ -2,7 +2,7 @@
 
 Sources (label-rich): ['sheep', 'horse', 'cat', 'cattle', 'dog', 'human'] | label-poor targets: ['goat', 'chicken', 'pig']
 
-## (1) Debiased metric suite — transfer holds under EVERY metric, not just ECE
+## (1) Debiased metric suite — transfer improves on no calibration in 35 of 36 species-metric cells (worse: human KS-cal 0.1066→0.1167)
 | species | role | n | pos | ECE none→tr | **adaptive-ECE none→tr** | KS-cal none→tr | Brier none→tr | oracle aECE |
 |---|---|---|---|---|---|---|---|---|
 | goat | target | 99 | 9 | 0.3232→0.0564 | **0.3144→0.0564** | 0.323→0.0329 | 0.152→0.0457 | 0.0657 |
@@ -47,4 +47,4 @@ Mean transferred adaptive-ECE on the label-poor targets vs #labels in the source
 
 Transfer is STABLE well below n=99 — at n≤100 the transferred ECE is within 1.5× of the full-data ECE, so the label-poor results are NOT isotonic overfitting.
 
-**VERDICT:** the calibration-transfer result holds under all three checks — debiased metrics, a formal calibration test, and a size-stability curve.
+**VERDICT:** transfer improves on no calibration in 35 of 36 species-metric cells (worse: human KS-cal 0.1066→0.1167); the formal test cannot reject perfect calibration of the transferred map in 2 of 9 species, so it rejects it in the other 7; and the transferred ECE is stable down to n<=100 calibration labels.

@@ -105,7 +105,8 @@ def main():
                 sys.exit("builder %s failed; refusing to stage a partial figure set" % mod)
 
     import fitz
-    os.makedirs(SUB, exist_ok=True)
+    if not a.check:
+        os.makedirs(SUB, exist_ok=True)
     rows, stale, bad = [], 0, 0
     for _mod, built, shipped in FIGURES:
         src, dst = os.path.join(BUILT, built), os.path.join(SUB, shipped)

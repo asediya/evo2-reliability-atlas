@@ -4,7 +4,7 @@
 > readouts are the subject of the paper's first accounting result. Read this as the 1,001-bp readout,
 > not as the paper's headline.
 
-# Calibrated cross-species reliability atlas — master table (paper Table 1)
+# Calibrated cross-species reliability atlas — master table (development log; superseded by the submitted Table 2)
 
 One row per species. **AUROC 40B** = Evo2-40B zero-shot; **Δvs cons/1B** = paired gain over best conservation / Evo2-1B (Δvs cons on the variants conservation scores, so not AUROC 40B minus a printed column); **ECE** = calibration (no-cal → transferred); **ΔFM** = signal the FM adds beyond conservation; **@low-cons** = Evo2 AUROC at below-median-conservation sites; **trust** = abstention selective error (100% coverage → min).
 

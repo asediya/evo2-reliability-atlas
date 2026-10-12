@@ -19,9 +19,9 @@ S10 The 85% knee was chosen on the panel its benefit is then reported on, which 
     concedes. The optimism that concession leaves unquantified is measurable: select the knee on
     eight species and re-measure the risk reduction it delivers on the ninth, once per species.
 
-S12 A gene-clustered bootstrap runs 5.8 times wider than the closed-form standard error on the
-    dbNSFP panel, and the manuscript leaves that sentence next to its own headline without saying
-    whether the headline survives it. Re-run the random-effects pool with every per-species DeLong
+S12 On the human ClinVar missense panel a gene-clustered bootstrap interval runs 5.9 times wider than
+    the closed-form one (Additional file 1, Note S28), and the manuscript leaves that sentence next to
+    its own headline without saying whether the headline survives it. Re-run the random-effects pool with every per-species DeLong
     standard error inflated, and report at what inflation the interval first touches zero.
 
     python analyses/scripts/review_round2_statistics.py
@@ -207,7 +207,7 @@ def s12_se_inflation():
     names = list(ps)
     y = np.array([ps[s]["delta"] for s in names])
     se = np.array([ps[s]["se_delong"] for s in names])
-    factors = [1.0, 1.25, 1.5, 2.0, 3.0, 4.0, 5.0, 5.8, 7.0]
+    factors = [1.0, 1.25, 1.5, 2.0, 3.0, 4.0, 5.0, 5.9, 7.0]
     runs = {}
     for f in factors:
         r = _pool(names, y, se * f)
@@ -222,8 +222,8 @@ def s12_se_inflation():
             break
         g = round(g + 0.01, 2)
     return {
-        "_question": "does the headline pool survive the clustering penalty the dbNSFP panel shows",
-        "_dbnsfp_observed_inflation": 5.8,
+        "_question": "does the headline pool survive the clustering penalty the human ClinVar missense panel shows",
+        "_clinvar_missense_observed_inflation": 5.9,
         # ci95_hksj_modified lives under ["meta"] in meta_8192.json, not at the top level, so
         # it is indexed there: a top-level .get() would return None and leave the comparison it feeds
         # vacuous, and a .get() that cannot find its key looks exactly like a key whose value is null.
@@ -232,7 +232,7 @@ def s12_se_inflation():
         "n_species": len(names),
         "runs": runs,
         "inflation_at_which_interval_first_touches_zero": breaks,
-        "_note": ("5.8x is a dbNSFP figure, where variants cluster inside genes; the atlas's own "
+        "_note": ("5.9x is the human ClinVar missense panel's figure, where variants cluster inside genes; the atlas's own "
                   "locus-clustered widths are far smaller. It is used here as an adversarial upper "
                   "bound, not as an estimate of this panel's clustering."),
     }
@@ -254,7 +254,7 @@ def main():
     s12 = out["S12_se_inflation"]
     print("S12  1.0x %s" % s12["runs"]["1.00"]["ci95"])
     print("S12  1.5x %s" % s12["runs"]["1.50"]["ci95"])
-    print("S12  5.8x %s" % s12["runs"]["5.80"]["ci95"])
+    print("S12  5.9x %s" % s12["runs"]["5.90"]["ci95"])
     print("S12  interval first touches zero at %sx" % s12["inflation_at_which_interval_first_touches_zero"])
     print("S8   mc sd / se: B=200 %.3f, B=2000 %.3f"
           % (out["S8_bootstrap_resolution"]["simulation"]["200"]["mc_sd_as_multiple_of_se"],

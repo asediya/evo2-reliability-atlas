@@ -173,8 +173,9 @@ consequence-class and gene-and-consequence baselines, 0.880, 0.837 and 0.974.
 - `write_card(report, path, ...)` → writes it and returns the path.
 
 The card leads with the verdict and specifically with whether the audit *changed* it: a reversal
-(the matched interval excluding zero on the other side) appears above the tables, and a lead that the
-matched comparison cannot confirm is called inconclusive. When nothing is wrong it says so.
+(the matched interval excluding zero on the other side) appears above the tables, and a lead whose matched
+delta is zero or opposite in sign, with an interval that includes zero, is reported as not separated on the
+variants both can score. When nothing is wrong it says so.
 
 ## `glmtrust.delong`
 

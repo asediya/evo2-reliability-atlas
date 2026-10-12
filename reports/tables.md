@@ -2,7 +2,7 @@
 
 Built by `src/ccs/build_tables.py` from the figure recompute layers; headline values are asserted against literals in build_tables.py at build time. Regenerate rather than patch.
 
-**These are the deposit's own tables, D1-D4, and they are not the tables printed in the manuscript.** They present the same recompute layer more fully -- Table D1 carries the 8,192-bp panel with fourteen columns; the manuscript's eight-column Table 2 reports the same nine species at both readouts against GERP, on slightly different per-species panels, so its 8,192-bp and GERP point estimates agree with D1 at three decimals while its 1,001-bp column, on the full 11,130-variant panel, differs in the third decimal for goat, horse and cat, and its intervals do not agree.
+**These are the deposit's own tables, D1-D4, and they are not the tables printed in the manuscript.** They present the same recompute layer more fully -- Table D1 carries the 8,192-bp panel with fourteen columns; the manuscript's eight-column Table 2 reports the same nine species at both readouts against GERP, on slightly different per-species panels, so its 8,192-bp and GERP point estimates agree with D1 at three decimals while its 1,001-bp column, on the full 11,130-variant panel, differs in the third decimal for goat, horse and cat, and its locus-clustered intervals agree with D1's only for human and cattle.
 
 
 ## Table D1. Cross-species reliability atlas for Evo 2-40B
@@ -117,4 +117,4 @@ Over the **9,532** variants both Evo 2 and conservation can score it is a tie: E
 
 **Protein LM**: only **3 of 9** annotated panels can host one, and ESM-2 is scored at usable size on **1**. On human (n = 912): ESM-2 0.887 vs Evo 2 0.838, Δ **+0.049** [+0.019, +0.079].
 
-*Every GERP AUROC here is measured on the subset GERP can score — see Table D3. The 'abstain' column is the same AUROC once unscorable variants must be answered. Supervised rows are point estimates only: the baseline scripts retain no per-variant predictions, so paired intervals are not computable from the deposit. Goat has no CNN run.*
+*Every GERP AUROC here is measured on the subset GERP can score — see Table D3. The 'GERP (must answer)' column is the same AUROC once unscorable variants must be answered. Supervised rows are point estimates only: the baseline scripts retain no per-variant predictions, so paired intervals are not computable from the deposit. Goat has no CNN run.*

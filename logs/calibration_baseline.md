@@ -71,5 +71,5 @@ Binned by value with `ece_mass` (tied posteriors share a bin). The global-sigmoi
 - Global sigmoid is **on par with** isotonic transfer: sigmoid wins 4/9 species on equal-width ECE (median ECE sigmoid=0.048 vs isotonic=0.050).
 - Brier is effectively tied (median sigmoid=0.041 vs isotonic=0.040); a 2-param sigmoid buys the same reliability as the nonparametric transfer.
 - The base-rate constant is a genuine floor and both calibrators clear it.
-- Transfer ECE is **prevalence-SENSITIVE only toward 50%** (non-monotone: FINE near the ~9% deployment prevalence, can even improve at 25%, rises only toward a balanced 50%). e.g. dog 0.05@9% -> 0.137@50%.
+- Transfer ECE is **prevalence-SENSITIVE** and non-monotone: FINE near the ~9% deployment prevalence; at 25% it improves in 4 species (sheep, horse, cattle, dog) and already rises in 5 (goat, chicken, pig, cat, human); at a balanced 50% it rises in 9 of 9. e.g. dog 0.05@9% -> 0.137@50%.
 - Takeaway: the calibration-transfer win is real but NOT better than a trivial global sigmoid, and it is only trustworthy near the prevalence it was measured at.

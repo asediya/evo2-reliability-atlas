@@ -14,7 +14,7 @@ biopython==1.87
 duckdb==1.5.4
 freesasa==2.2.1
 joblib==1.5.3
-matplotlib==3.11.1
+matplotlib==3.11.2
 numpy==2.5.1
 pandas==3.0.3
 pillow==12.3.0

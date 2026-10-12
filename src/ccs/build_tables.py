@@ -221,7 +221,7 @@ def table4_baselines(F5):
         "protein_lm": {"human": P["human"], "n_evaluable": P["n_evaluable"],
                        "n_annotated": P["n_annotated"], "n_esm_usable": P["n_esm_usable"]},
         "_note": ("Every GERP AUROC here is measured on the subset GERP can score — see Table D3. The "
-                  "'abstain' column is the same AUROC once unscorable variants must be answered. "
+                  "'GERP (must answer)' column is the same AUROC once unscorable variants must be answered. "
                   "Supervised rows are point estimates only: the baseline scripts retain no "
                   "per-variant predictions, so paired intervals are not computable from the deposit. "
                   "Goat has no CNN run."),
@@ -275,7 +275,7 @@ def _md(T1, T2, T3, T4):
              "the same nine species at both readouts against GERP, on slightly different "
              "per-species panels, so its 8,192-bp and GERP point estimates agree with D1 at three decimals "
              "while its 1,001-bp column, on the full 11,130-variant panel, differs in the third decimal for "
-             "goat, horse and cat, and its intervals do not agree.\n")
+             "goat, horse and cat, and its locus-clustered intervals agree with D1's only for human and cattle.\n")
 
     L.append(f"\n## Table D1. {T1['title']}\n")
     p = T1["pooled_8192"]; rp = T1["readout_pooled"]; dp = T1["d_fm_pooled"]

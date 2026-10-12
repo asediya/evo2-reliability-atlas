@@ -42,8 +42,8 @@ OUT = "reports/DATA_MANIFEST.md"
 # inputs from a path that carries one more component than the raw tree does, and a pattern anchored
 # on the bare inventory directory recorded them one level too shallow -- non-existent paths, in the
 # one document whose job is to tell a reader where an input lives.
-PAT = re.compile(r"(?:analyses/)?data/(?:[A-Za-z0-9_%{}-]+/)*[A-Za-z0-9_%{}.-]+?"
-                 r"\.(?:vcf\.gz|parquet|csv|vcf|fai|fa|bw|bed|txt|tsv|json|npy|xlsx|npz|pdb|chain|config)(?![A-Za-z0-9.])")
+PAT = re.compile(r"(?:analyses/)?data/(?:[A-Za-z0-9_%{}*-]+/)*[A-Za-z0-9_%{}*.-]+?"
+                 r"\.(?:vcf\.gz|fa\.gz|tsv\.gz|gtf\.gz|gz|parquet|csv|vcf|fai|fa|bw|bed|txt|tsv|json|npy|xlsx|npz|pdb|chain|config|bim|psam|pgen|pvar)(?![A-Za-z0-9.])")
 
 
 def collect_paths():
@@ -101,12 +101,14 @@ def main():
     out.append("# Data manifest — inputs required to regenerate the analysis from scratch\n")
     out.append(
         "*This file, its path inventory and the prose around it, is written by "
-        "`tools/build_data_manifest.py`, which greps the deposited code, so the list cannot drift "
-        "from what the scripts actually open. It inventories what the code references; not every "
+        "`tools/build_data_manifest.py`, which greps the deposited code for paths under `data/` ending in a "
+        "data-file extension, so the list follows what the scripts name rather than being typed by hand. "
+        "It inventories what the code references; not every "
         "listed path is produced by the published analysis.*\n")
     out.append(
         "\n## Why the raw data is not in the deposit\n\n"
-        "The `data/` tree for this study is not deposited — nine genome FASTAs, per-species "
+        "The `data/` tree for this study is not deposited, apart from the two BRCA1 structure models and their "
+        "README under `data/raw/structures/` — nine genome FASTAs, per-species "
         "variant-window files, and the 8,192-bp Evo 2 score parquets — which exceeds any reasonable "
         "supplementary-file limit. It is therefore **not** included in Additional file 2.\n\n"
         "**This does not block reproduction of the published numbers.** Every value in the "
@@ -116,12 +118,13 @@ def main():
         "deposited artifacts regenerates the deposit's own tables report, `reports/tables.md`, without "
         "touching `data/`, while `src/ccs/build_supplementary.py` does not produce the submitted "
         "supplementary table set, which ships as the export `reports/supplementary_tables.md`; `tools/verify_from_data.py`, by contrast, re-derives published values "
-        "from the raw score and label files under `data/`. The `fig*_stats.py` scripts are **not** in that class: "
+        "from the raw score and label files under `data/`. Most `fig*_stats.py` scripts are **not** in that class: "
         "they read "
-        "per-variant panels under `data/` and exit non-zero without it. So do most deposited "
+        "per-variant panels under `data/` and exit non-zero without it; the three `fig4_*_stats.py` read only "
+        "deposited `reports/` files and run here. So do most deposited "
         "analysis scripts — %d of the %d under `src/` reference a `data/` path, including "
-        "`build_tost_equivalence.py`, `build_phylop_crosscheck.py` and the `fig*_stats.py` "
-        "family. What they emit — the recompute JSONs and small parquets — IS deposited, so "
+        "`build_phylop_crosscheck.py` and the other `fig*_stats.py` scripts, and `build_tost_equivalence.py` "
+        "needs `data/` through its import of `fig5_stats`. What they emit — the recompute JSONs and small parquets — IS deposited, so "
         "every published value stays checkable where the script that produced it cannot be re-run "
         "here. The raw tree is needed to re-run Evo 2 scoring end-to-end (a GPU workload) and to "
         "rebuild Additional file 1's Figures S3, S5 and S6 (see FIGURES.md). Figures 9 and 10 "
@@ -135,15 +138,16 @@ def main():
     # origin was undocumented. Stated here because this file is where a reader looks for provenance.
     out.append(
         "\n## Deposited `reports/` artefacts with no in-deposit writer\n\n"
-        "Three artefacts in the deposit are inputs rather than outputs: deposited scripts read "
+        "Six artefacts in the deposit are inputs rather than outputs: deposited scripts read "
         "them, but no deposited script writes them. They are listed here so the provenance chain "
         "has no unexplained node.\n\n"
         "- `reports/_recon_pervariant_trust.parquet` — per-variant trust-layer reconstruction "
-        "(species, variant_id, label, score and the four calibration posteriors) for the 8,192-bp "
-        "panel. It is a deposited **input**, consumed by `build_emin.py`, "
+        "(species, variant_id, label, score and the four calibration posteriors) for the 1,001-bp "
+        "single-position readout on all 11,130 atlas variants. It is a deposited **input**, consumed by `build_emin.py`, "
         "`build_fig3_consequence.py`, `build_locus_clustered_ci.py`, `build_ablation_fp8.py`, "
         "`build_raw_ece.py`, `fig4_trust.py` and `analyses/scripts/calibration_error.py`. "
-        "Produced by the trust-layer build from `data/processed/scores_cloud/`, which is not "
+        "Produced by the trust-layer build from `data/processed/scores/<species>_evo2_40b_local_scores.parquet` "
+        "(the input `src/ccs/fig4_reconcile.py` reads), which is not "
         "deposited; the file is shipped so those consumers run without it.\n"
         "- `reports/ablation_fp8.parquet` — the FP8 batch-size control's per-variant scores at both "
         "batch sizes (variant_id, delta_b4, delta_b32; 600 rows). `build_ablation_fp8.py` reads it "
@@ -153,7 +157,18 @@ def main():
         "false alarms, caught, reaching the clinician); Additional file 1 prints the first three "
         "in Table S28, the refusal total in Table S27's notes and the share of errors refused "
         "(35.4%) in Note S52. Every stored count "
-        "recomputes from the deposited `reports/fig4_pervariant.parquet` at the 15% cut.\n")
+        "recomputes from the deposited `reports/fig4_pervariant.parquet` at the 15% cut.\n"
+        "- `reports/eqtl_pervariant.parquet` — the 20,000 pig cis-eQTL records (variant_id, chrom, pos, "
+        "gene_id, pip, label, evo2_40b_score), read by the Figure S2 builder and the eQTL control scripts.\n"
+        "- `reports/gerp_pervariant.parquet` — GERP per atlas variant (11,130 rows; species, source, "
+        "variant_id, label, gerp, gerp_is_finite), read by `src/ccs/gerp_consequence.py` and three "
+        "`analyses/scripts/`.\n"
+        "- `reports/nt_vs_evo2.parquet` — the per-panel Nucleotide Transformer, Evo 2 and GERP AUROCs "
+        "(10 rows), read by `src/ccs/fig3_data.py`.\n\n"
+        "Four further files are records that no deposited script reads or writes: "
+        "`reports/eqtl_pervariant_meta.json` and `reports/gerp_pervariant_meta.json` describe the two "
+        "parquets above, `reports/power_mde.json` holds the minimum-detectable-difference table, and "
+        "`reports/supplementary_citation_map.json` maps an earlier draft's reference numbering.\n")
     out.append(
         "\n## Public sources of the raw inputs\n\n"
         "Exact releases and assembly accessions are in the manuscript Methods and Availability of "
@@ -169,13 +184,14 @@ def main():
         "- **Conservation tracks:** GERP from the per-species Ensembl bigWig tracks (see `src/ccs/query_gerp.py`); phyloP from UCSC where a genuine track exists (human hg38 phyloP100way, chicken galGal6 phyloP77way) and, for cattle (bosTau9), from Zenodo record 13332541 (Roslin) over a Cactus 241-way alignment — a different alignment and species set, described in Additional file 1: Table S8.\n"
         "- **Label-free panels:** the cattle population allele-frequency panel and the pilot bat "
         "cohort VCF described in Methods.\n")
-    out.append("\n## Path inventory (%d distinct templates; `<var>` = species or sample)\n"
+    out.append("\n## Path inventory (%d distinct templates; `<var>` = a species, sample, model size, scorer or file stem)\n"
                 % len(paths))
     labels = {
         "data/raw/": "Raw downloads — genome FASTAs, OMIA/ClinVar truth sets, source VCFs.",
         "data/external/": "Third-party tracks and panels obtained externally.",
         "data/interim/": "Intermediate build products — variant windows, candidate tables, pilots.",
         "data/processed/": "Scored outputs — Evo 2 / NT / conservation scores per panel.",
+        "analyses/data/": "Inputs of the analyses/scripts/ arms — splicing, ClinVar and strand-ladder scores and windows.",
     }
     for top in sorted(buckets):
         out.append("\n### `%s` — %s\n" % (top, labels.get(top, "")))

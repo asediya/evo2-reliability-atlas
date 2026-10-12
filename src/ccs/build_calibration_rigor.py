@@ -173,9 +173,18 @@ def main():
     med_or = float(np.median([r["aece_oracle"] for r in rows if "aece_oracle" in r]))
     n_notreject = sum(1 for r in rows if r.get("ks_pval") is not None and r["ks_pval"] > 0.05)
     n_tested = sum(1 for r in rows if r.get("ks_pval") is not None)
+    # Cells where transfer is worse than no calibration are counted and named, not assumed away.
+    MET = [("ECE", "ece"), ("adaptive-ECE", "aece"), ("KS-cal", "ks"), ("Brier", "brier")]
+    num = lambda v: isinstance(v, (int, float))
+    cells = [(r["species"], m, r[k + "_none"], r[k + "_transfer"]) for r in rows for m, k in MET
+             if num(r.get(k + "_none")) and num(r.get(k + "_transfer"))]
+    worse = [c for c in cells if c[3] > c[2]]
+    improved = "transfer improves on no calibration in %d of %d species-metric cells" % (len(cells) - len(worse), len(cells))
+    if worse:
+        improved += " (worse: %s)" % ", ".join("%s %s %s→%s" % w for w in worse)
     lines = ["# Calibration robustness bundle: debiased metrics, a formal calibration test, and a size-stability curve", "",
              f"Sources (label-rich): {rich} | label-poor targets: {poor}", "",
-             "## (1) Debiased metric suite — transfer holds under EVERY metric, not just ECE",
+             "## (1) Debiased metric suite — " + improved,
              "| species | role | n | pos | ECE none→tr | **adaptive-ECE none→tr** | KS-cal none→tr | Brier none→tr | oracle aECE |",
              "|---|---|---|---|---|---|---|---|---|"]
     for r in rows:
@@ -205,13 +214,11 @@ def main():
               "",
               # The verdict is conditional on `stable`, like the sentence directly above it: a verdict
               # that cannot come out the other way is not a verdict.
-              ("**VERDICT:** the calibration-transfer result holds under all three checks — debiased metrics, "
-               "a formal calibration test, and a size-stability curve."
-               if stable else
-               "**VERDICT:** two of the three checks are met (debiased metrics and a formal "
-               "calibration test); the size-stability curve is NOT — the transferred ECE at n<=100 "
-               "is more than 1.5x the full-data ECE, so report the minimum viable N rather than "
-               "claiming stability.")]
+              "**VERDICT:** %s; the formal test cannot reject perfect calibration of the transferred map in "
+              "%d of %d species, so it rejects it in the other %d; and the transferred ECE %s."
+              % (improved, n_notreject, n_tested, n_tested - n_notreject,
+                 "is stable down to n<=100 calibration labels" if stable else
+                 "is NOT stable at n<=100 (more than 1.5x the full-data ECE), so report the minimum viable N")]
     open(MD, "w", encoding="utf-8").write("\n".join(lines) + "\n")
     pl.DataFrame(rows).write_parquet("data/processed/calibration_rigor.parquet")
     pl.DataFrame(curve).write_parquet("data/processed/calibration_size_curve.parquet")

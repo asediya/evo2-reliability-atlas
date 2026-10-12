@@ -155,17 +155,20 @@
   "_note": "The in-sample figure picks each species' own best coverage on its own data and is the optimistic bound, not a competing estimate."
  },
  "S12_se_inflation": {
-  "_question": "does the headline pool survive the clustering penalty the dbNSFP panel shows",
-  "_dbnsfp_observed_inflation": 5.8,
-  "_deposited_ci95_hksj": null,
+  "_question": "does the headline pool survive the clustering penalty the human ClinVar missense panel shows",
+  "_clinvar_missense_observed_inflation": 5.9,
+  "_deposited_ci95_hksj": [
+   0.05438445044040587,
+   0.1376832236396108
+  ],
   "n_species": 9,
   "runs": {
    "1.00": {
     "mu": 0.09603383704000834,
     "tau2": 0.0015776755339301232,
     "ci95": [
-     0.05438445044040587,
-     0.1376832236396108
+     0.05438445044040586,
+     0.13768322363961083
     ],
     "excludes_zero": true
    },
@@ -173,8 +176,8 @@
     "mu": 0.09454164062048205,
     "tau2": 0.0010095297085477338,
     "ci95": [
-     0.05683044537118822,
-     0.13225283586977588
+     0.056830445371188205,
+     0.1322528358697759
     ],
     "excludes_zero": true
    },
@@ -182,8 +185,8 @@
     "mu": 0.09527407666310067,
     "tau2": 0.0004129528842292113,
     "ci95": [
-     0.06317121217536184,
-     0.1273769411508395
+     0.06317121217536183,
+     0.12737694115083953
     ],
     "excludes_zero": true
    },
@@ -191,8 +194,8 @@
     "mu": 0.09752096986497555,
     "tau2": 0.0,
     "ci95": [
-     0.072576729481262,
-     0.1224652102486891
+     0.07257672948126198,
+     0.12246521024868912
     ],
     "excludes_zero": true
    },
@@ -200,7 +203,7 @@
     "mu": 0.09752096986497555,
     "tau2": 0.0,
     "ci95": [
-     0.06010460928940521,
+     0.0601046092894052,
      0.1349373304405459
     ],
     "excludes_zero": true
@@ -209,8 +212,8 @@
     "mu": 0.09752096986497555,
     "tau2": 0.0,
     "ci95": [
-     0.04763248909754844,
-     0.14740945063240266
+     0.04763248909754842,
+     0.14740945063240268
     ],
     "excludes_zero": true
    },
@@ -218,17 +221,17 @@
     "mu": 0.09752096986497552,
     "tau2": 0.0,
     "ci95": [
-     0.03516036890569164,
-     0.1598815708242594
+     0.03516036890569161,
+     0.15988157082425944
     ],
     "excludes_zero": true
    },
-   "5.80": {
+   "5.90": {
     "mu": 0.09752096986497555,
     "tau2": 0.0,
     "ci95": [
-     0.025182672752206245,
-     0.16985926697774484
+     0.02393546073302054,
+     0.17110647899693054
     ],
     "excludes_zero": true
    },
@@ -236,13 +239,13 @@
     "mu": 0.09752096986497553,
     "tau2": 0.0,
     "ci95": [
-     0.01021612852197809,
-     0.18482581120797298
+     0.010216128521978063,
+     0.184825811207973
     ],
     "excludes_zero": true
    }
   },
   "inflation_at_which_interval_first_touches_zero": 7.82,
-  "_note": "5.8x is a dbNSFP figure, where variants cluster inside genes; the atlas's own locus-clustered widths are far smaller. It is used here as an adversarial upper bound, not as an estimate of this panel's clustering."
+  "_note": "5.9x is the human ClinVar missense panel's figure, where variants cluster inside genes; the atlas's own locus-clustered widths are far smaller. It is used here as an adversarial upper bound, not as an estimate of this panel's clustering."
  }
 }

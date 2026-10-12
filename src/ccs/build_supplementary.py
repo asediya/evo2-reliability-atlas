@@ -80,7 +80,7 @@ def main():
     # wiped by the next build, which is what happened to it once already.
     W("> **Citation scheme — read this before resolving any bracketed marker.** This file is a "
       "pre-renumbering **source**, not the reader-facing supplement. Its markers cite the 144-entry "
-      "draft reference list; the submitted manuscript's list was trimmed to 86 and renumbered, so "
+      "draft reference list; the submitted manuscript's list was trimmed and renumbered, so "
       "resolving a marker here against that list returns the wrong paper. The reader-facing "
       "supplement is **Additional file 1**, which is renumbered and correct. To resolve a marker "
       "here, go through `reports/supplementary_citation_map.json`, generated from the two lists by "

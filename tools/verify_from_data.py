@@ -690,6 +690,11 @@ def main():
                 print("  %-12s %-44s got %.4f  want %.4f  (d=%.4f)"
                       % (sec, name, got, want, abs(got - want)))
 
+    if skips:
+        print("\n%d SKIPPED, each with the missing input or the check that could not run:" % len(skips))
+        for _ok, sec, name, _got, _want, _ev in skips:
+            print("  %-12s %s" % (sec, name))
+
     print("\n%d checks passed, %d failed, %d skipped" % (len(passes), len(fails), len(skips)))
     if not passes and not fails:
         sys.stderr.write("no check executed -- refusing to report success\n")
@@ -707,7 +712,7 @@ def main():
               " so this is NODATA,"
               % (_nsec, len(SECTIONS), len(passes) + len(fails),
                  len(passes) + len(fails) + len(skips)))
-        print("not a pass. The path each skipped section wanted is printed above.")
+        print("not a pass. Each skipped section is listed above with what it could not reach.")
         sys.exit(3)
     sys.exit(1 if fails else 0)
 

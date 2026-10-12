@@ -71,7 +71,7 @@ def main():
              "fraction benign (benign-rate > 0.15).", ""]
     verdicts = []
     for a in ALPHAS:
-        lines += [f"## alpha = {a} (guarantee: <= {a:.0%} of true pathogenics missed)",
+        lines += [f"## alpha = {a} (guarantee: <= {a:.0%} of true positives missed)",
                   "| held-out species | role | n | pos | achieved FNR | <=alpha+0.02? | benign-call rate | informative? |",
                   "|---|---|---|---|---|---|---|---|"]
         for sp in data:

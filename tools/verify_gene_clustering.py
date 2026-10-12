@@ -13,8 +13,11 @@ Two things to check, and they are separate:
      smaller than the pooled-across-genes delta, the effect is largely between-gene composition and
      the headline is not supportable.
 
-Gene comes from ClinVar's GENEINFO INFO field, parsed here from the raw VCF rather than taken from
-anything already derived.
+Gene comes from ClinVar's GENEINFO INFO field, the first symbol of each record: parsed from the raw VCF
+when data/external/human_panel/clinvar.vcf.gz is present, otherwise read from Additional file 3's
+tables/clinvar_panel_geneinfo.parquet, which carries the same field from the same release for every panel
+variant at one star or more (set CLINVAR_GENEINFO to its path, or place it at the default below). The two
+give the same gene for every panel variant.
 """
 import gzip
 import os
@@ -30,10 +33,22 @@ sys.stdout.reconfigure(encoding="utf-8")
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 CACHE = "data/interim/clinvar_gene.parquet"
+VCF = "data/external/human_panel/clinvar.vcf.gz"
+GENEINFO = os.environ.get("CLINVAR_GENEINFO", "data/external/human_panel/clinvar_panel_geneinfo.parquet")
+if not os.path.exists(CACHE) and not os.path.exists(VCF):
+    if not os.path.exists(GENEINFO):
+        sys.exit("needs ClinVar's GENEINFO: place the raw VCF at %s, or Additional file 3's "
+                 "tables/clinvar_panel_geneinfo.parquet at %s (or set CLINVAR_GENEINFO)" % (VCF, GENEINFO))
+    print("  reading GENEINFO from %s ..." % GENEINFO)
+    gi = pl.read_parquet(GENEINFO)
+    pl.DataFrame({"variant_id": gi["variant_id"],
+                  "gene": [(s or "").split("|")[0].split(":")[0] for s in gi["geneinfo"].to_list()]}
+                 ).write_parquet(CACHE)
+    print("  cached %s rows" % format(gi.height, ","))
 if not os.path.exists(CACHE):
     print("  parsing GENEINFO from the raw ClinVar VCF ...")
     keys, genes = [], []
-    with gzip.open("data/external/human_panel/clinvar.vcf.gz", "rt", errors="replace") as fh:
+    with gzip.open(VCF, "rt", errors="replace") as fh:
         for line in fh:
             if line[0] == "#":
                 continue

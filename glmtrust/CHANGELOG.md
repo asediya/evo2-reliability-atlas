@@ -155,7 +155,7 @@ variant, and anything else is refused by name with the recoding to apply.
   `midrank_auroc` reads labels and scores by the same contract as everything else. `render_card`
   refuses a reach report, labels its intervals at the audit's level, calls a verdict reversed only
   when the matched interval excludes zero (an opposite-signed delta whose interval spans zero is
-  called inconclusive), and cards a scorer that reaches every variant as not better than chance
+  reported as not separated), and cards a scorer that reaches every variant as not better than chance
   rather than as carried by its reach.
 - The command line reads semicolon-separated files with decimal commas, UTF-8 with a byte-order mark,
   UTF-16, Windows-1252, gzip and parquet files whatever their name, and refuses spreadsheets,

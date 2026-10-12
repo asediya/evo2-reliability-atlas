@@ -16,13 +16,13 @@ That is everything the recompute layer and the clone-runnable figure builders ne
 is read by `fig2_split`, which draws Additional file 1's Figure S7, and by
 `style_main`, the style
 module of the main figures, which reads each PDF it writes back to check the page. The
-submitted PDFs were written under matplotlib 3.11.1; a rebuild under another matplotlib matches
+submitted PDFs were written under matplotlib 3.11.2; a rebuild under another matplotlib matches
 them in content and geometry but not pixel for pixel.
 
 Scripts that read the undeposited `data/` tree need more, and none of it is required for anything
 above: `duckdb` and `pybigtools` for the panel and phyloP builders, `pyBigWig` for the older GERP
 and phyloP queries, `pyfaidx` for window extraction, `pyliftover` for the dog liftover panel,
-`biopython` and `freesasa` for the BRCA1 structure figure, `joblib` where a script parallelises,
+`biopython` and `freesasa` for the BRCA1 structure figure, `joblib` where a script parallelises, `requests` for the BRCA1 panel download,
 and `torch`, `transformers`, `fair-esm`, `evo2` and `vortex` on a GPU scoring host.
 
 `requirements.txt` records the environment that produced every published number. Install from the
@@ -37,7 +37,7 @@ open `reports/` relative to the working directory.
 | tier | what it needs | what it gives |
 |---|---|---|
 | **Package benchmark** | `pip install './glmtrust[io]'`, nothing else | the 8,192-bp trust-layer numbers, from a fixture that ships with the package |
-| **Recompute layer** | this repository | every published table and the figures listed below |
+| **Recompute layer** | this repository | the deposit's own tables D1 to D4 (Additional file 3 recomputes the published tables) and the figures listed below |
 | **From raw data** | the raw `data/` tree, and a GPU for scoring | everything, including the Evo 2 scores themselves |
 
 Most readers want the first two. Neither needs the raw tree.
@@ -54,14 +54,15 @@ core dependencies, and the benchmark reads the study parquets through it, so `pi
 ./glmtrust` without the extra exits 1 with "this benchmark needs polars to read the study
 parquets". The quotes matter in zsh, which treats the brackets as a glob.
 
-Exits zero when every headline figure matches within its declared tolerance: 415 errors, pooled
-capture 0.6096, pooled lift 4.0676, macro lift 3.9343, macro ECE 0.0209. The 11,109 variant-level
+Exits zero when the order-invariant figures match within tolerance (415 errors, macro ECE 0.0209) and the published pooled capture 0.6096 and pooled lift 4.0676 lie inside their row-order ranges; the macro lift, 3.9343, is printed beside them. The 11,109 variant-level
 scores it needs travel with the package as a 119 kB fixture.
 
 ### Tier 2: the recompute layer
 
-Every figure has a recompute layer that emits a JSON. The figure module draws only from that JSON
-and types no float by hand. The tables read the same JSONs and assert their headline values, so
+Every figure has a recompute layer. Most figure modules draw only from the JSON it emits; figS1_missing_panels
+reads reports/fig4_pervariant.parquet, fig7_atlas and fig8_readout compute their AUROCs and locus bootstraps at
+build time from Additional file 3's per-variant atlas, and fig_brca1_composite computes its AUROC from data/.
+No module types a float by hand. The tables read the same JSONs and assert their headline values, so
 drift fails the build instead of reaching the paper.
 
 ```bash
@@ -73,7 +74,7 @@ python tools/verify_from_data.py    # the count is printed by the run itself; fr
 
 `build_tables.py` runs from a clone and prints `8 canonical values asserted, all match`.
 `verify_from_data.py` reads the raw score and label files, so from a clone it re-derives the 23
-checks it can, reports the path each of the other sections wanted, and exits **3** — this archive's
+checks it can, lists each of the other sections with the input it could not reach, and exits **3** — this archive's
 "stopped at an undeposited path" code, which `tools/run_all_gates.py` files as NODATA rather than
 PASS. That is the intended behaviour: it is the one check that recomputes from raw data instead of
 from the deposited layer, so it cannot be made to pass without that data. It is not a broken

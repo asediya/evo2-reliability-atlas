@@ -1,7 +1,7 @@
 {
   "_meta": {
     "test": "phyloP vs GERP conservation baseline, species where genuine phyloP exists",
-    "note": "validates GERP as the uniform cross-species baseline; phyloP queried from genuine UCSC (chicken galGal6, human hg38) and project-computed (cattle bosTau9) bigWigs"
+    "note": "validates GERP as the uniform cross-species baseline; phyloP queried from genuine UCSC (chicken galGal6, human hg38) and Zenodo/Roslin Cactus 241-way (cattle bosTau9) bigWigs"
   },
   "per_species": {
     "cattle": {

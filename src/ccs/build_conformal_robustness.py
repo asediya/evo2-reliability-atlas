@@ -111,8 +111,10 @@ def main():
               "**Honest reframing (replaces the over-claim):** we do NOT claim a distribution-free finite-sample guarantee "
               "on an unseen species; cross-species transport violates exact exchangeability. We claim, and here TEST, "
               "coverage under a stated cross-species exchangeability assumption -- empirically it holds (Mondrian ~nominal) "
-              "and degrades gracefully, and the observed OVER-coverage is conservative finite-sample slack (a small "
-              "calibration set), i.e. an efficiency cost, not evidence the guarantee fails. Set sizes/abstention are "
+              "and degrades gracefully, and the observed OVER-coverage comes from ties in the isotonic posterior, which "
+              "takes few distinct values, so a block of tied scores straddles the conformal quantile; it is not "
+              "finite-sample slack (the calibration half holds over 5,000 variants, so that slack is under 0.001). It is "
+              "an efficiency cost, not evidence the guarantee fails. Set sizes/abstention are "
               "reported so coverage is never read in isolation."]
     os.makedirs("logs", exist_ok=True)
     open("logs/conformal_robustness.md", "w", encoding="utf-8").write("\n".join(lines) + "\n")

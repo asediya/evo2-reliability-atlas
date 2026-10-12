@@ -881,13 +881,13 @@
     "n": 2000
    },
    {
-    "window": 2049,
+    "window": 2048,
     "readout": "single-pos",
     "auroc": 0.487,
     "n": 2000
    },
    {
-    "window": 4097,
+    "window": 4096,
     "readout": "single-pos",
     "auroc": 0.484,
     "n": 2000
@@ -902,7 +902,7 @@
   ],
   "window_effect_fixed_readout": 0.0020000000000000018,
   "window_from": 1002,
-  "window_to": 2049,
+  "window_to": 2048,
   "readout_effect_fixed_window": 0.01100000000000001,
   "readout_window_fixed_at": 1002
  }

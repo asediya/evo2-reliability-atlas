@@ -1,5 +1,5 @@
 {
- "_what": "old-to-new citation map between the pre-renumber draft reference list and the submitted manuscript list. reports/supplementary_prose.md and reports/supplementary_tables.md are pre-renumber SOURCES and cite the OLD numbers; Additional file 1 as submitted is renumbered and cites the NEW ones. Resolve any marker in those two files through this map before reading it against the manuscript's reference list.",
+ "_what": "old-to-new citation map between the 144-entry draft reference list and a later draft list of 87 entries. It resolves the bracketed markers that src/ccs/build_supplementary.py emits, which cite the draft numbering. The two deposited exports, reports/supplementary_prose.md and reports/supplementary_tables.md, transcribe the submitted Additional file 1 and cite its own numbering, which resolves against that file's reference list without this map.",
  "_n_old": 144,
  "_n_new": 87,
  "_n_supplement_only": 12,
