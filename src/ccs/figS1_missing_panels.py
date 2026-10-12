@@ -109,7 +109,7 @@ def main():
     out = ROOT / "reports" / "figures"
     out.mkdir(parents=True, exist_ok=True)
     SG.tidy_minus(fig)
-    fig.savefig(out / "figS1_missing_panels.pdf")
+    fig.savefig(out / "figS1_missing_panels.pdf", metadata={"CreationDate": None})
     fig.savefig(out / "figS1_missing_panels.png", dpi=300)
     print("wrote %s (%.0f x %.0f mm, %d panels)" % (out / "figS1_missing_panels.pdf", W_MM, H_MM, len(axes)))
 

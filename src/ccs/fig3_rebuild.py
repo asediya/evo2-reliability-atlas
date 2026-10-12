@@ -375,9 +375,10 @@ def panel_e(ax, box):
     the two groups say something the first group alone cannot: the panel
     is separable, and the sequence scores are the things not separating it.
 
-    The open blue markers are each scorer's own coding-panel reference from `coding_ref`, so every
-    row in the first group carries the comparison the claim needs: what it does elsewhere, and what
-    it does here.
+    The open blue markers are each scorer's own nine-species mean on the atlas from `coding_ref`, so
+    every row in the first group carries the comparison the claim needs: what it does elsewhere, and
+    what it does here. GERP's is the per-base score on the variants it reaches, so it is drawn on the
+    exact flavour only; the mean25 and absmax25 window flavours have no atlas value and carry no marker.
     """
     sc = S["scorers"]
     probe = json.load(open("reports/eqtl_blindspot_probe.json", encoding="utf-8"))
@@ -386,9 +387,9 @@ def panel_e(ax, box):
 
     seq = [("Evo 2-40B", sc["Evo2-40B"], cref["Evo2-40B"]),
            ("Nucleotide Transformer", sc["NT-500M"], cref["NT-500M"]),
-           ("GERP (absmax25)", sc["GERP:gerp_absmax25"], cref["GERP"]),
+           ("GERP (absmax25)", sc["GERP:gerp_absmax25"], None),
            ("GERP (exact)", sc["GERP:gerp_exact"], cref["GERP"]),
-           ("GERP (mean25)", sc["GERP:gerp_mean25"], cref["GERP"])]
+           ("GERP (mean25)", sc["GERP:gerp_mean25"], None)]
     seq.sort(key=lambda r: -r[1]["auroc"])
     oth = [("PIP (circular by construction)", {"auroc": sc["PIP (positive control)"]["auroc"],
                                                "lo": sc["PIP (positive control)"]["lo"],
@@ -455,7 +456,7 @@ def panel_e(ax, box):
     # "scores tested here" head.
     ax.scatter([0.60], [ytop - 0.45], s=15, marker="o", facecolor="white", edgecolor=CODING,
                lw=0.8, clip_on=False, zorder=6)
-    ax.text(0.612, ytop - 0.45, "The same score on the coding panel", fontsize=FOOT,
+    ax.text(0.612, ytop - 0.45, "The same score on the atlas", fontsize=FOOT,
             color=CODING, ha="left", va="center")
 
     ax.set_yticks([y for y, _ in rows])

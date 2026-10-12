@@ -28,8 +28,8 @@ Both figures are recomputed from the raw score files by
 `analyses/scripts/verify_readme_reversal.py`, which prints them beside the claim when the scorer tables are present. From a clone it prints only `cannot check: ... absent (it lives in the undeposited data tree)`, because those tables are not deposited.
 
 How large the effect is depends on the panel, and it is not always this large. On the dbNSFP
-panel the audit reports -- **328,328 variants at one ClinVar review star or better**,
-not the 352,907 of the unfiltered table, which is a different panel -- coverage differs sharply
+panel the audit reports — **328,328 variants at one ClinVar review star or better**,
+not the 352,907 of the unfiltered table, which is a different panel — coverage differs sharply
 by class: REVEL reaches **35% of positives against 85% of negatives**, while the head-to-head
 inflation between SIFT, PolyPhen-2 and REVEL stays under 0.007 and reverses nothing. The coverage warning is the reliable part; a
 reversed ranking is what you check for, not what you should expect.
@@ -235,7 +235,7 @@ glmtrust reach reach_panel.parquet --label-col label --reach-prefix reach__ \
 
 ## What it deliberately does *not* claim
 
-- It does **not** improve discrimination: calibration and conformal prediction re-express a score, they
+- It does **not** improve discrimination: calibration and conformal prediction re-express a score; they
   do not add signal.
 - A **transferred probability** across species is, per the study, no better than a single global
   two-parameter sigmoid; the component that survives transfer is the selective-prediction *ordering*.
@@ -280,6 +280,6 @@ Python 3.12.10 with NumPy 2.5.1, SciPy 1.18.0 and scikit-learn 1.9.0.
 scripts that produced the paper's numbers live in the study repository; this package is the reusable,
 tested extraction of those methods. A `CITATION.cff`, carrying the reserved Zenodo DOI, is included beside this README.
 
-## License
+## Licence
 
 MIT; see [LICENSE](LICENSE).

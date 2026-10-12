@@ -47,7 +47,7 @@ know" instead of guessing.
 - [The trust layer](#the-trust-layer)
 - [Notebook](#notebook)
 - [Analysis code](#analysis-code)
-- [License](#license)
+- [Licence](#licence)
 
 ## Install
 
@@ -162,7 +162,7 @@ frequency; without the frequencies the script checks the printed values against 
 **[docs/REPRODUCING.md](docs/REPRODUCING.md)** gives what regenerates from a clone, what needs the
 raw data tree, and where the guarantees stop.
 
-## License
+## Licence
 
 MIT, see [LICENSE](LICENSE). The data files are CC0 1.0 except the third-party parts that
 [LICENSING.md](LICENSING.md) lists file by file; among them, the PigGTEx fine-mapping probabilities and

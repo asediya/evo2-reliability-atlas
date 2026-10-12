@@ -45,7 +45,7 @@ QUANTITIES = {
     "eQTL AUROC (20,000-variant panel, 1,001 bp)": (
         [r"0\.488",
          r"eQTL[^.]{0,80}?AUROC[^.]{0,20}?(?:reads?|of|at|is)\s+\*{0,2}(0\.\d{3})"], {"0.488"}),
-    "eQTL AUROC, consequence-matched 2,000 subpanel": ([r"0\.498"], {"0.498"}),
+    "eQTL AUROC, 2,000-variant subpanel (8,192 bp)": ([r"0\.498"], {"0.498"}),
     "atlas macro AUROC (8,192 bp)": ([r"macro AUROC of (0\.\d{3})", r"macro (0\.943)"], {"0.943"}),
     # Required "is", which neither form in the manuscript uses ("a pooled value of **0.973**",
     # "Pooled AUROC 0.973 [").
@@ -85,8 +85,8 @@ QUANTITIES = {
     # panel at 1,001 bp; +0.047 is the within-set margin vs GERP on the 9,529 variants carrying BOTH an
     # 8,192-bp score and a finite GERP value. The two sets differ by three variants and are not the same
     # analysis; do not merge them.
-    # Subtracting Table 1's two columns (Evo 2 full panel
-    # minus GERP scoreable subset) gives the reach-mismatched comparison Table 1's caption forbids.
+    # Subtracting Table 2's two columns (Evo 2 full panel
+    # minus GERP scoreable subset) gives the reach-mismatched comparison Table 2's notes flag.
     # The co-scoreable species-mean is +0.047 and is tracked below.
     "1,001-bp margin vs GERP (co-scoreable set)": (
         [r"raises its margin over GERP from \+(0\.\d{3})"], {"0.047"}),

@@ -20,7 +20,7 @@ The builders here read what the table below says. Three run from the archive as 
 `refseq_chromosome_map.csv` and, for Figure 10, `atlas_gerp_windows.parquet` — set
 `CCS_TABLES` to point at them. They read deposited recompute-layer artefacts plus the image files
 under `assets/`, all of which are the PhyloPic silhouettes, loaded by `fig2_style.load_silhouette`.
-**Additional file 1's Figures S3, S5 and S6 additionally read the `data/` tree** --
+**Additional file 1's Figures S3, S5 and S6 additionally read the `data/` tree** —
 `data/processed/scores/selection_evo2_40b.parquet`, `data/processed/conservation/*_gerp.parquet` and
 `data/interim/brca1_windows.parquet` respectively — which is not deposited
 (`reports/DATA_MANIFEST.md` gives the public source of every path), so those three exit non-zero

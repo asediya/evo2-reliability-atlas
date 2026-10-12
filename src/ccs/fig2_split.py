@@ -148,7 +148,7 @@ def _save(fig, stem):
               fig.get_figheight())
     SG.tidy_minus(fig)   # ASCII hyphen -> U+2212 in numeric labels; see style_gb.tidy_minus
     fig.savefig(pdf, dpi=600, bbox_inches=matplotlib.transforms.Bbox(
-        [[0.0, _y0], [fig.get_figwidth(), fig.get_figheight()]]))
+        [[0.0, _y0], [fig.get_figwidth(), fig.get_figheight()]]), metadata={"CreationDate": None})
     fig.savefig(f"reports/figures/{stem}.png", dpi=300)
     plt.close(fig)
     # Guard, not decoration: read the text back out of the PDF that was just written and refuse a

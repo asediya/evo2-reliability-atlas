@@ -13,7 +13,7 @@ pip install './glmtrust[io]'   # the package itself; the io extra pulls polars, 
 ```
 
 That is everything the recompute layer and the clone-runnable figure builders need. `pymupdf`
-is read by `fig2_split`, which draws Additional file 1's Figure S7, and by
+is used by `fig2_split`, which draws Additional file 1's Figure S7, and by
 `style_main`, the style
 module of the main figures, which reads each PDF it writes back to check the page. The
 submitted PDFs were written under matplotlib 3.11.2; a rebuild under another matplotlib matches
@@ -21,7 +21,7 @@ them in content and geometry but not pixel for pixel.
 
 Scripts that read the undeposited `data/` tree need more, and none of it is required for anything
 above: `duckdb` and `pybigtools` for the panel and phyloP builders, `pyBigWig` for the older GERP
-and phyloP queries, `pyfaidx` for window extraction, `pyliftover` for the dog liftover panel,
+and phyloP queries, `pyfaidx` for window extraction, `pyliftover` for the dog lift-over panel,
 `biopython` and `freesasa` for the BRCA1 structure figure, `joblib` where a script parallelises, `requests` for the BRCA1 panel download,
 and `torch`, `transformers`, `fair-esm`, `evo2` and `vortex` on a GPU scoring host.
 

@@ -548,7 +548,15 @@ def panel_b(fig, gs_slice):
         # caption in the q3 cell. Top-right is the clear quadrant for a descending series.
         # "All quintiles", not "All variants": this cell pools the five strata, the 27,234 variants
         # phyloP reaches, not the 28,006 of panel a and Table S6's first row.
-        ax.text(0.955, 0.955, ("All quintiles" if pooled else c["label"].replace("phyloP ", "phyloP ")),
+        # Quintile bounds from the strata block, at the two decimals Table S6 prints: at one decimal
+        # the boundary between the two middle quintiles rounds to a signed zero.
+        if pooled:
+            _title = "All quintiles"
+        else:
+            _b = (_strata[c["key"]]["phylop_lo"], _strata[c["key"]]["phylop_hi"])
+            assert min(abs(v) for v in _b) >= 0.005, (c["key"], _b)
+            _title = "phyloP %s to %s" % tuple(("%+.2f" % v).replace("-", "\u2212") for v in _b)
+        ax.text(0.955, 0.955, _title,
                 transform=ax.transAxes, fontsize=MINPT, color=col, fontweight="bold",
                 ha="right", va="top")
         # Print the statistic the VERDICT is made on. The previous version printed only the endpoint

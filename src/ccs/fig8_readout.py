@@ -646,8 +646,8 @@ for s, y in zip(STR, BAR_Y):
     label(P_COL, y, ("%.0f%%" if frac >= 0.1 else "%.1f%%") % (100 * frac), ha="right")
 label(N_COL, KEY1, "n", ha="right")
 label(P_COL, KEY1, SHARE_HEAD, ha="right")
-key(X_R, KEY1, [F.glyph_swatch(F.PATH_FILL, w=2.6, h=BAR_H) + ("Positive",),
-                F.glyph_swatch(F.BEN_FILL, w=2.6, h=BAR_H) + ("Negative",)])
+key(X_R, KEY1, [F.glyph_swatch(F.PATH_FILL, w=2.6, h=BAR_H) + ("Positives",),
+                F.glyph_swatch(F.BEN_FILL, w=2.6, h=BAR_H) + ("Negatives",)])
 # the pooled readout per stratum
 B_ROWS = [AX1_BOT - 0.8 - R_DATA - SUB - (STRATA_DY[-1] - dy) for dy in STRATA_DY]
 B_HEAD = B_ROWS[0] - SUB - R_DATA - KEY_CLEAR - DESC - DIGIT_HALF
@@ -717,7 +717,7 @@ for sp in ORDER:
     fill_mark(axC, r["m8"], y + SUB, F.EVO)
     row_label(LAB_X, y, species_label(sp))
     label(LOCI_X, y, F.thousands(r["pos_loci"]), ha="right", color=F.MUTED)
-label(LOCI_X, KEY2, "Loci", ha="right")
+label(LOCI_X, KEY2, "Positive loci", ha="right")
 zx = mm_x(X_L, C_LO, 0.0)
 label(zx - 1.4, KEY2, "← GERP ahead", ha="right")
 label(zx + 1.4, KEY2, "Evo 2 ahead →")

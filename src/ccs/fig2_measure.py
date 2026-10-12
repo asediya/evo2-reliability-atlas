@@ -248,8 +248,8 @@ def panel_b(ax1, ax2):
 def panel_c(ax):
     d, _, _ = _load()
     P = d["pooled"]
-    ax.axhspan(P["lo"], P["hi"], color=S.EVO2, alpha=.10, zorder=1)
-    ax.axhline(P["auroc"], color=S.EVO2, lw=.6, ls=(0, (3, 2)), zorder=2)
+    ax.axhspan(P["lo"], P["hi"], color=SG.MUTED, alpha=.10, zorder=1)   # grey: the key gives Evo 2 blue to sheep
+    ax.axhline(P["auroc"], color=SG.MUTED, lw=.6, ls=(0, (3, 2)), zorder=2)
     F = d["forest"]
     grp = {}
     for r in F:
@@ -320,7 +320,7 @@ def panel_c(ax):
                 clip_on=False, solid_capstyle="butt", zorder=2)
     # "pooled" in the empty stretch between the mammals' slot and chicken's
     _mid = (slot_x[ticks[-2]] + SLOT_W[ticks[-2]] / 2 + slot_x[ticks[-1]]) / 2
-    ax.text(_mid, P["auroc"] + .004, "Pooled", fontsize=ANNOT, color=S.EVO2, ha="center",
+    ax.text(_mid, P["auroc"] + .004, "Pooled", fontsize=ANNOT, color=SG.MUTED, ha="center",
             va="bottom")
     # The seven non-human mammals all sit at 92 My and are spread across x only so their intervals
     # do not overlap; the tick says "7 mammals" and the legend says the spread carries no
@@ -400,7 +400,9 @@ def panel_d(axP, axS):
 
     d_ = _load()[0]
     G = d_["gerp"]
-    rows = sorted(G.items(), key=lambda kv: -kv[1]["delta"])
+    # tree order, as Figure 9 and Figure 10c order their rows, so each species is where the reader found it there
+    rows = [(sp, G[sp]) for sp in S.LEAF_ORDER if sp in G]
+    assert len(rows) == len(G), sorted(set(G) - set(S.LEAF_ORDER))
     # Species whose positive class does not support a cluster-robust interval, so the variant-level
     # bootstrap this strip draws is NOT an honest uncertainty for them. Goat's nine positives occupy
     # two loci, eight of them inside a 570-bp span, giving Kish's effective count of 1.2 independent

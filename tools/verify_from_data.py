@@ -188,12 +188,13 @@ def sec_scale():
         check("scale", "%s coding species-mean AUROC" % tag,
               round(float(np.mean(per)), 3), coding.get(tag), tol=0.0011)
 
-    # The eQTL rung is a separate 2,000-variant matched subpanel; assert the 40B value the
+    # The eQTL rung is a separate 2,000-variant subpanel, the first 1,000 of each class in
+    # variant-identifier order (src/ccs/build_ablation_eqtl.py); assert the 40B value the
     # manuscript quotes (0.498) is the one deposited, so the two rungs cannot drift apart.
     eq = (st.get("scale") or {}).get("eqtl") or {}
     set_evidence("scale", "lit")            # the rung below is JSON-vs-constant, not a re-derivation
     if "40B" in eq:
-        check("scale", "eQTL 40B matched subpanel", eq["40B"]["auroc"], 0.498, tol=0.001)
+        check("scale", "eQTL 40B 2,000-variant subpanel", eq["40B"]["auroc"], 0.498, tol=0.001)
 
 
 # --------------------------------------------------------------------------- 3. composition

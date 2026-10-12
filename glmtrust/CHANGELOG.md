@@ -97,7 +97,7 @@ wolf on large ones.
   two floats a unit in the last place apart (two isotonic levels of exactly 1/4 stored as 0.25 and
   0.24999999999999994); a plain `<=` then left out a label whose score equals the threshold. Labels within
   four units in the last place of the threshold are now admitted, which only ever enlarges a set.
-Every public entry point now reads input by one contract (`glmtrust._checks`): labels are 0/1 with
+- Every public entry point now reads input by one contract (`glmtrust._checks`): labels are 0/1 with
 every one present, a score is a real number per variant with NaN for a no-call, one value per
 variant, and anything else is refused by name with the recoding to apply.
 - Labels coded 0.7, NaN, 1/2, -1/+1 or as text were cast silently by the calibrators, the conformal

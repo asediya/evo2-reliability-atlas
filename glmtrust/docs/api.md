@@ -66,7 +66,7 @@ audit(labels, scorers, strata=None, n_boot=2000, seed=0, alpha=0.05,
 | `values_add_nothing` | the interval on `lex_gain` is defined and contains zero |
 | `values_gain_undefined` | `lex_gain` is computed but its interval is not (a class with one scored variant): no verdict on the values is drawn |
 | `values_run_backwards` | the whole interval on `lex_gain` is below zero: informative values, opposite to the declared direction |
-| `strata` | list of `StratumAudit`, `n_strata_dropped` counts those too small to test |
+| `strata` | list of `StratumAudit`; `n_strata_dropped` counts those too small to test |
 
 ### `PairAudit`
 

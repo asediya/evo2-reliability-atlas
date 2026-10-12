@@ -23,7 +23,8 @@ share one baseline, each key starting at its plot's left edge. Labels are set in
      PhyloPic silhouette at each tip in light grey, the species name and, under it, its panel size,
      positives / negatives (Table 2's N). An internode shorter than MIN_INTERNODE is drawn at that length,
      so that two nodes a few My apart read as two nodes; the build prints every node it moves with its
-     true and its drawn age, and asserts that the only one it moves is the one the legend names. Each row
+     true and its drawn age, and asserts that it moves only the two nodes the legend names: the ungulate
+     node, which TimeTree dates with the laurasiatherian one, and the cetartiodactyl node below it. Each row
      carries three AUROCs on one axis, each on its own sub-row, top to bottom: Evo 2 at the 8,192-bp
      window-mean readout (filled amber circle) with Table 2's locus-clustered 95% interval as a capped
      whisker; the snpEff impact ordering (ink |); and the one-bit coding flag (grey x). A row's name sits

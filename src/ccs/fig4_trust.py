@@ -619,7 +619,7 @@ def panel_c(ax):
     ax.plot(cov, rnd, color=SUB, lw=1.0, ls=(0, (3, 1.6)), zorder=3, label="Random (control)")
     ax.plot(cov, orc, color=POS, lw=1.0, ls=(0, (1, 1.4)), zorder=3,
             label="Oracle (needs labels)")
-    ax.plot(cov, hon, color=CODING, lw=1.0, zorder=5, label="Transferred (honest)")
+    ax.plot(cov, hon, color=CODING, lw=1.0, zorder=5, label="Transferred")
     i = int(np.argmin(hon))
     ax.scatter([cov[i]], [hon[i]], s=22, color=CODING, zorder=6, edgecolors="white", lw=0.7)
     # The key sits below the axes: inside them it would cross the control and oracle curves.
@@ -630,7 +630,12 @@ def panel_c(ax):
     _wk = min(_P, key=lambda k: _P[k]["self_knowledge_auroc"])
     _fr = _P[_wk]["n_err"] / R["staircase"]["census"]["n_errors"]
     ax.set_xticks([1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3])
-    ax.set_xlim(1.03, 0.27); ax.set_ylim(0.026, 0.0800)
+    # A tick below the marked minimum and the oracle's floor, so both read off the axis.
+    ax.set_xlim(1.03, 0.27); ax.set_ylim(0.025, 0.0800); ax.set_yticks([0.025, 0.050, 0.075])
+    _all, (_ylo, _yhi) = np.concatenate([hon, rnd, orc]), ax.get_ylim()
+    assert _ylo < _all.min() and _all.max() < _yhi, "a curve leaves the y range"
+    assert min(t for t in ax.get_yticks() if _ylo <= t <= _yhi) < min(hon[i], orc.min()), \
+        "no tick below the marked minimum"
     ax.set_xlabel("Coverage  (fraction still called)", fontsize=AXIS)
     ax.set_ylabel("Macro error", fontsize=AXIS)
     y_lg = _below(ax, -0.05)                     # measured: below the x-label, whatever height it took
@@ -674,9 +679,10 @@ def panel_dm(ax):
     change what gets CALLED? Here every variant is placed at its probability under the global
     sigmoid against its probability under leave-one-species-out isotonic transfer.
 
-    The two disagree on the probability scale (mean absolute difference 0.052), the cloud lies along
-    the identity, and only 68 of 11,130 variants -- 0.61 % -- cross the decision boundary, every
-    one of them from sigmoid-positive to transfer-negative.
+    The two disagree on the probability scale (mean absolute difference 0.052): the transfer lowers
+    every call the sigmoid places between 0.1 and 0.5 and raises every call above 0.6, and only 68 of
+    11,130 variants -- 0.61 % -- cross the decision boundary, every one of them from
+    sigmoid-positive to transfer-negative.
 
     NO ECE IS PRINTED ON THIS PANEL, and that is deliberate, for two reasons.
 
@@ -711,7 +717,10 @@ def panel_dm(ax):
     a = d.global_sigmoid.to_numpy(); b = d.isotonic_LOSO.to_numpy()
     ok = np.isfinite(a) & np.isfinite(b)
     a, b, lab = a[ok], b[ok], d.label.to_numpy()[ok]
-
+    # The legend's reading of the cloud, checked on every build.
+    _mid, _top = (a > 0.1) & (a < 0.5), a > 0.6
+    assert (b[_mid] < a[_mid]).all() and (b[_top] > a[_top]).all(), \
+        "the bow the legend describes does not hold"
 
     flip = (a >= .5) != (b >= .5)
     ax.axhspan(0.5, 1.0, xmin=0, xmax=0.5, color="#C1443E", alpha=.05, lw=0, zorder=1)
@@ -735,12 +744,18 @@ def panel_dm(ax):
     ax.set_ylabel("Probability under leave-one-species-out\nisotonic transfer", fontsize=AXIS,
                   linespacing=1.35)
     _spines(ax)
-    # Three short lines that end left of the diagonal: the longer wording ran through it.
-    ax.text(0.035, 0.965, "Shaded: the two disagree\nRed: a call crossing the\ndecision boundary",
-            transform=ax.transAxes, fontsize=FOOT, ha="left", va="top", color=INK,
-            linespacing=1.4)
-    ax.text(0.965, 0.035, "One hexagon =\na count of calls", transform=ax.transAxes,
-            fontsize=FOOT, ha="right", va="bottom", color=MUTED, linespacing=1.3)
+    # Three short lines in the upper-left corner, each ending left of the dotted x = 0.5 rule.
+    k_ul = ax.text(0.035, 0.965, "Shaded: they disagree\nRed: a call crossing\nthe decision boundary",
+                   transform=ax.transAxes, fontsize=FOOT, ha="left", va="top", color=INK,
+                   linespacing=1.4)
+    # Lower right: only crossing calls can sit in this quadrant, and the key stays right of them.
+    k_lr = ax.text(0.965, 0.035, "One hexagon =\na count of calls,\nlog-scaled", transform=ax.transAxes,
+                   fontsize=FOOT, ha="right", va="bottom", color=MUTED, linespacing=1.3)
+    _r = ax.figure.canvas.get_renderer()
+    x_rule = ax.transData.transform((0.5, 0.0))[0]
+    x_flip = ax.transData.transform((a[flip].max(), 0.0))[0]
+    assert k_ul.get_window_extent(_r).x1 < x_rule, "upper-left key reaches the x = 0.5 rule"
+    assert k_lr.get_window_extent(_r).x0 > x_flip, "lower-right key reaches the crossing calls"
 
 
 def panel_e(ax):
@@ -872,7 +887,7 @@ def main():
     # all five letters sit in one column instead of a alone hanging over the grid's left edge.
     from .style_gb import letter_x as _letter_x
     _mark(fig.text, _letter_x(fig), _fy(6.2), "a",
-          f"n = {PV.height:,}  ·  cells ordered by sample size", x_right=0.955)
+          f"n = {PV.height:,}  ·  rows ordered by sample size", x_right=0.955)
     axb = fig.add_subplot(gs[1, 0]); panel_b(axb)
     axc = fig.add_subplot(gs[1, 1]); panel_c(axc)
     axdm = fig.add_subplot(gs[2, 0]); panel_dm(axdm)

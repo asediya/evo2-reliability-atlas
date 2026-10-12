@@ -33,8 +33,9 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from matplotlib.gridspec import GridSpec
 from matplotlib.colors import TwoSlopeNorm, ListedColormap
-from matplotlib.patches import Ellipse
+from matplotlib.patches import Ellipse, Rectangle
 from matplotlib.lines import Line2D
+from matplotlib.textpath import TextPath
 from scipy.stats import spearmanr, rankdata
 import figstyle as fs
 from figtext import restore_text_layer
@@ -323,7 +324,10 @@ def main():
     im = axH.imshow(M, aspect="auto", cmap=SG.tol_del_cmap(), norm=norm, interpolation="nearest")
     axH.set_yticks(range(4)); axH.set_yticklabels(list("ACGT"), fontsize=SG.TICK)
     axH.set_ylabel("Evo 2\nalt base", fontsize=SG.AXIS, linespacing=LEAD)
-    axH.set_xticks([]); axH.set_xlabel("BRCA1 coding substitutions  ·  protein N→C  ·  introns collapsed",
+    # No "coding" in the label: 369 of the 1,326 columns (1,090 of the 3,893 substitutions) carry no
+    # residue in brca1_variant_residues.parquet -- the grey of the Domain track -- so the deposit
+    # certifies them as neither coding nor non-coding.
+    axH.set_xticks([]); axH.set_xlabel("BRCA1 substitutions  ·  protein N→C  ·  introns collapsed",
                                        fontsize=SG.AXIS)
     for s in axH.spines.values(): s.set_edgecolor("#CCC")
 
@@ -337,7 +341,9 @@ def main():
     # ("LOF"), which is pinned to a different axes. Both live in the same 17 mm margin column;
     # the bar is the one with slack, since its job is a ramp and not a scale to read values off.
     cax = fig.add_axes([0.8985, pH.y0, 0.012, 0.36 * pH.height])   # aligned with the foot of the quilt
-    cb = fig.colorbar(im, cax=cax)
+    # The norm stops at the 3rd and 97th percentiles of the scores (load_heatmap), and every score
+    # beyond either end prints in that end's colour; the pointed ends say the scale is clipped.
+    cb = fig.colorbar(im, cax=cax, extend="both")
     # Everything between the bar and the trim is on a 40 pt budget: tick, pad, "0.010", labelpad,
     # and two stacked lines of rotated label. Raising the leading to LEAD widened the label by
     # 1.8 pt and pushed its last line 0.9 pt OFF the page, so the bar, the gridspec's right edge
@@ -365,12 +371,16 @@ def main():
     # FLOOR: a four-line key in a fixed reservation beside the colour swatches.
     fig.text(KX, pS.y1 + 1.0 * PT, "SGE class\n(Findlay 2018)\nworst of ≤3\nsubs per site:",
              fontsize=SG.FLOOR, va="top", color=CAP, linespacing=LEAD)
-    # The label is set in its swatch's colour; SGE_FUNC alone was 1.63:1 on white. text_safe
-    # darkens the TYPE only -- the swatch above it keeps the full-chroma hue.
-    for i, (lab, c) in enumerate([("FUNC", SG.text_safe(SGE_FUNC)), ("INT", SG.text_safe(SGE_INT)),
-                                  ("LOF", SG.text_safe(SGE_LOF))]):
+    # Each swatch is a patch in the strip's own colour, not a "■" glyph: a glyph is type and must
+    # clear 4.5:1 on white, which SGE_FUNC cannot, and a darkened FUNC would key a colour the strip
+    # does not draw. The square takes the ink box of a "■" set at SG.TICK, in points; the labels
+    # stay in CAP.
+    ink = TextPath((0, 0), "■", size=SG.TICK).get_extents()
+    for i, (lab, c) in enumerate([("FUNC", SGE_FUNC), ("INT", SGE_INT), ("LOF", SGE_LOF)]):
         y = pS.y1 - (41.0 + i * 9.5) * PT
-        fig.text(KX, y, "■", color=c, fontsize=SG.TICK, va="center")
+        fig.add_artist(Rectangle((KX + ink.x0 / W_PT, y - 0.5 * ink.height * PT), ink.width / W_PT,
+                                 ink.height * PT, transform=fig.transFigure, facecolor=c,
+                                 edgecolor="none", zorder=3))
         fig.text(KX2 - 0.001, y, lab, fontsize=SG.ANNOT, va="center", color=CAP)
 
     # ---- b: 2x2 structure grid ----

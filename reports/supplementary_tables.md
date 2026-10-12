@@ -10,27 +10,27 @@
 | Proximal Intron | 1,170 | 114 | 0.535 | [0.474, 0.596] | 0.656 | 0.656 | −0.121 | 0.00618 |
 | Deep Exon | 1,419 | 372 | 0.471 | [0.438, 0.504] | 0.652 | 0.665 | −0.181 | < 0.00002 |
 
-Table S34 notes. 3,912 variants with splice-disruptive calls, measured in cells except for 82 essential-splice calls admitted by rule (Note S35). The Evo 2 column is Evo 2-1B with its log-likelihood summed over a 1,001-bp window, the only readout at which all six assays were scored; on the BRCA1 assay Evo 2-40B at the 8,192-bp readout reads 0.974 (Note S65). SpliceAI and Pangolin use roughly 10,000 nt of flanking sequence, so the columns are not matched on input context (Methods). Intervals on Evo 2 are within-class stratified percentile bootstraps at B = 200,000 (positives and negatives resampled separately at their observed class sizes, so no replicate can lose a class; Essential Splice carries eight negatives). The p-value is family-wise across the five classes by Westfall–Young max-T permutation over 50,000 draws, so no class is read on its own; the smallest p the test can resolve is 1/50,001 = 0.00002, and the three cells shown as "< 0.00002" sit on that floor and are bounds rather than estimates. Rows are ordered by class size, smallest first; Fig. 8a draws the same five classes in a different, positional order. Class negatives are n minus the disruptive count: 8, 286, 455, 1,056 and 1,047 in the row order above. Differences are computed on the unrounded AUROCs and can disagree by 0.001 with the subtraction of the two rounded columns beside them. Pooled over all 3,912 variants Evo 2 reads 0.621 against SpliceAI 0.799 and Pangolin 0.803, a paired difference of −0.1771 (95% CI [−0.2008, −0.1534], DeLong on the shared variants); that pooled comparison is not covered by the family-wise correction.
+Table S34 notes. 3,912 variants with splice-disruptive calls, measured in cells except for 82 essential-splice calls admitted by rule (Note S35). The Evo 2 column is Evo 2-1B with its log-likelihood summed over a 1,001-bp window, the only readout at which all six assays were scored; on the BRCA1 assay Evo 2-40B at the 8,192-bp readout reads 0.974 (Note S65). SpliceAI and Pangolin use roughly 10,000 nt of flanking sequence, so the columns are not matched on input context (Methods). Intervals on Evo 2 are within-class stratified percentile bootstraps at B = 200,000 (positives and negatives resampled separately at their observed class sizes, so no replicate can lose a class; Essential Splice carries eight negatives). The p-value is family-wise across the five classes by Westfall–Young max-T permutation over 50,000 draws, so no class is read on its own; the smallest p the test can resolve is 1/50,001 = 0.00002, and the three cells shown as "< 0.00002" sit on that floor and are bounds rather than estimates. Rows are ordered by class size, smallest first; Figure 8a draws the same five classes in a different, positional order. Class negatives are n minus the disruptive count: 8, 286, 455, 1,056 and 1,047 in the row order above. Differences are computed on the unrounded AUROCs and can disagree by 0.001 with the subtraction of the two rounded columns beside them. Pooled over all 3,912 variants Evo 2 reads 0.621 against SpliceAI 0.799 and Pangolin 0.803, a paired difference of −0.1771 (95% CI [−0.2008, −0.1534], DeLong on the shared variants); that pooled comparison is not covered by the family-wise correction.
 
 ## Table S1. The readout effect on identical variants
 
 | Species | n | AUROC 8,192-bp mean-LL | 95% CI | AUROC 1,001-bp single-token (same variants) |
 |---|---|---|---|---|
-| Human | 3,000 | 0.974 | [0.968, 0.979] | 0.825 |
-| Cattle | 2,067 | 0.974 | [0.958, 0.987] | 0.900 |
-| Dog | 2,496 | 0.970 | [0.952, 0.984] | 0.888 |
-| Sheep | 616 | 0.962 | [0.917, 0.994] | 0.903 |
 | Goat | 98 | 0.959 | [0.907, 0.994] | 0.950 |
+| Chicken | 308 | 0.954 | [0.913, 0.986] | 0.861 |
 | Pig | 396 | 0.863 | [0.753, 0.957] | 0.848 |
+| Sheep | 616 | 0.962 | [0.917, 0.994] | 0.903 |
 | Horse | 766 | 0.941 | [0.895, 0.978] | 0.883 |
 | Cat | 1,362 | 0.890 | [0.838, 0.938] | 0.848 |
-| Chicken | 308 | 0.954 | [0.913, 0.986] | 0.861 |
+| Cattle | 2,067 | 0.974 | [0.958, 0.987] | 0.900 |
+| Dog | 2,496 | 0.970 | [0.952, 0.984] | 0.888 |
+| Human | 3,000 | 0.974 | [0.968, 0.979] | 0.825 |
 
-Both columns are computed on the same variants, every variant carrying an 8,192-bp mean-log-likelihood score, 11,109 of the 11,130 in the panel, so the two readouts are matched variant-for-variant and isolate the readout effect: +0.065 AUROC by the species mean, +0.092 pooled [+0.083, +0.101]. Table 2 is computed on the full 11,130-variant panel and this table on the 11,109 carrying an 8,192-bp score, so n differs in the five species that lose variants at 8,192 bp (horse 15, cat 3, and one each in goat, cattle and dog; Note S27), and the 1,001-bp AUROC shifts with it at three decimals in goat, horse and cat. That panel difference is the whole of the residual, and the readout effect above is computed on the matched subset. The intervals in this table are variant-level and are not cluster-robust. Goat's [0.907, 0.994] is therefore the unclustered interval, and it is printed here for completeness only: goat's nine positives occupy two loci, eight of them within a 570-bp span, giving 1.2 effective independent positions, which is why Table 2 declines to print an interval for goat at all. Read goat's AUROC as a descriptive point estimate, as Table 2 does.
+Both columns are computed on the same variants, every variant carrying an 8,192-bp mean-log-likelihood score, 11,109 of the 11,130 in the panel, so the two readouts are matched variant-for-variant and isolate the readout effect: +0.065 AUROC by the species mean, +0.092 pooled [+0.083, +0.101]. Table 2's 1,001-bp column is computed on the full 11,130-variant panel and this table on the 11,109 carrying an 8,192-bp score, so n differs in the five species that lose variants at 8,192 bp (horse 15, cat 3, and one each in goat, cattle and dog; Note S27), and the 1,001-bp AUROC shifts with it at three decimals in goat, horse and cat. That panel difference is the whole of the residual, and the readout effect above is computed on the matched subset. The intervals in this table are variant-level and are not cluster-robust. Goat's [0.907, 0.994] is therefore the unclustered interval, and it is printed here for completeness only: goat's nine positives occupy two loci, eight of them within a 570-bp span, giving 1.2 effective independent positions, which is why Table 2 declines to print an interval for goat at all. Read goat's AUROC as a descriptive point estimate, as Table 2 does.
 
 ## Table S2. Reach: what the conservation baseline can be run on
 
-| Species | n | positive scorable | negative scorable | class gap | deployment AUROC penalty |
+| Species | n | positive scorable | negative scorable | class gap | deployment AUROC penalty (must-answer − covered) |
 |---|---|---|---|---|---|
 | Goat | 99 | 0.889 | 0.800 | +0.089 | −0.081 |
 | Chicken | 308 | 0.964 | 0.882 | +0.082 | −0.034 |
@@ -42,7 +42,7 @@ Both columns are computed on the same variants, every variant carrying an 8,192-
 | Dog | 2,497 | 0.921 | 0.911 | +0.009 | −0.062 |
 | Human | 3,000 | 0.963 | 0.957 | +0.007 | −0.029 |
 
-Conservation scores are undefined where the alignment or track is unavailable, and missingness is marginally associated with class in these panels; the consequence-matched analysis does not establish its cause. Every per-species conservation AUROC computed this way is therefore computed on a class-skewed subset of the panel it is drawn from, whose full-panel value is unidentified without an assumption about the unscored variants; we establish that within our own nine panels and do not survey the published literature. The missingness is also spatially structured rather than random: a Wald–Wolfowitz runs test on the no-call pattern rejects randomly scattered no-calls in the three largest panels (human z = −13.87 negative and −13.94 positive, dog −10.86, cattle −7.31). That cuts both ways: it is independent evidence that the holes are structural, and it means the per-variant reach intervals of the Figure S5 legend assume an independence of missingness that the runs test rejects, so they understate uncertainty in exactly those three panels. The test only detects clustering on the scale of the spacing between sampled variants, which is 0.41 Mb in human, 0.58 Mb in dog and 0.97 Mb in cattle, and 2.42 Mb in pig and 2.43 Mb in horse. It has no power against kilobase-scale alignment gaps, so non-rejection in a panel is not evidence that the no-calls are unclustered. The penalty column above charges every ranking pair that touches a no-call at one half, following the full evaluation mode of the Critical Assessment of Functional Annotation (CAFA) in charging for silence, though CAFA itself assigns zero. That is a scoring convention and not a forecast of what conservation would emit if it were forced to answer, so we give the alternatives here. Under the paper's rule the penalty is −0.1019 by the unweighted species mean and −0.2448 in horse. Giving each no-call the conservation score's own median value and then taking AUROC over the whole panel gives −0.0235 and −0.0100. Drawing each no-call from the conservation score's own score distribution gives, in expectation over the draws, −0.0400 and −0.0645. The two alternatives are milder because the scored negatives sit at low conservation and the scored positives at high, so a filled-in value inherits information from that arrangement. We keep the first rule throughout this paper, and a reader who prefers a different one should take these figures in place of the tabulated ones.
+Conservation scores are undefined where the alignment or track is unavailable, and missingness is marginally associated with class in these panels; the consequence-matched analysis does not establish its cause. Every per-species conservation AUROC computed this way is therefore computed on a class-skewed subset of the panel it is drawn from, whose full-panel value is unidentified without an assumption about the unscored variants; we establish that within our own nine panels and do not survey the published literature. The missingness is also spatially structured rather than random: a Wald–Wolfowitz runs test on the no-call pattern rejects randomly scattered no-calls in the three largest panels (human z = −13.87 negative and −13.94 positive, dog −10.86, cattle −7.31). That cuts both ways: it is independent evidence that the holes are structural, and it means the per-variant reach intervals of the Figure S5 legend assume an independence of missingness that the runs test rejects, so they understate uncertainty in exactly those three panels. The test only detects clustering on the scale of the spacing between sampled variants, which is 0.41 Mb in human, 0.58 Mb in dog and 0.97 Mb in cattle, and 2.42 Mb in pig and 2.43 Mb in horse. It has no power against kilobase-scale alignment gaps, so non-rejection in a panel is not evidence that the no-calls are unclustered. The penalty column above, written as the signed change from covered to must-answer AUROC and so negative (Methods and Table S40 give its size, covered minus must-answer), charges every ranking pair that touches a no-call at one half, following the full evaluation mode of the Critical Assessment of Functional Annotation (CAFA) in charging for silence, though CAFA itself assigns zero. That is a scoring convention and not a forecast of what conservation would emit if it were forced to answer, so we give the alternatives here. Under the paper's rule the penalty is −0.1019 by the unweighted species mean and −0.2448 in horse. Giving each no-call the conservation score's own median value and then taking AUROC over the whole panel gives −0.0235 and −0.0100. Drawing each no-call from the conservation score's own score distribution gives, in expectation over the draws, −0.0400 and −0.0645. The two alternatives are milder because the scored negatives sit at low conservation and the scored positives at high, so a filled-in value inherits information from that arrangement. We keep the first rule throughout this paper, and a reader who prefers a different one should take these figures in place of the tabulated ones. The class gap's Newcombe hybrid-score 95% interval, drawn in Figure S5a, excludes zero in pig [+0.190, +0.481], horse [+0.397, +0.543], cat [+0.132, +0.234] and cattle [+0.022, +0.054] and includes it in the other five species; a locus-resampled interval excludes zero in the same four (Note S43).
 
 ## Table S3. Baseline suite
 
@@ -75,7 +75,7 @@ The n column applies to ESM-2 and Evo 2-40B. GERP is measured on the subset it c
 | Evo 2-7B | 0.928 | 0.488 | [0.464, 0.514] | 2,000 |
 | Evo 2-40B | 0.943 | 0.498 | [0.473, 0.523] | 2,000 |
 
-The whole-atlas column is the nine-species mean AUROC at the 8,192-bp readout on all 11,109 variants, not a coding subset; its steps have paired species-mean t intervals that include zero, +0.061 [−0.016, +0.137] from 1B to 7B and +0.015 [−0.003, +0.032] from 7B to 40B. Without human, whose 1B scores are anomalous and whose 1B-to-7B step is +0.324, the eight OMIA species read 0.896, 0.924 and 0.939 and step by +0.028 [+0.014, +0.042] from 1B to 7B and by +0.015 [−0.005, +0.035] from 7B to 40B (Note S15). The eQTL column is the 2,000-variant consequence-matched subpanel, 1,000 of each class, on which no rung moves from chance. Every cell of both columns is read at the 8,192-bp mean-log-likelihood readout, scored at each checkpoint by the scorer that loads it whole (Note S30).
+The whole-atlas column is the nine-species mean AUROC at the 8,192-bp readout on all 11,109 variants, not a coding subset; its steps have paired species-mean t intervals that include zero, +0.061 [−0.016, +0.137] from 1B to 7B and +0.015 [−0.003, +0.032] from 7B to 40B. Without human, whose 1B scores are anomalous and whose 1B-to-7B step is +0.324, the eight OMIA species read 0.896, 0.924 and 0.939 and step by +0.028 [+0.014, +0.042] from 1B to 7B and by +0.015 [−0.005, +0.035] from 7B to 40B (Note S15). The eQTL column is a 2,000-variant subpanel of the 20,000-variant panel, the first 1,000 of each class in variant-identifier order (candidate causal variants on chromosomes 10 to 14, controls on 10 to 12), on which no rung moves from chance. Every cell of both columns is read at the 8,192-bp mean-log-likelihood readout, scored at each checkpoint by the scorer that loads it whole (Note S30).
 **Table S4 (continued)**
 
 | Scorer | AUROC | 95% CI | n |
@@ -86,16 +86,16 @@ The whole-atlas column is the nine-species mean AUROC at the 8,192-bp readout on
 | GERP (mean25) | 0.473 | [0.437, 0.510] | 1,015 |
 | GERP (absmax25) | 0.532 | [0.497, 0.569] | 1,015 |
 
-Every sequence-based scorer collapses together on the same panel. GERP is shown as one row per flavour because its reach on this panel is flavour-dependent (n varies with how many variants carry a finite score); each row is a genuine estimator with its own bootstrap interval, in place of an uninterpretable average across flavours.
+Every sequence-based scorer collapses together on the same panel. GERP is shown as one row per flavour because its reach on this panel is flavour-dependent (n varies with how many variants carry a finite score); each row is a genuine estimator with its own bootstrap interval, in place of an uninterpretable average across flavours. GERP (exact) is the score at the variant's own base; GERP (mean25) and GERP (absmax25) are the mean and the largest absolute value of the scores within 25 bp either side, defined wherever any base of that 51-base window is scored.
 
 ## Table S5. Equivalence testing, Evo 2 versus GERP on the co-scorable panel
 
 | Bootstrap | 90% CI | verdict at SESOI 0.02 |
 |---|---|---|
-| species-clustered (reported) | [−0.0237, +0.0555] | equivalence NOT established |
+| species-clustered (reported) | [−0.0237, +0.0555] | equivalence not established |
 | variant-level (contrast only) | [−0.0095, +0.0145] | equivalent |
 
-Observed pooled difference +0.0024 at the 1,001-bp single-token readout, on n = 9,532 over 9 species. The unit of analysis decides the answer, and we report the species-clustered interval because species are this study's unit of generalisation.
+TOST is the two one-sided tests procedure at α = 0.05, and SESOI the smallest effect size of interest, the δ of Methods: equivalence is declared only if the 90% interval lies wholly inside ±SESOI. Observed pooled difference +0.0024 at the 1,001-bp single-token readout, on n = 9,532 over 9 species. The unit of analysis decides the answer, and we report the species-clustered interval because species are this study's unit of generalisation.
 **Table S5 (continued)**
 
 | SESOI | p (TOST) | equivalent? |
@@ -114,7 +114,7 @@ Observed pooled difference +0.0024 at the 1,001-bp single-token readout, on n = 
 | common | 5,596 | 0.12139 | 0.201 |
 | major | 5,598 | 0.38986 | 0.178 |
 
-Cattle (ARS-UCD1.2), 28,006 variants. Mean Evo 2-40B deleteriousness at the 1,001-bp single-token readout, by minor-allele-frequency bin; Spearman rs = −0.099 [−0.111, −0.088], p = 2.9 × 10−62. The claim is the monotone gradient at this n, not the magnitude of rs.
+Cattle (ARS-UCD1.2), 28,006 variants. Mean Evo 2-40B deleteriousness at the 1,001-bp single-token readout, by minor-allele-frequency bin (bin edges at MAF 0.002, 0.01, 0.05 and 0.30; Note S33); Spearman rs = −0.099 [−0.111, −0.088], p = 2.9 × 10−62. The claim is the monotone gradient at this n, not the magnitude of rs.
 Fold change, major-allele bin to ultra-rare bin: 4.33.
 **Table S6 (continued)**
 
@@ -126,7 +126,7 @@ Fold change, major-allele bin to ultra-rare bin: 4.33.
 | 4 | 0.03 to 0.39 | 5,505 | −0.109 | [−0.138, −0.083] | 4.06 × 10−16 |
 | 5 | 0.39 to 9.85 | 5,459 | −0.118 | [−0.143, −0.093] | 2.25 × 10−18 |
 
-Conditioned on conservation (phyloP quintiles). The frequency–deleteriousness relationship survives at fixed conservation in 4 of 5 quintiles, and its interval crosses zero exactly where conservation itself has no signal, with no disease label anywhere in the analysis.
+Conditioned on conservation (phyloP quintiles over the 27,234 of the 28,006 variants that phyloP reaches). The frequency–deleteriousness relationship survives at fixed conservation in 4 of 5 quintiles, and its interval crosses zero exactly where conservation itself has no signal, with no disease label anywhere in the analysis.
 Strata with negative rs: 5 of 5; strata whose CI excludes zero: 4.
 
 ## Table S7. Evo 2 versus GERP is readout-dependent (co-scorable variants)
@@ -150,8 +150,8 @@ On the variants both methods can score, Evo 2 scored at the 1,001-bp single-toke
 
 | Species | n (matched) | GERP | phyloP | phyloP − GERP | Evo 2 @8,192 | Evo 2 @8,192 − phyloP | Evo 2 @1,001 | Evo 2 @1,001 − phyloP |
 |---|---|---|---|---|---|---|---|---|
-| Cattle | 1,921 | 0.828 | 0.931 | +0.103 | 0.978 | +0.047 | 0.909 | −0.022 |
 | Chicken | 274 | 0.725 | 0.793 | +0.068 | 0.956 | +0.163 | 0.862 | +0.069 |
+| Cattle | 1,921 | 0.828 | 0.931 | +0.103 | 0.978 | +0.047 | 0.909 | −0.022 |
 | Human | 2,880 | 0.874 | 0.925 | +0.051 | 0.974 | +0.049 | 0.825 | −0.100 |
 
 GERP is the sole cross-species conservation baseline because it is the only per-base score available for all nine assemblies (Methods). For chicken (galGal6/GRCg6a UCSC phyloP77way) and human (hg38/GRCh38 UCSC phyloP100way), which carry a genuine UCSC phyloP track, and cattle (bosTau9), whose phyloP comes from Zenodo record 13332541 (Roslin) over a Cactus 241-way alignment rather than from UCSC, so that row rests on a different alignment and species set from the two beside it, we recomputed conservation discrimination from phyloP queried at each variant position. All four scores above are evaluated on exactly the same variants (the intersection of the 8,192-bp-scored, GERP-scorable and phyloP-scorable sets; cattle n = 1,921), so every comparison is like-for-like. Two things follow. First, phyloP is a stronger baseline than GERP in all three species, so every Evo 2-versus-conservation margin reported against GERP is an upper bound rather than a conservative one; GERP is kept as the primary comparator for uniformity across all nine assemblies, not for strength. Second, and more important, Evo 2 at the reference-implementation 8,192-bp readout beats even phyloP in all three, so the readout head-to-head (Table S7) is robust to using the stronger baseline; at the 1,001-bp readout, by contrast, phyloP beats Evo 2 in two of three, reinforcing that the single-token readout understates the model.
@@ -171,7 +171,7 @@ phyloP was queried with pybigtools from genuine bigWig tracks; chromosome coordi
 | Dog | 400 | 200 | 0.890 | 0.929 | 0.979 | 0.979 | +0.039 | +0.050 |
 | Human | 400 | 200 | 0.814 | 0.875 | 0.974 | 0.972 | +0.061 | +0.097 |
 
-Both readouts are accounting choices, not results. The +0.065 species-mean advantage of the 8,192-bp mean-log-likelihood over the 1,001-bp single-token variant-delta (Fig. 10a) confounds two choices: a longer model context and averaging surprise across the window. We separate them on 2,599 atlas variants (at most 200 positives and 200 negatives per species), reading three quantities from a single 8,192-bp forward pass per sequence, which hold the model and context fixed and vary only the aggregation scope, and a fourth from the separate 1,001-bp pass. The left-context-and-scorer term is the gain of the single-token readout as its left context grows from ~0.5 kb (the 1,001-bp window) to ~4 kb, a step that also moves from the streamed scorer to the resident one; the aggregation term is the further gain of the full-window mean over that single position.
+Both readouts are accounting choices, not results. The +0.065 species-mean advantage of the 8,192-bp mean-log-likelihood over the 1,001-bp single-token variant-delta (Figure 10a) confounds two choices: a longer model context and averaging surprise across the window. We separate them on 2,599 atlas variants (at most 200 positives and 200 negatives per species), reading three quantities from a single 8,192-bp forward pass per sequence, which hold the model and context fixed and vary only the aggregation scope, and a fourth from the separate 1,001-bp pass. The left-context-and-scorer term is the gain of the single-token readout as its left context grows from ~0.5 kb (the 1,001-bp window) to ~4 kb, a step that also moves from the streamed scorer to the resident one; the aggregation term is the further gain of the full-window mean over that single position.
 **Table S9 (continued)**
 
 |  | left context and scorer term | aggregation term | total |
@@ -179,7 +179,7 @@ Both readouts are accounting choices, not results. The +0.065 species-mean advan
 | species mean (± SE) | +0.0359 ± 0.0066 | +0.0309 ± 0.0107 | +0.0668 ± 0.0149 |
 | pooled (95% CI) | +0.0377 [+0.0286, +0.0469] | +0.0374 [+0.0267, +0.0483] | +0.0751 [+0.0611, +0.0898] |
 
-The total recovered here (+0.0668 species mean) reproduces the readout effect of Fig. 10a (+0.065), evidence that the effect size is representative even though the subset is not class-balanced: it retains every positive in seven species and keeps at most 200 positives and 200 negatives in each, so dog and human are held at 200 positives and the per-species positive fraction runs from about 9% in goat, whose whole panel is kept, to 50% in dog (human's full panel is already 1:1). The split into context and aggregation is path-dependent. Taking context first (single-token readout, window 1 kb to 8 kb) then aggregation (single to window-mean at 8 kb) gives context +0.0359 and aggregation +0.0309; taking aggregation first (single to window-mean at 1 kb) then context (window-mean 1 kb to 8 kb) gives aggregation +0.0708 and context −0.0040. The total minus the two first steps, each measured from the single-token 1-kb cell, is −0.0399. That residual is not a factorial interaction and does not show that the two factors overlap: the fourth cell of a complete two-by-two, a window mean at 1,001-bp conditioning context, is not part of the design, so the aggregation-first path substitutes the central-1-kb mean of the 8,192-bp pass, which moves conditioning context as well as aggregation. The +0.0349 gap between the two single-factor conditions is likewise a difference between conditions rather than an interaction term. A 'roughly equal halves' reading holds only under the first ordering. What is robust across orderings is that the averaged window can stop at 1 kb: the central 1-kb window-mean exceeds the full 8-kb window-mean in six of nine species (dog's two values tie at the printed precision) (species mean 0.946 against 0.942), so extending the averaged window past 1 kb adds nothing. As a correctness check the full-window mean recomputed here reproduces the deposited 8,192-bp mean-log-likelihood to within 0.0003 pooled AUROC.
+The total recovered here (+0.0668 species mean) reproduces the readout effect of Figure 10a (+0.065), evidence that the effect size is representative even though the subset is not class-balanced: it retains every positive in seven species and keeps at most 200 positives and 200 negatives in each, so dog and human are held at 200 positives and the per-species positive fraction runs from about 9% in goat, whose whole panel is kept, to 50% in dog (human's full panel is already 1:1). The split into context and aggregation is path-dependent. Taking context first (single-token readout, window 1 kb to 8 kb) then aggregation (single to window-mean at 8 kb) gives context +0.0359 and aggregation +0.0309; taking aggregation first (single to window-mean at 1 kb) then context (window-mean 1 kb to 8 kb) gives aggregation +0.0708 and context −0.0040. The total minus the two first steps, each measured from the single-token 1-kb cell, is −0.0399. That residual is not a factorial interaction and does not show that the two factors overlap: the fourth cell of a complete two-by-two, a window mean at 1,001-bp conditioning context, is not part of the design, so the aggregation-first path substitutes the central-1-kb mean of the 8,192-bp pass, which moves conditioning context as well as aggregation. The +0.0349 gap between the two single-factor conditions is likewise a difference between conditions rather than an interaction term. A 'roughly equal halves' reading holds only under the first ordering. What is robust across orderings is that the averaged window can stop at 1 kb: the central 1-kb window-mean exceeds the full 8-kb window-mean in six of nine species (dog's two values tie at the printed precision; species mean 0.946 against 0.942), so extending the averaged window past 1 kb adds nothing. As a correctness check the full-window mean recomputed here reproduces the deposited 8,192-bp mean-log-likelihood to within 0.0003 pooled AUROC.
 
 ## Table S10. Precision-recall (AUPRC) at the 8,192-bp readout
 
@@ -222,7 +222,7 @@ The two missense-only scores carry a missingness AUROC above their own must-answ
 | reach <70% | 31 | 0.5885 | 0.9375 | 0.6226 | 0.3149 |
 | missense: reach >99.9% | 6 | 1.0000 | 0.8507 | 0.8507 | 0.0000 |
 | missense: reach 70 to 99.9% | 43 | 0.9362 | 0.9410 | 0.8706 | 0.0479 |
-| missense: reach <70% | 0 | — | — | — | — |
+| missense: reach <70% | 0 | – | – | – | – |
 
 These 49 predictors are audited on the 328,328 nonsynonymous and splice-site variants dbNSFP annotates (166,149 pathogenic, 162,179 benign), of which 202,643 are missense, across 15,606 genes; the class-gap counts below use a bootstrap resampling genes rather than variants (2,000 draws), and per-predictor intervals are in the deposited artefact. Predictors are grouped by reach into three disjoint bands and medians are taken over the group. Cut instead at nested reach thresholds, the same 49 give counts that overlap rather than partition: the 18 predictors reaching 75% of the panel carry a median penalty of 0.0217, the 12 reaching 90% carry 0.0009 and the 8 reaching 99% carry 0.0000. Rows marked missense repeat the accounting on the 202,643 missense substitutions (15,389 genes), with the same 2,000-draw gene bootstrap. The bands are cut on reach, not on ρ as the figures' pair-coverage regimes are (Figure 1), so on the missense subset GERP_92_mammals sits in the 70 to 99.9% band at ρ = 0.447 (Figure 4).
 **Table S12 (continued)**
@@ -251,9 +251,9 @@ Restricting to the classes dbNSFP annotates reverses the direction of the reach 
 
 ## Table S13. OMIA trait alleles: which positives are not disease variants, and what removing them does
 
-| Species | n | positives | trait positives | AUROC (full panel) | AUROC (disease only) | Δ |
+| Species | n | positives | trait positives | AUROC (full panel) | AUROC (disease only) | Δ (disease only − full panel) |
 |---|---|---|---|---|---|---|
-| Goat | 98 | 9 | 8 | 0.959 | — | — |
+| Goat | 98 | 9 | 8 | 0.959 | – | – |
 | Chicken | 308 | 28 | 20 | 0.954 | 1.000 | +0.0464 |
 | Pig | 396 | 36 | 13 | 0.863 | 0.952 | +0.0888 |
 | Sheep | 616 | 56 | 27 | 0.962 | 0.990 | +0.0276 |
@@ -262,7 +262,7 @@ Restricting to the classes dbNSFP annotates reverses the direction of the reach 
 | Cattle | 2,067 | 188 | 28 | 0.974 | 0.982 | +0.0077 |
 | Dog | 2,496 | 227 | 25 | 0.970 | 0.979 | +0.0098 |
 | Human | 3,000 | 1,500 | 0 | 0.974 | 0.974 | +0.0000 |
-| Mean, eight species |  |  |  | 0.941 | 0.975 | +0.0336 |
+| Mean, eight species without goat |  |  |  | 0.941 | 0.975 | +0.0336 |
 | Pooled | 11,109 | 2,237 | 203 | 0.973 | 0.985 | +0.0118 |
 
 OMIA catalogues single-gene traits and disorders together, so 203 of the 737 scored non-human positives are trait alleles: coat and feather colour and type, morphology such as polydactyly and tail length, production traits such as double muscling and fecundity, blood groups, gait, and resistance to infection, including eight of goat's nine positives, which are PRNP alleles associated with resistance to scrapie. The class of each positive is curated from its OMIA phenotype string and deposited with it (atlas_positive_annotations.parquet in Additional file 3), where the rules and every correction to a phenotype-string pattern are stated; a phenotype that joins a trait to a disorder, such as white coat with deafness, counts as a disease, and the two cat CMAH records whose phenotype names only a 2019 blood-typing panel count, like the other CMAH alleles, as blood-group alleles. Removing the trait alleles and rescoring the identical panel at the identical 8,192-bp readout raises discrimination in every OMIA species that keeps at least five disease alleles, so their presence works against the reported values.
@@ -285,14 +285,14 @@ The same positive-count-weighted estimator as the Evo 2 gradient, with GERP in p
 |---|---|---|---|
 | ClinVar B/LB, all | 17,376 | 0.851 | [0.836, 0.866] |
 | ClinVar B/LB, coding only | 4,377 | 0.811 | [0.795, 0.826] |
-| ClinVar B/LB, noncoding only | 12,999 | 0.865 | [0.850, 0.879] |
+| ClinVar B/LB, non-coding only | 12,999 | 0.865 | [0.850, 0.879] |
 
 The human arm's 1,500 negatives are a matched sample from ClinVar's benign half; every one of them is a Benign/Likely_benign record, so human is the one species whose negatives are clinically adjudicated rather than catalogued population variation. This rescores the same 1,500 positives against a larger and differently composed sample of the same catalogue, at the identical 1,001-bp readout on GRCh38. Both draws are ClinVar B/LB, so what this bounds is sampling and composition sensitivity, not the population-versus-adjudicated question, which the human arm cannot pose.
-Against the atlas panel's own 1,500 benign negatives the same positives give 0.825, so the human figure moves by −0.014 (coding-only) to +0.040 (noncoding-only) with the benign draw; the range is asymmetric, the noncoding draw is the larger move, and it is not a ±0.03 band, within a single catalogue.
+Against the atlas panel's own 1,500 benign negatives the same positives give 0.825, so the human figure moves by −0.014 (coding-only) to +0.040 (non-coding-only) with the benign draw; the range is asymmetric, the non-coding draw is the larger move, and it is not a ±0.03 band, within a single catalogue.
 
 ## Table S16. Splicing benchmark by assay: Evo 2-1B, summed over a 1,001-bp window, against SpliceAI
 
-| assay | n | disruptive | Evo 2 (1B) | SpliceAI | difference |
+| assay | n | disruptive | Evo 2-1B | SpliceAI | Evo 2 − SpliceAI |
 |---|---|---|---|---|---|
 | BRCA1 | 1,386 | 223 | 0.808 | 0.986 | −0.178 |
 | FAS exon 6 | 189 | 115 | 0.462 | 0.729 | −0.267 |
@@ -348,8 +348,8 @@ In this constructed background, 432 genes are unreachable by at least one predic
 
 | consequence | positive | negative | AUROC | 95% CI | MDE | p (FWER) |
 |---|---|---|---|---|---|---|
-| 3 prime UTR variant | 54 | 250 | 0.7023 | [0.6143, 0.7851] | 0.122 | < 0.00002 |
-| 5 prime UTR variant | 160 | 250 | 0.6497 | [0.5938, 0.7043] | 0.082 | 0.00042 |
+| 3′ UTR variant | 54 | 250 | 0.7023 | [0.6143, 0.7851] | 0.122 | < 0.00002 |
+| 5′ UTR variant | 160 | 250 | 0.6497 | [0.5938, 0.7043] | 0.082 | 0.00042 |
 | missense variant | 250 | 250 | 0.8496 | [0.8140, 0.8831] | 0.072 | < 0.00002 |
 | non-coding transcript variant | 250 | 250 | 0.7167 | [0.6715, 0.7607] | 0.072 | < 0.00002 |
 | nonsense | 250 | 250 | 0.7462 | [0.7020, 0.7885] | 0.072 | < 0.00002 |
@@ -357,7 +357,7 @@ In this constructed background, 432 genes are unreachable by at least one predic
 | splice donor variant | 250 | 250 | 0.7952 | [0.7546, 0.8339] | 0.072 | < 0.00002 |
 | synonymous variant | 250 | 250 | 0.7902 | [0.7491, 0.8296] | 0.072 | < 0.00002 |
 
-All values are the Evo 2-1B checkpoint on the 1,001-bp window readout. Intervals are percentile bootstrap at B = 200,000 where available. MDE is the Hanley–McNeil minimum detectable difference from chance at 80% power. The p value is adjusted for the family-wise error rate (FWER) across the eight rungs by Westfall–Young max-T over 50,000 permutations — a separate resampling from the B = 200,000 bootstrap above. The smallest p that permutation count can resolve is 1/50,001 = 0.00002, so the seven cells shown as "< 0.00002" are bounds, not estimates.
+All values are the Evo 2-1B checkpoint on the 1,001-bp window readout. Intervals are percentile bootstrap at B = 200,000. MDE is the Hanley–McNeil minimum detectable difference from chance at 80% power. The p value is adjusted for the family-wise error rate (FWER) across the eight rungs by Westfall–Young max-T over 50,000 permutations — a separate resampling from the B = 200,000 bootstrap above. The smallest p that permutation count can resolve is 1/50,001 = 0.00002, so the seven cells shown as "< 0.00002" are bounds, not estimates.
 Every rung is resolved against its own minimum detectable difference and survives family-wise control across the eight.
 
 ## Table S20. Negative controls
@@ -371,9 +371,9 @@ Every rung is resolved against its own minimum detectable difference and survive
 | Family-wise control, splicing, five variant classes | The per-class pattern is what five simultaneous tests produce by chance | all five survive max-T, worst p = 0.01006 | analyses/results/multiplicity_control.json |
 | Family-wise control, ClinVar, eight consequence rungs | The consequence gradient is an artefact of testing eight rungs at once | all eight survive max-T, worst p = 0.00042 | analyses/results/multiplicity_control.json |
 | Seed stability of a reported count | A count quoted as a finding moves with the bootstrap seed | At the 1,001-bp readout, 3 of the 9 species always significant (goat and cattle for Evo 2, human against it), 5 never at any seed, and chicken seed-dependent (8 of 40 seeds), across 40 seeds | reports/seed_stability.json |
-| Interval stability at 200,000 resamples | The published intervals are Monte Carlo noise at the precision printed | largest endpoint standard error ~3e-04, in 3_prime_UTR_variant (clinvar), given to one significant figure because two valid bootstrap realisations of that cell give 2.845e-04 and 2.922e-04; an endpoint near a rounding boundary can therefore move in the third decimal between realisations, as the 3′ UTR upper endpoint does, and the fourth decimal is resampling noise throughout; one skewed cell, the Essential Splice class (Note S35), needs BCa | Additional file 3: scripts/recompute_endpoint_se.py (the endpoint se); Additional file 2: analyses/results/heavy_intervals.json (carries the intervals and the se of the mean) |
+| Interval stability at 200,000 resamples | The published intervals are Monte Carlo noise at the precision printed | largest endpoint standard error ~3e-04, in 3_prime_UTR_variant (clinvar), given to one significant figure because two valid bootstrap realisations of that cell give 2.845e-04 and 2.922e-04; an endpoint near a rounding boundary can therefore move in the third decimal between realisations, as the 3′ UTR upper endpoint does, and the fourth decimal is resampling noise throughout; one skewed cell, the Essential Splice class (Note S35), needs BCa | Additional file 3: scripts/recompute_endpoint_se.py (the endpoint SE); Additional file 2: analyses/results/heavy_intervals.json (carries the intervals and the SE of the mean) |
 
-Every value is read from the artefact named in the last column.
+Every value is read from the artefact named in the last column; a path given without an Additional file is in Additional file 2.
 Each control could have failed; the one that did not pass is set in bold.
 
 ## Table S21. Reproducibility table
@@ -389,7 +389,7 @@ Each control could have failed; the one that did not pass is set in bold.
 | Macro expected calibration error, 8,192-bp arm | 0.0209 | reports/trust_layer_8192.json | glmtrust benchmark |
 | Pig cis-eQTL, Evo 2, the 19,341 published-panel variants with a TSS distance | 0.4879 | analyses/results/eqtl_tss_matched.json | matched-baseline recomputation |
 | Pig cis-eQTL, positional baseline after matching | 0.5165 | analyses/results/eqtl_tss_matched.json | matched-baseline recomputation |
-| Splicing panel, Evo 2 (1B) | 0.6214 | analyses/results/mfass_evo2_vs_specialists.json | re-run and compared |
+| Splicing panel, Evo 2-1B | 0.6214 | analyses/results/mfass_evo2_vs_specialists.json | re-run and compared |
 | Splicing panel, SpliceAI | 0.7986 | analyses/results/mfass_evo2_vs_specialists.json | re-run and compared |
 | Splicing panel, Pangolin | 0.8029 | analyses/results/mfass_evo2_vs_specialists.json | re-run and compared |
 | ClinVar 3′ UTR rung, Evo 2-1B | 0.7023 | analyses/results/clinvar_evo2_participant.json | re-run and compared |
@@ -399,9 +399,9 @@ Each control could have failed; the one that did not pass is set in bold.
 | S-CAP reach, 500,000 random variants | 0.3895 | analyses/results/mfass_random500k_coverage.json | re-run and compared |
 | Variants answered by all eight splice predictors | 0.0792 | analyses/results/mfass_random500k_coverage.json | re-run and compared |
 | Strand-choice AUROC shift, 40B, 8,192 bp | 0.0079 | analyses/results/strand_ladder.json | re-run and compared |
-| Strand-choice shift as a percentage of the 8,192-bp margin | 8.2% | analyses/results/strand_ladder.json | re-run and compared |
+| Strand-choice shift as a percentage of the DeLong-based pooled 8,192-bp margin of Note S64, +0.096 | 8.2% | analyses/results/strand_ladder.json | re-run and compared |
 
-Every value is read from the artefact named beside it at build time, so a row cannot outlive the number it describes.
+Every value is read from the artefact named beside it, in Additional file 2, at build time, so a row cannot outlive the number it describes.
 Rows bound by independent re-derivation are re-derived from the raw score and label files by tools/verify_from_data.py (Additional file 2), a script that imports nothing from the analysis code, so those checks are an independent reimplementation. The glmtrust-benchmark row is bound by glmtrust's packaged benchmark (Methods), and the remaining rows by re-running the analysis that produced them and comparing the artefact byte for byte, which shows the value is current and deterministic but does not reproduce it independently.
 
 ## Table S22. Expected calibration error is estimator-dependent
@@ -421,7 +421,7 @@ Rows bound by independent re-derivation are re-derived from the raw score and la
 | width50 | 0.0603 | 0.0663 | 0.0248 | −0.0060 |
 | mass50 | 0.0605 | 0.0721 | 0.0272 | −0.0116 |
 
-Macro-averaged ECE for the transferred isotonic map, the trivial two-parameter global sigmoid, and an in-species oracle, across twelve binning rules. The formal paired test was run on four of these (ece_grid): 3 of 4 are indistinguishable, with mass15 dissenting in transfer's favour.
+Macro-averaged ECE for the transferred isotonic map, the trivial two-parameter global sigmoid, and an in-species oracle, across twelve binning rules, widthN and massN being N equal-width and N equal-mass bins. The formal paired test was run on four of these (width10, width15, mass10 and mass15; ece_grid in reports/fig4_reconciliation.json, Additional file 2): 3 of 4 are indistinguishable, with mass15 dissenting in transfer's favour.
 **Table S22 (continued)**
 
 | Species | mass10 → effective | mass15 → effective |
@@ -451,7 +451,7 @@ This degeneracy is the source of the sign disagreement above. It is one-sided: i
 | mass15 | macro | 0.0554 | 0.0621 | −0.0067 |
 | mass15 | pooled | 0.0532 | 0.0582 | −0.0050 |
 
-Both aggregations of the four formally tested estimators (eight cells). The paired test was run on equal-width and equal-mass binning at 10 and 15 bins, under macro and pooled aggregation. The two pooled cells disagree in sign (width10 favours transfer, width15 favours the sigmoid), which is the direct evidence that pooled ECE is unstable on this posterior and why the macro aggregation is used throughout.
+Both aggregations of the four formally tested estimators (eight cells). The paired test was run on equal-width and equal-mass binning at 10 and 15 bins, under macro and pooled aggregation. The two equal-width pooled cells disagree in sign (width10 favours transfer, width15 favours the sigmoid), which is the direct evidence that pooled ECE is unstable on this posterior and why the macro aggregation is used throughout.
 
 ## Table S23. Calibration transfer per species, leave-one-species-out
 
@@ -466,8 +466,8 @@ Both aggregations of the four formally tested estimators (eight cells). The pair
 | Cattle | 0.0609 | 0.0707 | 0.0707 | 0.0084 |
 | Dog | 0.0495 | 0.0491 | 0.0491 | 0.0026 |
 | Human | 0.1174 | 0.1339 | 0.1339 | 0.0073 |
-| **macro** | **0.0533** | **0.0551** | **0.0551** | **0.0157** |
-| pooled | 0.0046 | 0.0440 | 0.0440 | 0.0047 |
+| **Macro** | **0.0533** | **0.0551** | **0.0551** | **0.0157** |
+| Pooled | 0.0046 | 0.0440 | 0.0440 | 0.0047 |
 
 Equal-width 10-bin ECE. The transferred Platt map and the trivial global sigmoid are arithmetically the same operation and are bit-identical here, which is why the substantive comparison in the main text is isotonic against that sigmoid.
 **Table S23 (continued)**
@@ -482,7 +482,7 @@ Equal-width 10-bin ECE. The transferred Platt map and the trivial global sigmoid
 | 1,000 | 0.0410 | 0.0198 |
 | 10,327 | 0.0470 | 0.0146 |
 
-Calibration-set-size learning curve. The unit is variants, not donor species. It answers whether the smallest panels (goat, n = 99) are overfitting: they are not, and equally, more calibration data does not close the gap to the in-species oracle.
+Calibration-set-size learning curve. Adaptive ECE is equal-mass ECE at 10 bins. Each calibration set is a random draw of that many variants from the six label-rich species (10,327 variants in all, the last row), and the isotonic map fitted on it is scored on goat, chicken and pig; mean and sd are over five draws per size and those three species. The unit is variants, not donor species. It answers whether the smallest panels (goat, n = 99) are overfitting: they are not, and equally, more calibration data does not close the gap to the in-species oracle.
 The learning curve is flat within noise.
 
 ## Table S24. Prevalence correction to the panel construction ratio
@@ -519,7 +519,7 @@ The marginal construction abstains far less but lets positive-class coverage col
 
 ## Table S26. Selective prediction: the risk–coverage curve
 
-| Coverage | macro selective error | random-refusal control | pooled selective error |
+| Coverage | macro selective error | macro random-refusal control | pooled selective error |
 |---|---|---|---|
 | 100% | 0.0577 | 0.0577 | 0.0774 |
 | 95% | 0.0450 | 0.0588 | 0.0649 |
@@ -537,7 +537,7 @@ The marginal construction abstains far less but lets positive-class coverage col
 | 35% | 0.0428 | 0.0569 | 0.1014 |
 | 30% | 0.0412 | 0.0508 | 0.1030 |
 
-Refusing each species' own least-confident 15% of calls defers 1,673 of 11,130 (a realised 15.03%, the threshold being applied within each species) and captures 35.4% of all errors (316 of 893, on the Platt posterior of Table S27), a lift of 2.35 over refusing at random. Refusing the worst 15% globally instead, ignoring species, defers 1,669 calls and captures 38.4% (343), lift 2.56.
+The panel above is the leave-one-species-out isotonic arm, with 861 errors at full coverage (pooled error 0.0774); the Platt arm of Tables S27 to S29, with 893 (0.0802), is the panel below. Refusing each species' own least-confident 15% of calls defers 1,673 of 11,130 (a realised 15.03%, the threshold being applied within each species) and captures 35.4% of all errors (316 of 893, on the Platt posterior of Table S27), a lift of 2.35 over refusing at random. Refusing the worst 15% globally instead, ignoring species, defers 1,669 calls and captures 38.4% (343), lift 2.56.
 The minimum sits at 85% coverage; refusing beyond it buys nothing and eventually costs, as the retained set becomes small and unrepresentative.
 **Table S26 (continued)**
 
@@ -561,7 +561,7 @@ The minimum sits at 85% coverage; refusing beyond it buys nothing and eventually
 | 25% | 2,782 | 0.0996 | worse | 0.171 | 1.000 |
 | 20% | 2,226 | 0.1141 | worse | 0.070 | 0.999 |
 
-The deployed (Platt) arm, full trajectory to 20% coverage. The isotonic table uses the isotonic arm and stops at 30%; the per-variant deliverable is the Platt arm (Note S63), whose deposited trajectory also reports the retained-set sensitivity. Its error rises monotonically below the 80–85% minimum and crosses the do-nothing baseline of 0.0802, so below that crossing the layer is worse than answering every variant; sensitivity collapses in step while specificity climbs toward 1.0; pushed hard, the layer answers 'benign' to almost everything.
+The deployed (Platt) arm, full trajectory to 20% coverage. The isotonic table uses the isotonic arm and stops at 30%; the per-variant deliverable is the Platt arm (Note S63), whose deposited trajectory also reports the retained-set sensitivity. Its error rises monotonically below the 80–85% minimum and crosses the do-nothing baseline of 0.0802, so below that crossing the layer is worse than answering every variant; sensitivity collapses in step while specificity climbs towards 1.0; pushed hard, the layer answers 'benign' to almost everything.
 
 ## Table S27. Selective prediction per species
 
@@ -614,7 +614,7 @@ Specificity is high everywhere and sensitivity is not. Across the eight non-huma
 
 ## Table S30. The trust layer rebuilt at the 8,192-bp readout
 
-| Species | n | AUROC | ECE | errors | lift | error-detection AUROC |
+| Species | n | AUROC | ECE (equal-width, 10 bins) | errors | lift | error-detection AUROC |
 |---|---|---|---|---|---|---|
 | Goat | 98 | 0.959 | 0.0514 | 7 | 5.60 | 0.929 |
 | Chicken | 308 | 0.954 | 0.0272 | 9 | 2.23 | 0.743 |
@@ -626,7 +626,7 @@ Specificity is high everywhere and sensitivity is not. Across the eight non-huma
 | Dog | 2,496 | 0.970 | 0.0072 | 54 | 4.70 | 0.856 |
 | Human | 3,000 | 0.974 | 0.0226 | 207 | 3.93 | 0.828 |
 
-The construction follows the 1,001-bp layer of Notes S63 and S66: leave-one-species-out calibration, the confidence functional |2p − 1|, each species refusing its own least-confident 15%, a 0.5 decision threshold. Besides the score, the refusals here rest on an isotonic rather than a Platt posterior, and the donor pool admits every other species (Notes S52 and S54). With 218 distinct posteriors, a species' 15% boundary can fall inside a tie block; src/ccs/rebuild_trust_layer_8192.py (Additional file 2) breaks such ties by a stable sort, in the order of reports/fig4_pervariant_8192.parquet, so at the boundary the refused set, and with it the lifts here, follow that order rather than confidence.
+The 8,192-bp readout scores 11,109 of the 11,130 variants, 21 fewer than at 1,001 bp (15 in horse, 3 in cat and one each in goat, cattle and dog), so n here is smaller than in Table S27 in those five species. The construction follows the 1,001-bp layer of Notes S63 and S66: leave-one-species-out calibration, the confidence functional |2p − 1|, each species refusing its own least-confident 15%, a 0.5 decision threshold. Besides the score, the refusals here rest on an isotonic rather than a Platt posterior, and the donor pool admits every other species (Notes S52 and S54). With 218 distinct posteriors, a species' 15% boundary can fall inside a tie block; src/ccs/rebuild_trust_layer_8192.py (Additional file 2) breaks such ties by a stable sort, in the order of reports/fig4_pervariant_8192.parquet, so at the boundary the refused set, and with it the lifts here, follow that order rather than confidence.
 **Table S30 (continued)**
 
 |  | 1,001-bp (Note S66) | 8,192-bp |
@@ -655,17 +655,17 @@ The layer is better at the readout the paper argues for, on every axis, and ever
 | Dog | 2,496 | 54 | 0.856 | [0.798, 0.908] | 3.97 |
 | Human | 3,000 | 207 | 0.828 | [0.796, 0.858] | 4.20 |
 
-Whether the 15%-refusal lift (4.07 pooled) reflects genuine selectivity or the sampling variability of small panels, tested on the deployable leave-one-species-out arm at the 8,192-bp readout. A within-species permutation of the confidence (10,000 permutations, each preserving every panel's size and error count) gives a null lift of 0.97; the observed lift sits far outside it (p = 0.0001). Error detection is the AUROC of the confidence functional |2p − 1| separating incorrect from correct calls.
+Whether the 15%-refusal lift (4.07 pooled) reflects genuine selectivity or the sampling variability of small panels, tested on the deployable leave-one-species-out arm at the 8,192-bp readout. A within-species permutation of the confidence (10,000 permutations, each preserving every panel's size and error count) gives a null lift of 0.97; the observed lift sits far outside it (p < 0.0001: none of the 10,000 permuted lifts reached it). Error detection is the AUROC of the confidence functional |2p − 1| separating incorrect from correct calls.
 **Table S31 (continued)**
 
 | pooled | value |
 |---|---|
 | error-detection AUROC (species-clustered 95% CI) | 0.814 [0.703, 0.849] |
-| within-species permutation p | 0.0001 |
+| within-species permutation p | < 0.0001 |
 | leave-one-species-out lift range | 3.91 to 4.20 |
 
 At this readout, error-detection ordering was above chance in eight of nine species, taking above chance to mean a bootstrap interval excluding 0.5, and the pooled permutation result was inconsistent with random ordering. The effect was nevertheless heterogeneous: pig's interval spans chance, human is near chance at the 1,001-bp readout and two of the nine species are worse than random there when the whole risk–coverage curve is summarised, and the 15% operating point was selected on these panels. We therefore describe a pooled selective-prediction signal at this operating point, not a validated transfer guarantee for a label-free species.
-The same test at the 1,001-bp readout, which is the layer Note S66 reports. Observed pooled lift 2.36; permutation null mean 1.00, p = 0.0001; pooled error-detection AUROC 0.586, species-clustered 95% CI [0.510, 0.768]; leave-one-species-out lift range 2.19 to 3.37; errors detected above chance in seven of the nine species. The permutation rejects sampling variability at both readouts and both pooled intervals clear 0.5, but error detection is markedly weaker at 1,001 bp, which is why the two arms are never quoted interchangeably.
+The same test at the 1,001-bp readout, which is the layer Note S66 reports. Observed pooled lift 2.36 (the same 316 errors removed over 1,669 refusals, each species' 15% rounded to the nearest variant, against the 1,673 refusals behind the 2.35 of Tables S27 and S30); permutation null mean 1.00, p < 0.0001, again with no permuted lift reaching it; pooled error-detection AUROC 0.586, species-clustered 95% CI [0.510, 0.768]; leave-one-species-out lift range 2.19 to 3.37; errors detected above chance in seven of the nine species. The permutation rejects sampling variability at both readouts and both pooled intervals clear 0.5, but error detection is markedly weaker at 1,001 bp, which is why the two arms are never quoted interchangeably.
 
 ## Table S32. Class-asymmetry of the abstention layer, per species
 
@@ -678,7 +678,7 @@ The same test at the 1,001-bp readout, which is the layer Note S66 reports. Obse
 | Cattle | 58 | 53 | 0.776 | 0.264 |
 | Human | 66 | 479 | 0.652 | 0.203 |
 
-Fraction of each error class removed when a species refuses its least-confident 15% of calls. 'protects negatives' is the share of over-calls removed, 'protects positives' the share of missed positives removed. The negative side is defined in only six species (goat, chicken and pig have no negative-class errors at the 0.5 threshold); human carries 479 of the 731 missed positives.
+Fraction of each error class removed when a species refuses its least-confident 15% of calls, at the 1,001-bp readout on the Platt posterior of Tables S27 and S28 (893 errors); rows run from the largest to the smallest share of missed positives removed. 'protects negatives' is the share of over-calls removed, 'protects positives' the share of missed positives removed. The negative side is defined in only six species (goat, chicken and pig have no negative-class errors at the 0.5 threshold); human carries 479 of the 731 missed positives.
 Positive-class capture ranges from 0.500 (sheep) to 0.203 (human) in the six species tabulated, and is 0.833 in goat, 0.600 in pig and 0.333 in chicken, whose errors are all missed positives; the pooled figure of 0.261, 191 of 731, is a variant-weighted mean dominated by human.
 
 ## Table S33. Per-species calibration: transfer vs trivial vs oracle
@@ -695,7 +695,7 @@ Positive-class capture ranges from 0.500 (sheep) to 0.203 (human) in the six spe
 | Dog | 2,497 | 0.0383 | 0.0472 | 0.0101 | yes | 4.7× |
 | Human | 3,000 | 0.1347 | 0.1153 | 0.0107 | no | 10.8× |
 
-Expected calibration error on the operating-point estimator: trivial is the two-parameter global sigmoid, transfer the leave-one-species-out isotonic map (the paper's method), oracle in-species calibration. Under this estimator, transfer is worse than the trivial sigmoid in six of nine species (macro transfer 0.0560 against trivial 0.0553, a difference of +0.0007) and better in the other three (sheep, cattle, human), which are not simply the three largest panels, since dog and cat are both larger than sheep. Under the paper's primary equal-width-10 estimator (Table S23) the count is four of nine (goat, pig, cat, dog) and the macro slightly favours transfer (−0.0019), so the direction of the split is estimator-dependent and we name the estimator with each count. Where labels exist the oracle ranges from 0.9× (slightly worse than transfer, in goat) to 10.8× better (in human).
+Expected calibration error at the 1,001-bp readout on the operating-point estimator, equal-mass binning at 10 bins (the mass10 row of Table S22): trivial is the two-parameter global sigmoid, transfer the leave-one-species-out isotonic map (the paper's method), oracle in-species calibration. Under this estimator, transfer is worse than the trivial sigmoid in six of nine species (macro transfer 0.0560 against trivial 0.0553, a difference of +0.0007) and better in the other three (sheep, cattle, human), which are not simply the three largest panels, since dog and cat are both larger than sheep. Under the paper's primary equal-width-10 estimator (Table S23) the count is four of nine (goat, pig, cat, dog) and the macro slightly favours transfer (−0.0019), so the direction of the split is estimator-dependent and we name the estimator with each count. Where labels exist the oracle ranges from 0.9× (slightly worse than transfer, in goat) to 10.8× better (in human).
 Transfer is worse than the trivial two-parameter sigmoid in six of nine species, the per-species detail behind the macro null, and the reason we frame transfer as recovering only a fraction of what in-species labels would buy.
 Table S34 is printed with Note S65.
 
@@ -703,18 +703,18 @@ Table S34 is printed with Note S65.
 
 | Species | Class | Positives / negatives | Evo 2, 1,001 bp | Evo 2, 8,192 bp | GERP | Readout gain | Margin at 8,192 bp |
 |---|---|---|---|---|---|---|---|
-| eight OMIA species, pooled | all classes | 6,649 variants | 0.678 [0.599, 0.759] | 0.773 [0.692, 0.853] | 0.652 [0.554, 0.746] | +0.095 [+0.029, +0.167] | +0.121 [+0.021, +0.239] |
-| human | all classes | 2,880 variants | 0.809 [0.775, 0.841] | 0.850 [0.815, 0.882] | 0.837 [0.799, 0.873] | +0.041 [+0.004, +0.078] | +0.012 [−0.030, +0.056] |
-| eight OMIA species, pooled | missense | 424 / 72 | 0.783 [0.718, 0.842] | 0.746 [0.671, 0.816] | 0.660 [0.573, 0.744] | −0.037 [−0.115, +0.039] | +0.086 [−0.022, +0.186] |
-| eight OMIA species, pooled | synonymous | 5 / 51 | 0.500 [0.273, 0.734] | 0.578 [0.292, 0.895] | 0.344 [0.000, 0.594] | +0.078 [−0.118, +0.385] | +0.234 [+0.000, +0.567] |
-| eight OMIA species, pooled | splice region | 12 / 16 | 0.578 [0.278, 0.861] | 0.906 [0.724, 1.000] | 0.875 [0.621, 1.000] | +0.328 [−0.012, +0.656] | +0.031 [−0.181, +0.250] |
-| eight OMIA species, pooled | intronic | 27 / 2140 | 0.534 [0.395, 0.686] | 0.715 [0.560, 0.883] | 0.657 [0.478, 0.830] | +0.181 [+0.046, +0.347] | +0.058 [−0.122, +0.277] |
-| eight OMIA species, pooled | intergenic or flanking | 15 / 2989 | 0.773 [0.649, 0.903] | 0.854 [0.744, 0.957] | 0.619 [0.420, 0.820] | +0.081 [+0.010, +0.170] | +0.236 [+0.047, +0.442] |
-| human | missense | 566 / 163 | 0.829 [0.794, 0.862] | 0.865 [0.831, 0.898] | 0.843 [0.801, 0.882] | +0.036 [+0.001, +0.072] | +0.023 [−0.020, +0.070] |
-| human | stop gained | 515 / 5 | 0.773 [0.658, 0.878] | 0.449 [0.144, 0.723] | 0.765 [0.684, 0.845] | −0.324 [−0.730, +0.011] | −0.317 [−0.570, −0.037] |
-| human | splice region | 20 / 104 | 0.637 [0.472, 0.806] | 0.934 [0.830, 1.000] | 0.819 [0.686, 0.938] | +0.296 [+0.102, +0.487] | +0.114 [−0.015, +0.263] |
-| human | intronic | 5 / 314 | 0.399 [0.125, 0.732] | 0.638 [0.122, 1.000] | 0.597 [0.311, 0.946] | +0.239 [−0.255, +0.712] | +0.040 [−0.291, +0.431] |
-| human | intergenic or flanking | 8 / 105 | 0.485 [0.250, 0.744] | 0.770 [0.529, 0.983] | 0.737 [0.475, 0.952] | +0.286 [+0.045, +0.546] | +0.033 [−0.129, +0.192] |
+| Eight OMIA species, pooled | all classes | 6,649 variants | 0.678 [0.599, 0.759] | 0.773 [0.692, 0.853] | 0.652 [0.554, 0.746] | +0.095 [+0.029, +0.167] | +0.121 [+0.021, +0.239] |
+| Human | all classes | 2,880 variants | 0.809 [0.775, 0.841] | 0.850 [0.815, 0.882] | 0.837 [0.799, 0.873] | +0.041 [+0.004, +0.078] | +0.012 [−0.030, +0.056] |
+| Eight OMIA species, pooled | missense | 424 / 72 | 0.783 [0.718, 0.842] | 0.746 [0.671, 0.816] | 0.660 [0.573, 0.744] | −0.037 [−0.115, +0.039] | +0.086 [−0.022, +0.186] |
+| Eight OMIA species, pooled | synonymous | 5 / 51 | 0.500 [0.273, 0.734] | 0.578 [0.292, 0.895] | 0.344 [0.000, 0.594] | +0.078 [−0.118, +0.385] | +0.234 [+0.000, +0.567] |
+| Eight OMIA species, pooled | splice region | 12 / 16 | 0.578 [0.278, 0.861] | 0.906 [0.724, 1.000] | 0.875 [0.621, 1.000] | +0.328 [−0.012, +0.656] | +0.031 [−0.181, +0.250] |
+| Eight OMIA species, pooled | intronic | 27 / 2,140 | 0.534 [0.395, 0.686] | 0.715 [0.560, 0.883] | 0.657 [0.478, 0.830] | +0.181 [+0.046, +0.347] | +0.058 [−0.122, +0.277] |
+| Eight OMIA species, pooled | intergenic or flanking | 15 / 2,989 | 0.773 [0.649, 0.903] | 0.854 [0.744, 0.957] | 0.619 [0.420, 0.820] | +0.081 [+0.010, +0.170] | +0.236 [+0.047, +0.442] |
+| Human | missense | 566 / 163 | 0.829 [0.794, 0.862] | 0.865 [0.831, 0.898] | 0.843 [0.801, 0.882] | +0.036 [+0.001, +0.072] | +0.023 [−0.020, +0.070] |
+| Human | stop gained | 515 / 5 | 0.773 [0.658, 0.878] | 0.449 [0.144, 0.723] | 0.765 [0.684, 0.845] | −0.324 [−0.730, +0.011] | −0.317 [−0.570, −0.037] |
+| Human | splice region | 20 / 104 | 0.637 [0.472, 0.806] | 0.934 [0.830, 1.000] | 0.819 [0.686, 0.938] | +0.296 [+0.102, +0.487] | +0.114 [−0.015, +0.263] |
+| Human | intronic | 5 / 314 | 0.399 [0.125, 0.732] | 0.638 [0.122, 1.000] | 0.597 [0.311, 0.946] | +0.239 [−0.255, +0.712] | +0.040 [−0.291, +0.431] |
+| Human | intergenic or flanking | 8 / 105 | 0.485 [0.250, 0.744] | 0.770 [0.529, 0.983] | 0.737 [0.475, 0.952] | +0.286 [+0.045, +0.546] | +0.033 [−0.129, +0.192] |
 
 Pairs are formed within species and within consequence class (first snpEff term, splice donor and acceptor pooled as splice site, 3′ and 5′ UTR pooled, intergenic, upstream and downstream pooled as intergenic or flanking), on the 9,529 variants that Evo 2 at both readouts and GERP all score, and pooled over species by pair count. Intervals resample positive-bearing 100-kb loci whole and negatives individually within species (B = 2,000, seed 61). A class row is shown only where the pooled class holds at least five positives and five negatives; the per-species cells meeting the same rule, with each species' share of the pairs and a precision-weighted pool across species (Note S23), are printed by recompute_macro_ci.py. Readout gain is Evo 2 at 8,192 bp minus Evo 2 at 1,001 bp; margin is Evo 2 at 8,192 bp minus GERP; both are computed before rounding and can differ by 0.001 from the subtraction of the printed columns. A class row counts the variants that enter a within-species pair, so a species lacking either label in that class contributes none, while an all-classes row counts every co-scorable variant; the residual class of other first terms is not shown.
 
@@ -781,7 +781,7 @@ ClinGen Evidence Repository classifications of single-nucleotide variants that a
 | Reference-only single-token AUROC | variants | 2,000; seed 61 | recompute_strand.py |
 | Strand-choice AUROC shift (Note S36) | variants | 2,000; seed 61 | recompute_strand.py |
 | eQTL permutation null | labels permuted within eGene | 20,000; seed 20260723 | eqtl_cluster_and_bca.py (Additional file 2) |
-| Refusal lifts of the selective layer and the sensitivity intervals of Table S29 | variants within species | 2,000; seed 20260719 | fig4_reconcile.py and fig4_matrix_stats.py (Additional file 2); Table S31's error-detection intervals use 4,000 draws and 10,000 within-species permutations, seed 20260724, in audit_selective_robustness.py (Additional file 2) |
+| Refusal lifts of the selective layer, the sensitivity intervals of Table S29 and the paired calibration-error differences at both readouts (Notes S44, S48 and S63) | variants within species | 2,000; seed 20260719 | fig4_reconcile.py and fig4_matrix_stats.py, with trust_layer_8192_fair.py for the 8,192-bp calibration differences (Additional file 2); Table S31's error-detection intervals use 4,000 draws and 10,000 within-species permutations, seed 20260724, in audit_selective_robustness.py (Additional file 2) |
 
 Seeds are recorded in each script. Intervals that treat variants as independent are given only where the estimand is itself variant-level, and each is labelled as such where it is quoted.
 
@@ -799,7 +799,7 @@ Seeds are recorded in each script. Intervals that treat variants as independent 
 | dog | CanFam3.1 (GCA_000002285.2) | Ensembl 104, 90 mammals | Ensembl 104 / CanFam3.1 | Ensembl variation 104 | 227 | 178 | 189 | 25 |
 | human | GRCh38 (GCA_000001405.15) | Ensembl 110, 91 mammals | Ensembl 112 / GRCh38 | ClinVar benign, 1:1 | 1,500 | 843 | – | – |
 
-Assemblies are those each panel was built and verified on. GERP is read from the per-species Ensembl compara bigWig track on that assembly; the release and alignment given are those of the track that reproduces the atlas's per-base values, value for value for all but two cat positives (build_gerp_windows.py, Additional file 3). Genes and OMIA phenotypes count distinct gene symbols and distinct phenotype strings among the positives; trait alleles are the positives classed as non-disease in atlas_positive_annotations.parquet (Additional file 3). Negatives are drawn from each species' population-variant pool rather than from the positives' genes, so the atlas supports no within-gene comparison; in sheep, chicken and pig the pool does not reach every chromosome (Note S62). The Negatives column names each species' pool and its release: Ensembl variation, at the release given, in seven species, the PigGTEx v0 genotypes in pig, and ClinVar's benign or likely-benign records, drawn 1:1, in human; in the eight non-human species the negatives are matched to the positives on trinucleotide context and alternate allele and not on GC (reports/atlas_controls.json, Additional file 2). Of the 27 positives that OMIA curates as coding but snpEff's first term calls non-coding (Note S62), 16 are in dog, 4 in cattle, 3 each in cat and horse and 1 in sheep; the gene-model releases run from Ensembl 99 (cattle) to 114 (cat).
+Assemblies are those each panel was built and verified on. GERP is read from the per-species Ensembl Compara bigWig track on that assembly; the release and alignment given are those of the track that reproduces the atlas's per-base values, value for value for all but two cat positives (build_gerp_windows.py, Additional file 3). Genes and OMIA phenotypes count distinct gene symbols and distinct phenotype strings among the positives; trait alleles are the positives classed as non-disease in atlas_positive_annotations.parquet (Additional file 3). Negatives are drawn from each species' population-variant pool rather than from the positives' genes, so the atlas supports no within-gene comparison; in sheep, chicken and pig the pool does not reach every chromosome (Note S62). The Negatives column names each species' pool and its release: Ensembl variation, at the release given, in seven species, the PigGTEx v0 genotypes in pig, and ClinVar's benign or likely-benign records, drawn 1:1, in human; in the eight non-human species the negatives are matched to the positives on trinucleotide context and alternate allele and not on GC (reports/atlas_controls.json, Additional file 2). Of the 27 positives that OMIA curates as coding but snpEff's first term calls non-coding (Note S62), 16 are in dog, 4 in cattle, 3 each in cat and horse and 1 in sheep; the gene-model releases run from Ensembl 99 (cattle) to 114 (cat).
 
 ## Table S40. Per-predictor provenance and accounting on the 49-predictor panel
 
@@ -855,7 +855,7 @@ Assemblies are those each panel was built and verified on. GERP is read from the
 | phastCons17way_primate | conservation track | none (conservation) | no | 1.000 / 1.000 | 0.691 | 0.580 | 0.000 |
 | bStatistic | conservation track | none (conservation) | no | 0.990 / 0.985 | 0.549 | 0.477 | 0.001 |
 
-Scope, training labels and allele-frequency input are taken from each tool's own publication or documentation and from the dbNSFP 5.3.1a description; a cell that could not be confirmed there is marked unverified, and the allele-frequency 'no' of Polyphen2_HDIV, Polyphen2_HVAR and MutPred2 rests on their published feature categories rather than a full feature list. Reach P / B is the share of pathogenic and benign variants a predictor scores on the 328,328-variant panel; covered AUROC is on the pairs it scores; within-gene AUROC pools pathogenic–benign pairs formed within a gene; penalty is covered minus must-answer AUROC. The full table, with the missense-subset columns and every bound, is figures/dbnsfp_49_provenance.csv in Additional file 3.
+Scope, training labels and allele-frequency input are taken from each tool's own publication or documentation and from the dbNSFP 5.3.1a description; a cell that could not be confirmed there is marked unverified, an allele-frequency input marked indirect reaches the predictor through the scores of other predictors it takes as inputs, MetaSVM and MetaLR among them, and the allele-frequency 'no' of Polyphen2_HDIV, Polyphen2_HVAR and MutPred2 rests on their published feature categories rather than a full feature list. Reach P / B is the share of pathogenic and benign variants a predictor scores on the 328,328-variant panel; covered AUROC is on the pairs it scores; within-gene AUROC pools pathogenic–benign pairs formed within a gene; penalty is covered minus must-answer AUROC. The full table, with the missense-subset columns and every bound, is figures/dbnsfp_49_provenance.csv in Additional file 3, which gives each value to four decimals; the cells here are rounded from the unrounded estimates, so a few differ by 0.001 from the CSV's value rounded again (Eigen-raw_coding's benign reach is 0.858453, 0.8585 in the CSV, 0.858 here).
 
 ## Table S41. Covered AUROC of the 49 predictors on labels ClinVar already carried and on newer labels
 
@@ -911,7 +911,7 @@ Scope, training labels and allele-frequency input are taken from each tool's own
 | phastCons17way_primate | no | 0.6708 | 0.6957 | +0.0249 |
 | bStatistic | no | 0.5635 | 0.5423 | −0.0213 |
 
-Covered AUROC on the dbNSFP panel's labels that ClinVar's release of fileDate 2021-01-02 already carried with the same class (older) and on the rest (newer), and the shift from older to newer. ClinVar in training follows the provenance table, figures/dbnsfp_49_provenance.csv in Additional file 3: yes where ClinVar labels trained or tuned the predictor, no where they did not, and test, calibration or evaluation where ClinVar was used only for that. Older and newer are disjoint label sets; the newer are also easier to separate by gene alone (Note S61), so a shift here is not a measure of training overlap on its own. Computed and printed by section F of recompute_identification.py in Additional file 3.
+Covered AUROC on the dbNSFP panel's labels that ClinVar's release of fileDate 2021-01-02 already carried with the same class (older) and on the rest (newer), and the shift from older to newer. ClinVar in training follows the provenance table, figures/dbnsfp_49_provenance.csv in Additional file 3: yes where ClinVar labels trained or tuned the predictor, no where they did not, and test, calibration or evaluation where ClinVar was used only for that. Older and newer are disjoint label sets, 95,765 and 232,563 of the panel's 328,328; the newer are also easier to separate by gene alone, the sequence-blind gene prior reading 0.041 higher on them (Note S61), so a shift here is not a measure of training overlap on its own. Computed and printed by section F of recompute_identification.py in Additional file 3.
 
 ## Table S42. Calibrated PP3 and BP4 levels as likelihood ratios on ClinVar missense variants
 
