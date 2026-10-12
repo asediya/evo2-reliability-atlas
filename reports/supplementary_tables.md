@@ -131,7 +131,7 @@ Strata with negative rs: 5 of 5; strata whose CI excludes zero: 4.
 
 ## Table S7. Evo 2 versus GERP is readout-dependent (co-scorable variants)
 
-| Species | n (co-scorable) | Evo 2 @1,001-bp | Evo 2 @8,192-bp | GERP | Δ (8,192 − GERP) |
+| Species | n (co-scorable) | Evo 2 (1,001 bp) | Evo 2 (8,192 bp) | GERP | Δ (8,192 − GERP) |
 |---|---|---|---|---|---|
 | Goat | 80 | 0.953 | 0.958 | 0.780 | +0.178 |
 | Chicken | 274 | 0.862 | 0.956 | 0.725 | +0.231 |
@@ -148,7 +148,7 @@ On the variants both methods can score, Evo 2 scored at the 1,001-bp single-toke
 
 ## Table S8. phyloP versus GERP where a phyloP track is available
 
-| Species | n (matched) | GERP | phyloP | phyloP − GERP | Evo 2 @8,192 | Evo 2 @8,192 − phyloP | Evo 2 @1,001 | Evo 2 @1,001 − phyloP |
+| Species | n (matched) | GERP | phyloP | phyloP − GERP | Evo 2 (8,192 bp) | Evo 2 (8,192 bp) − phyloP | Evo 2 (1,001 bp) | Evo 2 (1,001 bp) − phyloP |
 |---|---|---|---|---|---|---|---|---|
 | Chicken | 274 | 0.725 | 0.793 | +0.068 | 0.956 | +0.163 | 0.862 | +0.069 |
 | Cattle | 1,921 | 0.828 | 0.931 | +0.103 | 0.978 | +0.047 | 0.909 | −0.022 |
@@ -198,7 +198,7 @@ The total recovered here (+0.0668 species mean) reproduces the readout effect of
 | **Pooled** | 11,109 | 0.201 | 0.973 | 0.940 |  |
 
 Average precision (AUPRC) alongside AUROC per species, with the no-skill baseline (the base rate). AUROC is optimistic under the 9% class imbalance and for a screening use case; AUPRC is the decision-relevant summary. Macro AUPRC is 0.854 against a 0.137 base rate (6.3×), pooled 0.940.
-AUPRC stays well above the base rate in every species, so the discrimination at this readout is not a base-rate artefact. The one setting where precision-recall collapses is the matched control of the concurrent cross-species work cited in the main text (AUPRC 0.166 against a ~9% base rate, versus its 0.717 AUROC), which is why we quote both metrics in Note S6. Both figures are that paper's, read from its text and held by no artefact here; its 0.717 is not the 0.717 this paper reports for HAL's covered AUROC.
+AUPRC stays well above the base rate in every species, so the discrimination at this readout is not a base-rate artefact. The one setting where precision–recall collapses is the matched control of the concurrent cross-species work cited in the main text (AUPRC 0.166 against a ~9% base rate, versus its 0.717 AUROC), which is why we quote both metrics in Note S6. Both figures are that paper's, read from its text and held by no artefact here; its 0.717 is not the 0.717 this paper reports for HAL's covered AUROC.
 
 ## Table S11. Reach and must-answer accuracy for five human scores on ClinVar
 
@@ -799,7 +799,7 @@ Seeds are recorded in each script. Intervals that treat variants as independent 
 | Dog | CanFam3.1 (GCA_000002285.2) | Ensembl 104, 90 mammals | Ensembl 104 / CanFam3.1 | Ensembl variation 104 | 227 | 178 | 189 | 25 |
 | Human | GRCh38 (GCA_000001405.15) | Ensembl 110, 91 mammals | Ensembl 112 / GRCh38 | ClinVar benign, 1:1 | 1,500 | 843 | – | – |
 
-Assemblies are those each panel was built and verified on. GERP is read from the per-species Ensembl Compara bigWig track on that assembly; the release and alignment given are those of the track that reproduces the atlas's per-base values, value for value for all but two cat positives (build_gerp_windows.py, Additional file 3). Genes and OMIA phenotypes count distinct gene symbols and distinct phenotype strings among the positives; trait alleles are the positives classed as non-disease in atlas_positive_annotations.parquet (Additional file 3). Negatives are drawn from each species' population-variant pool rather than from the positives' genes, so the atlas supports no within-gene comparison; in sheep, chicken and pig the pool does not reach every chromosome (Note S62). The Negatives column names each species' pool and its release: Ensembl variation, at the release given, in seven species, the PigGTEx v0 genotypes in pig, and ClinVar's benign or likely-benign records, drawn 1:1, in human; in the eight non-human species the negatives are matched to the positives on trinucleotide context and alternate allele and not on GC (reports/atlas_controls.json, Additional file 2). Of the 27 positives that OMIA curates as coding but snpEff's first term calls non-coding (Note S62), 16 are in dog, 4 in cattle, 3 each in cat and horse and 1 in sheep; the gene-model releases run from Ensembl 99 (cattle) to 114 (cat).
+Assemblies are those each panel was built and verified on. GERP is read from the per-species Ensembl Compara bigWig track on that assembly; the release and alignment given are those of the track that reproduces the atlas's per-base values, value for value for all but two cat positives (build_gerp_windows.py, Additional file 3). Genes and OMIA phenotypes count distinct gene symbols and distinct phenotype strings among the positives; trait alleles are the positives classed as non-disease in atlas_positive_annotations.parquet (Additional file 3). Negatives are drawn from each species' population-variant pool rather than from the positives' genes, so the atlas supports no within-gene comparison; in sheep, chicken and pig the pool does not reach every chromosome (Note S62). The Negatives column names each species' pool and its release: Ensembl variation, at the release given, in seven species, the PigGTEx v0 genotypes in pig, and ClinVar's benign or likely benign records, drawn 1:1, in human; in the eight non-human species the negatives are matched to the positives on trinucleotide context and alternate allele and not on GC (reports/atlas_controls.json, Additional file 2). Of the 27 positives that OMIA curates as coding but snpEff's first term calls non-coding (Note S62), 16 are in dog, 4 in cattle, 3 each in cat and horse and 1 in sheep; the gene-model releases run from Ensembl 99 (cattle) to 114 (cat).
 
 ## Table S40. Per-predictor provenance and accounting on the 49-predictor panel
 
