@@ -245,7 +245,7 @@ def match(want, dec, got, printed_text):
       identity   the plain case
       percent    artifacts store fractions, prose prints percentages (0.176417 vs "17.64%")
       scale      prose prints kb where the artifact stores bases (163244 vs "163 kb")
-      magnitude  the reach penalty is stored positive and printed negative
+      magnitude  the prose prints the size of a value the artifact stores with its sign
 
     The transform is RECORDED rather than applied silently, because "matched under magnitude" is a
     weaker statement than "matched" and a reader of the table is entitled to see which it was. A

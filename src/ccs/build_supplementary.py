@@ -322,7 +322,7 @@ def main():
         W("| %s | %s | %s | %s | %s | %s |" % (
             r["species"].capitalize(), r.get("n", "--"),
             f(r.get("reach_pos")), f(r.get("reach_neg")),
-            f(r.get("class_gap"), 3, True), f(-r.get("must_call_penalty", 0), 3, True)))
+            f(r.get("class_gap"), 3, True), f(r.get("must_call_penalty", 0), 3)))
 
     # ---------------- S8 baselines ----------------
     W("\n## Table S8. Baseline suite\n")

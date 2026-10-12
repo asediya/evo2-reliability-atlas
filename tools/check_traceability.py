@@ -46,8 +46,8 @@ def main():
     # "RECORDED rather than applied silently, because 'matched under magnitude' is a weaker
     # statement than 'matched'". So `how` is read, not just tested for truthiness: a genuine SIGN
     # ERROR on a traced value also matches under "magnitude" and would otherwise be counted among
-    # the values that "still agree". Ten rows legitimately need that transform (the
-    # must-answer penalties are stored positive and printed negative), so failing on it would fail
+    # the values that "still agree". Five rows legitimately need that transform (the
+    # prose prints the size of a value stored with its sign: a slope, an interval bound, a gap), so failing on it would fail
     # a correct package; every one of them is made visible instead.
     transforms = {}
     weak = []
@@ -114,7 +114,7 @@ def main():
         print()
         print("  %d value(s) agreed only after a SIGN transform. That is legitimate where the"
               % len(weak))
-        print("  artifact stores a penalty positive and the prose prints it negative, and it is")
+        print("  prose prints the size of a value the artifact stores with its sign, and it is")
         print("  indistinguishable from a real sign error, so every one is named here. A value that")
         print("  appears in this list and did not before is a defect, not a convention:")
         for v, art, key, got in weak:

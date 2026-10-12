@@ -15,11 +15,11 @@
    "section": "Abstract and Background"
   },
   {
-   "value": "-0.245",
+   "value": "0.245",
    "artifact": "reports/fig5_reach.json",
    "key": "per_species[4] (species=\"horse\").must_call_penalty",
    "resolved": 0.24478829796654955,
-   "transform": "magnitude",
+   "transform": "identity",
    "section": "Abstract and Background"
   },
   {
@@ -97,27 +97,27 @@
    "section": "Results \u2014 \"Reach: the conservation comparison is not measure"
   },
   {
-   "value": "\u22120.169",
+   "value": "0.169",
    "artifact": "reports/fig5_reach.json",
-   "key": "per_species[species=sheep].must_call_penalty (sign flipped in the text)",
+   "key": "per_species[species=sheep].must_call_penalty",
    "resolved": 0.16924715305515414,
-   "transform": "magnitude",
+   "transform": "identity",
    "section": "Results \u2014 \"Reach: the conservation comparison is not measure"
   },
   {
-   "value": "\u22120.245",
+   "value": "0.245",
    "artifact": "reports/fig5_reach.json",
-   "key": "per_species[species=horse].must_call_penalty (sign flipped in the text)",
+   "key": "per_species[species=horse].must_call_penalty",
    "resolved": 0.24478829796654955,
-   "transform": "magnitude",
+   "transform": "identity",
    "section": "Results \u2014 \"Reach: the conservation comparison is not measure"
   },
   {
-   "value": "\u22120.177",
+   "value": "0.177",
    "artifact": "reports/fig5_reach.json",
    "key": "per_species[species=pig].must_call_penalty",
    "resolved": 0.17716541896506433,
-   "transform": "magnitude",
+   "transform": "identity",
    "section": "Results \u2014 \"Reach: the conservation comparison is not measure"
   },
   {
@@ -1418,11 +1418,11 @@
    "section": "Table 1 (all cells + Table 1 notes) and every figure legend "
   },
   {
-   "value": "-0.245",
+   "value": "0.245",
    "artifact": "reports/fig5_reach.json",
    "key": "['per_species'][4]['must_call_penalty']",
    "resolved": 0.24478829796654955,
-   "transform": "magnitude",
+   "transform": "identity",
    "section": "Table 1 (all cells + Table 1 notes) and every figure legend "
   },
   {
