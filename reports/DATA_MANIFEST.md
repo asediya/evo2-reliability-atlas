@@ -21,12 +21,12 @@ Six artefacts in the deposit are inputs rather than outputs: deposited scripts r
 - `reports/gerp_pervariant.parquet` — GERP per atlas variant (11,130 rows; species, source, variant_id, label, gerp, gerp_is_finite), read by `src/ccs/gerp_consequence.py` and three `analyses/scripts/`.
 - `reports/nt_vs_evo2.parquet` — the per-panel Nucleotide Transformer, Evo 2 and GERP AUROCs (10 rows), read by `src/ccs/fig3_data.py`.
 
-Four further files are records that no deposited script reads or writes: `reports/eqtl_pervariant_meta.json` and `reports/gerp_pervariant_meta.json` describe the two parquets above, `reports/power_mde.json` holds the minimum-detectable-difference table, and `reports/supplementary_citation_map.json` maps a superseded reference numbering.
+Four further files are records that no deposited script writes: `reports/eqtl_pervariant_meta.json` and `reports/gerp_pervariant_meta.json` describe the two parquets above, `reports/power_mde.json` holds the minimum-detectable-difference table, and `reports/supplementary_citation_map.json` maps a superseded reference numbering.
 
 
 ## Public sources of the raw inputs
 
-Exact releases and assembly accessions are in the manuscript Methods and Availability of data and materials; the primary sources are:
+Exact releases and assembly accessions are in the manuscript Methods and Data Availability; the primary sources are:
 
 - **Catalogued alleles (positives):** OMIA (Online Mendelian Inheritance in Animals, <https://omia.org>) for the eight non-human species; NCBI ClinVar (<https://www.ncbi.nlm.nih.gov/clinvar/>, release dated in Methods) for the human panel.
 - **Negatives and genome assemblies:** population variants from Ensembl Variation for seven non-human species, the PigGTEx v0 genotype panel for pig, and ClinVar Benign/Likely_benign records for human; the Ensembl per-species releases and GenBank assembly accessions are listed in Methods.

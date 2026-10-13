@@ -168,9 +168,9 @@ consequence-class and gene-and-consequence baselines, 0.880, 0.837 and 0.974.
 
 ## `glmtrust.card`
 
-- `render_card(report, title=..., subtitle=...)` → one self-contained HTML string: no external
+- `render_card(rep, title=..., subtitle=...)` → one self-contained HTML string: no external
   assets, no scripts, light/dark aware, printable.
-- `write_card(report, path, ...)` → writes it and returns the path.
+- `write_card(rep, path, ...)` → writes it and returns the path.
 
 The card leads with the verdict and specifically with whether the audit *changed* it: a reversal
 (the matched interval excluding zero on the other side) appears above the tables, and a lead whose matched

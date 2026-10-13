@@ -63,7 +63,7 @@ def main():
             # so the 1,001-bp panels are not filtered on build-consistency here; only the pig
             # negative builders and the independent 8,192-bp builder enforce it. A record whose
             # reference and alternate are swapped against the assembly therefore survives, and
-            # its score carries an inverted sign, because the scorer reads the reference base
+            # its delta is exactly zero, because the scorer reads the reference base
             # from this window rather than from the source record. Bounded at 21 variants panel-
             # wide by the 11,130 vs 11,109 difference against the filtered 8,192-bp build.
             vid.append(v); ref_seq.append(s); alt_seq.append(alt); ref_ok.append(ok)

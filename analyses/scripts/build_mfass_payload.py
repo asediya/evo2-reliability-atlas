@@ -10,7 +10,7 @@ model reaches task-specific supervised models on regulatory variation.
 The panel is hg19 and only hg38 is on disk, so rather than download a genome for six genes, the six
 loci are fetched as slabs from the UCSC REST API and cached. Every window is reference-verified: if
 the hg19 base at the variant position does not match the table's REF, the variant is dropped, since
-a mismatch would invert the sign of the score.
+a mismatch would invalidate the score.
 
     python analyses/scripts/build_mfass_payload.py
 """
@@ -85,7 +85,7 @@ def main():
             short += 1
             continue
         win = sq[a:b]
-        if win[HALF] != r.ref:                      # a mismatch would invert the score's sign
+        if win[HALF] != r.ref:                      # a mismatch would invalidate the score
             bad_ref += 1
             continue
         vid.append("%s:%s:%d:%s>%s" % (r.assay, r.chrom, r.pos, r.ref, r.alt))

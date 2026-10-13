@@ -5,7 +5,7 @@ each new variant, a *set* of labels that, under exchangeability of the calibrati
 binary call the set is one of:
 
   {positive}            a confident deleterious call
-  {benign}              a confident benign call
+  {negative}            a confident benign call
   {negative, positive}  the model is not certain -- abstain
   {}                    neither label conforms -- an outlier; also treated as abstain
 

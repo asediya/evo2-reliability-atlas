@@ -8,8 +8,8 @@ Two operating points are provided, both standard:
     that the calibrated probability does not.
 
   * :func:`precision_operating_point` -- an RCPS-style rule that chooses the score threshold with the
-    most calls whose Clopper-Pearson precision lower bound still meets a target, giving a distribution
-    -free guarantee on the precision of the flagged set. Reported with recall, so the cost of the
+    most calls whose Clopper-Pearson precision lower bound still meets a target, giving a
+    distribution-free guarantee on the precision of the flagged set. Reported with recall, so the cost of the
     guarantee is visible.
 
 Neither guards the missed-positive (false-negative) rate, and the paper is explicit that the

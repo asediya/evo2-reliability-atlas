@@ -681,7 +681,7 @@ The same test at the 1,001-bp readout, which is the layer Note S66 reports. Obse
 Fraction of each error class removed when a species refuses its least-confident 15% of calls, at the 1,001-bp readout on the Platt posterior of Tables S27 and S28 (893 errors); rows run from the largest to the smallest share of missed positives removed. 'protects negatives' is the share of over-calls removed, 'protects positives' the share of missed positives removed. The negative side is defined in only six species (goat, chicken and pig have no negative-class errors at the 0.5 threshold); human carries 479 of the 731 missed positives.
 Positive-class capture ranges from 0.500 (sheep) to 0.203 (human) in the six species tabulated, and is 0.833 in goat, 0.600 in pig and 0.333 in chicken, whose errors are all missed positives; the pooled figure of 0.261, 191 of 731, is a variant-weighted mean dominated by human.
 
-## Table S33. Per-species calibration: transfer vs trivial vs oracle
+## Table S33. Per-species calibration: transfer versus trivial versus oracle
 
 | Species | n | ECE trivial | ECE transfer | ECE oracle | ECE transfer > ECE trivial? | oracle vs transfer |
 |---|---|---|---|---|---|---|

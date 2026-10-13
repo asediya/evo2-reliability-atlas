@@ -15,7 +15,7 @@ ClinVar carries tens of thousands of variants in each regulatory class.
 
 Sampling is balanced by (consequence x label) so no cell can dominate, and every window is
 verified: the reference base at the variant offset must match the ClinVar REF, or the variant is
-dropped. A silent reference mismatch would invert the sign of the score.
+dropped. A silent reference mismatch would invalidate the score.
 
     python analyses/scripts/build_clinvar_payload.py --per-cell 250
 """
@@ -89,7 +89,7 @@ def main():
             continue
         off = HALF                                  # 0-based index of the variant in the window
         if seq[off] != str(r["ref"]).upper():
-            bad_ref += 1                            # a mismatch would invert the score's sign
+            bad_ref += 1                            # a mismatch would invalidate the score
             continue
         alt = seq[:off] + str(r["alt"]).upper() + seq[off + 1:]
         vid.append(r["variant_id"])

@@ -165,14 +165,14 @@ def main():
         "`analyses/scripts/`.\n"
         "- `reports/nt_vs_evo2.parquet` — the per-panel Nucleotide Transformer, Evo 2 and GERP AUROCs "
         "(10 rows), read by `src/ccs/fig3_data.py`.\n\n"
-        "Four further files are records that no deposited script reads or writes: "
+        "Four further files are records that no deposited script writes: "
         "`reports/eqtl_pervariant_meta.json` and `reports/gerp_pervariant_meta.json` describe the two "
         "parquets above, `reports/power_mde.json` holds the minimum-detectable-difference table, and "
         "`reports/supplementary_citation_map.json` maps a superseded reference numbering.\n")
     out.append(
         "\n## Public sources of the raw inputs\n\n"
-        "Exact releases and assembly accessions are in the manuscript Methods and Availability of "
-        "data and materials; the primary sources are:\n\n"
+        "Exact releases and assembly accessions are in the manuscript Methods and Data Availability; "
+        "the primary sources are:\n\n"
         "- **Catalogued alleles (positives):** OMIA (Online Mendelian Inheritance in Animals, "
         "<https://omia.org>) for the eight non-human species; NCBI ClinVar "
         "(<https://www.ncbi.nlm.nih.gov/clinvar/>, release dated in Methods) for the human panel.\n"

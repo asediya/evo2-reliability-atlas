@@ -3,7 +3,7 @@
 
 Without a `ref_ok` gate, every headline AUROC would be computed on windows whose
 central base was never confirmed against the allele the variant record describes, and OMIA deposits
-coordinates against several assembly versions, so a ref/alt swap would invert the sign of
+coordinates against several assembly versions, so a ref/alt swap would zero
 logP(ref) - logP(alt) for the affected variants.
 
 The check does not need the reference FASTAs. Each deposited window file carries `ref_seq`,

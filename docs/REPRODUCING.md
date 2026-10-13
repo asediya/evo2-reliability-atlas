@@ -59,9 +59,9 @@ scores it needs travel with the package as a 119 kB fixture.
 
 ### Tier 2: the recompute layer
 
-Every figure has a recompute layer. Most figure modules draw only from the JSON it emits; figS1_missing_panels
-reads reports/fig4_pervariant.parquet, fig7_atlas and fig8_readout compute their AUROCs and locus bootstraps at
-build time from Additional file 3's per-variant atlas, and fig_brca1_composite computes its AUROC from data/.
+Every figure has a recompute layer. Most figure modules draw only from the JSON it emits; `figS1_missing_panels`
+reads `reports/fig4_pervariant.parquet`, `fig7_atlas` and `fig8_readout` compute their AUROCs and locus bootstraps at
+build time from Additional file 3's per-variant atlas, and `fig_brca1_composite` computes its AUROC from `data/`.
 No module types a float by hand. The tables read the same JSONs and assert their headline values, so
 drift fails the build instead of reaching the paper.
 
