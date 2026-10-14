@@ -18,6 +18,8 @@ import json
 
 import numpy as np
 import matplotlib as mpl
+# Agg is pinned, as in fig4_trust.py: the active backend sets the page size and the text layout.
+mpl.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.transforms import ScaledTranslation
 import matplotlib.transforms as mtransforms
@@ -425,7 +427,7 @@ def panel_e(ax, box):
         # rebuilt PDF, not asserted.
         ax.text(0.866, y, "%.3f" % v["auroc"], transform=ax.get_yaxis_transform(), fontsize=FOOT,
                 color=INK, va="center", ha="right", clip_on=False)
-        ax.text(0.998, y, "%.3f–%.3f" % (v["lo"], v["hi"]), transform=ax.get_yaxis_transform(),
+        ax.text(1.011, y, "[%.3f, %.3f]" % (v["lo"], v["hi"]), transform=ax.get_yaxis_transform(),
                 fontsize=FOOT, color=MUTED, va="center", ha="right", clip_on=False)
 
     ytop = len(rows) + 2.0
@@ -447,7 +449,7 @@ def panel_e(ax, box):
             bbox=dict(facecolor="white", edgecolor="none", alpha=0.88, pad=0.9))
     ax.text(0.872, ytop, "AUROC", transform=ax.get_yaxis_transform(), fontsize=FOOT, color=MUTED,
             va="top", ha="right", clip_on=False)
-    ax.text(0.998, ytop, "95% CI", transform=ax.get_yaxis_transform(), fontsize=FOOT,
+    ax.text(1.011, ytop, "95% CI", transform=ax.get_yaxis_transform(), fontsize=FOOT,
             color=MUTED, va="top", ha="right", clip_on=False)
 
     _chance_v(ax)

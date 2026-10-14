@@ -41,6 +41,8 @@ from pathlib import Path
 import numpy as np
 import polars as pl
 import matplotlib as mpl
+# Agg is pinned, as in fig4_trust.py: the active backend sets the page size and the text layout.
+mpl.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 
@@ -326,7 +328,11 @@ def panel_a_resid(ax, ax_cb=None):
                         # the cell's own colour on the ENRICH ramp, normalised the same way
                         # imshow does it above (vmin=-v, vmax=v)
                         color=_ink_on(ENRICH((R[i, k] + v) / (2.0 * v))),
-                        fontweight="bold", zorder=5)
+                        fontweight="bold", zorder=5,
+                        # a hatched (negative) cell keeps its hatch, knocked out behind the numeral by a
+                        # box in the cell's own colour
+                        bbox=(dict(boxstyle="square,pad=0.12", ec="none",
+                                   fc=ENRICH((R[i, k] + v) / (2.0 * v))) if R[i, k] < 0 else None))
 
     keep = [0, 2, 4, 6, 8, NX]
     ax.set_xticks([k - 0.5 for k in keep])
@@ -686,6 +692,8 @@ def panel_c(ax):
     ax.set_ylabel("Conservation + Evo 2\nAUROC", fontsize=AXIS, linespacing=1.2)
     ax.tick_params(labelsize=MINPT)
     _spines(ax)
+    # the y axis stops at the 1.00 rule: above it is the band of rotated species names
+    ax.spines["left"].set_bounds(lo, 1.0)
     # the lower-right, below the diagonal, is the only region with no sticks and no label leaders --
     # in the upper-left the leaders would run straight through this text.
     # Everything here must fit UNDER the diagonal, which on square axes means a right-aligned line at

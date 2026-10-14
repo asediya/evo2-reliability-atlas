@@ -388,7 +388,7 @@ def panel_a(fig, gs_slice):
                 transform=ax.get_yaxis_transform(), ha="right", va="center",
                 fontsize=FOOT, color=MUTED, zorder=9)
         res = r.get("lift_resolved", True)
-        ax.text(HI - 0.12, i + 0.50, (f"{r['lift']:.1f}×" if res else f"{r['lift']:.1f}× n.s."),
+        ax.text(HI + 0.84, i + 0.50, (f"{r['lift']:.1f}×" if res else f"{r['lift']:.1f}× n.s."),
                 ha="right", va="center", fontsize=FOOT,
                 color=(CODING if res else MUTED), zorder=9)
     ax.axvline(0, color="#8E8880", lw=0.5, zorder=5)
@@ -440,7 +440,7 @@ def panel_a(fig, gs_slice):
     # name the corridor on the row where it is widest, so the leader stays short
     iw = int(np.argmax([r["refuse_logit_abs"] for r in RW]))
     ax.annotate("Dashed box =\nwhat this species refuses",
-                xy=(-RW[iw]["refuse_logit_abs"], iw + 0.50), xytext=(LO + 0.25, iw + 0.10),
+                xy=(-RW[iw]["refuse_logit_abs"], iw + 0.50), xytext=(LO + 0.25, iw - 0.35),
                 color=BEDROCK, ha="left", va="center", linespacing=1.45,
                 arrowprops=dict(arrowstyle="->", color=BEDROCK, lw=0.55,
                                 connectionstyle="arc3,rad=0.10"), **lab_kw)
@@ -661,10 +661,8 @@ def panel_c(ax):
         fig_.canvas.draw()
     y_cap = (lg.get_window_extent(fig_.canvas.get_renderer())
              .transformed(ax.transAxes.inverted()).y0) - 0.035
-    # Was a red italic "Caveat: ... and there confidence does not predict error" -- a warning about
-    # how to read the panel, which is legend copy. What stays is the plain arithmetic behind it: the
-    # weight, the error share and the self-knowledge AUROC, none of which is printed anywhere else.
-    _line(ax, y_cap, f"Macro average over {len(_P)} species", fontsize=FOOT, color=MUTED)
+    # Nothing is set under the key: the y label names the macro average and the legend the nine species,
+    # and a line here would stand on panel e's letter line and read as panel e's title.
     _spines(ax)
 
 

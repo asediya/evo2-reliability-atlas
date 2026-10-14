@@ -29,6 +29,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from collections import defaultdict
 import numpy as np
 import polars as pl
+import matplotlib
+# Agg is pinned, as in fig4_trust.py: the active backend sets the page size and the text layout.
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from matplotlib.gridspec import GridSpec
@@ -102,7 +105,8 @@ def load_heatmap():
     truth = np.zeros(N)
     for p, fc in zip(pos, fclass):
         truth[xr[p]] = max(truth[xr[p]], rank[fc])
-    # genomic pos -> residue, then residue -> mean x-index (for residue-anchored annotations)
+    # genomic pos -> residue, then residue -> median x-index (for residue-anchored annotations): a codon
+    # split by an intron then sits on one of its own columns, not in the collapsed intron between them
     vr = pl.read_parquet("data/interim/brca1_variant_residues.parquet")
     posres = {int(v.split("_")[1]): r for v, r in zip(vr["variant_id"].to_list(), vr["residue"].to_list())}
     acc = defaultdict(list)
@@ -110,7 +114,7 @@ def load_heatmap():
         r = posres.get(p)
         if r is not None:
             acc[r].append(xr[p])
-    res2x = {int(r): float(np.mean(v)) for r, v in acc.items()}
+    res2x = {int(r): float(np.median(v)) for r, v in acc.items()}
 
     def dom(res):
         if res is None: return 0
