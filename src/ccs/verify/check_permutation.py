@@ -3,7 +3,7 @@ pipeline (out-of-fold logistic) to build the null AUROC distribution. A correct 
 centered at 0.5; the real 0.971 must sit far outside it. This catches any structural inflation in the
 cross-fold/ensembling machinery itself (independent of the biology).
 
-NOTE: this script was written against an exploratory evo2+phylop ensemble (out-of-fold AUROC ~0.97) that is NOT a result in the manuscript, which reports Evo 2 alone. Run it via `src/ccs/verify/run_controls.py`, which records the panel-level composition and spatial controls that bear on the paper (deposited in reports/verify_controls.json) and labels the ensemble numbers as provenance.
+NOTE: this script tests an exploratory evo2+phylop ensemble (out-of-fold AUROC ~0.97) that is NOT a result in the manuscript, which reports Evo 2 alone. Run it via `src/ccs/verify/run_controls.py`, which records the panel-level composition and spatial controls that bear on the paper (deposited in reports/verify_controls.json) and labels the ensemble numbers as provenance.
 """
 import os
 import numpy as np, polars as pl

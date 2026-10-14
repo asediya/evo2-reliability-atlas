@@ -1,7 +1,7 @@
 """The measurement figure, its supplement, and the two atlas panels that read the per-variant table.
 
 fig2_split draws Figure S7 from panel_c and panel_d, and fig7_atlas and fig8_readout read the atlas
-through this module; panel_a, panel_b and panel_headtohead are not called.
+through this module; panel_a, panel_b, panel_headtohead and panel_composition are not called.
 
   measurement plate (panel_a, panel_b, panel_headtohead)
     a  discrimination melts to the missense floor -- drawn against the panel's own
@@ -20,8 +20,8 @@ through this module; panel_a, panel_b and panel_headtohead are not called.
   atlas plate (panel_composition; atlas_skill() and table2_intervals() below)
     c  what each species' panel is made of: the coding share of positives and of negatives.
 
-Every number is read from the recompute layer (`reports/fig2_data.json`,
-`reports/type_matched_atlas.parquet`, `reports/fig2_pervariant.parquet`) or computed at build time
+Every number is read from the recompute layer (`reports/fig2_data.json`)
+or computed at build time
 from Additional file 3's tables (`fig1_atlas_pervariant.parquet`, `table2_cluster_aware_ci.tsv`,
 `refseq_chromosome_map.csv`). Nothing is typed.
 """
@@ -49,8 +49,8 @@ def _deposit_table(name):
     """Locate a reduced table that ships in Additional file 3, not in this repository.
 
     Figures 9 and 10 and Additional file 1's Figures S3, S5 and S7 read per-variant tables from the
-    recompute deposit. Resolving one as a bare relative path silently depended on the maintainer's
-    own directory layout, so the builders failed for anyone who unpacked only this archive. Look in
+    recompute deposit. A bare relative path to one would depend on the maintainer's
+    own directory layout and fail for anyone who unpacked only this archive. Look in
     the places a reader could reasonably have put it, then say exactly what is missing and where it
     comes from.
     """
@@ -148,8 +148,8 @@ def panel_a(axC, axR):
     axC.plot([wm, wm], [1.20, 2.80], color=SG.RULE, lw=.5, ls=(0, (2, 1.6)), zorder=2)
     axC.set_xlim(0, 1.005); axC.set_ylim(-0.85, 3.45); axC.invert_yaxis()
     axC.set_yticks(range(4))
-    # "unmatched", not "all": the same word the legend and panel b use for this stratum. Three of
-    # the four strata already agreed; only the top one had two names, and "all" is the one that
+    # "unmatched", not "all": the same word the legend and panel b use for this stratum;
+    # "all" is the one that
     # loses the point -- the row exists to be the NOT-consequence-matched comparison the other
     # three are matched against.
     axC.set_yticklabels(["unmatched\n(all variants)", "coding\nonly", "non-coding\nonly",
@@ -159,7 +159,7 @@ def panel_a(axC, axR):
     axC.set_xlabel("share of the %s-variant panel (%%)" % "{:,}".format(ntot), fontsize=SG.AXIS)
     SG.spines(axC, keep=("bottom",))
     axC.tick_params(axis="y", length=0)
-    # The key sits in the header row, level with "n" and "% pos.". Inside the bars' rows it shared the
+    # The key sits in the header row, level with "n" and "% pos.". Inside the bars' rows it would share the
     # missense row with that row's own count, and read as part of it.
     for x, fc, al, txt in ((0.0, PATHO, 1.0, "positive"), (0.47, BENIGN, .55, "negative")):
         axC.add_patch(plt.Rectangle((x, -0.83), .035, .16, facecolor=fc, alpha=al,
@@ -179,7 +179,7 @@ def panel_a(axC, axR):
         axR.text(1.03, i, "%+.3f" % (r["auroc"] - g), transform=axR.get_yaxis_transform(),
                  fontsize=ANNOT, va="center", ha="left", color=SG.MUTED, clip_on=False)
     floor = asc["MISSENSE-only (type-matched)"]["auroc"]
-    # The rule stops under its own label: drawn full height it ran through "pooled missense".
+    # The rule stops under its own label: drawn full height it would run through "pooled missense".
     axR.plot([floor, floor], [-0.50, 3.45], color=S.PATHO, lw=.6, ls=(0, (2.5, 2)), zorder=2)
     axR.text(floor, -0.72, "pooled missense %.3f" % floor, fontsize=ANNOT, ha="center",
              va="bottom", color=S.PATHO)
@@ -189,7 +189,7 @@ def panel_a(axC, axR):
     axR.set_xlim(.60, 1.0); axR.set_xticks([.6, .7, .8, .9, 1.0])
     # "pooled": each stratum's AUROC ranks its variants across all nine species together, where the
     # paper's primary aggregation is the species mean.
-    # The whiskers' meaning (95% CI) is the legend's: with it, the label ran off the page.
+    # The whiskers' meaning (95% CI) is the legend's: with it, the label would run off the page.
     axR.set_xlabel("pooled AUROC   (open, single token;  filled, window mean)", fontsize=SG.AXIS)
     SG.spines(axR, keep=("bottom",))
     axR.tick_params(axis="y", length=0)
@@ -236,8 +236,8 @@ def panel_b(ax1, ax2):
         # cannot give.
         ax2.text(1.12, ys, "%s  %.3f→%.3f" % (r["species"], r["auroc_1001"], r["auroc"]),
                  fontsize=FLOOR, va="center", ha="left", color=S.species_text_color(r["species"]))
-    # The two headers sit in the empty band at the foot of each panel. At the top they shared the
-    # rows where the highest lines end and their labels begin, and both were overdrawn there.
+    # The two headers sit in the empty band at the foot of each panel. At the top they would share the
+    # rows where the highest lines end and their labels begin, and both would be overdrawn there.
     ax1.text(0.5, YLO + .012, "four strata", fontsize=SG.ANNOT, ha="center", va="bottom",
              color=SG.MUTED)
     ax2.text(0.5, YLO + .012, "nine species", fontsize=SG.ANNOT, ha="center", va="bottom",
@@ -297,7 +297,7 @@ def panel_c(ax):
     ticks = slots
     ax.set_xticks([slot_x[t] for t in ticks])
     ax.set_xticklabels(["%d My" % t for t in ticks], fontsize=ANNOT)
-    # 16.5 pt below the axis line, in points. At 12.5 pt this row collided with the tick labels
+    # 16.5 pt below the axis line, in points. At 12.5 pt this row would collide with the tick labels
     # above it by 1.47 pt (tools/pdfcheck.py): a tick label at ANNOT ends 2.2 pt of tick + 3.5 pt of
     # pad + one 8.5 pt line box below the axis, 14.2 pt, and the row must start under that.
     _names = mtransforms.offset_copy(ax.get_xaxis_transform(), fig=ax.figure, y=-16.5,
@@ -324,7 +324,7 @@ def panel_c(ax):
             va="bottom")
     # The seven non-human mammals all sit at 92 My and are spread across x only so their intervals
     # do not overlap; the tick says "7 mammals" and the legend says the spread carries no
-    # divergence. A two-line note saying so on the canvas was wider than the panel and was crossed by
+    # divergence. A two-line note saying so on the canvas would be wider than the panel and crossed by
     # pig's interval, so the note lives in the legend, with the marker-area key.
     return P, d["distance"], len(F)
 
@@ -408,8 +408,8 @@ def panel_d(axP, axS):
     # two loci, eight of them inside a 570-bp span, giving Kish's effective count of 1.2 independent
     # positives (Methods; Additional file 1: Note S29); Table 2 accordingly prints goat's AUROC as
     # "0.959 (no interval)" and calls it a descriptive point estimate. Drawing goat the same solid
-    # interval and the same bold value as cattle asserted, on this plate, the significance the Methods
-    # elsewhere refuse -- and half of the panel's own "2 of 9" count rested on it. The estimate is
+    # interval and the same bold value as cattle would assert, on this plate, the significance the Methods
+    # elsewhere refuse -- and half of the panel's own "2 of 9" count rests on it. The estimate is
     # still drawn, because it is the paper's estimate; what is withdrawn is the claim that its
     # interval means what the other eight intervals mean. The set is hard-coded rather than derived
     # because no deposited artefact carries the per-species cluster count; the citation above is the
@@ -460,8 +460,8 @@ def _dy(ax, pt):
     """`pt` points expressed in this axes' data units on the y axis.
 
     Layout distances that exist to clear a GLYPH have to be authored in points: a fraction of the
-    ylim shrinks when the canvas or the box does, while the type in it does not. This paper lost
-    an afternoon to that class of bug when the plates went from 195 mm to 173 mm.
+    ylim shrinks when the canvas or the box does, while the type in it does not.
+    
 
     abs(): an inverted axis (the row plots below count rows downward) has hi < lo, and a distance
     is a distance.
@@ -730,7 +730,7 @@ def panel_composition(ax):
     position (positives always the left bar) and by the key.
 
     The coding definition is the coding flag's own (atlas_skill): the first term of the consequence
-    in CODING. The rule this panel used before also counted a protein-altering term in any later
+    in CODING. A wider rule also counts a protein-altering term in any later
     position. On this table the two agree variant for variant, and that is asserted, so the panel
     cannot drift from the flag it decomposes.
     """
@@ -768,7 +768,7 @@ def panel_composition(ax):
     # The key names the two classes in the words panel b uses. A real legend with proxy handles, so
     # it cannot drift from the bars it names. It sits 12 pt above the axes: the printed shares of
     # the tallest bars (98 %, 96 %, 100 %) stand up to 10 pt above the top of the axes, so a key
-    # seated on the axes' top edge collided with them wherever it was put along the row.
+    # seated on the axes' top edge would collide with them wherever it was put along the row.
     from matplotlib.patches import Patch
     lg = ax.legend(handles=[Patch(facecolor=PATHO, edgecolor="none", label="positives"),
                             Patch(facecolor=BENIGN, alpha=NEG_ALPHA, edgecolor="none",
@@ -817,7 +817,7 @@ def panel_headtohead(ax):
     lo = min(lo, mean["m1"][1], mean["m8"][1])
     hi = max(hi, mean["m1"][2], mean["m8"][2])
     # The data's own range plus 0.03 either side, labelled every 0.1: ticks at every 0.1 over a
-    # range padded out to whole tenths set eight labels in 39 mm and ran them into one another.
+    # range padded out to whole tenths would set eight labels in 39 mm and run them into one another.
     ax.set_xlim(lo - 0.03, hi + 0.03)
     ax.xaxis.set_major_locator(plt.MultipleLocator(0.1))
     ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: "0" if abs(x) < 1e-9 else "%.1f" % x))

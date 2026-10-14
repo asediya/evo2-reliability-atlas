@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """Regression: does glmtrust.audit still re-derive every published reach number exactly?
 
-This mattered when the auditor was written and matters more now. Since then the module has gained
+The module carries
 missingness AUROC, strata, materiality gating, a per-class stratum gate, and a switch from
 bootstrap to closed-form intervals -- any of which could have perturbed quantities the manuscript
 already reports.
 
 Compares against reports/fig5_reach.json, the tracked recompute-layer artifact. NOT against
-COMPILED_RESULTS.md, which is not canonical.
+(delete, together with ' NOT against' at the end of line 9)
 
 A VACUOUS PASS IS A FAILURE. A script that assumes the wrong JSON shape matches
 no keys and can print "CLEAN -- every published reach number still reproduces" having checked
@@ -32,7 +32,7 @@ sys.path.insert(0, "src/ccs")
 from glmtrust.audit import Scorer, audit                              # noqa: E402
 from fig5_stats import SP                                             # noqa: E402
 
-# EXACT, not a floor. The true count is 108 -- nine species times twelve quantities -- and setting
+# EXACT, not a floor. 108, nine species times twelve quantities, so a published value that vanishes from the artifact fails the gate.
 # the gate to 100 left room for eight published values to vanish from the artifact without the check
 # noticing, while the docstring above promised that a vacuous pass is a failure. A floor eight short
 # of the ceiling is a floor that tolerates exactly the silent-shrinkage failure it was written to
@@ -81,7 +81,7 @@ for sp in SP:
              ("must_call_penalty", r.get("must_call_penalty"), a.penalty),
              # In the artifact "evo2_covered" means Evo 2 restricted to the subset GERP can score,
              # and "evo2_full" means Evo 2 over the whole panel. Evo 2 reaches everything, so its
-             # OWN covered set is the full panel -- mapping evo2_covered onto that reported seven
+             # OWN covered set is the full panel.
              # false regressions before the two keys were read side by side.
              ("auroc_evo2_full", r.get("auroc_evo2_full"), e.auroc_covered),
              ("auroc_evo2_on_gerp_subset", r.get("auroc_evo2_covered"),

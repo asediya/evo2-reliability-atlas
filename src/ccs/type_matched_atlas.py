@@ -1,13 +1,13 @@
-"""THE TYPE-MATCHED ATLAS -- the paper's honest headline.
+"""THE TYPE-MATCHED ATLAS.
 
 Problem: atlas negatives were drawn genome-wide from Ensembl variation while positives
-are OMIA pathogenic (heavily coding). In cattle: negatives 84% intergenic/intronic, positives 85%
+are OMIA catalogued alleles (heavily coding). In cattle: negatives 84% intergenic/intronic, positives 85%
 coding-impactful. So the unmatched AUROC largely measures "is this variant in a gene", not "is this
-coding variant pathogenic" (cattle 0.900 -> 0.744 missense-only). This replicates competitor rs-7579108
+coding variant pathogenic" (cattle 0.900 -> 0.744 missense-only). This replicates the Jiang et al. preprint (rs-7579108)
 (0.934 -> 0.717 with type-matched controls).
 
 Fix: snpEff consequence for EVERY variant (build-matched DBs we built ourselves), then compare
-pathogenic vs benign WITHIN a consequence class. Pooling across species gives the power a single
+positives vs negatives WITHIN a consequence class. Pooling across species gives the power a single
 species lacks. No new Evo2 compute -- re-stratifying variants already scored.
 
   python src/ccs/type_matched_atlas.py --jobs 50 --nboot 10000

@@ -1,6 +1,6 @@
 """ADVERSARIAL CHECK 1 — leakage audit of the ensemble AUROC (claimed 0.971).
 The ensemble = logistic(evo2_neg, phylop). If the logistic ever sees test labels, AUROC inflates.
-We compare: (a) strict out-of-fold (nested) AUROC, (b) in-sample refit-on-all AUROC (the leaky version),
+We compare: (a) strict out-of-fold AUROC, (b) in-sample refit-on-all AUROC (the leaky version),
 (c) repeated with different seeds. If (a) ~ 0.97 and is stable, no leakage. If (a) << (b), the headline
 number was leaky.
 

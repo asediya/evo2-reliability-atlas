@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """Does the naive (covered-subset) delta carry an interval, and does it exclude zero at each star floor?
 
-The record shows a naive column with no interval anywhere, and immediately after the table asserts
-"Every interval excludes zero". That is true of the four MATCHED intervals, which are the only ones
-shown -- but the sentence follows a claim about the naive column, where at the 2-star floor the delta
-is +0.0001 and cannot plausibly be distinguishable from zero.
+
+
+
+
 
 Computes the missing intervals, so the text rests on numbers rather than reasoning.
 Gene-clustered: variants within one gene are not independent.

@@ -102,7 +102,7 @@ DBNSFP_NAME = {"phyloP100way_vertebrate": "phyloP100way", "phastCons100way_verte
                "phyloP470way_mammalian": "phyloP470way", "phastCons470way_mammalian": "phastCons470way",
                "Eigen-raw_coding": "Eigen-raw", "Eigen-PC-raw_coding": "Eigen-PC-raw", "LIST-S2_mammals": "LIST-S2"}
 
-# Classes, one encoding in every figure: pathogenic = catalogued allele (vermilion), benign = population variant
+# Classes, one encoding in every figure: positive = pathogenic or catalogued allele (vermilion), benign = population variant
 # (grey). *_FILL for areas large enough that PATH would outweigh the data around them.
 PATH = VERM
 BEN_FILL, PATH_FILL = "#D9D9D9", VERM_M
@@ -111,7 +111,7 @@ POS, NEG = PATH, BEN
 # an amber that is none of the regime hues (its 8,192-bp readout leaves variants unscored, so a regime colour would
 # say something false of it); GERP is a grey baseline. Readouts are open (1,001 bp) or filled (8,192 bp). Amber and
 # vermilion converge under red-green colour-vision deficiency, so no panel asks the reader to tell Evo 2 from the
-# pathogenic class by colour alone.
+# catalogued class by colour alone.
 EVO, GERP = "#B07A1E", "#7F7F7F"
 EVO_P = "#EFE4D2"        # Evo 2's pale tint, for a band or an interval fill
 REGIME_PALE.update({EVO: EVO_P, GERP: TINT})

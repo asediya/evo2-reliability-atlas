@@ -2,7 +2,7 @@
 """Blind-spot probe: does Evo 2's REPRESENTATION carry regulatory signal its LIKELIHOOD does not?
 
 The paper's central negative result: Evo 2's zero-shot likelihood reads pig cis-eQTLs at AUROC
-~0.488 (chance). The Evo 2 paper itself shows embeddings are the strong mode (supervised probe on
+~0.488 (near chance). The Evo 2 paper itself shows embeddings are the strong mode (supervised probe on
 embeddings beat zero-shot on BRCA1, 0.95 vs 0.87). So the sharp, thesis-aligned hypothesis:
 
   the regulatory blind spot is a READOUT limit, not a representational one — the signal is IN the
@@ -11,7 +11,7 @@ embeddings beat zero-shot on BRCA1, 0.95 vs 0.87). So the sharp, thesis-aligned 
 This probes 1B embeddings with a supervised logistic model, and compares to
 the matched 1B zero-shot likelihood, the 40B zero-shot, and the TSS-distance baseline.
 
-CRITICAL: causal and non-causal variants share eGenes, so CV MUST group by gene_id — otherwise a
+CRITICAL: candidate causal and non-causal variants share eGenes, so CV MUST group by gene_id — otherwise a
 gene seen in training leaks into test and the AUROC is inflated. We use GroupKFold by gene.
 
     python src/ccs/probe_eqtl_blindspot.py
@@ -76,7 +76,7 @@ def main():
     g = np.array([gene[v] for v in vid])
     delta = (alt - ref)[keep]
     concat = np.concatenate([ref[keep], alt[keep], delta], axis=1)
-    print("matched to labels: %d (%d causal, %d non-causal), %d eGenes"
+    print("matched to labels: %d (%d candidate causal, %d non-causal), %d eGenes"
           % (len(y), int(y.sum()), int((y == 0).sum()), len(set(g.tolist()))))
 
     clf = lambda: make_pipeline(StandardScaler(), LogisticRegression(max_iter=3000, C=0.5))
@@ -132,7 +132,7 @@ def main():
     if zs_1b:
         print("  matched 1B zero-shot          : %.4f  (probe gain %+.4f)" % (zs_1b, best_probe - zs_1b))
     print("  TSS positional baseline       : 0.651")
-    # factual summary, not an internal-planning conclusion string.
+    # factual summary.
     if best_probe > 0.60 and (not zs_1b or best_probe > zs_1b + 0.05):
         v = ("A gene-grouped linear probe of Evo 2-1B embeddings reaches AUROC %.2f, above the "
              "zero-shot likelihood, so the representation carries regulatory signal the readout does "

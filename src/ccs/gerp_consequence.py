@@ -1,4 +1,4 @@
-"""C4: run GERP through the identical by-consequence analysis Figure 3 applies to Evo 2.
+"""Run GERP through the identical by-consequence analysis applied to Evo 2 (Additional file 1's Table S14).
 
 Same estimator as fig3_consequence.json: per-species AUROC of a class's positives against
 that species' own negatives, combined as a positive-count-weighted mean. Negatives are never

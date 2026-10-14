@@ -32,7 +32,7 @@ from .audit import (AuditReport, PairAudit, ReachReport, ReachScorer, Scorer, Sc
                     StratumAudit, audit, breakdown_point, contamination_bounds, lexicographic_gain,
                     missingness_auroc, must_answer_auroc, reach_audit, wilson_interval)
 from .baseline import sequence_blind
-# docs/api.md says "import everything from the top level" and names these
+# docs/api.md says "Import the main API from the top level" and names these
 # four, so `from glmtrust import wilson_interval` must work: the documentation defines
 # what a caller should be able to reach.
 from .delong import delong_auroc_variance, delong_delta_ci, midrank

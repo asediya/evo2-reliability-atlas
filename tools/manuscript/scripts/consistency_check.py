@@ -1,6 +1,6 @@
 """Internal cross-consistency checker: does the manuscript agree with ITSELF?
 
-Motivation. The existing `verify-numbers` check compares manuscript numbers against
+Motivation. A source check compares manuscript numbers against
 the recompute layer (COMPILED_RESULTS + the deposited JSONs) — i.e. manuscript-vs-source. It does not
 compare manuscript numbers against EACH OTHER, and it barely covers figure legends. Internal
 numerical contradictions, including those in figure legends, are mechanically
@@ -47,14 +47,14 @@ QUANTITIES = {
          r"eQTL[^.]{0,80}?AUROC[^.]{0,20}?(?:reads?|of|at|is)\s+\*{0,2}(0\.\d{3})"], {"0.488"}),
     "eQTL AUROC, 2,000-variant subpanel (8,192 bp)": ([r"0\.498"], {"0.498"}),
     "atlas macro AUROC (8,192 bp)": ([r"macro AUROC of (0\.\d{3})", r"macro (0\.943)"], {"0.943"}),
-    # Required "is", which neither form in the manuscript uses ("a pooled value of **0.973**",
+    # No "is" is required: neither form in the supplement uses one ("a pooled value of **0.973**",
     # "Pooled AUROC 0.973 [").
     "atlas pooled AUROC (8,192 bp)": (
         [r"[Pp]ooled AUROC \*{0,2}(0\.\d{3})", r"pooled value of \*{0,2}(0\.\d{3})"], {"0.973"}),
     # 8,192-bp panel (11,109 variants): cattle 0.9745 is the maximum
     # and pig 0.8633 the minimum, both computed on the SAME variant set Figures 9a and 10a use — NOT
     # the GERP-restricted head-to-head set.
-    # The manuscript says "running from **0.974** in cattle down to **0.863** in pig", not
+    # The supplement says "from 0.974 in cattle to 0.863 in pig", not
     # "0.974 (cattle)". A registered quantity that silently fails to match is worse than an
     # unregistered one: it reads as scanned. See the not-found guard in main().
     "atlas max per-species AUROC (cattle)": (
@@ -70,7 +70,7 @@ QUANTITIES = {
         [r"worth \+(0\.\d{3}) AUROC", r"the \+(0\.\d{3}) AUROC difference between them"], {"0.065"}),
     "readout effect, pooled": ([r"\+\*?\*?(0\.092)\*?\*? pooled"], {"0.092"}),
     # The coding-vs-eQTL fold ratio is not registered. Registering it would make
-    # this checker DEFEND a number the Results explicitly refuse to quote ("we do not quote a
+    # this checker DEFEND a number Note S22 explicitly refuses to quote ("we do not quote a
     # ratio, because the denominator sits close to zero"). The ratio is absent from every deliverable.
     # The calibration-transfer ECE bound is not registered: it is stated in the supplement as a
     # bound rather than as a single

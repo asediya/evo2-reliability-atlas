@@ -3,7 +3,7 @@ Claim: ensemble 0.971 > phyloP 0.942 > Evo2 0.912. Paired bootstrap the AUROC de
 indices for both scorers) and report 95% CIs. If CI(ensemble - phylop) excludes 0, the FM adds signal
 beyond conservation. Also report Evo2-vs-phyloP correlation (orthogonality of the added axis).
 
-NOTE: this script was written against an exploratory evo2+phylop ensemble (out-of-fold AUROC ~0.97) that is NOT a result in the manuscript, which reports Evo 2 alone. Run it via `src/ccs/verify/run_controls.py`, which records the panel-level composition and spatial controls that bear on the paper (deposited in reports/verify_controls.json) and labels the ensemble numbers as provenance.
+NOTE: this script tests an exploratory evo2+phylop ensemble (out-of-fold AUROC ~0.97) that is NOT a result in the manuscript, which reports Evo 2 alone. Run it via `src/ccs/verify/run_controls.py`, which records the panel-level composition and spatial controls that bear on the paper (deposited in reports/verify_controls.json) and labels the ensemble numbers as provenance.
 """
 import os
 import numpy as np, polars as pl

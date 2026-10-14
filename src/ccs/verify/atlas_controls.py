@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """Composition and spatial controls computed on the FULL nine-species atlas with Evo 2-40B ALONE.
 
-An earlier check found that the controls then in `reports/verify_controls.json`
-were computed on `data/interim/verify_table.parquet` -- a 1,999-variant subset, scored with an
-exploratory evo2+phylop *ensemble* that is not a manuscript result -- and that the composition
-verdict was one-sided (an AUROC of 0.25 "passed" a `< 0.60` test although it is as far from 0.5 as
-0.75 is). This script recomputes both controls on the panel the paper actually reports:
+The controls in `reports/verify_controls.json`
+are computed on `data/interim/verify_table.parquet` -- a 1,999-variant subset, scored with an
+exploratory evo2+phylop *ensemble* that is not a manuscript result.
+(delete this line)
+This script computes both controls on the panel the paper reports:
 
   * Panel: the same nine per-species scoring-window tables `build_atlas.py` assembles (11,130
     variants at the 1,001-bp readout), joined to the Evo 2-40B score (block streaming coalesced with
@@ -20,7 +20,7 @@ verdict was one-sided (an AUROC of 0.25 "passed" a `< 0.60` test although it is 
     within 50 kb of a same-chromosome positive.
 
 Features come from the stored `ref_seq`/`var_off` in the window tables, so no FASTA access or
-chromosome-name normalisation is involved; `ref_seq[var_off] != alt_seq[var_off]` is asserted per
+chromosome-name normalisation is involved; `ref_seq[var_off] != alt_seq[var_off]` is checked (failures counted in n_window_ref_eq_alt) per
 variant as an internal consistency check.
 
     python src/ccs/verify/atlas_controls.py

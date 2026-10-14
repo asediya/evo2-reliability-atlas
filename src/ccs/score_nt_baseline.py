@@ -6,7 +6,7 @@ deleteriousness = -nt_llr (a variant the model finds unlikely = deleterious), or
 
 Purpose: a DNA-foundation-model peer for Evo2 across all 9 species AND the eQTL set -- the key test is
 whether the regulatory blind spot is Evo2-specific or SHARED across DNA FMs (does NT also fail on the
-causal eQTLs?). No Evo2.
+candidate causal eQTLs?). No Evo2.
 
   python src/ccs/score_nt_baseline.py --win 1002 --batch 32
 """

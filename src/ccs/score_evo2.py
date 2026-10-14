@@ -1,8 +1,8 @@
-"""Evo2 zero-shot variant scoring — reconstruction of the CP1 harness (which ran inside the
+"""Evo 2 zero-shot variant scoring — a reconstruction of the scoring harness (which ran inside the
 BioNeMo container). Runs anywhere `evo2` is importable: the BioNeMo
 2.6.2 container OR a CUDA environment with the Arc `evo2` pip package.
 
-Method (matches Arc Institute's BRCA1 zero-shot VEP + the cached CP1 schema):
+Method (matches Arc Institute's BRCA1 zero-shot VEP + the cached score schema):
   evo2_delta = score_sequences(alt_window) - score_sequences(ref_window)   # logL(alt) - logL(ref)
   evo2_neg   = -evo2_delta                                                 # deleteriousness (higher = worse)
 

@@ -7,7 +7,7 @@ one file with no external assets, so it can be attached to a submission or dropp
 supplement without a build step.
 
 WHAT IT LEADS WITH. The verdict, and specifically whether the audit changed it. A card whose top
-line reads "the covered-subset winner is not the must-answer winner" has done its job before anyone
+line reads "The verdict reverses" has done its job before anyone
 scrolls. When nothing is wrong it says so plainly -- a tool that only ever reports problems is a
 tool whose reports carry no information.
 

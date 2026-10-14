@@ -136,8 +136,8 @@ def _duplicate_note(path, n_rows, n_distinct, column_cardinalities):
 
 def _read(path):
     """The whole table, whatever its format, or an exit naming what is wrong with the file."""
-    # A missing input file otherwise surfaced as a polars traceback from three frames down, which
-    # is what a reader copying a command out of the README saw first. The tool already exits
+    # A missing input file would otherwise surface as a polars traceback from three frames down, which
+    # is what a reader copying a command out of the README would see first. The tool already exits
     # cleanly on a missing column; it should do the same on a missing file.
     if not os.path.exists(path):
         sys.exit("no such file: %s" % path)
@@ -242,7 +242,7 @@ def _write_rows(path, header, rows):
 
 
 #: What a delimited file writes where a scorer returned nothing. A parquet column carries a real
-#: null and arrives as NaN; a CSV or TSV carries one of these strings, and every one of them used to
+#: null and arrives as NaN; a CSV or TSV carries one of these strings, and every one of them would otherwise
 #: take down the whole column with "could not convert string to float: ''". That is the one input
 #: this package exists to measure, so it has to survive the front door.
 _NA = {"", "na", "n/a", "nan", "null", "none", ".", "-", "?"}
@@ -457,7 +457,7 @@ def _arrays(args):
     A real panel carries no-calls: on dbNSFP's 328,328 variants at one review star or better,
     REVEL returns no value for 40% of them -- 65% of the positives and 15% of the negatives -- and a
     scorer that declines is the case this package exists for. The calibration and conformal layers
-    fit a model, so they cannot take a NaN, and passing one through produced a raw scikit-learn
+    fit a model, so they cannot take a NaN, and passing one through would produce a raw scikit-learn
     traceback on the most ordinary input there is.
 
     Dropping them here is the right behaviour for `calibrate`, `evaluate` and `transfer`, which are
@@ -577,8 +577,8 @@ def cmd_transfer(args):
     return 0
 
 
-# Columns that are numeric but are not scores. Kept as substrings because annotation tables prefix
-# and suffix freely (hg38_pos, pos_1based, #chr). Matched case-insensitively against the whole name.
+# Columns that are numeric but are not scores. Kept as name tokens because annotation tables prefix
+# and suffix freely (hg38_pos, pos_1based, #chr). Matched case-insensitively against the name's tokens.
 _NOT_A_SCORE = ("pos", "position", "start", "end", "chrom", "chr", "label", "class", "stars",
                 "rank", "id", "index", "count", "n_", "_n", "length", "len", "af", "freq",
                 "allele", "gene", "strand", "build", "assembly", "distance", "row")
@@ -610,7 +610,7 @@ def _detect_score_columns(tab, label_col, strata_col=None):
         except (TypeError, ValueError):
             # A delimited file writes no-calls as strings, so a genuine score column with
             # missingness fails the bulk cast. Retry per element before discarding it: silently
-            # skipping such a column made --auto pass over exactly the scorers whose reach this
+            # skipping such a column would make --auto pass over exactly the scorers whose reach this
             # package is meant to report.
             try:
                 v = _np.array([_to_float(x) for x in col], dtype=float)
@@ -908,7 +908,7 @@ def _common(sub, groups=True, group_required=False):
                          help="group column, e.g. species: %s" % (
                              "each group is calibrated from the others" if group_required else
                              "evaluate each group with a map fitted on the others"))
-    # The default is platt because the Methods state the per-variant deliverable is the
+    # The default is platt because the paper states the per-variant deliverable is the
     # two-parameter Platt posterior; an isotonic default would hand a reader of the documented
     # command a different arm from the paper. The two differ materially on the paper's own panel
     # (AUROC 0.820 against 0.847, lift 2.37 against 2.56).

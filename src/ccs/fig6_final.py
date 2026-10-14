@@ -5,7 +5,7 @@ try:
 except ImportError:
     import style_gb as _SG
 
-"""FIGURE 6 — "Signal without a curator."
+"""FIGURE S3 (Additional file 1) — "Signal without a curator."
 
 Every result in Figs 1-6 rests on a CURATED DISEASE LABEL (OMIA, ClinVar, SGE). This figure is the
 evidence that does not depend on a curator, and the test of whether it is conservation in disguise.
@@ -13,8 +13,8 @@ evidence that does not depend on a curator, and the test of whether it is conser
   a  SELECTION FIELD    28,006 cattle variants, MAF x deleteriousness   [2-D density field]
   b  CONDITIONING LATTICE  the same gradient inside phyloP quintiles    [small-multiple mini-axes]
   c  LIFT PLANE          conservation-only vs combined AUROC, 9 species [2-D plane, meaningful coords]
-  d  (reserved -- ClinVar, NOT YET VERIFIED, see COMPILED_RESULTS 10e)
-  e  (reserved -- bat cross-clade, PILOT grade)
+  d  BAT LATTICE      allele number x minor allele count, bat pilot [observability lattice]
+  
 
 SKELETON BUDGET (checked against figure-skeleton-ban-list BEFORE building, not after)
 Fig 5 closed four primitives that were free when it was designed: area-partition waffle (5a),
@@ -27,7 +27,7 @@ the slope gnomon (5c). What remained free: small-multiple lattice, alluvial/Sank
   * panel b takes the SMALL-MULTIPLE LATTICE, faceted on conservation stratum. The lattice entry
     explicitly requires the facet variable NOT be the nine species; it is not.
   * panel c is the one per-species panel the gates allow, and only under all four constraints:
-    both axes carry data (a meaningful coordinate, not a slot index), NO silhouettes (Fig 2's ink),
+    both axes carry data (a meaningful coordinate, not a slot index), NO silhouettes (Figure 9's ink),
     NO left name margin, NO right value column, NO sort by n or by the plotted delta.
 
 Run: python -m src.ccs.fig6_final
@@ -298,7 +298,7 @@ def panel_a_resid(ax, ax_cb=None):
     NOT A FILLED CONTOUR SURFACE. Contouring log2(observed/expected) over a 10x8 table
     interpolates between cells that have no intermediate values, so it implies
     a continuity the data does not have, renders as a pale wash, shows no counts, and carries no
-    uncertainty. See the kill list in reports/fig6_plan.md.
+    uncertainty.
 
     What is drawn is the contingency table with NO smoothing: discrete cells, Pearson
     standardised residuals, and the residual printed wherever |r| > 2. That reports the STRENGTH of the
@@ -380,7 +380,7 @@ def panel_a_resid(ax, ax_cb=None):
 
 
 def panel_a(ax, ax_cb=None):
-    """SUPERSEDED — the rejected contour surface. Kept only so the kill list has a referent.
+    """The contour-surface rendering of panel a, drawn only by hero_preview().
 
     WHY NOT A RAW SCATTER OR A COUNT-DENSITY FIELD. Both fail on the
     render. The deleteriousness score spans -7 to +8 while the whole effect is a 0.36-unit shift in the
@@ -484,7 +484,7 @@ def panel_b(fig, gs_slice):
 
     THE RESULT THIS PANEL CARRIES. The gradient survives at fixed conservation in 4 of 5 quintiles, so
     it is not a conservation artifact -- but it STRENGTHENS monotonically with conservation and goes
-    flat in the least-conserved quintile. That is Fig 4's regulatory blind spot, reproduced from
+    flat in the least-conserved quintile. That is Figure S2's regulatory blind spot, reproduced from
     population genetics instead of eQTLs, with no labels of any kind.
     """
     C = J["selection_conditioned"]
@@ -518,7 +518,7 @@ def panel_b(fig, gs_slice):
         # panel's headline.
         _lo = min(min(cc["lo"]) for cc in cells[:6]); _hi = max(max(cc["hi"]) for cc in cells[:6])
         # headroom of 0.105 so the three-line stat block in the
-        # top-right corner clears the curve's left shoulder at 6 pt.
+        # top-right corner clears the curve's left shoulder at MINPT.
         ax.set_ylim(_lo - 0.012, _hi + 0.105)
         ax.set_xticks([-4, -3, -2, -1])
         # TICK DENSITY IS SOLVED, NOT TYPED. A hard-coded [0.45, 0.50, 0.55, 0.60] puts four
@@ -526,7 +526,7 @@ def panel_b(fig, gs_slice):
         # 7.3 pt label, so EVERY adjacent pair would overlap.
         # The step is chosen from the cell's own rendered height so the labels cannot touch,
         # and it widens by itself if the cell is ever made shorter. Shrinking the labels instead
-        # would put them under the 6.5 pt floor.
+        # would put them under style_gb.FLOOR.
         _yt = _pitched_ticks(ax, *ax.get_ylim())
         ax.set_yticks(_yt)
         # two decimals kept explicitly: the default formatter drops the trailing zero once the
@@ -568,7 +568,7 @@ def panel_b(fig, gs_slice):
         # ranks q0 (drawn as flat) ABOVE q1 (counted as surviving) -- so the panel's own
         # numbers would contradict its own colouring. rho and its CI are what decide it.
         rc = (_strata[c["key"]]["ci"] if c["key"] in _strata else c.get("rho_ci")) or [float("nan"), float("nan")]
-        # 0.955 / 0.807 / 0.659 is a 6 pt stack on an 18 mm cell: the pitch is
+        # 0.955 / 0.807 / 0.659 is a MINPT stack on an 18 mm cell: the pitch is
         # set from the type size, not guessed, so the three lines cannot touch.
         # Spearman's correlation, named in words: ρ is the paper's pair coverage, and an r with a subscript s
         # would print the s under the 7.0 pt floor. The legend and the Notes write it rₛ.
@@ -595,7 +595,7 @@ def panel_c(ax):
 
     GATE COMPLIANCE (this is the one per-species panel the ban list allows, and only under all four):
     both axes carry data, so species sit at a meaningful coordinate rather than a slot index; NO
-    PhyloPic silhouettes (Fig 2's signature ink); no left name margin; no right value column; no sort
+    PhyloPic silhouettes (Figure 9's signature ink); no left name margin; no right value column; no sort
     by n or by the plotted delta. The mark is a segment terminating in a dot -- deliberately NOT a
     dot-with-CI-whisker (ban 4): the segment is the estimate itself, and the only interval in the panel
     is the POOLED one, drawn once as a band rather than nine times as whiskers.
@@ -649,9 +649,9 @@ def panel_c(ax):
     lx_ = np.array([r["a_c"] for r in lab], float)
     span = hi - lo
     # The minimum separation is the ROTATED label's own width plus clear air, measured on this
-    # axes -- not the hand-set 0.052 of the range, which was solved once against a 56 mm box and
-    # silently became too small when the box or the type size changed. Nine names at 6.5 pt need
-    # 9.6 pt each; the solver below spreads them to exactly that and leaders each one back.
+    # axes, floored at the hand-set 0.052 of the range, which was solved once against a 56 mm box and
+    # silently became too small when the box or the type size changed. Nine names at MINPT need
+    # (MINPT * 1.15 + 2.3) pt each; the solver below spreads them to exactly that and leaders each one back.
     fig_ = ax.figure
     fig_.canvas.draw()
     _axw_pt = ax.get_window_extent(fig_.canvas.get_renderer()).width * 72.0 / fig_.dpi
@@ -703,13 +703,13 @@ def panel_c(ax):
     # a label that the diagonal runs through. Nothing else catches it:
     # no text-vs-text pair overlaps (the tick labels are the only neighbours and they are a
     # separate artist), and tools/inkunder.py averages edge density over the whole span box, so three
-    # thin strokes across a wide label dilute below its 10% bar. "by species" (22 pt narrower than
-    # "species-clustered", and still the resampling unit) and the four-line split below make it fit.
+    # thin strokes across a wide label dilute below its 10% bar.
+    # The four-line split below makes it fit.
     # The budget is arithmetic, not taste: on square axes the diagonal runs corner to corner, so a
     # right-aligned line whose top edge sits at axes-y t may be at most (0.99 - t) * 104.9 pt wide.
     # Four lines therefore get 95.3 / 87.2 / 79.1 / 71.0 pt from the bottom up, and the block has to
     # be ordered WIDEST AT THE BOTTOM -- the triangle is the constraint, so the stack is a staircase.
-    # No three-line arrangement carries all four claims: "n-weighted mean +0.054" is 85.7 pt and the
+    # No three-line arrangement carries all four claims: the
     # top slot of a three-line stack is 79.1. Splitting the key off the count is what makes it fit,
     # and the reading order still runs encoding -> count -> estimate -> interval.
     _lines = [(0.236, "Stick = Evo 2's lift", MUTED, "normal"),
@@ -792,7 +792,7 @@ def hero_preview():
     fig.text(0.112, 0.030, textwrap.fill(
         f"ρ = {S['spearman_rho']:+.3f} [{lo:+.3f}, {hi:+.3f}], p = {S['spearman_p']:.0e}, "
         f"n = {S['n']:,}, cattle ARS-UCD1.2, scored with the block-streaming variant-delta harness at ~1 kb — "
-        f"NOT the 8192 bp mean-LL readout behind the atlas (Fig 2), which is worth +0.071 on its own. "
+        f"NOT the 8192 bp mean-LL readout behind the atlas (Figure 9), which is worth +0.071 on its own. "
         f"The dependence is real but small: at most {2 ** lim:.2f}× over or under the independence "
         f"expectation. Normalising is what makes it visible — on the raw score axis the conditional "
         f"median moves 0.414 → 0.059, about 5% of the range the distribution spans.", width=150),
@@ -810,7 +810,7 @@ def hero_preview():
 
 
 def bc_preview():
-    """Panels b and c alone, at shipping width, for review before the five-panel compose."""
+    """Panels b and c alone, at shipping width, for review before the four-panel compose."""
     H = 104.0
     fig = plt.figure(figsize=(W_MM * MM, H * MM))
     gs = fig.add_gridspec(1, 2, width_ratios=[1.62, 1.0], wspace=0.34,
@@ -833,7 +833,7 @@ def bc_preview():
         f"{len(C['strata'])} quintiles — it is NOT a conservation artifact — but it strengthens "
         f"monotonically with conservation and its CI crosses zero in the least-conserved quintile. "
         f"That is the same competence boundary, reached from population genetics instead of eQTLs, "
-        f"with no labels. cattle phyloP is the one genuine phyloP track (the "
+        f"with no labels. Cattle phyloP is the one genuine phyloP track (the "
         f"pig/sheep/horse/dog tracks are GERP copies). "
         f"c: 5-fold CV logistic on within-species z-scored scores, n = "
         f"{J['decomposition']['pooled']['n']:,} over "
@@ -851,7 +851,7 @@ def main():
     'abstention concentrates in noncoding' headline rests on a stratum that is 0.3% of the panel with
     81 negatives at 94.6% positive, so the miscalibration there is a base-rate artifact. The defensible
     ClinVar result is a labelled-benchmark generality claim and belongs with the trust layer, not in a
-    figure whose subject is evidence that needs no curator. See COMPILED_RESULTS 10e."""
+    figure whose subject is evidence that needs no curator."""
     # The mm budget below is authored from a top edge that reserves 4 mm for a title and
     # 10-20 mm for a standfirst. House style sets both in the legend, so the whole
     # stack lifts by HEAD_MM and the canvas loses the same amount: every panel keeps its
@@ -894,7 +894,7 @@ def main():
     axb0.set_ylabel("")
     fig.text(0.038, T(105.0), "P(deleteriousness > stratum median)", fontsize=AXIS,
              color=INK, ha="center", va="center", rotation=90)
-    # panel b needs an x-axis label -- it is the panel COMPILED_RESULTS §10b calls the strongest
+    # panel b needs an x-axis label -- it carries the strongest
     # result in the figure. One shared label under the lattice. The ticks are
     # plain log10 exponents, so the label names the log10 axis.
     fig.text(0.542, T(132.9), "log10 minor allele frequency in cattle   (equal-count bins)",
@@ -910,11 +910,11 @@ def main():
     panel_e_lattice(ax_e)
 
     S = J["selection"]; C = J["selection_conditioned"]; D = J["decomposition"]
-    # TITLE AND STANDFIRST ARE IN THE MANUSCRIPT LEGEND (house style, src/ccs/style_gb.py).
+    # TITLE AND STANDFIRST ARE IN ADDITIONAL FILE 1'S FIGURE S3 LEGEND (house style, src/ccs/style_gb.py).
     # A title and an italic paragraph on the plate would be the
     # figure arguing its own claim. The legend makes that argument, in the
     # journal's face, and opens "Score is associated with allele frequency without
-    # curated labels, and the limits of that signal."
+    # curated labels, and its limits."
 
     for x_, y_mm, letter, title, note in (
             (None, 24.5, "a", "Evo 2 score is associated with allele frequency genome-wide, label-free",
@@ -939,7 +939,7 @@ def main():
                      va="bottom")
 
     # NO METHODS FOOTER ON THE CANVAS: a methods paragraph is not a figure element, so its
-    # prose is in the manuscript legend for Figure 6.
+    # prose is in the Additional file 1 legend for Figure S3.
 
     os.makedirs(ROOT / "reports" / "figures", exist_ok=True)
     base = str(ROOT / "reports" / "figures" / "Figure6_curator")

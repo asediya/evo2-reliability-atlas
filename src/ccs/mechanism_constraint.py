@@ -1,13 +1,13 @@
-"""MECHANISM: is Evo2 a learned evolutionary-constraint detector -- and is that WHY it is blind to causal
+"""MECHANISM: is Evo2 a learned evolutionary-constraint detector -- and is that WHY it is blind to candidate causal
 regulatory variants? Four tests, all on data in hand (no Evo2 compute, no embeddings):
 
-  A. Can CONSERVATION itself find causal eQTLs? GERP AUROC on causal(PIP>=.9) vs within-eGene control (PIP<=.001).
+  A. Can CONSERVATION itself find candidate causal eQTLs? GERP AUROC on candidate causal (PIP>=.9) vs within-eGene control (PIP<=.001).
      If GERP is also at chance -> no constraint-based method can solve this task.
-  B. Are causal eQTLs conserved AT ALL? mean GERP causal vs control + Mann-Whitney.
+  B. Are candidate causal eQTLs conserved AT ALL? mean GERP candidate causal vs control + Mann-Whitney.
   C. Is Evo2 a conservation proxy? Spearman(evo2, GERP) on coding (atlas) vs regulatory (eQTL).
-  D. Dose-response: does Evo2 work on the LARGEST-effect / highest-PIP eQTLs (partial competence)?
+  D. Dose-response: does Evo2 work on the LARGEST-effect (|z|) eQTLs (partial competence)?
 
-If A+B are null and C is high on coding -> mechanism: "Evo2 learned constraint; causal common eQTLs carry no
+If A+B are null and C is high on coding -> mechanism: "Evo2 learned constraint; candidate causal common eQTLs carry no
 constraint signal; the blind spot is the PREDICTED consequence of genome-only training, not a bug."
 
   python src/ccs/mechanism_constraint.py

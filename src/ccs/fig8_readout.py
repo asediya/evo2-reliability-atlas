@@ -207,7 +207,7 @@ for key, lab, mask in STRATA:
                     a1=a1, a8=a8, lo=lo, hi=hi, mask=mask))
 SD = {s["label"]: s for s in STR}
 assert SD["coding"]["n"] + SD["non-coding"]["n"] == SD["unmatched"]["n"]
-# The strata's sizes and 8,192-bp AUROCs as Additional file 1's Note S59 prints them, and the readout
+# The strata's sizes and 8,192-bp AUROCs as Additional file 1's Notes S27 and S59 print them, and the readout
 # gains. Both readouts are read on the same variants, so the gains are variant-matched, and the unmatched
 # row reads the paper's pooled +0.092.
 for lab, n8, a8, gain in (("unmatched", "11,109", "0.973", "+0.092"),
@@ -247,15 +247,15 @@ assert (round(SP_M1, 4), round(SP_M8, 4)) == (_fe["macro"]["auroc_1001"], _fe["m
 # of its four-place per-species deltas (0.06474) would round to 0.0647, so it is not the check
 assert abs((SP_M8 - SP_M1) - _fe["macro"]["delta"]) <= 5e-5, (SP_M8 - SP_M1, _fe["macro"]["delta"])
 assert _fe["n_variants_both_readouts"] == N_BOTH
-published("species mean at 1,001 bp (Fig. 8b)", "0.878", F.fnum(SP_M1, 3))
-published("species mean at 8,192 bp (Fig. 8b)", "0.943", F.fnum(SP_M8, 3))
-published("readout gain, species mean (Fig. 8b)", "+0.065", F.signed(SP_M8 - SP_M1))
+published("species mean at 1,001 bp (Fig. 10a)", "0.878", F.fnum(SP_M1, 3))
+published("species mean at 8,192 bp (Fig. 10a)", "0.943", F.fnum(SP_M8, 3))
+published("readout gain, species mean (Fig. 10a)", "+0.065", F.signed(SP_M8 - SP_M1))
 SP_T1 = MEAS._tint([SPR[s]["a1"] for s in ORDER])
 SP_T8 = MEAS._tint([SPR[s]["a8"] for s in ORDER])
-# the main text quotes both species means with their t intervals and cites Fig. 8b for them
-published("species mean at 8,192 bp with its t interval (MS, Fig. 8b)", "0.943 (95% CI 0.913 to 0.973)",
+# the main text quotes both species means with their t intervals and cites Figs. 9a and 10a for them
+published("species mean at 8,192 bp with its t interval (MS, Fig. 10a)", "0.943 (95% CI 0.913 to 0.973)",
           "%s (95%% CI %s to %s)" % tuple(F.fnum(v, 3) for v in SP_T8))
-published("species mean at 1,001 bp with its t interval (MS, Fig. 8b)", "0.878 (0.849 to 0.907)",
+published("species mean at 1,001 bp with its t interval (MS, Fig. 10a)", "0.878 (0.849 to 0.907)",
           "%s (%s to %s)" % tuple(F.fnum(v, 3) for v in SP_T1))
 published("the readout lifts every species", "every species",
           "every species" if all(SPR[s]["a8"] > SPR[s]["a1"] for s in ORDER) else "not every species")
@@ -302,8 +302,8 @@ published("the readout lifts every species on Table 2's panels too", "every spec
 # ---------------------------------------------------------------- c: Evo 2 minus GERP, both readouts
 H, HM, N_CO = MEAS.headtohead()      # asserts that goat alone lacks three positive-bearing loci
 published("co-scorable variants", "9,529", F.thousands(N_CO))
-published("species-mean margin, 1,001 bp (Fig. 8c)", "+0.047 [−0.009, +0.104]", brack(*HM["m1"]))
-published("species-mean margin, 8,192 bp (Fig. 8c)", "+0.108 [+0.058, +0.159]", brack(*HM["m8"]))
+published("species-mean margin, 1,001 bp (Fig. 10c)", "+0.047 [−0.009, +0.104]", brack(*HM["m1"]))
+published("species-mean margin, 8,192 bp (Fig. 10c)", "+0.108 [+0.058, +0.159]", brack(*HM["m8"]))
 GAIN_T = MEAS._tint([H[s]["m8"] - H[s]["m1"] for s in ORDER])
 published("paired change in margin", "+0.061 (+0.027 to +0.095)", paren(*GAIN_T))
 published("positive-bearing loci: goat, chicken, human (Note S59)", "1 in goat and 19 in chicken to 908 in human",

@@ -8,7 +8,7 @@ puts both classes in the same disease genes, both scorers use gene-level feature
 coverage pass for skill.
 
 One reversal is an anecdote. The question a reader should ask is how often it happens, and that is
-answerable here: 49 predictors give 1,176 ordered pairs on one panel with gene identity attached.
+answerable here: 49 predictors give 1,176 pairs on one panel with gene identity attached.
 
     pooled delta       AUROC(a) - AUROC(b) over the variants both score, ignoring gene
     within-gene delta  the same contrast computed inside each gene and pooled over genes, weighted
@@ -18,11 +18,10 @@ answerable here: 49 predictors give 1,176 ordered pairs on one panel with gene i
 A reversal is a pair where those two disagree in SIGN. Reported as a rate, not as a ranking: the
 point is the instability of the ranking, not which predictor wins.
 
-Two-stage by design. Point estimates for all 1,176 pairs are cheap; gene-clustered bootstrap
-intervals are not, so they are computed only for the pairs that actually reverse, where the interval
-is what decides whether the reversal is real or noise.
+Point estimates only: no bootstrap interval is computed here, so the script reports how often the
+sign reverses, not whether any one reversal is real or noise.
 
-    python src/ccs/pairwise_clustering_stability.py --jobs 48 --n-boot 400
+    python src/ccs/pairwise_clustering_stability.py --jobs 48
 """
 from __future__ import annotations
 
@@ -115,7 +114,7 @@ def main():
     pairs = list(itertools.combinations(range(len(cols)), 2))
     print("  panel %s variants (%s genes) restricted to %s"
           % (format(len(y), ","), format(len(set(gene)), ","), a.consequence or "everything"))
-    print("  %d predictors -> %s ordered pairs" % (len(cols), format(len(pairs), ",")))
+    print("  %d predictors -> %s pairs" % (len(cols), format(len(pairs), ",")))
     print("  computing pooled and within-gene deltas on %d workers ..." % a.jobs)
 
     res = []

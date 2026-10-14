@@ -104,7 +104,7 @@ def join_revel(panel):
     # is a no-op for one scorer and a best-of-N pick for the other. 5.1% of REVEL variants carry more
     # than one transcript, with a mean max-minus-min spread of 0.1441, and the choice moves the
     # missense head-to-head by about 0.0025 (max -0.0096, mean -0.0094, min -0.0070 matched). Small
-    # beside the gene-clustering effect that retracted that comparison, but it is exactly the kind of
+    # beside the gene-clustering effect on that comparison, but it is exactly the kind of
     # undeclared reporting choice this project documents, so it is named here rather than inherited.
     rv = rv.group_by("variant_id").agg(pl.col("revel").max().alias("revel"))
     print("  scorer rows (unique variants) %s" % format(rv.height, ","))
@@ -130,11 +130,11 @@ def _join_bigwig(panel, path, name):
     have = set(bw.chroms())
     # The tracks are UCSC-named (chr1); the panel is Ensembl-named (1). The mitochondrion is the one
     # contig where the two conventions disagree beyond the prefix: Ensembl/ClinVar write MT, UCSC
-    # writes chrM. Prefixing alone produced "chrMT", which matches nothing, so all 1,725
-    # mitochondrial variants were recorded as unreachable for both conservation tracks even though
+    # writes chrM. Prefixing alone gives "chrMT", which matches nothing, so all 1,725
+    # mitochondrial variants would be recorded as unreachable for both conservation tracks even though
     # the tracks carry real values across all 16,569 bases. That is exactly the silent-join failure
-    # this module's docstring says it exists to detect, and the guard below printed the bad key
-    # instead of stopping -- so it was visible in the output and read past.
+    # this module's docstring says it exists to detect,
+    # so the guard below stops on it.
     ALIAS = {"MT": "chrM", "M": "chrM"}
     rows = panel.select(["variant_id", "chrom", "pos"]).sort(["chrom", "pos"])
     out = np.full(rows.height, np.nan)

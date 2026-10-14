@@ -15,8 +15,8 @@ Computed here:
   1. a gene x predictor coverage matrix (38,420 x 49)
   2. the correlation structure across predictors at gene level -- is there one common hard-gene axis?
   3. genes covered by no predictor, by few, and by all
-  4. what distinguishes a dark gene from a covered one (variant count, consequence mix, label mix)
-  5. per gene, the best-covering predictor -- the table a lab would actually use
+  4. what a dark gene looks like (variant count)
+
 
 Parallel over predictors; the matrix build is the expensive part.
 

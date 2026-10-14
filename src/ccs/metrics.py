@@ -1,5 +1,5 @@
-"""Discrimination metrics for the Week-1 go/no-go: AUROC / AUPRC with bootstrap CIs,
-and the paired FM-vs-baseline difference. Higher score = more likely a causal reg. variant.
+"""Discrimination metrics: AUROC / AUPRC with bootstrap CIs,
+and the paired FM-vs-baseline difference. Higher score = more likely a candidate causal reg. variant.
 
 Usage:
   from metrics import evaluate
@@ -11,7 +11,7 @@ from sklearn.metrics import roc_auc_score, average_precision_score
 import sys
 
 # A referee on a cp437 console or with LC_ALL=C otherwise gets a traceback and a nonzero
-# exit from a run that succeeded; build_tables.py even wrote its outputs first.
+# exit from a run that succeeded.
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
@@ -99,4 +99,4 @@ if __name__ == "__main__":
     thr = 0.05
     verdict = "GO (FM-swing)" if d["delta_auroc"] >= thr and d["ci"][0] > 0 else \
               "PIVOT (calibration-as-product)" if abs(d["delta_auroc"]) < thr or d["ci"][0] <= 0 else "MIXED"
-    print(f"WEEK-1 VERDICT (this species): {verdict}")
+    print(f"VERDICT (this species): {verdict}")

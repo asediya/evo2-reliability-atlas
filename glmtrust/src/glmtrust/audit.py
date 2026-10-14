@@ -63,7 +63,7 @@ covered:
                         / (n_pos * n_neg)
 
 so the penalty is closed-form in the reach and needs no imputation. Imputing no-calls to the
-covered median was tried and rejected: it moves a no-call towards whichever class dominates the
+covered median is rejected here: it moves a no-call towards whichever class dominates the
 covered set, manufacturing the very asymmetry under test.
 
     from glmtrust.audit import Scorer, audit
@@ -494,7 +494,7 @@ class ScorerAudit:
 
     @property
     def missingness_direction(self) -> str:
-        """Which class this scorer reaches better: 'positives', 'negatives', or '' when undefined."""
+        """Which class this scorer reaches better: 'positives', 'negatives', 'neither' at exactly one half, or '' when undefined."""
         if not math.isfinite(self.miss_auroc):
             return ""
         if self.miss_auroc > 0.5:
@@ -689,7 +689,7 @@ def _pct(values, alpha):
 
 
 def _must_answer_of(y, s):
-    """Must-answer AUROC of one scorer on one (resampled) panel; NaN when a class is unreached."""
+    """Must-answer AUROC of one scorer on one (resampled) panel; NaN when a class is absent, 0.5 when a class is unreached."""
     fin = np.isfinite(s)
     pos, neg = y == 1, y == 0
     n_pos, n_neg = int(pos.sum()), int(neg.sum())
@@ -857,7 +857,7 @@ def audit(labels, scorers, strata=None, n_boot: int = 2000, seed: int = 0,
         ma = must_answer_auroc(cov, k_pos, n_pos, k_neg, n_neg)
         b_lo, b_hi = identification_bounds(cov, k_pos, n_pos, k_neg, n_neg)
 
-        # The missingness AUROC is exactly 0.5 + class_gap/2, so its interval is the Newcombe
+        # The missingness AUROC is exactly 0.5 + class_gap/2, so at variant level its interval is the Newcombe
         # interval on the gap pushed through that same monotone map -- exact, instant, and better
         # behaved at the boundary than a percentile bootstrap, which is
         # both slower and worse: on a million-variant panel it costs minutes per scorer to
@@ -940,7 +940,7 @@ def audit(labels, scorers, strata=None, n_boot: int = 2000, seed: int = 0,
         if a.values_run_backwards:
             rep.warnings.append(
                 "%s: its values are informative but run the opposite way to the declared direction "
-                "(ranking by them LOSES %+.4f AUROC on the indicator, %s CI [%+.4f, %+.4f]). Declare "
+                "(ranking by them gains %+.4f AUROC on the indicator, %s CI [%+.4f, %+.4f]). Declare "
                 "the direction (Scorer(..., higher_is_worse=False); CLI --lower-is-worse %s) before "
                 "reading any figure for it." % (sc.name, a.lex_gain, lvl, a.lex_gain_ci[0],
                                                 a.lex_gain_ci[1], sc.name))

@@ -7,7 +7,7 @@ provided:
   * :class:`IsotonicCalibrator` -- monotone, non-parametric (``sklearn`` isotonic regression);
   * :class:`PlattCalibrator`    -- a two-parameter logistic (Platt scaling).
 
-Neither is new. What the paper found, and what this module is careful about, is that the *isotonic*
+Neither is new. What this module is careful about is that the *isotonic*
 map overfits at low prevalence unless it is fitted out-of-fold, so :func:`cross_conformal_calibrate`
 returns cross-conformal (out-of-fold) probabilities and is what the pipeline uses by default.
 """

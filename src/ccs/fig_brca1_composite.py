@@ -43,7 +43,7 @@ from scipy.stats import spearmanr, rankdata
 import figstyle as fs
 from figtext import restore_text_layer
 
-# The shared Genome Biology house style. Imported the same way as figtext: relative when this file
+# The shared house style. Imported the same way as figtext: relative when this file
 # runs as part of the package, flat when src/ccs is on sys.path directly. figstyle updates rcParams
 # at import time, so SG.rc() is applied AFTER it and wins -- this figure takes its whole type scale,
 # its canvas and its ink from the contract, and a change there reaches it without an edit here.
@@ -211,7 +211,7 @@ def main():
     auroc_pt = _auroc(vislof, vscore); alo, ahi = boot_auroc(vscore, vislof, vsite)
     n_lof = int(vislof.sum()); n_neg = len(vislof) - n_lof
 
-    # The site-clustered interval quoted in the Results and in this figure's
+    # The site-clustered interval quoted in the Analyses and in this figure's
     # legend is computed here; compiled_results.parquet carries only the variant-level
     # [0.862, 0.886], not the site-clustered [0.858, 0.889]. This
     # builder needs data/, so the interval travels as its own small artifact.
@@ -237,7 +237,7 @@ def main():
     rmap = {int(r): (float(md), float(e)) for r, md, e in zip(res, mdel, ev)}   # residue -> (measured, predicted)
 
     INK_ = SG.INK
-    # SG.H_MM_MAX. Genome Biology's 225 mm cap is for FIGURE PLUS LEGEND, and this
+    # SG.H_MM_MAX. The 225 mm cap is for FIGURE PLUS LEGEND, and this
     # legend is long, so the graphic has to stop short of it: the prose blocks are in the legend,
     # and panel a's three stacked tracks are no taller than the type in them needs.
     H_PT = SG.H_MM_MAX * 72.0 / 25.4
@@ -339,7 +339,7 @@ def main():
     # re-tuned by hand whenever the canvas height changes.
     pD, pS, pH = axD.get_position(), axSg.get_position(), axH.get_position()
     KX, KX2 = 0.905, 0.918          # swatch column, label column
-    # 0.44 -> 0.36 of the quilt height. The bar is pinned to the quilt's foot and grows upward,
+    # 0.36 of the quilt height. The bar is pinned to the quilt's foot and grows upward,
     # so on the shorter 173 mm canvas its top tick ("0.010") rose into the SGE key's last row
     # ("LOF"), which is pinned to a different axes. Both live in the same 17 mm margin column;
     # the bar is the one with slack, since its job is a ramp and not a scale to read values off.
@@ -356,7 +356,7 @@ def main():
                  linespacing=1.30)
     # Explicit ticks and explicit labels. Shortening the bar to clear the SGE key handed the
     # locator a 34 pt run and it dropped to "0.00"/"0.01" -- two decimals on a scale whose real
-    # maximum is 0.01486, which reads as if the ramp topped out at one hundredth. Two ticks, not
+    # maximum is 0.01486, which reads as if the ramp topped out at one hundredth. (flag-only: no new text; lines 359-362 describe two ticks and 'a ramp keyed at its ends', but line 363 sets three ticks, cb.set_ticks([0.000, 0.001, 0.010]), labelled the same at line 364. A correct fix spans lines 359-362.)
     # the three the 195 mm plate carried: this norm is not linear, so 0.005 and 0.010 sit 7.4 pt
     # apart at this length and their labels overlap. A ramp keyed at its ends is the honest form
     # here -- the panel asks the reader to compare cells, not to read values off the bar.
@@ -498,7 +498,7 @@ def main():
     plt.rcParams.update({"mathtext.fontset": "custom", "mathtext.default": "regular",
                          "mathtext.rm": "Arial", "mathtext.it": "Arial:italic",
                          "mathtext.bf": "Arial:bold"})
-    pstr = f"{p_all / 10.0 ** pe:.0f} $\\times$ 10$^{{{pe}}}$"   # 7 x 10^-24, as AF1 Note S60
+    pstr = f"{p_all / 10.0 ** pe:.0f} $\\times$ 10$^{{{pe}}}$"   # 7 x 10^-24, as AF1 Note S43
     axV.legend(handles=[Line2D([0], [0], marker=DOM_MARK[0], color="none", markerfacecolor=RING_C, markersize=6.5, label="RING"),
                         Line2D([0], [0], marker=DOM_MARK[1], color="none", markerfacecolor=BRCT_C, markersize=6.5, label="BRCT"),
                         # "linker", without "(n = 11)": the count ran the row out of the marker-free
@@ -523,7 +523,7 @@ def main():
              va="bottom", ha="left")
 
     # ---- panel c's statistics, off the data and onto empty canvas ----
-    # Genome Biology wants the key in the graphic, so every number stays on the page, beneath the
+    # The key belongs in the graphic, so every number stays on the page, beneath the
     # scatter rather than on it. A card at the top-left of the scatter (alpha
     # 0.72) would cover the four most deleterious residues in the study — 1837 among them, the very
     # point the "max Evo 2" leader points at — and make the panel appear to top out at 0.0098

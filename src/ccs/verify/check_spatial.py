@@ -3,7 +3,7 @@ a positive, their windows overlap and Evo2/phyloP signal could bleed across, inf
 negative is within the window span of a positive, and that AUROC is unchanged after removing negatives
 that are 'close' (<50 kb) to any positive.
 
-NOTE: this script was written against an exploratory evo2+phylop ensemble (out-of-fold AUROC ~0.97) that is NOT a result in the manuscript, which reports Evo 2 alone. Run it via `src/ccs/verify/run_controls.py`, which records the panel-level composition and spatial controls that bear on the paper (deposited in reports/verify_controls.json) and labels the ensemble numbers as provenance.
+NOTE: this script scores an exploratory evo2+phylop ensemble (out-of-fold AUROC ~0.97) that is NOT a result in the manuscript, which reports Evo 2 alone. Run it via `src/ccs/verify/run_controls.py`, which records the panel-level composition and spatial controls that bear on the paper (deposited in reports/verify_controls.json) and labels the ensemble numbers as provenance.
 """
 import os
 import numpy as np, polars as pl
@@ -13,7 +13,7 @@ from sklearn.metrics import roc_auc_score
 import sys
 
 # A referee on a cp437 console or with LC_ALL=C otherwise gets a traceback and a nonzero
-# exit from a run that succeeded; build_tables.py even wrote its outputs first.
+# exit from a run that succeeded.
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 

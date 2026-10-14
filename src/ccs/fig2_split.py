@@ -72,14 +72,14 @@ def _letter(fig, ax, letter, x=None, pad_pt=4.5):
 
 
 def build_supplement(N):
-    """The supplementary plate (Additional file 1, Figure S7): the measurement plate's former
-    panels c and d, unchanged in content.
+    """The supplementary plate (Additional file 1, Figure S7): fig2_measure's
+    panels c and d.
 
       a  discrimination against divergence (fig2_measure.panel_c), with the pooled interval and the
-         Spearman test that panel carried in a note above it;
+         pooled value printed in a note above it;
       b  the GERP plane with its paired per-species strip (fig2_measure.panel_d).
 
-    Same house style and the same _save guard as the two main plates. The panels are larger here
+    Set in the supplementary house style (style_gb), saved through the _save guard below.
     than they were as a third and a fourth panel; every string they print is the one they printed
     there. Two placements changed, both on panel a (see panel_c): the row of group names under its
     tick labels, which collided with them by 1.47 pt on the measurement plate, now clears them, and
@@ -92,7 +92,7 @@ def build_supplement(N):
     axB1 = fig.add_axes([0.115, 0.305, 0.440, 0.255])
     axB2 = fig.add_axes([0.720, 0.305, 0.200, 0.255])
     _pool, _dist, _k = MEAS.panel_c(axA)
-    # A species key for panel a. On the measurement plate its colours were named by the species
+    # A species key for panel a. (delete; also delete 'strip of the panel beside it; on a plate of its own the panel needs its own key.' at the start of line 96, keeping 'Entries run')
     # strip of the panel beside it; on a plate of its own the panel needs its own key. Entries run
     # down the columns in the tree order (fig2_style.LEAF_ORDER) of panel b's strip and of every other
     # species plate. Words in ink, colour on the markers only.
@@ -135,13 +135,13 @@ def _save(fig, stem):
     pdf = f"reports/figures/{stem}.pdf"
     # A guard rather than a fix. Haloed text renders as vector outlines and drops out
     # of the PDF text layer, so every haloed string needs a transparent extractable twin.
-    # House style sets no path effect on text in either figure, so this adds nothing
+    # House style sets no path effect on text in this figure, so this adds nothing
     # -- and it will go on adding nothing unless a halo is introduced.
     restore_text_layer(fig)
     # GB: figures are "closely cropped to minimise the amount of white space surrounding the
     # illustration". Crop the PAGE at the save, to the drawn extent plus 3 mm, and only ever
     # upward from the BOTTOM edge: the width stays the declared 170 mm, the top edge does not
-    # move, and no artist is re-placed. This is NOT the H_MM change FIGURES.md warns about --
+    # move, and no artist is re-placed:
     # nothing authored in millimetres from the top is touched. A plate already tighter than
     # 3 mm keeps its own margin (the clamp at 0).
     _y0 = min(max(0.0, fig.get_tightbbox(fig.canvas.get_renderer()).y0 - 3.0 * MM),
@@ -172,7 +172,7 @@ def _save(fig, stem):
 
 
 def main():
-    # The shared contract, applied before anything is drawn: Arial first (both figures went out as
+    # The shared contract, applied before anything is drawn: Arial first (the plate is set in
     # ArialMT and must stay there), type 42 embedding, the one type scale, the neutral ink.
     plt.rcParams.update(SG.rc())
     _save(build_supplement(None), "FigureS7_measurement_supp")

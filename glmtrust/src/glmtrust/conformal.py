@@ -10,7 +10,7 @@ binary call the set is one of:
   {}                    neither label conforms -- an outlier; also treated as abstain
 
 :class:`MondrianConformal` computes a separate threshold per class, so the coverage guarantee (valid under exchangeability of calibration and test data)
-targets coverage *within each class* -- the property that matters when the classes are as imbalanced as positive and
+targets coverage *within each class* -- the property that matters when the classes are as imbalanced as deleterious and
 benign variants, and the reason a single marginal threshold (:class:`SplitConformal`) can silently
 under-cover the rare class. The method is standard; the class-conditional form is the one the paper
 argues for.

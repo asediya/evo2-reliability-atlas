@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""Is the species arm exposed to the same between-gene artefact that retracted the human comparison?
+"""Is the species arm exposed to the same between-gene artefact as the human comparison?
 
 The human defect had a specific shape: ClinVar puts pathogenic AND benign variants in the SAME
 disease genes, so which genes a scorer covers determines which variants it sees, and pooling across
 genes let coverage masquerade as skill. Holding gene fixed flipped the sign.
 
-The species panels are built differently. Positives are OMIA causal variants -- 879 across 474
+The species panels are built differently. Positives are OMIA catalogued alleles -- 879 across 474
 genes, median one per gene -- and negatives are trinucleotide-matched population variants sampled
 genome-wide. If the two classes barely share genes, then there is no within-gene comparison to make,
 and the human artefact cannot arise in the same form. That is not automatically reassuring: it means

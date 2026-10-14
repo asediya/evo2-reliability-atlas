@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Evo 2 minus GERP under must-answer accounting, with a confidence interval, per species.
 
-WHAT IS MISSING FROM THE PUBLISHED ARTIFACT. reports/fig5_reach.json carries GERP's own must-answer
+WHAT THIS ADDS. reports/fig5_reach.json carries GERP's own must-answer
 penalty with an interval (`must_call_penalty`, `penalty_ci`) and both methods' point accuracies
 (`auroc_gerp_full_abstain`, `auroc_evo2_full`), but nothing on the DIFFERENCE between them. So the
 comparison the reach argument actually rests on -- when both methods must answer for every variant

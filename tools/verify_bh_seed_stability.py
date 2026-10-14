@@ -2,8 +2,8 @@
 """Does the manuscript's published count move with the seed, once BH correction is applied?
 
 The uncorrected check found chicken significant in 8 of 40 seeds. But the manuscript does not report
-uncorrected intervals: it says Evo 2 beat conservation "with Benjamini-Hochberg significance in two
-of nine". BH across nine species is strictly more conservative than a raw interval, so the question
+uncorrected intervals: Note S43 of Additional file 1 says Evo 2 "leads significantly in 2
+of 9 species (goat, cattle)". BH across nine species is strictly more conservative than a raw interval, so the question
 is not whether chicken's raw interval wobbles -- it does -- but whether the PUBLISHED COUNT does.
 
 Per seed: a two-sided bootstrap p-value per species from the sign of the draws, BH across the nine,
@@ -42,7 +42,7 @@ def _seed_job(seed):
     for sp, (y, gb, eb) in _D.items():
         ip, ineg = np.flatnonzero(y == 1), np.flatnonzero(y == 0)
         # Python's hash() is randomised per process unless PYTHONHASHSEED is fixed, so the
-        # per-species stream was not reproducible across runs. A stable digest of the species
+        # per-species stream would not be reproducible across runs. A stable digest of the species
         # name makes this check bit-reproducible without changing what it tests.
         _sp_key = int(hashlib.sha256(sp.encode("utf-8")).hexdigest()[:8], 16)
         rng = np.random.default_rng(seed * 1000 + _sp_key % 997)
@@ -93,8 +93,8 @@ if __name__ == "__main__":
     print("  published count '2 of 9' is %s"
           % ("STABLE across every seed" if ok else "NOT stable -- it varies with the seed"))
     # A gate must be able to fail, so the verdict sets the exit code. "2 of 9" is a live
-    # published claim (Additional file 1: "Evo 2 beat GERP with Benjamini-Hochberg significance in
-    # two of nine (goat +0.173, cattle +0.075)"), so a count that moves with the seed, or that
+    # published claim (Additional file 1, Note S43: "Evo 2 leads significantly in 2 of 9 species
+    # (goat, cattle)"), so a count that moves with the seed, or that
     # settles anywhere but 2, contradicts the paper.
     if not ok:
         print("  *** FAIL *** the published count is not reproduced at every seed.")

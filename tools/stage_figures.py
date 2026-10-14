@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""Rebuild every submitted figure and stage it into reports/submission/.
+"""Rebuild the submitted figures this archive builds and stage them into reports/submission/.
 
-WHY THIS FILE EXISTS. finalize_submission.sh regenerates the manuscript, the supplement and the
+WHY THIS FILE EXISTS. finalize_submission.sh (not deposited) regenerates the manuscript, the supplement and the
 code deposit, but not the figures: builders write to reports/figures/ and the deliverables are read
 from reports/submission/. Without this file a rebuilt figure reaches the
 submission only if someone remembers to copy it, and the export step snapshots whatever is in
@@ -40,7 +40,7 @@ SUB = os.path.join(ROOT, os.environ.get("CCS_SUBMISSION_OUT", os.path.join("repo
 # The mapping is established three independent ways, because a filename proves nothing here:
 #   * by digest, against the upload;
 #   * by the recompute layer each builder reads (eqtl_* -> S2, selection_evo2_40b -> S3,
-#     fig4_reconciliation -> S4, splice.json -> Figure 8), per FIGURES.md;
+#     fig4_reconciliation -> S4), per FIGURES.md;
 #   * against Additional file 1 Note S58, whose set of figures that need the undeposited data/
 #     tree -- Figures S3, S5 and S6 -- matches FIGURES.md.
 #
@@ -128,11 +128,11 @@ def main():
             bad += 1
         rows.append((shipped, w, h, fits, older))
         print("  %-32s %6.1f x %6.1f mm  %s%s"
-              % (shipped, w, h, "within envelope" if fits else "** EXCEEDS 170 x 225 **",
+              % (shipped, w, h, "within envelope" if fits else "** EXCEEDS 170.5 x 173.5 **",
                  "   (was stale)" if older else ""))
 
     # Files in reports/submission/ carrying a BUILDER name rather than a shipped name are leftovers
-    # from before this mapping existed. They
+    # of staging done without this mapping. They
     # matter because they COLLIDE BY NUMBER with live figures (Figure3_blindspot is Additional file 1's
     # Figure S2, not Figure 3) and because the export step snapshots whatever is in this directory,
     # so one could be shipped with no gate objecting. Reported, never deleted here: a script should
@@ -142,7 +142,7 @@ def main():
     orphans = sorted(n for n in os.listdir(SUB)
                      if n in builder_names and n not in shipped_names)
     if orphans:
-        print("\n  %d ORPHAN(S) in reports/submission/ carry a builder name, not a shipped name:"
+        print("\n  %d ORPHAN(S) in the staging directory carry a builder name, not a shipped name:"
               % len(orphans))
         for n in orphans:
             print("    %-28s collides by number with a live figure -- delete it" % n)
@@ -150,12 +150,12 @@ def main():
     if a.check:
         print("\n%d of %d shipped figures are behind their builder" % (stale, len(FIGURES)))
         sys.exit(1 if (stale or bad or orphans) else 0)
-    # Print the directory actually written. The literal path here said reports/submission/ while the
-    # env var sent the files elsewhere, which is exactly the kind of line that makes a reader certify
+    # Print the directory actually written. CCS_SUBMISSION_OUT can send the files away from
+    # reports/submission/, and a literal path here would let a reader certify
     # the wrong version.
     print("\nstaged %d figure(s) into %s" % (stale, os.path.relpath(SUB, ROOT).replace("\\", "/")))
     if bad:
-        sys.exit("%d figure(s) missing or outside the Genome Biology envelope" % bad)
+        sys.exit("%d figure(s) missing or outside the figure envelope" % bad)
 
 
 if __name__ == "__main__":

@@ -14,7 +14,7 @@ from scipy.stats import chi2_contingency, mannwhitneyu
 import sys
 
 # A referee on a cp437 console or with LC_ALL=C otherwise gets a traceback and a nonzero
-# exit from a run that succeeded; build_tables.py even wrote its outputs first.
+# exit from a run that succeeded.
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
@@ -45,5 +45,5 @@ print(f"GC mean pos={gc[y==1].mean():.3f} neg={gc[y==0].mean():.3f}")
 # TWO-SIDED verdict: an AUROC of 0.25 is as far from the matched
 # value of 0.5 as 0.75 is, so a one-sided `< 0.60` test cannot detect an inverse composition signal.
 # NB: this script runs on the small verify_table.parquet subset where the trinuc one-hot overfits;
-# the panel-wide control is src/ccs/verify/atlas_controls.py (per-species, on the full 11,130 atlas).
+# the panel-wide control is src/ccs/verify/atlas_controls.py (per-species, on the full 11,130-variant atlas).
 print("VERDICT_HINT:", "matched (composition uninformative)" if abs(comp_auc - 0.5) < 0.10 else "COMPOSITION SIGNAL — |AUROC-0.5| >= 0.10 (matched value is 0.5)")

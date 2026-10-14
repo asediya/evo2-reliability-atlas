@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """INDEPENDENT verification gate: re-derive every headline from raw data and assert.
 
-WHY THIS EXISTS. The project's two other gates cannot catch a wrong number:
+WHY THIS EXISTS. Two of the project's other gates cannot catch a wrong number:
 
   * repro_runner.py + compare_repro.py prove the pipeline is DETERMINISTIC. They re-run the
     deposited scripts and diff the output. A script that computes the wrong thing reproduces its
@@ -267,7 +267,7 @@ def sec_eqtl():
         RESULTS.append((False, "eqtl", "ORIENTATION: deposited value matches the FLIPPED score",
                         a, want, "raw"))
 
-    # within-eGene rank-percentile null, over eGenes with both a causal and a non-causal variant
+    # within-eGene rank-percentile null, over eGenes with both a candidate causal and a non-causal variant
     kept, chance, base = 0, [], []
     for _, g in d.group_by("gene_id"):
         lab = g["label"].to_numpy()
@@ -292,7 +292,7 @@ def sec_reach():
         gv = g["gerp"].to_numpy().astype(float)
         fin = np.isfinite(gv)                       # NaN, not null -- see module docstring
         d = dep[sp]
-        check("reach", "%s reach pathogenic" % sp, fin[y == 1].mean(), d["reach_pos"])
+        check("reach", "%s reach catalogued" % sp, fin[y == 1].mean(), d["reach_pos"])
         check("reach", "%s reach population" % sp, fin[y == 0].mean(), d["reach_neg"])
         check("reach", "%s GERP AUROC where scoreable" % sp,
               auroc(y[fin], gv[fin]), d["auroc_gerp_covered"], tol=0.003)
@@ -378,15 +378,15 @@ def sec_human():
     check("human", "dbNSFP panel n_pos", npos, 166149, tol=0)
     check("human", "dbNSFP panel n_neg", nneg, 162179, tol=0)
     # The dbNSFP panel is NOT the missense panel. dbNSFP annotates nonsynonymous and splice-site
-    # substitutions, and only 62% of these variants are missense. The manuscript called all 328,328
-    # "missense" in three places, which overstated how much scope penalty the restriction removes
-    # and put a different n on the pairwise sweep than the sweep actually used.
+    # substitutions, and only 62% of these variants are missense; calling all 328,328
+    # "missense" would overstate how much scope penalty the restriction removes
+    # and put a different n on the pairwise sweep than the sweep uses.
     n_mis = int((d["consequence"] == "missense_variant").sum())
     check("human", "dbNSFP panel missense subset", n_mis, 202643, tol=0)
     check("human", "panel is not all missense", 1.0 if n_mis < len(d) else 0.0, 1.0, tol=0)
     # Variants with no gene symbol are pooled into one bootstrap cluster rather than dropped, so the
     # gene count includes that cluster. Counting only named genes gives a different number.
-    check("human", "missense panel n_genes",
+    check("human", "dbNSFP panel n_genes",
           len(set(g if g else "?" for g in d["gene"].to_list())), 15606, tol=0)
 
     cols = {c[:-len("_rankscore")]: c for c in d.columns if c.endswith("_rankscore")}
@@ -437,9 +437,9 @@ def sec_human():
         # two n's differ by 38% and quoting the wrong one is an easy error.
         check("human", "pairwise sweep n_variants", pw["_meta"]["n_variants"], 202643, tol=0)
         check("human", "pairs compared", pw["summary"]["n_pairs"], 1176, tol=0)
-        # The AlphaMissense/REVEL exemplar. The ClinVar-panel figures
-        # (-0.0096 / +0.0124 / 3,156 genes) do not belong in a sentence declaring the dbNSFP panel,
-        # and they come from a working record that is not deposited, so a referee could not trace them.
+        # The AlphaMissense/REVEL exemplar.
+        # 
+        # 
         # Pinned to the deposited pair record, with the sign convention made explicit.
         pr = [q for q in pw["pairs"] if {q.get("a"), q.get("b")} == {"REVEL", "AlphaMissense"}]
         if pr:
@@ -465,10 +465,10 @@ def sec_human():
                 check("human", "REVEL missingness alone", s["miss_auroc"], 0.6116)
             if s["name"] == "cadd":
                 check("human", "CADD whole-panel reach", s["reach"], 0.9988, tol=0.0002)
-            # These two do not "return one for all of it and pay exactly zero":
-            # reach is 99.997% and the penalty is ~2e-5. That phrasing reads as
-            # rounding but is a statement about exactness, and the supplement's own table
-            # contradicts it. Pinned so the overstatement cannot appear.
+            # These two are near-complete, not complete:
+            # reach is 99.997% and the penalty is ~2e-5.
+            # 
+            # Pinned so neither reads as exact.
             if s["name"] in ("phylop", "phastcons"):
                 check("human", "%s reach is not 1.0" % s["name"], s["reach"], 0.99997, tol=1e-5)
                 check("human", "%s penalty under 2e-5" % s["name"],
@@ -508,11 +508,11 @@ def sec_human():
 
 
 def sec_table1():
-    """Table 1 as PRINTED, parsed out of the manuscript and checked against the recompute layer.
+    """Table 2 as PRINTED, parsed out of the manuscript and checked against the recompute layer.
 
-    Table 1 is hand-maintained markdown, not generated, so nothing tied its cells to the artifacts
-    until now. It gained an 8,192-bp AUROC column so the reader can reconcile it with the Abstract's
-    macro 0.943, which had no counterpart in the table while the table's own macro was 0.878.
+    Table 2 is hand-maintained markdown, not generated; this section ties its cells to the artifacts.
+    Its 8,192-bp AUROC column lets the reader reconcile it with the Abstract's
+    macro 0.943.
     """
     ms = "reports/manuscript.md"
     if not os.path.exists(ms):
@@ -579,12 +579,12 @@ def sec_table1():
 
 
 def sec_matched():
-    """Table 1's conservation-matched column, which had no artifact at all until now.
+    """Table 2's conservation-matched column.
 
-    build_conservation_matched.py wrote only logs/conservation_matched.md, so every value in that
-    column and the macro 0.834 the paper quotes sat outside the recompute layer and outside every
-    gate, while the paper states that all published numbers are regenerated by it. The script now
-    also emits reports/conservation_matched.json and this section pins it against the printed table.
+    build_conservation_matched.py writes logs/conservation_matched.md and
+    reports/conservation_matched.json; this section pins the JSON, with the macro 0.834 the paper
+    quotes, against the printed table.
+    
     """
     cm = jload("reports/conservation_matched.json")
     if not cm:
@@ -604,11 +604,11 @@ def sec_matched():
     check("matched", "OMIA-species conservation-matched, seven species", float(np.mean(omia)), 0.845,
           tol=0.0006)
     check("matched", "macro unmatched, same eight", cm["macro"]["auroc_all_neg"], 0.869, tol=0.0006)
-    # The manuscript quoted 0.035, which is the difference of the two ROUNDED means. The drop itself
-    # is 0.0344. Both are pinned so the distinction cannot be lost again.
+    # 0.035 is the difference of the two ROUNDED means; the drop itself
+    # is 0.0344. Both are pinned so they cannot be confused.
     check("matched", "drop as printed (0.034)", cm["macro"]["drop"], 0.034, tol=0.0006)
     check("matched", "drop of the rounded means", cm["macro"]["drop_of_rounded"], 0.035, tol=1e-9)
-    # replicate spread, quoted in Table 1's notes as 0.002 to 0.008
+    # replicate spread, quoted in Additional file 1 Note S13 as 0.002 to 0.008
     sds = [r["replicate_sd"] for r in cm["per_species"]]
     check("matched", "replicate sd lower bound", min(sds), 0.002, tol=0.0006)
     check("matched", "replicate sd upper bound", max(sds), 0.008, tol=0.0006)

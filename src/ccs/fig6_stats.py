@@ -1,6 +1,6 @@
-"""Figure 6 recompute layer — LABEL-FREE VALIDATION.
+"""Additional file 1 Figure S3 recompute layer — LABEL-FREE VALIDATION.
 
-Everything Figure 6 draws is computed here and written to reports/fig6_free.json. No float is typed by
+Everything Figure S3 takes from this module is computed here and written to reports/fig6_free.json. No float is typed by
 hand in the figure module. Same contract as fig5_stats.py, for the same reason: a hand-typed float lets a
 caption describe an estimator the code does not compute, or quote a number that exists nowhere
 in the data.
@@ -147,7 +147,7 @@ def selection_arm(rng, out):
             los.append(lo_); his.append(hi_); ns.append(n_)
         r_, p_ = spearmanr(m2[m], d2[m])
         # The CI on rho is what DECIDES the flat/surviving verdict, so it has to travel with the cell.
-        # Printing only the endpoint "drop" put the panel's numbers in contradiction with its own
+        # Printing only the endpoint "drop" would put the panel's numbers in contradiction with its own
         # colouring: q0 (called flat) has a LARGER drop than q1 (counted as surviving).
         cells.append({"key": spec["key"], "label": spec["label"], "n": int(m.sum()),
                       "median_del": med, "maf": xs, "p_above": ys, "lo": los, "hi": his, "n_bin": ns,
@@ -182,8 +182,8 @@ def decomposition_arm(rng, out):
 
     d = pl.read_parquet(ROOT / "data/processed/decomposition.parquet")
     # The deposited parquet has NINE rows but only EIGHT species: the ninth is a 'POOLED' summary row.
-    # Counting it as a species gives "9/9 species positive" and pulls the median -- and panel c drew it
-    # as a stick labelled POOLED sitting among the species. GOAT is absent from this arm entirely
+    # Counting it as a species gives "9/9 species positive" and pulls the median.
+    # GOAT is absent from the deposited parquet only
     # (the same 8-species restriction as the CNN arm in Fig 5d), which has to be disclosed, not implied.
     all_rows = d.to_dicts()
     rows = [r for r in all_rows if r["sp"] != "POOLED"]
@@ -311,7 +311,7 @@ def decomposition_arm(rng, out):
 
 
 def bat_arm(rng, out):
-    """Panel e: cross-clade replication ~65 My away.
+    """Panel d: cross-clade pilot ~65 My away.
 
     PROVENANCE WARNING carried into the JSON: this is PILOT-grade (10 Myotis lucifugus samples,
     AN <= 20, so the frequency axis is coarse). In a main figure the pilot status must be
@@ -337,7 +337,7 @@ def bat_arm(rng, out):
     # THE DOMAINS ARE DISJOINT, and this is the single most important caveat on the bat panel.
     # AN <= 20 puts a HARD FLOOR at MAF = 1/20 = 0.05: the bat panel contains no rare variants at all.
     # 60% of the cattle variants sit below that floor, and cattle's whole effect lives there -- inside
-    # the bat's own window cattle is a clean null. So panel e is NOT a replication of panel a on a
+    # the bat's own window cattle is a clean null. So panel d is NOT a replication of panel a on a
     # shared axis; the two frequency axes are not the same quantity (a bat allele seen once in 10
     # diploids is biologically rare but scores MAF 0.05, while a cattle variant at MAF 0.05 really is
     # at 5%). The figure must say this rather than print one rho beside the other.

@@ -1,4 +1,4 @@
-"""Proper conservation baseline: Evo2-40B vs GERP (+ phyloP) per species, on the IDENTICAL variant set,
+"""Proper conservation baseline: Evo2-40B vs GERP per species, on the IDENTICAL variant set,
 with paired bootstrap CIs on the AUROC difference: an interval-carrying Evo 2 versus conservation table rather
 than a bare win count, computed where both methods return a value. All data already on disk
 (data/processed/conservation/*_gerp.parquet); pure CPU.

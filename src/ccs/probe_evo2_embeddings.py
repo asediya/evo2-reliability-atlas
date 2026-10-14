@@ -1,7 +1,7 @@
 """Supervised probe on Evo2 embeddings — the strong mode for variant effect.
 Reads an embedding .npz (ref_emb, alt_emb) + a panel parquet (labels), builds features from the
 ref/alt hidden states, and evaluates a cross-validated logistic probe (honest within-species AUROC).
-Also supports cross-species transfer: --train a.npz,b.npz --test c.npz (train probe on some species,
+Also supports cross-species transfer: --train a.npz:a.parquet,b.npz:b.parquet --test c.npz:c.parquet (train probe on some species,
 test on a held-out species).
 
 Within-species CV:

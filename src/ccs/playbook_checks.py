@@ -1,4 +1,4 @@
-"""Two checks the GB presentation playbook says are mandatory BEFORE we claim anything:
+"""Two checks that are mandatory BEFORE we claim anything:
 
   1. MULTIPLE-COMPARISON CORRECTION on the nine Evo2-vs-GERP contrasts. We claim "Evo2 significantly beats
      GERP in 2/9". Nine contrasts, uncorrected. If Holm/BH kills goat (largest effect, smallest n=98), the

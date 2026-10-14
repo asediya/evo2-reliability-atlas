@@ -1,4 +1,4 @@
-"""A3 sensitivity: recompute the atlas with non-disease OMIA trait alleles removed.
+"""Sensitivity: recompute the atlas with non-disease OMIA trait alleles removed.
 
 No model inference. Reads Additional file 3's atlas table and its curated disease-or-trait class for every
 positive (tables/atlas_positive_annotations.parquet; set CCS_TABLES to the folder holding both, as for

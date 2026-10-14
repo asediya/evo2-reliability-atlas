@@ -1,8 +1,8 @@
-"""CP2 kickoff — multi-species OMIA scorable-SNV inventory.
+"""Multi-species OMIA scorable-SNV inventory.
 
 Parses the raw OMIA export (genomic-HGVS `g. or m.` column) into clean biallelic-SNV
 positives per species, WITHOUT needing any reference genome (ref/alt come straight from
-the HGVS substitution string). Produces the annex-vs-pool decision table CP2 hinges on:
+the HGVS substitution string). Produces the annex-vs-pool decision table:
 which species clear N>=30 scorable SNVs (worth a per-species conformal column) vs which
 get pooled into clade-level abstention endpoints.
 
@@ -23,7 +23,7 @@ RAW = ROOT / "data" / "raw" / "truth" / "omia_all_variants.csv"
 OUT_POS = ROOT / "data" / "interim" / "omia_multispecies_positives.parquet"
 OUT_SUMMARY = ROOT / "reports" / "omia_species_inventory.csv"
 
-# NCBI taxon + roadmap OMIA-density (dense core = the CP2 species ruler)
+# NCBI taxon IDs of the dense-core OMIA species
 CORE = {
     "dog": 9615, "cattle": 9913, "cat": 9685, "horse": 9796,
     "sheep": 9940, "pig": 9823, "chicken": 9031, "goat": 9925,
@@ -98,7 +98,7 @@ def main():
     print(f"scorable biallelic-SNV positives (all species): {tot_snv}")
     print(f"wrote {OUT_POS}")
     print(f"wrote {OUT_SUMMARY}\n")
-    print("== CORE veterinary species (CP2 ruler) ==")
+    print("== CORE veterinary species ==")
     core = per_species.filter(pl.col("core_species")).select(
         ["species", "taxon", "snv_positives", "annex_ok", "top_build", "n_builds"])
     with pl.Config(tbl_rows=20, fmt_str_lengths=40):

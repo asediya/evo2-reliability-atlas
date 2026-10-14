@@ -4,7 +4,7 @@ compute LD in R, run susie_rss -> per-variant PIP + credible-set id. Pool of wor
 
   micromamba run -p ~/micromamba/envs/ccs-bio python finemap_driver.py \
     --z-dir data/interim/finemap_z --pgen-dir data/interim/geno_pgen \
-    --susie-r src/ccs/susie_one.R --out data/processed/cattle_finemapped.parquet \
+    (flag-only: no new text; src/ccs/susie_one.R is not in Additional file 2) --out data/processed/cattle_finemapped.parquet \
     --tmpdir /tmp/fm --workers 48
 """
 import argparse, os, subprocess, glob

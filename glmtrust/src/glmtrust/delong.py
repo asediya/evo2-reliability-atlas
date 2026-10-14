@@ -232,8 +232,8 @@ def must_answer_delta_ci(labels, score_a, score_b, alpha: float = 0.05):
 def _norm_ppf(p: float) -> float:
     """Standard-normal quantile, Acklam's rational approximation refined by one Halley step.
 
-    Accurate to ~1e-15 over the range that matters here, and avoids a scipy dependency in a package
-    whose only hard requirement is numpy.
+    Accurate to ~1e-15 over the range that matters here, and keeps a scipy import out of this module,
+    which needs only numpy.
     """
     a = [-3.969683028665376e+01, 2.209460984245205e+02, -2.759285104469687e+02,
          1.383577518672690e+02, -3.066479806614716e+01, 2.506628277459239e+00]

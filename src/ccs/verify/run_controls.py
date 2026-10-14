@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """Run the five adversarial panel-level controls and deposit their output.
 
-It was noted that the five `check_*.py` scripts in this directory had no deposited
-output and were never reported, and the composition and spatial controls in particular
-needed to be run and reported. This runner executes all five against the current `verify_table.parquet`,
+
+
+This runner executes the five `check_*.py` scripts in this directory against the current `verify_table.parquet`,
 writes the raw stdout to `reports/verify_controls.txt`, and parses the headline numbers into
 `reports/verify_controls.json` so the manuscript can cite them.
 

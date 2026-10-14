@@ -228,8 +228,8 @@ def precision_operating_point(scores, labels, target_precision: float,
 def _labels01(labels, where):
     """Labels as 0/1, refusing every other encoding by name (see ``glmtrust._checks.as_labels``).
 
-    TrustLayer guards this at the front door; these lower-level helpers are public and did not, so
-    ``_labels01(labels, "selective")`` coerced silently. The SVM convention {-1, +1} is the dangerous one:
+    TrustLayer guards this at the front door; these lower-level helpers are public and guard it too.
+    The SVM convention {-1, +1} is the dangerous one:
     it does not raise, it changes the error count (23 becomes 196 on a 2,000-variant panel) and it
     reports a capture that looks plausible. An encoding this routine cannot interpret is a caller
     error, not something to guess at.

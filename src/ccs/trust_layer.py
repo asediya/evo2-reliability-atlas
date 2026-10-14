@@ -1,4 +1,4 @@
-"""The trust-layer (Checkpoint-1 novel core): calibrate a variant-effect score, then provide
+"""The trust layer: calibrate a variant-effect score, then provide
 RISK-CONTROLLED SELECTIVE PREDICTION — guarantee a target precision on the variants the model
 calls 'deleterious', and report how many true disease variants that recovers (recall).
 
@@ -6,7 +6,7 @@ For imbalanced deleterious detection (prevalence ~10%), raw accuracy is meaningl
 =90%). The meaningful guarantee for a vet is: "of the variants I flag, >=X% are truly deleterious."
 
 Outputs per scorer (Evo2, phyloP, ensemble):
-  - discrimination: AUROC, AUPRC (bootstrap CIs)
+  - discrimination: AUROC (bootstrap CI), AUPRC
   - calibration: Brier, ECE (isotonic cross-conformal)
   - risk-controlled operating points: at target precision {0.90,0.95}, achieved test precision + recall,
     selected via a binomial lower-confidence-bound (Clopper-Pearson) on a calibration split (RCPS-style),
@@ -143,7 +143,7 @@ def main():
 
     json.dump(results, open(os.path.join(a.out, "trust_results.json"), "w"), indent=2)
     print(f"\nwrote {a.out}/trust_results.json + PR curves")
-    print("\nREAD: at a GUARANTEED precision target, 'recall' = fraction of true cattle disease variants "
+    print("\nREAD: at a GUARANTEED precision target, 'recall' = fraction of true disease variants "
           "the trust-layer confidently recovers; the rest it abstains on. This is the vet-facing 'trust-meter'.")
 
 

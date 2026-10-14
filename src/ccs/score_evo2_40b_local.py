@@ -3,7 +3,7 @@ from 256GB CPU RAM -> GPU -> evict. Works because vortex's stateless_forward thr
 hidden tensor block->block (inference_params=None => no cross-block state), so blocks are evictable.
 
 Design (validated by reading vortex source):
- - Build StripedHyena with torch.cuda.is_available()==False so ALL blocks construct on CPU (no 80GB
+ - Build StripedHyena block by block on cuda:0, evicting each block to CPU as it is built (no 80GB
    GPU OOM at construction; model.py:686 branches on cuda availability).
  - Load 40B bf16 weights into RAM (fits 256GB; the process needs >=200GB of host memory).
  - Move only embedding + final norm + unembed (tiny: vocab 512 x 8192) to cuda:0.
@@ -108,9 +108,9 @@ def patch_streaming(sh):
 def score_col(model_name):
     """Column name for a checkpoint: evo2_1b_base -> 'evo2_1b_base_neg'.
 
-    The column carried the model in its name from the start, and it has to keep doing so now that
+    The column carries the model in its name because
     this scorer can run more than one checkpoint. A 1B file with a column called `evo2_40b_neg` is
-    the metric-key collision this repository already had to go and fix elsewhere: the file name says
+    a metric-key collision: the file name says
     one thing, the column says another, and whichever a reader joins on wins silently.
     """
     return "%s_neg" % model_name

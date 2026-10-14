@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """How much did taking MAX over REVEL's transcripts flatter REVEL?
 
-The two scorers were aggregated differently and the asymmetry was invisible in the code:
+The two scorers are aggregated differently:
 
   AlphaMissense_hg38.tsv.gz   one row per variant, the CANONICAL transcript only
   revel_with_transcript_ids   one row per (variant, transcript)
@@ -11,7 +11,7 @@ REVEL variants carry more than one transcript, with a mean max-minus-min spread 
 not a rounding-level choice.
 
 Recompute the missense comparison under max, mean and min over REVEL's transcripts. The spread
-across those three is the size of a decision nobody declared -- which is this project's own thesis,
+across those three is the size of the aggregation choice.
 turned on its own analysis.
 """
 import os
@@ -80,4 +80,4 @@ print("    must-answer delta  %+.4f to %+.4f   (range %.4f)" % (min(ma), max(ma)
 print()
 print("  For reference, the retracted headline quoted matched -0.0096 and must-answer -0.0357,")
 print("  both computed under 'max'. An undeclared aggregation choice moves them by the amounts")
-print("  above -- the same class of defect this project exists to document.")
+print("  above.")

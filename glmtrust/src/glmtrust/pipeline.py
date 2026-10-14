@@ -100,27 +100,27 @@ class TrustLayer:
     def _validate(scores, labels, where):
         """The input contract, shared by fit(), evaluate() and summary().
 
-        These checks lived in fit() alone, which left evaluate() -- the method the paper documents
-        -- unprotected: NaN scores through evaluate() raised the same scikit-learn message the
-        guards were written to replace. Two failure modes are new here and both were silent:
+        These checks cover evaluate() -- the method the paper documents
+        -- too, so NaN scores never reach the scikit-learn message the
+        guards replace. Two further checks catch failures that would otherwise be silent:
 
         Labels are checked for finiteness BEFORE the int cast. ``np.asarray([np.nan], int)`` is
-        platform-dependent and on most builds yields 0, so an unadjudicated variant became a benign
+        platform-dependent and on most builds yields 0, so an unadjudicated variant would become a benign
         one with nothing louder than a RuntimeWarning. An unadjudicated variant is a decision, not
         a benign call.
 
-        Labels are then checked to be 0/1. The SVM convention {-1, +1} passed silently and changed
-        12 of 21 reported fields, because -1 is a legal numpy column index: benign rows were read
-        out of the positive column, the Mondrian ``y == 0`` stratum was empty, and a fitted layer
-        could never call a variant positive. {0, 2} and {1, 2} already raised; only the negative
-        encodings got through.
+        Labels are then checked to be 0/1. Unchecked, the SVM convention {-1, +1} would pass silently and change
+        12 of 21 reported fields, because -1 is a legal numpy column index: benign rows would be read
+        out of the positive column, the Mondrian ``y == 0`` stratum would be empty, and a fitted layer
+        could never call a variant positive. {0, 2} and {1, 2} raise in any case; only the negative
+        encodings would pass.
         """
         scores = as_scores(scores, "scores")
         raw = np.asarray(labels).ravel() if not hasattr(labels, "mask") else labels
         # this package targets species with no curated labels of their own, where an
         # empty panel, a length mismatch, or a calibration slice carrying only one class is a
-        # plausible FIRST input. PlattCalibrator was hardened for the single-class case; the front
-        # door was not, so a reader hitting it met an opaque failure from inside the calibrator
+        # plausible FIRST input. PlattCalibrator handles the single-class case; without these checks the front
+        # door would show a reader an opaque failure from inside the calibrator
         # instead of a statement of what is wrong. Fail here, by name.
         if scores.size != np.size(raw):
             raise ValueError("scores and labels differ in length (%d vs %d)"
@@ -331,7 +331,7 @@ class TrustLayer:
             # The equal-WIDTH estimator collapses on a coarse posterior: unlabelled and printed
             # first, it would show 0.0041 where the paper
             # reports ECE around 0.05 -- twelvefold apart, smaller first -- so a reader quoting the tool
-            # would conclude the layer is a hundredth as miscalibrated as the paper says. The paper's
+            # would conclude the layer is a twelfth as miscalibrated as the paper says. The paper's
             # own rule is to name the estimator beside each figure rather than nominate one as
             # canonical, so both are named and the equal-mass one leads.
             "  calibration    : ECE equal-mass {eceq:.4f}, equal-width {ece:.4f}   Brier {br:.4f}\n"

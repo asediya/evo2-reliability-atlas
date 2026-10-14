@@ -56,4 +56,4 @@ for c in ["nonsense (stop-gain)", "splicing", "missense", "regulatory"]:
     tag = "" if n >= 15 else "  (underpowered)"
     if n >= 4:
         print(f"{c:24s}{n:5d}{r['evo2_neg']:8.3f}{r['phylop']:8.3f}{r['ensemble']:10.3f}{tag}")
-print(f"\n(class annotation coverage: {int((eff!=None).sum() - neg.sum())} of {int((lab==1).sum())} positives labeled)")
+print(f"\n(class annotation coverage: {int((eff!=None).sum() - neg.sum())} of {int((lab==1).sum())} positives labelled)")

@@ -1,5 +1,5 @@
 """Query GERP conservation at each variant from a single bigWig (local path OR remote URL).
-Ensembl 91-mammal GERP, per-species build. Chrom names are Ensembl-style ('1'..'18','X').
+Ensembl Compara GERP, per-species build. Chrom names are Ensembl-style ('1'..'18','X').
 
 Input: positions parquet [variant_id, chrom, pos]
 Output: gerp.parquet [variant_id, gerp]  (higher = more conserved/constrained)
