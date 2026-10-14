@@ -22,7 +22,7 @@ pdfcheck is that it builds from source and attributes every string to the axes i
 Run:  python -m src.ccs.check_overlaps [module | figure.pdf]      (default: fig4_trust)
 
 Five of the figure modules -- fig2_split, fig3_rebuild, fig_brca1_composite, fig7_atlas and
-fig8_readout -- write their PDFs and return None rather than a Figure. Pass such a PDF instead and it checks
+fig8_readout -- write their PDFs rather than return a Figure (fig8_readout has no main()). Pass such a PDF instead and it checks
 the page directly; the only thing lost is the ax0/ax1 attribution, which needs a live Figure.
 """
 import sys, os, importlib, itertools

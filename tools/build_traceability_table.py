@@ -48,9 +48,9 @@ _cache = {}
 def _relpath(p):
     """Repo-relative artifact path.
 
-    41 of the 211 rows recorded the author's local drive
+    41 of the 211 map rows record an absolute local path
     (F:/CalibratedCrossSpecies/reports/...) as the provenance path, so check_traceability could not
-    resolve them from a clean extraction of the deposit and reported two rows unresolvable. The
+    resolve from a clean extraction of the deposit. The
     reader gets a path they can open; the author's working directory is not provenance.
     """
     p = str(p).replace("\\", "/")
@@ -250,7 +250,7 @@ def match(want, dec, got, printed_text):
     The transform is RECORDED rather than applied silently, because "matched under magnitude" is a
     weaker statement than "matched" and a reader of the table is entitled to see which it was. A
     blanket abs() would also hide a genuine sign error, which is exactly the class of defect this
-    project has already shipped once.
+    check exists to catch.
     """
     tol = (10.0 ** -dec) * 0.75 if dec else 0.75
 

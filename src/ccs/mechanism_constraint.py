@@ -1,7 +1,7 @@
 """MECHANISM: is Evo2 a learned evolutionary-constraint detector -- and is that WHY it is blind to causal
 regulatory variants? Four tests, all on data in hand (no Evo2 compute, no embeddings):
 
-  A. Can CONSERVATION itself find causal eQTLs? GERP AUROC on causal(PIP>=.9) vs LD-matched control(PIP<=.001).
+  A. Can CONSERVATION itself find causal eQTLs? GERP AUROC on causal(PIP>=.9) vs within-eGene control (PIP<=.001).
      If GERP is also at chance -> no constraint-based method can solve this task.
   B. Are causal eQTLs conserved AT ALL? mean GERP causal vs control + Mann-Whitney.
   C. Is Evo2 a conservation proxy? Spearman(evo2, GERP) on coding (atlas) vs regulatory (eQTL).

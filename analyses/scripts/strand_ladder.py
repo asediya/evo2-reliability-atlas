@@ -4,7 +4,7 @@
 The published 1B and 7B strand numbers were measured on 389 variants in 1,002-bp windows and the
 40B run on 327 variants in 8,192-bp windows. Placed in a column those three points appear to show
 the inconsistency reversing at the deployed scale, but panel and window length move with capacity,
-so nothing is identified. This reads 1B and 7B scored on the identical 8,192-bp panel the 40B run
+so nothing is identified. This reads 1B (and 7B, where scored) on the identical 8,192-bp panel the 40B run
 used, so the ladder means what it appears to mean.
 
 One readout caveat, stated because it changes what is comparable. The window-sum scorer returns the

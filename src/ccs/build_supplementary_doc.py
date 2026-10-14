@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Assemble reports/gb_supplementary.md, Additional file 1, from its two generated halves.
+"""Assemble reports/gb_supplementary.md from its two generated halves; the submitted Additional file 1 is not built from it.
 
 build_supplementary.py mentions this script in its docstring, but it did not exist. The consequence
 was that reports/gb_supplementary.md, which the submission renderer turns into the

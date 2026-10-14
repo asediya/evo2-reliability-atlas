@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """Does the trust layer fail in human because of its LABELS, or because of its PREVALENCE?
 
-The paper says, in five places, that the layer "fails in human — the one
+One reading is that the layer "fails in human — the one
 species with adjudicated labels", implying the failure is about label quality. But human is also the
 only 1:1 panel; the other eight are 10:1. That single difference moves the calibrated probability,
 the position of the 0.5 threshold, the error composition and the ECE floor.
 
 The test is cheap: downsample human's negatives to a 10:1 ratio, matching the other panels, and
 recompute the layer's per-species behaviour. If human still fails, the label-adjudication reading is
-earned. If it does not, the sentence has to come out of four places.
+earned. If it does not, that reading is wrong.
 
 We resample the negatives many times rather than once, because a single draw of 90 negatives from
 1,500 would confound the answer with sampling noise.

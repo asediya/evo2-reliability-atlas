@@ -1,4 +1,4 @@
-"""Generate the supplementary tables for Additional file 1.
+"""Generate an internal supplementary table set, not the submitted Additional file 1 tables (reports/DATA_MANIFEST.md).
 
 Every table here is derived from the recompute JSONs, never typed by hand, for the same reason
 build_tables.py exists: a hand-maintained supplementary drifts from the analysis silently and
@@ -77,7 +77,7 @@ def main():
     # regenerating this file reproduces its bracketed markers exactly, wrong
     # numbers included, because the numbering is a separate step (a separate renumbering step, not deposited)
     # and this is its INPUT. So the header has to be emitted here; written into the output it is
-    # wiped by the next build, which is what happened to it once already.
+    # wiped by the next build.
     W("> **Citation scheme — read this before resolving any bracketed marker.** This file is a "
       "pre-renumbering **source**, not the reader-facing supplement. Its markers cite the 144-entry "
       "draft reference list; the submitted manuscript's list was trimmed and renumbered, so "
@@ -502,10 +502,10 @@ def main():
             W("GERP is the sole cross-species conservation baseline because it is the only per-base "
               "score available for all nine assemblies (Methods). For chicken (galGal6/GRCg6a UCSC "
               "phyloP77way) and human (hg38/GRCh38 UCSC phyloP100way), which carry a genuine UCSC "
-              # Not project-computed and not undocumented. conf/DATA_SOURCES.md records it as a
+              # Not project-computed and not undocumented: it is a
               # Zenodo download over a documented Cactus 241-way alignment, and query_phylop.py says
-              # so in its docstring. Claiming otherwise was a provenance falsehood in a paper whose
-              # subject is provenance. The real caveat is the different alignment, which stays.
+              # so in its docstring.
+              # The real caveat is the different alignment.
               "phyloP track, and cattle (bosTau9), whose phyloP comes from Zenodo record 13332541 "
               "(Roslin) over a Cactus 241-way alignment rather than from UCSC, so that row rests on "
               "a different alignment and species set from the two beside it, we recomputed "
@@ -536,7 +536,7 @@ def main():
               "chromosome coordinates were mapped through the UCSC chromAlias, and no positive variant was "
               "dropped for want of a coordinate in any species.")
 
-    # ---- Tables S25-S28: the controls added in response to the expert reviews ----------------
+    # ---- Tables S25-S28: further controls ----------------
     # Each is generated from its deposited JSON, like everything above it, so the supplement cannot
     # drift from the analysis.
 

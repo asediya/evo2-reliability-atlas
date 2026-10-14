@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """Regenerate reports/readout_effect_fullpanel.json — the readout effect on the full panel.
 
-WHY THIS FILE EXISTS. The artifact was committed by hand in 6a75e92 and no script produced it,
+WHY THIS FILE EXISTS. Without this script nothing would produce the artifact,
 so the paper's headline readout numbers (pooled 8,192-bp AUROC 0.973, species-mean effect +0.065)
-lived in a file that could not be regenerated. Figure 2's chip strip and Figure 3's chip strip
-both read it. That is the same failure mode 6a75e92 was fixing: the effect had gone stale at
-+0.071 precisely because nothing recomputed it when the panel grew from 3,506 to 11,109 variants.
+would live in a file that could not be regenerated. Figure 10 reads it.
+
+
 An un-regenerable artifact goes stale silently; a script does not.
 
 The values here reproduce the committed file exactly. Run:

@@ -1,4 +1,4 @@
-"""PDF-level gate: page size, min type, text-span collisions (zero tolerance), off-page text, fonts.
+"""PDF-level report: page size, min type, text-span collisions (enforced only with --gate PT), off-page text, fonts.
 Usage: python pdfcheck.py file.pdf [file2.pdf ...]   ;  --compare a.pdf b.pdf  diffs span text sets."""
 import sys, re, fitz, collections
 def spans(path):

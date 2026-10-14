@@ -7,7 +7,7 @@ rescaling of the mean and ranks variants identically: delta = alt - ref, negated
 means more disruptive.
 
 Both raw log-likelihoods are kept, not just their difference. The deposited scorer discards
-MLL(ref), which is why the reference-likelihood confound could never be tested from disk.
+MLL(ref), which is why the reference-likelihood confound cannot be tested from that scorer's output.
 
 FP8 requires each batch's token count to be divisible by 8, so the panel is padded to a whole number
 of batches with filler sequences that are never mapped back into the output.

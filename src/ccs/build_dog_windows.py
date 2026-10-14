@@ -48,7 +48,7 @@ def main():
             # records the build as verified. Swaps are detected, counted and dropped, and ref_ok records
             # the genuine result instead of a constant.
             #
-            # Effect on the deposited panel: at most one variant. build_atlas8192.py rejects
+            # Effect on the deposited panel: none; README.md says this lift-over route did not build it. build_atlas8192.py rejects
             # reference mismatches independently, and dog loses exactly one variant between the
             # 1,001-bp panel (2,497) and the 8,192-bp panel (2,496). The 8,192-bp arm, which carries
             # every headline number, cannot contain a swapped record at all.

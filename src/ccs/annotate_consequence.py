@@ -42,7 +42,7 @@ def main():
                        pl.col("Pathogenicity Classification").alias("patho")]).unique(subset=["omia_variant_id"])
 
     per_species = []
-    scored = []  # (species, variant_id, effect, patho, score)
+    scored = []  # (species, effect, patho, score)
     for sp in WIN:
         scf = f"data/processed/scores/{sp}_evo2_40b_local_scores.parquet"
         if not os.path.exists(scf):

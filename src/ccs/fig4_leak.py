@@ -234,7 +234,7 @@ def main():
     fig.text(0.085, 0.968, "The trust layer catches the errors you could afford",
              fontsize=TITLE, fontweight="bold", ha="left", va="top", color=INK)
     fig.text(0.085, 0.936,
-             _wrap(f"All {N:,} cross-species disease variants, flowing through the decision pipeline. "
+             _wrap(f"All {N:,} variants from nine species, flowing through the decision pipeline. "
                    f"Stream widths are counts; the particles inside them are the actual variants, placed "
                    f"by their measured log-odds.", 170, PANEL),
              fontsize=PANEL, color=MUTED, ha="left", va="top", style="italic", linespacing=1.35)

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-"""Per-species UNCALIBRATED expected calibration error -- the 'none' side of Table 1's ECE column.
+"""Per-species UNCALIBRATED expected calibration error -- the 'none' side of the transfer comparison.
 
-WHY THIS FILE EXISTS. Table 1 prints 'ECE none -> transfer' for all nine species.
+WHY THIS FILE EXISTS. Note S66 of Additional file 1 quotes the 'none' side as a species mean.
 The 'transfer' side sources cleanly to reports/fig4_reconciliation.json (ece_grid.width10.
 isotonic_LOSO). Without this file the 'none' side would appear in NO deposited artefact, with the
-estimator behind it defined nowhere in the paper, so half a main-text table column could not be checked
+estimator behind it defined nowhere in the paper, so the quoted value could not be checked
 against the deposit and would look regenerable only from the absent data/ tree.
 
 It is not. It regenerates from reports/_recon_pervariant_trust.parquet, which IS deposited:
@@ -60,7 +60,7 @@ def main():
                    "n_pos": int(y.sum())}
     payload = {
         "_meta": {
-            "what": "per-species ECE of the UNCALIBRATED score, the 'none' side of Table 1",
+            "what": "per-species ECE of the UNCALIBRATED score, the 'none' side of the transfer comparison",
             "estimator": "min-max scale the raw score to [0,1] per species, then equal-width "
                          "%d-bin ECE against the binary label" % BINS,
             "note": "min-max scaling is a monotone rescaling, not a calibration: it leaves AUROC "

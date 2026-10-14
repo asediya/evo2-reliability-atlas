@@ -35,7 +35,7 @@ Exact releases and assembly accessions are in the manuscript Methods and Data Av
 - **Label-free panels:** the cattle population allele-frequency panel and the pilot bat cohort VCF described in Methods.
 
 
-## Path inventory (176 distinct templates; `<var>` = a species, sample, model size, scorer or file stem)
+## Path inventory (175 distinct templates; `<var>` = a species, sample, model size, scorer or file stem)
 
 
 ### `analyses/data/` — Inputs of the analyses/scripts/ arms — splicing, ClinVar and strand-ladder scores and windows.
@@ -220,7 +220,6 @@ Exact releases and assembly accessions are in the manuscript Methods and Data Av
 - `data/raw/genomes/sheep/sheep.fa`
 - `data/raw/liftover/canFam3ToCanFam6.over.chain`
 - `data/raw/snpeff/build.config`
-- `data/raw/structures/*.pdb`
 - `data/raw/structures/brca1_AF.pdb`
 - `data/raw/structures/brca1_BRCT_1t29.pdb`
 - `data/raw/structures/brca1_BRCT_1t29_model1.pdb`

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Verify the fatal accusation: does the 3.7x must-answer claim survive holding gene fixed?
+"""Does the AlphaMissense-versus-REVEL must-answer difference survive holding gene fixed?
 
 The accusation is that AlphaMissense-vs-REVEL on missense is a gene-composition artefact -- that
 AlphaMissense's no-calls cluster in particular genes, and that once gene is held fixed the
@@ -15,9 +15,9 @@ Two things to check, and they are separate:
 
 Gene comes from ClinVar's GENEINFO INFO field, the first symbol of each record: parsed from the raw VCF
 when data/external/human_panel/clinvar.vcf.gz is present, otherwise read from Additional file 3's
-tables/clinvar_panel_geneinfo.parquet, which carries the same field from the same release for every panel
-variant at one star or more (set CLINVAR_GENEINFO to its path, or place it at the default below). The two
-give the same gene for every panel variant.
+tables/clinvar_panel_geneinfo.parquet, which carries the same field from a later ClinVar release and lacks 81 panel
+variants (see its README; set CLINVAR_GENEINFO to its path, or place it at the default below). The two
+sources are not interchangeable.
 """
 import gzip
 import os

@@ -8,7 +8,7 @@ among all the LD-correlated cis variants of an eGene, WHICH one is likely causal
   POSITIVES  = high-PIP fine-mapped causal eQTL variants (prob >= --pos-pip in any tissue)
   NEGATIVES  = tested-but-not-causal variants (prob <= --neg-pip) drawn from the SAME eGenes
                -> same promoter/enhancer landscape, so the test isolates "is THIS the causal base",
-                  not "is this near a gene" (a much harder, LD-controlled benchmark).
+                  not "is this near a gene" (a much harder benchmark).
 
 This is CPU-only (parse + label + SNV filter). It emits the [variant_id,chrom,pos,ref,alt,label,...]
 table; window extraction + ref-match is done by extract_windows_local.py against pig.fa (Sscrofa11.1),
@@ -99,7 +99,7 @@ def main():
     # is a single global uniform sample from the pooled low-PIP variants of every positive-carrying
     # gene, with no per-gene allocation, so the within-gene structure is a by-product of that draw
     # rather than a design. No LD control is implemented -- `absz` is computed above and never used
-    # for matching -- and the earlier "LD-controlled" comment here overstated what this does.
+    # for matching.
     pos_genes = pos1.select("gene_id").unique()
     neg_pool = (gv.join(pos_genes, on="gene_id", how="inner")
                 .filter(pl.col("pip") <= a.neg_pip)

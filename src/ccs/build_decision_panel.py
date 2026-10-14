@@ -6,8 +6,8 @@ NT weak ~0.58) we compare three deployment policies:
   A. raw score + naive 0.5 threshold        (no calibration, no abstention)
   B. calibrated prob + reject-option         (abstain when a call is expected-cost-worse than abstaining)
   C. calibrated prob + conformal {both}      (distribution-free abstention)
-Punchline: the WEAK backbone still reaches LOW expected cost precisely BECAUSE it abstains and refuses
-catastrophic false-benign calls. Calibration+abstention turns 'weak' into 'safe'. CPU-only.
+Question: does the WEAK backbone reach LOW expected cost precisely BECAUSE it abstains and refuses
+catastrophic false-benign calls? CPU-only.
   python src/ccs/build_decision_panel.py   -> logs/decision_panel.md
 """
 import json
@@ -164,12 +164,12 @@ def main():
 
     ev = summary.get("Evo2-40B"); nt = summary.get("NucleotideTransformer")
     lines += ["",
-              "**Trivial-baseline reality check (added in adversarial audit).** At the chosen cost matrix "
+              "**Trivial-baseline reality check.** At the chosen cost matrix "
               f"(C_FN={C_FN}, C_FP={C_FP}, C_AB={C_AB}) the always-abstain floor is exactly C_AB = {C_AB:.3f}. NO learned "
               "policy — for either backbone — beats it: the best calibrated cell (NT reject-option ~0.540, Evo2 conformal "
               "~0.540) sits ABOVE 0.500. NT's 'low' cost is an artifact of abstaining on ~97% of variants, i.e. it "
               "approaches the zero-information floor from above without reaching it. Under THIS cost matrix the honest "
-              "conclusion is the opposite of the original punchline: calibration+abstention does not add decision value — "
+              "conclusion is that calibration+abstention does not add decision value — "
               "blanket abstention dominates. Answering only wins once deferral is made expensive relative to errors "
               "(two-action Bayes break-even C_AB ~ 0.56 for Evo2, ~1.13 for NT) or the miss penalty is softened "
               "(e.g. C_FN=2, C_FP=1, C_AB=0.5: Evo2 two-action cost ~0.14, NT ~0.42 — both beat 0.500). Raising C_FN "
@@ -183,7 +183,7 @@ def main():
 
     os.makedirs("logs", exist_ok=True)
     open("logs/decision_panel.md", "w", encoding="utf-8").write("\n".join(lines) + "\n")
-    # logs/decision_panel.md is not part of the code deposit, so on its own nothing a reader
+    # logs/decision_panel.md is a Markdown log, so on its own nothing a gate
     # could open would carry this result. Deposit it as JSON too.
     os.makedirs("reports", exist_ok=True)
     with open("reports/decision_panel.json", "w", encoding="utf-8") as fh:

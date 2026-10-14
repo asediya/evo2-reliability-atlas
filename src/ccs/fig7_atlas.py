@@ -208,7 +208,7 @@ def load():
     got.update({k: f3(M[k][0]) for k in ("coding", "impact")})
     assert got == PUB_MACRO, (got, PUB_MACRO)
 
-    # fig2_measure.panel_composition's check, kept: the coding flag's first-term rule and the older
+    # fig2_measure.panel_composition's check: the coding flag's first-term rule and the
     # first-term-or-any-protein-altering-term rule agree variant for variant on this table.
     parts = d.consequence.astype("string").str.split("&")
     pa_terms = {"frameshift_variant", "stop_gained", "stop_lost", "start_lost", "missense_variant"}

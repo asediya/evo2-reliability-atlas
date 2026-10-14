@@ -31,7 +31,7 @@ from the atlas table and checked against it (identical per-species multisets); i
 atlas order, which matters only for tie-breaking and random splits (flagged where it applies).
 
 Scores: 1,001 bp is evo2_1001 as stored; 8,192 bp is the negative of evo2_meanll_8192; higher reads as more
-pathogenic.
+deleterious.
 
 Inputs, by path relative to the repository root:
   reports/fig4_pervariant.parquet          the 1,001-bp per-variant layer (Platt, LOSO)
@@ -327,7 +327,7 @@ def report_ii(label, r):
         print("  %-38s %9.4f %9.3f %9.4f%s" % (nm, r[k][0], r[k][1], r["macro"][k],
               "" if k == "abstain" else ("   beats T1: pooled %s, macro %s" % ("YES" if r[k][0] < r["abstain"][0] else "no",
                                                                                 "YES" if r["macro"][k] < r["macro"]["abstain"] else "no"))))
-    print("  policy A calls %.1f%% of variants pathogenic (per-species min-max of the raw score, 0.5 cut)" % (100 * r["A_called_P"]))
+    print("  policy A calls %.1f%% of variants positive (per-species min-max of the raw score, 0.5 cut)" % (100 * r["A_called_P"]))
     cp = np.array([c[0] for c in r["C_seed_sweep"]]); cm = np.array([c[1] for c in r["C_seed_sweep"]])
     print("  policy C over conformal split seeds 0-99: pooled median %.4f (range %.4f-%.4f; %d of 100 below 0.5); "
           "macro median %.4f (range %.4f-%.4f; %d of 100 below 0.5)"
@@ -579,7 +579,7 @@ def main():
           % (cw, "REPRODUCED" if cw < 1e-12 else "MISMATCH"))
     REPRO.append(("1,001-bp Mondrian conformal coverage and abstention = fig4_reconciliation.json (to 1e-12)", bool(cw < 1e-12)))
     c8, _, th8 = conformal(d8)
-    print("  set rule: {benign} if p <= q0, {pathogenic} if p >= 1 - q1. 1,001 bp: q0 %.4f, 1-q1 %.4f (overlap -> {both});"
+    print("  set rule: {negative} if p <= q0, {positive} if p >= 1 - q1. 1,001 bp: q0 %.4f, 1-q1 %.4f (overlap -> {both});"
           " 8,192 bp: q0 %.4f, 1-q1 %.4f (%s)" % (th1[0], th1[1], th8[0], th8[1],
                                                   "gap -> empty sets, no abstention" if th8[0] < th8[1] else "overlap"))
     print("  %-8s %-7s | %-42s | %-42s" % ("species", "role", "1,001 bp: cov / cov+ / abstain / empty", "8,192 bp: cov / cov+ / abstain / empty"))

@@ -9,10 +9,10 @@ belonging to the model whose lead is being claimed.
 
 It changes the answer in one species. Cat's subset estimate is 0.9015 against a GERP upper bound of
 0.9003, identified by 0.0012. Cat's full-panel estimate is 0.8901, which sits inside the bound. The
-published count of seven identified species becomes six, and cat joins pig and horse as unresolved.
+count falls from seven identified species to six, the count the paper quotes, and cat joins pig and horse as unresolved.
 
-The correction is small in magnitude and it goes against the paper, which is why it is deposited
-rather than described.
+The correction is small in magnitude and goes against Evo 2's lead; the paper quotes six, and the computation is deposited
+here.
 
     python analyses/scripts/manski_like_for_like.py
 """

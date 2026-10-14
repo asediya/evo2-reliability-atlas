@@ -1,6 +1,6 @@
 """Additional file 1's Figure S4 — THE TRUST LAYER. "The ordering transfers; the probability does not."
 
-Built only from reports/fig4_reconciliation.json + reports/fig4_pervariant.parquet
+Built only from reports/fig4_field.json, reports/_recon_pervariant_trust.parquet, reports/fig4_reconciliation.json + reports/fig4_pervariant.parquet
 (src/ccs/fig4_reconcile.py). No float is typed by hand in this module.
 
 WHY THIS FIGURE LOOKS THE WAY IT DOES
@@ -9,8 +9,8 @@ figure follows the reconciliation:
   * MACRO aggregation only. Pooled ECE is unstable (pooled width10 says transfer wins by 10x) because
     human (n=3,000, 50% prevalence) dominates eight species at ~9% and per-species errors cancel.
   * The verdict is a PAIRED bootstrap on delta-ECE, not a comparison of point estimates. Under macro,
-    all four estimators straddle zero -> "statistically indistinguishable" is the robust claim.
-  * The deposited "abstention halves error" was measured on IN-COHORT (oracle) posteriors
+    three of the four estimators straddle zero and equal-mass at 15 bins favours transfer, so the count is reported.
+  * The oracle arm of reports/risk_coverage.parquet is built on IN-COHORT posteriors
     (analyze_trust_layer.py:151). Panel c uses honest LOSO posteriors and a random control instead.
   * The per-variant hero uses the PLATT posterior (8,792 distinct confidences / 11,130 variants).
     Isotonic gives only 248, so a per-variant panel on isotonic would place >99% of marks by sort
@@ -165,7 +165,7 @@ def _mark(place, x_letter, y, letter, right=None, x_right=1.0, va="baseline"):
 def _plab_top(ax):
     """House style: a bold lower-case letter and nothing else.
 
-    The `text` argument is accepted and IGNORED -- see src/ccs/fig3_rebuild.py:_plab, the
+    _plab's `text` argument is accepted and IGNORED -- see src/ccs/fig3_rebuild.py:_letter, the
     worked example this follows. No panel carries a sentence-length heading in bold
     ("No robust gain over a pooled sigmoid", "Why it fails, and what it would cost to fix"):
     such a heading either repeats the legend's per-panel sentence or states the finding the
@@ -299,7 +299,7 @@ def panel_a(fig, gs_slice):
         # "highest local error ... BUT 82% of missed positives sit LEFT of it, out in
         # confidently-negative territory" would make two claims: it would name the band and then
         # argue with the reader about what the band means. The label names the band, with every
-        # number; the argument belongs to the legend and Additional file 1 Note S45.
+        # number; the argument belongs to the legend and Additional file 1 Note S59.
         # Grey, unbolded, and set in the strip's own headroom rather than haloed over the profile
         # curve, so the caption does not sit on the line it describes.
         axm.annotate(f"Band: logit {h0:+.1f} to {h1:+.1f} — {_rate:.0%} local error, "
@@ -349,7 +349,7 @@ def panel_a(fig, gs_slice):
         ax.add_patch(Rectangle((-t, i + 0.06), 2 * t, 0.88, fc="none", ec=BEDROCK, lw=0.55,
                                ls=(0, (2.4, 1.6)), zorder=6))
         # SHAPE AS WELL AS COLOUR. The two error classes are not two shades of one
-        # quantity: a missed positive is a pathogenic variant called benign and an over-call is the
+        # quantity: a missed positive is a positive called negative and an over-call is the
         # reverse, and which of the two a corridor catches is the panel's finding. Encoding that in
         # hue alone puts it beyond a greyscale print and beyond a deuteranope reader -- dark red and
         # orange are the classic pair to lose -- and both classes are drawn on a red field, so even
@@ -378,8 +378,8 @@ def panel_a(fig, gs_slice):
         # is comparable across rows.
         rmax = max(x["base_rate"] for x in RW)
         # The bar's KEY is emitted once, with the other two column headers, in the clear band above
-        # the panel -- see the header block below. A second key was drafted here on the top row and
-        # is not kept: the two overlapped by 62 pt^2, and one key per mark is the point.
+        # the panel -- see the header block below.
+        
         ax.barh(i + 0.50, 0.0675 * r["base_rate"] / rmax, left=-0.350, height=0.36,
                 transform=ax.get_yaxis_transform(), color=FAIL, alpha=0.85, lw=0, zorder=8,
                 clip_on=False)
@@ -430,7 +430,7 @@ def panel_a(fig, gs_slice):
             ha="left", va="center", fontsize=FOOT, color=MUTED, clip_on=False, zorder=9)
 
     # ---- reading guides. Every number quoted here is computed from the field, not typed. ----
-    # No white stroke behind the guide any more (style_gb: no path effects behind text). It sits in
+    # No white stroke behind the guide (style_gb: no path effects behind text). It sits in
     # the empty left third of the field, where nothing is drawn for it to fight with.
     lab_kw = dict(fontsize=FOOT, zorder=10)
     # The empty left third of the field (0.19% of variants sit left of logit -6.5) is the only place on
@@ -471,7 +471,7 @@ def panel_a(fig, gs_slice):
     del n_over, n_thin
     # The argument that refusal is not class-neutral ("731 of 893 errors are MISSED positives and
     # only 26% of those are caught, against 77% of the 162 harmless over-calls") belongs to the
-    # legend and Additional file 1 Note S45, not to the canvas in red bold. Its five
+    # legend and Additional file 1 Note S43, not to the canvas in red bold. Its five
     # numbers do not: they are the census of the dots this panel draws, so they stay as one plain
     # grey line that counts the marks rather than interpreting them.
     # The wrap width is DERIVED from the axes box so the block cannot reach past the grid's right
@@ -519,9 +519,9 @@ def panel_a(fig, gs_slice):
     y = y - _lh - _axfrac(ax, 1.0 / 72.0 * fig.dpi)
 
     for txt, kw in [
-        # Two decimals, not one: the deposited lift is 2.3542 and ".1f" printed it as "2.4×" inside
-        # the image while the legend and the Results both said 2.35×, so the figure disagreed with
-        # its own caption on the same page. The value is read from the artefact either way.
+        # No caption line is drawn under panel a.
+        
+        
     ]:
         y = _line(ax, y, txt, x=-0.310, width=_wmax, gap_pt=1.4, **kw)
 
@@ -582,9 +582,9 @@ def panel_b(ax):
     fig_ = ax.figure; fig_.canvas.draw()
     y_cap = (lgb.get_window_extent(fig_.canvas.get_renderer())
              .transformed(ax.transAxes.inverted()).y0) - 0.035
-    # Emitted last, wrapped to the panel's own width. COUNTED, not asserted: "all four straddle zero" holds
+    # Counted, not asserted, and not set on the canvas: "all four straddle zero" holds
     # only if ece_mass splits tied scores on row order. With ties binned by value, mass15 leaves
-    # the null and favours transfer -- state it rather than let a referee find it.
+    # the null and favours transfer; Notes S43 and S48 state the count.
     #
     # This line does not argue. A clause such as "... — 88% of the pooled mass favours transfer,
     # A COIN-FLIP RATHER THAN AN EFFECT" is the reading of the posteriors, not the posteriors.
@@ -598,7 +598,7 @@ def panel_b(ax):
     # bootstrap densities of one contrast. And spell the dissenter with the key's own label:
     # "mass15" is a raw dict key matching none of the four labels drawn in the key below the axes.
     dis = ", ".join(lab[k] for k in NR["dissenting"]) or "none"
-    _ = (n_ind, n_est, frac, dis)   # stated in the Results; not set on the canvas
+    _ = (n_ind, n_est, frac, dis)   # stated in Notes S43 and S48; not set on the canvas
 
 
 # ---------------------------------------------------------------- c. what abstention buys
@@ -687,8 +687,8 @@ def panel_dm(ax):
     First, a POOLED ECE misleads. Pooling nine species whose base rates run from 4 % to 30 % lets one
     species' over-confidence cancel another's under-confidence inside a shared reliability bin, so
     the transfer appears to cut calibration error tenfold. This module's own header rejects pooled
-    ECE for exactly that reason. The pooled gap is also three times the upper bound the Results
-    place on any advantage of the transfer, and printing it would contradict panel b, which plots
+    ECE for exactly that reason. The pooled gap is also three times the upper bound Note S66
+    places on any advantage of the transfer, and printing it would contradict panel b, which plots
     the paired macro delta-ECE entirely between -0.015 and +0.005.
 
     Second, the macro pair cannot be computed here in a form that agrees with the supplement.
@@ -798,7 +798,7 @@ def panel_e(ax):
     n_ok = int((p_mond >= 0.90).sum())
     # Counting all nine flatters the arm: six are the calibration species, where coverage at or
     # above nominal follows by construction and is not evidence of transfer. The out-of-sample
-    # evidence is the three held-out species, which is what Results reports, so lead with it.
+    # evidence is the three held-out species, which is what the Figure S4 legend reports, so lead with it.
     HELD_OUT = ("goat", "chicken", "pig")
     ho = [i for i, s_ in enumerate(sp) if s_.lower() in HELD_OUT]
     n_ho_ok = int((p_mond[ho] >= 0.90).sum())
@@ -831,8 +831,8 @@ def panel_e(ax):
     # under the lowest triangle of those columns.
     ax.text(len(xs) - 0.55, 0.150, "Class-conditional abstention", transform=ax.get_xaxis_transform(),
             fontsize=FOOT, color=CODING, ha="right", va="bottom", zorder=7)
-    # y=0.33, not 0.40: at 170 mm the rotated label's top reached into panel e's own letter chip --
-    # the same chip-eats-ylabel defect Fig 5 shipped once (memory figure-qa-tooling blind spot 4).
+    # y=0.33, not 0.40: at 0.40 the rotated label's top reaches panel e's own letter.
+    
     ax.set_ylabel("Positive-class coverage", fontsize=AXIS, y=0.33)
     # UPPER right, not lower. The per-species abstention rates added above are printed along the
     # bottom of this panel at y = 0.02, which is exactly where a lower-right legend sits: the
@@ -893,10 +893,10 @@ def main():
     _plab_row([(axb, "b"), (axc, "c")])   # "No robust gain over a pooled sigmoid" / "…but refusing does"
     _plab_row([(axdm, "d"), (axe, "e")])  # "Why it fails…" / "Nominal coverage is bought with silence"
 
-    # NO on-canvas title and NO subtitle (src/ccs/style_gb.py rule 1). The manuscript legend
+    # NO on-canvas title and NO subtitle (src/ccs/style_gb.py rule 1). The Additional file 1 legend
     # carries the title ("Flexible calibration shows no robust transfer gain; confidence has
-    # limited selective utility") and the cohort sentence ("Evo 2-40B zero-shot on 11,130
-    # cross-species disease variants..."), set by the typesetter in the journal's own face.
+    # limited utility") and the cohort sentence ("Evo 2-40B on 11,130 variants from nine
+    # species..."), set in Additional file 1's own face.
     os.makedirs("reports/figures", exist_ok=True)
     base = "reports/figures/Figure4_trust"
     # Nothing on this canvas carries a path effect (style_gb: no strokes behind text), so

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """Deposit the per-species selective-error floor (emin): reports/fig4_emin.json
 
-The Results quote a per-species error floor ("0.000-0.025 in eight species
-to 0.155 in human") whose only source was a value computed inside `build_abstention.py` and never
-written to a deposited artifact, so a reader could not check it.
+A per-species error floor ("0.000-0.025 in eight species
+to 0.155 in human") is computed inside `build_abstention.py`; this script writes it
+to a deposited artifact so a reader can check it.
 
 emin is the lowest selective error a species reaches at any coverage on the deployable
 leave-one-species-out arm: variants are ordered by confidence |2p - 1| on the transferred isotonic

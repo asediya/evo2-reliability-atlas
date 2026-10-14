@@ -14,7 +14,7 @@ constructions share the label "1,001 bp" and differ by one base.
 
     python tools/check_var_off.py
 
-Exit 0 when every panel is consistent, 1 otherwise.
+Exit 0 when every panel is consistent, 1 when one is not, and 3 when no panel is found.
 """
 import glob
 import os

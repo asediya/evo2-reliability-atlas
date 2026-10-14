@@ -9,8 +9,8 @@ exactly 1.00. In greyscale a maximally tolerated substitution and a maximally de
 the same grey, and the quilt carries no signal at all.
 
 The builder can simply be handed a different colormap. The four structure PNGs cannot: they were
-rendered from `data/raw/structures/*.pdb`, which is not in the deposit, so re-rendering needs a
-tree this machine does not have. Changing only the quilt would leave the panel disagreeing with
+rendered in 3Dmol from the models under `data/raw/structures/`, so re-rendering needs a
+browser render, not this script. Changing only the quilt would leave the panel disagreeing with
 itself, which is worse than either state.
 
 So the PNGs are re-mapped at the pixel level. This is sound here, and the measurement that says so

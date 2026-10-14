@@ -120,7 +120,7 @@ for win, rd, path, col, neg in [(8192, "mean-LL", "data/processed/scores_cloud/e
                                 (2048, "single-pos", "data/processed/scores/eqtl_abl_2048_sp.parquet", "evo2_40b_neg", False),
                                 (4096, "single-pos", "data/processed/scores/eqtl_abl_4096_sp.parquet", "evo2_40b_neg", False)]:
     if path.endswith("eqtl_evo2_40b.parquet"):
-        y, s = y2 * 0, None  # placeholder; use full-20k below
+        y, s = y2 * 0, None  # placeholder; restricted below to the 2,000 scored
         yy = pl.read_parquet(path); dd = lab2k.join(yy, on="variant_id", how="inner")
         Y = dd["label"].to_numpy(); S = dd[col].to_numpy()
     else:

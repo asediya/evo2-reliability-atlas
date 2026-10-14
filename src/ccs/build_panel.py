@@ -1,7 +1,7 @@
 """Build the Week-1 cattle variant panel from CattleGTEx QTLtools output.
 
 Positives: lead cis-eQTL of BH-FDR<thr significant eGenes (from *.permutations files, col11 beta perm-p).
-Negatives: gene- and TSS-distance-matched non-associated variants (from *.nominals, p>0.5).
+Negatives: cross-locus, TSS-distance-matched non-associated variants (from *.nominals, p>0.9).
 Provisional (permutation lead, not fine-mapped; MAF-matching deferred to the genotype stage).
 
 Output: labeled_variants.parquet [variant_id, chrom, pos, ref, alt, gene, tissue, label, dist, source_p]

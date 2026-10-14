@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """C2 — settle the phylogeny dispute by measuring, not asserting.
 
-The manuscript says twice that "nine tips cannot support a phylogenetic mixed model". The deep
-research disputes that and asks for intercept-only PGLS with an estimated Pagel's lambda. Rather
+Additional file 1 says that "nine tips will not support a phylogenetic mixed model". A reviewer
+could dispute that and ask for intercept-only PGLS with an estimated Pagel's lambda. Rather
 than argue, this asks the empirical question: **at nine tips with this tree shape, is lambda
 estimable at all?**
 
@@ -36,7 +36,7 @@ os.chdir(ROOT)
 OUT = "analyses/results"
 RNG = np.random.default_rng(20260804)
 
-# Clade membership as recorded in Table 1 of the paper.
+# Clade membership as recorded in deposit Table D1 (reports/tables.md).
 CLADE = {"human": "primate", "cat": "carnivore", "dog": "carnivore", "horse": "perissodactyl",
          "pig": "suid", "cattle": "ruminant", "sheep": "ruminant", "goat": "ruminant",
          "chicken": "bird"}
@@ -150,7 +150,7 @@ def main():
     res["median_separation_between_truth_0_and_1"] = float(np.median(seps))
     res["conclusion"] = (
         "Across every tree shape tried, the ML estimate of lambda piles up at the boundaries and "
-        "its 5-95%% range spans most of [0,1] whatever the truth. Nine tips with seven of them at "
+        "its 5-95% range spans most of [0,1] whatever the truth. Nine tips with seven of them at "
         "an identical divergence depth cannot identify lambda, so a PGLS standard error computed "
         "from an estimated lambda would be reporting the boundary the optimiser hit, not a "
         "property of the data. The manuscript's position is correct.")

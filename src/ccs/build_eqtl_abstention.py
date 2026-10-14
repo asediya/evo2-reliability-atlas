@@ -83,7 +83,7 @@ def main():
     causal = e.filter(pl.col("label") == 1).height; noncausal = e.filter(pl.col("label") == 0).height
 
     lines = ["# STEP 2 - does the trust layer flag its own REGULATORY blind spot?", "",
-             "The coding-trained conformal trust layer (isotonic + Mondrian quantiles, 9-species OMIA) applied "
+             "The coding-trained conformal trust layer (isotonic + Mondrian quantiles, six label-rich species) applied "
              f"UNCHANGED to {e.height} regulatory eQTL variants ({causal} causal / {noncausal} non-causal). "
              "Set membership depends only on the calibrated score, so this is label-independent and honest.", "",
              "| regime | n | singleton (confident) | abstain {both} | mean calibrated P | %P<0.10 | %0.10-0.50 | %P>0.50 |",

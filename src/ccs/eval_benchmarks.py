@@ -1,11 +1,11 @@
 """Evaluate a benchmark panel's scores against its labels (AUROC / AUPRC).
 
-For BRCA1 this reproduces the Evo2 paper's headline metric: the model's mean-LL delta is negative
+For BRCA1 this reproduces the metric of Evo 2's reference notebook: the model's mean-LL delta is negative
 for loss-of-function variants, so the deleteriousness score is -delta and
 
     AUROC = roc_auc_score(y, -delta)          # y = 1 for LOF
 
-The paper reports Evo2-1B AUROC = 0.73 over all 3893 SNVs; this script prints the achieved AUROC
+Evo 2's reference notebook prints Evo2-1B AUROC = 0.73 over all 3893 SNVs; this script prints the achieved AUROC
 next to that target so we can confirm our harness matches.
 
 The scores parquet must have a variant_id column plus one score column (auto-detected: the first
@@ -69,7 +69,7 @@ def main():
     print(f"  matched {n_join}/{n_panel} panel variants; evaluated n={n} "
           f"(pos={n_pos}, prevalence={n_pos / n:.3f})" if n else "  no scored variants")
     print(f"  orientation: AUROC = roc_auc_score(y, -{score_col})   (LOF => negative delta)")
-    print(f"  AUROC = {auroc:.4f}   (paper target for 1B = {target:.2f})")
+    print(f"  AUROC = {auroc:.4f}   (notebook target for 1B = {target:.2f})")
     print(f"  AUPRC = {auprc:.4f}")
     if not np.isnan(auroc):
         # a sanity guard: if the un-negated orientation scores much better, the sign is flipped

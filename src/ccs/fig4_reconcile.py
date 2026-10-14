@@ -4,15 +4,15 @@ WHY THIS EXISTS
 The deposited calibration numbers must survive contact with their own estimator and aggregation
 choices. Problems this script resolves:
   (1) The transfer-vs-trivial verdict FLIPS with (binning x aggregation): pooled equal-width says isotonic
-      transfer wins by ~10x; pooled equal-mass, macro equal-width and macro equal-mass all say the trivial
+      transfer wins by ~10x; pooled and macro equal-mass both say the trivial
       sigmoid wins. A headline a referee can invert by rebinning is not a headline.
-  (2) reports/COMPILED_RESULTS.md appears to MIX aggregations across rows of one table (its oracle/trivial
+  (2) reports/COMPILED_RESULTS.md (not deposited) appears to MIX aggregations across rows of one table (its oracle/trivial
       match pooled values while its isotonic matches a macro value).
   (3) Two different ECE estimators live in the codebase (10 equal-width bins in calibration_transfer.py,
       15 in analyze_trust_layer.py).
-  (4) reports/risk_coverage.parquet (the deposited "abstention halves error") is built at
+  (4) reports/risk_coverage.parquet's oracle_isotonic_in_species_5fold arm is built at
       analyze_trust_layer.py:151 by an IN-COHORT isotonic fit -- the same construction used for
-      oracle_isotonic -- so the headline positive was measured on posteriors the paper calls unattainable.
+      oracle_isotonic -- so that arm is an upper bound, not the transferred arm the paper reports.
   (5) The LOSO training pool is RICH species only (RICH_MIN=50): goat, chicken and pig are targets that
       never appear in any training pool, i.e. transfer was never tested where labels are scarcest.
 
@@ -70,7 +70,7 @@ def ece_width(p, y, bins=10):
 def ece_mass(p, y, bins=10):
     """Equal-mass ECE, binned BY VALUE so tied scores always land in the same bin.
 
-    The previous implementation was `np.array_split(np.argsort(p, kind="stable"), bins)`, which splits
+    An order-based split, `np.array_split(np.argsort(p, kind="stable"), bins)`, splits
     the sorted ORDER into equal counts. The isotonic LOSO posterior is a step function with only 16-40
     distinct values per species, so essentially every bin boundary fell inside a block of tied scores and
     membership was decided by parquet row order. Under 1,000 row permutations that moved a panel-d mark
@@ -300,13 +300,13 @@ def main():
     # ---- 5b2. PANEL d, recomputed so all three marks are ONE quantity ----
     # The deposited prevalence arm above (R["prior_shift"]) scores with build_prevalence_correction.wece(),
     # which bins on np.linspace(0,1,11) -- EQUAL-WIDTH -- and is called with unit weights, so it is exactly
-    # ece_width(p, y, 10). Panel d drew its grey/blue from that arm but its amber oracle from mass10, under
-    # an axis reading "equal-mass, 10 bins". Two estimators, one axis label, and the sign of
+    # ece_width(p, y, 10). Drawing panel d's grey/blue from that arm and its amber oracle from mass10, under
+    # an axis reading "equal-mass, 10 bins", would put two estimators under one label, and the sign of
     # (transferred - oracle) flips for goat and chicken depending which one you pick. Recompute all three
     # here from the same isotonic_LOSO posterior, and report BOTH estimators so the panel can show the
     # spread instead of hiding it.
-    # Second fix: that arm takes the target prior from float(y.mean()) of the EVALUATION labels, which is a
-    # one-parameter fit on the test set. The panels were constructed at a known ratio (10:1 benign:pathogenic
+    # That arm also takes the target prior from float(y.mean()) of the EVALUATION labels, which is a
+    # one-parameter fit on the test set. The panels were constructed at a known ratio (10:1 negative:positive
     # for the animals, balanced for human), so pi_t is a design constant and needs no labels at all.
     PI_DESIGN = {sp: (0.5 if sp == "human" else 1.0 / 11.0) for sp in post}
 
@@ -384,8 +384,8 @@ def main():
                                                     (v.max() - v.min()) < 2 * s.mean())
 
     # ---- 5c. EQUAL-EVIDENCE RISK STAIRCASE (panel a) ----
-    # The previous panel-a plotted x = within-species RANK (exactly i/(n-1)) and y = a sawtooth on array
-    # index: neither coordinate moved if the confidences moved. Here every coordinate is a measured order
+    # 
+    # Every coordinate is a measured order
     # statistic. The axis is the SIGNED logit, because folding to |2p-1| destroys a real directional failure
     # mode (animals err when calling pathogenic; human errs when calling benign).
     from scipy.stats import rankdata as _rank

@@ -76,7 +76,7 @@ def main():
         pl.when(pl.col("label").is_in(list(POS))).then(1)
           .when(pl.col("label").is_in(list(NEG))).then(0).otherwise(None).alias("y"))
     df = df.drop_nulls(subset=["y"])
-    # AUDIT FIX: sub-sample ~150k rows (do NOT run the full 1.6M). The null baselines below are only
+    # Sub-sample ~150k rows (do NOT run the full 1.6M). The null baselines below are only
     # honest in the SAME size regime; at ~150k, isotonic degenerates toward the base-rate constant.
     full_h = df.height
     if df.height > SAMPLE_N:

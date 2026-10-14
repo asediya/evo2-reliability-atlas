@@ -21,7 +21,7 @@ carry them, and none of them is data:
      tandem BRCT + BACH1 phosphopeptide"). The PDB accessions themselves stay on the canvas as
      the column subtitles; only the composition detail is in the legend.
 Two numeric values are therefore not on the canvas -- 0.73 (the 1B notebook AUROC) and 103 (the RING
-construct's last residue) -- and the legend text has to state both.
+construct's last residue) -- and the legend states 0.73 (Note S43) but not the construct bounds.
 """
 import sys, os
 import json

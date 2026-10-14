@@ -3,7 +3,7 @@
 Substitute millions of REAL deep-mutational-scan measurements for curated clinical labels. Score every
 single-mutant with ESM-2 (a frozen PROTEIN FM = cross-modality 3rd backbone) by fast wt-marginal LLR,
 take ProteinGym's experimental binary label (DMS_score_bin), and run the SAME trust layer: leave-one-
-ASSAY-out isotonic calibration transport + split-conformal. Shows calibration/coverage transport across
+ASSAY-out isotonic calibration transport. Shows calibration/coverage transport across
 different proteins on wet-lab-grade labels -> the only attack on the structurally-unfixable no-wet-lab cap.
 Native CPU (ESM-2 150M, one forward per protein).
   python src/ccs/build_proteingym_grounding.py   -> logs/proteingym_grounding.md
@@ -72,7 +72,7 @@ def main():
             if (s := d.filter(pl.col("assay") == a))["y"].sum() >= 15 and (s.height - s["y"].sum()) >= 15]
     print(f"usable assays (>=15/class): {len(good)}", flush=True)
 
-    # leave-one-ASSAY-out calibration transport + pooled conformal, on EXPERIMENTAL labels
+    # leave-one-ASSAY-out calibration transport, on EXPERIMENTAL labels
     per = []
     for a in good:
         te = d.filter(pl.col("assay") == a); tr = d.filter((pl.col("assay") != a) & pl.col("assay").is_in(good))

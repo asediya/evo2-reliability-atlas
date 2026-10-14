@@ -10,7 +10,7 @@ selective prediction, consequence-stratified calibration). Three parts:
       specified. Does a coding-conditional calibrator beat the global one, especially on non-coding?
       -> the positive-method hook.
 
-  (3) CONFORMAL / SELECTIVE PREDICTION (pooled atlas): risk-coverage -- abstaining on low-confidence
+  (3) SELECTIVE PREDICTION (pooled atlas): risk-coverage -- abstaining on low-confidence
       calls trades coverage for accuracy.
 
   python src/ccs/analyze_trust_layer.py --jobs 50 --nboot 5000

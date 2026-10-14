@@ -4,7 +4,7 @@
 Grimm et al. name two circularity types. Type 2 is the one that bites a panel like this: genes
 whose variants are predominantly pathogenic, or predominantly benign, let a predictor score well
 by recognising the GENE rather than judging the variant. The manuscript cites Grimm for the
-concept and contains no gene-balanced evaluation.
+concept, and Supplementary Note S28 reports this gene-balanced evaluation.
 
 It can be run here, on the human dbNSFP panel, for all 49 deposited predictors at once — the same
 panel the reach audit uses, so the two results compose: a predictor can be flattered by what it
@@ -40,9 +40,9 @@ MIN_PER_CLASS = 5
 
 
 def main():
-    # The star filter is what the reach audit applies, and the manuscript divides one median by the
-    # other. Without it this ran on 352,907 variants against the audit's 328,328, so the ratio the
-    # paper quotes had operands measured on two different panels. The two are only commensurable if
+    # The star filter is what the reach audit applies, and Note S28 places the drop on that same
+    # panel. Without it this would run on 352,907 variants against the audit's 328,328, so the drop and the
+    # reach figures would sit on two different panels. The two are only commensurable if
     # the same filter reaches both, so it is applied here rather than described in a caveat.
     d = pl.read_parquet("data/processed/dbnsfp_panel.parquet").filter(pl.col("stars") >= 1)
     preds = [c for c in d.columns if c.endswith("rankscore")]

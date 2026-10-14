@@ -11,5 +11,5 @@
   "median_dist_control": 370241.0,
   "within_egene_mean_auroc": 0.6649477546476433,
   "n_egenes": 1380,
-  "summary": "TSS distance separates causal from control eQTLs at AUROC 0.6510 [0.6415, 0.6604] (n=19341); Evo 2 on the same panel reads 0.488 [0.478, 0.497]."
+  "summary": "TSS distance separates candidate causal from control eQTLs at AUROC 0.6510 [0.6415, 0.6604] (n=19341); Evo 2 on the same panel reads 0.488 [0.478, 0.497]."
 }

@@ -130,7 +130,7 @@ def main():
             "A count quoted as a finding moves with the bootstrap seed",
             # "3 always significant, 1 seed-dependent" is true and reads as 3 of 4. There are nine
             # contrasts: five reach significance under no seed at all, and the unstable one is
-            # chicken -- the species whose margin over GERP the Methods calls the largest. Naming
+            # chicken, whose margin over GERP is second only to goat's. Naming
             # the species and the never-significant five is the difference between a control and a
             # summary statistic that flatters the result.
             "%d of the %d species always significant, %d never at any seed, and %s "

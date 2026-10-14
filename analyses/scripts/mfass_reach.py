@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """Test the paper's thesis on functionally measured labels: saturation splicing MPRAs.
 
-Every panel in the manuscript so far carries a curated label. OMIA positives come from a curator,
+The atlas and ClinVar panels carry curated labels. OMIA positives come from a curator,
 ClinVar benign from a submitter, and the standing limitation is that curation decides both which
 variants exist and which are easy. The massively parallel splicing assays collected by Smith and
 Kitzman (Genome Biology 2023, doi:10.1186/s13059-023-03144-z, table S1) carry a label
-measured in cells, on every variant in an exon, with no curator between the variant and its class.
+measured in cells in the five saturation assays; the sixth, 296 MLH1 variants, is curated from published results.
 If reach still dominates there, the thesis does not depend on curation at all.
 
 Ten published splicing predictors ship with these panels, and they miss variants for structural

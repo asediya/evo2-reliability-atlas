@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """FP8 batch-size determinism control: does batch composition move a score, class-dependently?
 
-WHY THIS FILE EXISTS. reports/ablation_fp8.json is cited in the Methods as the control underwriting
+WHY THIS FILE EXISTS. reports/ablation_fp8.json is the deposited control underwriting
 the reproducibility of the whole GPU scoring layer, and every published number
 must trace to a builder. This is its builder, so the computation is inspectable and re-runnable rather than
 taken on trust.

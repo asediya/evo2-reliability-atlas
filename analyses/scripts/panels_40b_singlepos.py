@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """Evo 2-40B on the splicing and ClinVar panels, at the single-position readout.
 
-WHAT THIS IS NOT: a capacity rung for Table 3. The deposited 1B and 7B scores for these two panels
+WHAT THIS IS NOT: a capacity rung for Table S34. The deposited 1B and 7B scores for these two panels
 come from `analyses/scripts/score_mfass_evo2.py`, which sums the log-likelihood over the whole
 1,001-bp window. These 40B scores come from `src/ccs/score_evo2_40b_local.py`, which is a
 single-position next-token readout. Reading 40B from here against 1B from there moves the readout
-and the capacity at the same time, and this paper has already had to retract one ladder built that
-way (Note S48, the strand ladder, where panel and window length moved with capacity).
+and the capacity at the same time, the confound Note S36 avoids for the strand ladder by holding
+panel and window length fixed.
 
 A 40B window-sum rung is not reachable with this pipeline: the window-sum path calls BioNeMo's
 `predict_evo2`, which loads the whole model onto the GPU, and its runner accepts 1b and 7b only.
@@ -98,7 +98,7 @@ def main():
         "_not_comparable_to": (
             "the 1B and 7B scores deposited for these same panels, which are a WINDOW-SUM "
             "log-likelihood readout (analyses/scripts/score_mfass_evo2.py). Capacity and readout "
-            "would move together, which is the confound Note S48 retracted for the strand ladder."),
+            "would move together, the confound Note S36 avoids for the strand ladder."),
         "_why_no_40b_window_sum": (
             "BioNeMo's predict_evo2 loads the whole model to the GPU and its runner accepts 1b and "
             "7b only; in this pipeline the 40B single-position readout runs through block "

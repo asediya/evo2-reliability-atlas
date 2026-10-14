@@ -4,7 +4,7 @@
 This is the hardest available test of the manuscript's regulatory claim. Everywhere else in the
 paper Evo 2's regulatory competitors are conservation scores, which are not built for the task.
 Splicing is the one regulatory readout with strong supervised competitors evaluated on exactly
-these variants, and the labels come from a cell-based assay rather than a curator.
+these variants, and the labels are cell measurements apart from 82 essential-splice calls admitted by rule.
 
 Reports each predictor's AUROC on the shared panel, the same split by variant class, and a DeLong
 test of Evo 2 against SpliceAI and Pangolin. DeLong is used rather than a bootstrap because the

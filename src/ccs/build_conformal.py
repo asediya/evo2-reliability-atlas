@@ -10,7 +10,7 @@ We report EMPIRICAL coverage vs nominal (1-alpha) on held-out species + set-size
 marginal AND Mondrian (class-conditional, robust to the ~10:1 imbalance) conformal.
 
 If cross-species coverage tracks 1-alpha, that's a guaranteed trust layer for a species with no labels —
-unclaimed for genomic FMs, and the finite-sample-guarantee contribution that lifts toward Nat Comms. CPU-only.
+unclaimed for genomic FMs. CPU-only.
   python src/ccs/build_conformal.py
 """
 import os, sys, time

@@ -20,7 +20,7 @@ problem.
 
     compare(a, b) -> whether "a beats b" is identified, unassumed and under monotone coverage
 
-Written here rather than in `glmtrust/` so the frozen deposit stays untouched during revision. It
+It lives here, beside the analyses, rather than in `glmtrust/`. It
 carries a self-test that reproduces the deposited 49-predictor audit.
 
     python analyses/scripts/reach_eval.py        # runs the self-test

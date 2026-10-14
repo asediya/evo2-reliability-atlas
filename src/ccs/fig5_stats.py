@@ -5,7 +5,7 @@ hand in the figure module.
 
 THE FINDING THIS FIGURE EXISTS FOR
 GERP's missingness is CLASS-DEPENDENT. It silently returns no score for 4-58% of variants, and it drops
-BENIGN variants far more often than pathogenic ones (horse: 44.1% of negatives scoreable against 93.0%
+NEGATIVES far more often than positives (horse: 44.1% of negatives scoreable against 93.0%
 of positives). So every published GERP AUROC in this paper is measured on a subset selected in GERP's
 favour, and the fair comparison has to say so.
 
@@ -135,8 +135,8 @@ def sort_key(v):
     The IDs are {chrom}_{pos}_{ref}_{alt} and the chromosome may itself contain underscores --
     RefSeq accessions look like NC_058368.1. A left-anchored regex (`^(?:neg_)?([^_]+)_(\d+)_`)
     cannot cross that underscore, returns None, and every unparsed variant collapses to one constant
-    key; np.argsort then orders them by its own internal state. That silently dithered 100% of cat's
-    and horse's pathogenic cells and ~89% of dog's. Splitting from the right cannot fail this way.
+    key; np.argsort then orders them by its own internal state. That would dither 100% of cat's
+    and horse's positive cells and ~89% of dog's. Splitting from the right cannot fail this way.
     """
     t = v[4:] if v.startswith("neg_") else v
     parts = t.split("_")
@@ -200,7 +200,7 @@ def main():
         # ...and on the FULL panel under the correct abstention null.
         #
         # Imputing no-calls to the covered median is not "uninformative".
-        # 91-100% of no-calls are BENIGN in every species but human, and the covered median
+        # 91-100% of no-calls are negatives in every species but human, and the covered median
         # sits near the 55th percentile of covered benigns, so an imputed variant lands almost exactly
         # where a benign belongs. That REWARDS GERP for having class-shaped holes -- the very thing
         # panel a indicts -- and draws horse's true cost of +0.245 as +0.010, cattle's as a GAIN.
@@ -354,7 +354,7 @@ def main():
     # ---------------- REACH IS NOT UNIQUE TO Evo2 ----------------
     # Full reach is not something Evo2 "uniquely offers": it is a property of
     # DNA language models as a class. Nucleotide Transformer scores the same GERP-blind variants, and it
-    # does so at near-chance accuracy -- which is the figure's own title, not a concession. Measured here
+    # does so at near-chance accuracy. Measured here
     # so the claim cannot be asserted from memory.
     nt_tot = nt_cov = 0
     nt_rows = []
@@ -377,7 +377,7 @@ def main():
 
     # ---------------- consistency with Fig 2F ----------------
     # Evo2 does not "lose outright twice": counting horse's -0.033 (CI spans zero) as a
-    # loss would contradict Fig 2F, which reports horse as a tie. Read Fig 2's own verdicts so the two
+    # loss would contradict reports/fig2_data.json, which records horse as a tie. Read its verdicts so the two
     # figures cannot disagree about the same nine numbers.
     if os.path.exists("reports/fig2_data.json"):
         f2 = json.load(open("reports/fig2_data.json", encoding="utf-8"))["gerp"]
@@ -397,7 +397,7 @@ def main():
     l = c.filter(pl.col("regime") == "loso").select(["species", pl.col("auroc_cnn").alias("cnn_loso")])
     m = w.join(l, on="species", how="inner").sort("n")
 
-    # The Evo 2 column must be measured on the SAME variants as the baselines, because Table S8's
+    # The Evo 2 column must be measured on the SAME variants as the baselines, because Table S3's
     # caption says it is. cnn_baseline.py does not compute it, and
     # reports/local_bootstrap_ci.parquet holds the FULL panel. For six species the two sets
     # coincide and the numbers agree, which would hide a substitution; for the two that lose variants to
@@ -416,7 +416,7 @@ def main():
         if g is not None and g.get("auroc_1001") is not None:
             if g.get("n") != r["n"]:
                 raise SystemExit(
-                    "Table S8: baseline n=%s for %s but the same-variants panel has n=%s; the "
+                    "Table S3: baseline n=%s for %s but the same-variants panel has n=%s; the "
                     "like-for-like claim cannot be made without knowing which set the baseline used."
                     % (r["n"], r["species"], g.get("n")))
             if abs(g["auroc_1001"] - r["auroc_evo2"]) > 5e-4:

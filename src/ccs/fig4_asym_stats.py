@@ -1,4 +1,4 @@
-"""Figure 4 statistics — THE ASYMMETRY. Everything the rebuilt figure plots, computed from source.
+"""Figure 4 statistics — THE ASYMMETRY. Everything the figure plots, computed from source.
 
 Thesis: Evo 2 is a specificity machine. It misses a third of all positives and misses them
 CONFIDENTLY, so every confidence-based trust layer (abstention, conformal, calibration) protects the
@@ -57,7 +57,7 @@ def main():
                 "frac_in_least_confident_15": float((conf[mask] <= np.quantile(conf, 0.15)).mean())}
     O["lanes"] = [lane(ok, "correct calls"), lane(miss, "missed pathogenic"), lane(fa, "false alarms")]
 
-    # ---- c. refusing on confidence does not move sensitivity: a path in (specificity, sensitivity) ----
+    # ---- c. refusing on confidence: a path in (specificity, sensitivity) ----
     order = np.argsort(-conf, kind="stable")          # keep the most confident first
     traj = []
     for c in np.round(np.arange(1.00, 0.19, -0.05), 2):

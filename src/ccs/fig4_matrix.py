@@ -12,7 +12,7 @@ Margins carry what a matrix alone cannot:
   below  every one of the 11,130 variants on a shared signed log-odds axis, one strip per species,
          split into correct / missed-positive / false-alarm, aligned to the matrix rows
 
-Values from reports/fig4_matrix.json (src/ccs/fig4_matrix_stats.py). Nothing typed by hand.
+Values from reports/fig4_matrix.json (src/ccs/fig4_matrix_stats.py); only the subtitle's AUROC range is typed by hand.
 Run: python -m src.ccs.fig4_matrix
 """
 import os, json, textwrap
@@ -205,7 +205,7 @@ def main():
     fig.text(0.105, 0.972, "The trust ledger: what every layer protects, species by species",
              fontsize=TITLE, fontweight="bold", ha="left", va="top", color=INK)
     fig.text(0.105, 0.941,
-             _wrap(f"Evo 2-40B on {S['_meta']['n']:,} cross-species disease variants. Discrimination is "
+             _wrap(f"Evo 2-40B on {S['_meta']['n']:,} variants from nine species. Discrimination is "
                    f"good (AUROC 0.82–0.95) yet at the decision threshold the model misses "
                    f"{F['pathogenic_missed']:,} of {F['pathogenic']:,} positives "
                    f"(sensitivity {F['sensitivity']:.2f}) while almost never raising a false alarm "
@@ -218,7 +218,7 @@ def main():
                    "present in any calibration training pool. Probabilities come from Platt scaling on a "
                    "leave-one-species-out pool of label-rich species; calls are taken at p = 0.5; "
                    "confidence is |2p−1|; conformal coverage is split-conformal at a nominal 90%. "
-                   "Sensitivity intervals are 2,000 stratified bootstrap resamples.", 170, FOOT - 0.5),
+                   "Sensitivity intervals are 2,000 variant bootstrap resamples.", 170, FOOT - 0.5),
              fontsize=FOOT - 0.5, color=MUTED, ha="left", va="top", linespacing=1.35)
 
     os.makedirs("reports/figures", exist_ok=True)

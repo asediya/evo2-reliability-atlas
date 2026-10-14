@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """B7 (free version) — is a conservation track's silence a property of the VARIANT or the ALIGNMENT?
 
-The manuscript's largest stated unknown: "Why the missingness is class-dependent we could not
-establish." The expensive answer needs the Compara alignment blocks. This is the free one, and it
+The paper's largest stated unknown: "The defensible test does not establish why the missingness is
+class-dependent" (Note S14). The expensive answer needs the Compara alignment blocks. This is the free one, and it
 may be the better evidence.
 
 GERP and phyloP are built from DIFFERENT multiple-sequence alignments. Query both at the SAME
@@ -13,11 +13,11 @@ variants and two outcomes are possible:
   they fail separately -> silence is a property of the particular alignment the track was built
                           from, which is the paper's thesis demonstrated rather than asserted
 
-Run on the human atlas panel, the only one where both tracks are genuine third-party releases
-(Ensembl 91-mammal GERP; UCSC phyloP100way). The cattle phyloP in the deposit is project-computed
-and flagged provisional, so it is deliberately not used here.
+Run on the human atlas panel, whose two tracks are both genuine third-party releases
+(Ensembl 91-mammal GERP; UCSC phyloP100way). The cattle and chicken phyloP tracks of
+reports/phylop_crosscheck.json are not queried here.
 
-Two traps, both live in this file. Missingness is NaN, not null: is_null() reports 100% reach
+Two traps, one here and one in query_phylop_human.py. Missingness is NaN, not null: is_null() reports 100% reach
 and deletes the result. And pybigtools fills uncovered bases with 0.0 unless missing=nan is passed,
 which would turn every unalignable position into a real score of zero.
 

@@ -2,7 +2,7 @@
 
 Reviewer-proofing #1 across every venue: 'no CIs -> small-n cells read as pilots, not findings.'
 Adds nonparametric bootstrap 95% CIs to:
-  (A) per-species zero-shot AUROC (atlas Table 1)      -- 2000x stratified resample
+  (A) per-species zero-shot AUROC (atlas Table 2)      -- 2000x stratified resample
   (B) per-species TRANSFERRED ECE (calibration table)  -- isotonic fit on OTHER rich species (fixed),
       bootstrap the TARGET species, apply the fixed map, recompute ECE.
 Runs on Evo2-40B scores (the headline backbone). CPU-only.

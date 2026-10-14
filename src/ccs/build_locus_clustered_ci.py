@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """Deposit locus-clustered per-species AUROC intervals: reports/atlas_locus_clustered_ci.json
 
-Every atlas per-species interval in this paper resamples
+A variant-level atlas per-species interval resamples
 variants independently, but OMIA positives are drawn from disease genes, so positives cluster at the
 locus scale while the genome-wide negatives do not. An independent-variant bootstrap therefore
 treats correlated draws as independent and can understate uncertainty. The project already applies
 the correct unit elsewhere (eGene clustering on the eQTL arm, site clustering on BRCA1), so the
-atlas is the one place it was not applied.
+atlas needs it too.
 
 This computes, per species, a block bootstrap that resamples LOCI rather than variants: a locus is a
 (chromosome, 100-kb bin) block, blocks are drawn with replacement to the original block count, and

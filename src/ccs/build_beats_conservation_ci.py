@@ -71,8 +71,8 @@ def main():
     # order table by raw p ascending for readability
     rows.sort(key=lambda x: x["p"])
     lines = ["# STEP 2 - does Evo2-40B beat conservation (GERP)? One-sided bootstrap p + BH-FDR across 9 species", "",
-             "Baseline = GERP (sole conservation baseline; the fabricated byte-identical phyloP copies are no "
-             "longer used). The atlas statistic `p_40b_gt_cons` is the bootstrap fraction P(delta>0); we convert "
+             "Baseline = GERP (sole conservation baseline; the byte-identical phyloP copies of GERP are not "
+             "used). The atlas statistic `p_40b_gt_cons` is the bootstrap fraction P(delta>0); we convert "
              "it to a one-sided p-value  p = 1 - P(delta>0)  and apply Benjamini-Hochberg at q<=0.05.", "",
              "| species | n | pos | AUROC Evo2 | AUROC GERP | Δ | P(Δ>0) | one-sided p | BH q | verdict |",
              "|---|---|---|---|---|---|---|---|---|---|"]

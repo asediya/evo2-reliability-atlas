@@ -9,7 +9,7 @@ controls for trinucleotide context, for conservation and for consequence class, 
 controls addresses frequency.
 
 We can test this properly in cattle, the one species where a 44.5 M-variant allele-frequency panel
-is on disk (data/interim/geno_pgen/*.afreq, PLINK2 ALT_FREQS over 7,394 individuals). The atlas
+is on disk (data/interim/geno_pgen/*.afreq, PLINK2 ALT_FREQS over 7,394 samples). The atlas
 negatives share the {chrom}_{pos}_{ref}_{alt} identifier scheme with that panel, so they can be
 joined directly.
 

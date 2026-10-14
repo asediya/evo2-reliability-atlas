@@ -114,7 +114,7 @@ def main():
         rows.append({"arm": "ladder_eqtl", "key": sz, "n": int(m.sum()), "value": au, "lo": lo, "hi": hi})
         print(f"  eQTL AUROC   @ {sz:3s}: {au:.3f} [{lo:.3f},{hi:.3f}]", flush=True)
 
-    print("\n" + "=" * 74 + "\n(3) BRCA1 positive control @ 8192 (Evo2 paper reports ~0.73 for 1B)\n" + "=" * 74, flush=True)
+    print("\n" + "=" * 74 + "\n(3) BRCA1 positive control @ 8192 (Evo 2's reference notebook prints ~0.73 for 1B)\n" + "=" * 74, flush=True)
     d = load_scored(f"{D}/brca1_evo2_40b_meanll_8192.parquet", "data/interim/brca1_windows.parquet")
     if d:
         y, s = d

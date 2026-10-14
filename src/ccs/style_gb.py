@@ -1,7 +1,7 @@
-"""Genome Biology house style, shared by every figure builder in this paper.
+"""House style shared by the supplementary figure builders (Additional file 1's Figures S1 to S7); the main figures use style_main.py.
 
-Why this module exists. Each figure grew its own header block, panel-title voice and
-accent colour, so seven figures reached the submission looking like seven different
+Why this module exists. Left alone, each figure grows its own header block, panel-title voice and
+accent colour, and a set of figures reads like a set of different
 papers: on-canvas titles and italic subtitle paragraphs, editorial panel headings in
 blue or red, pill badges, filled letter chips, and commentary paragraphs set on the
 canvas in bold colour. A journal figure does none of that. The title and the reading
@@ -15,7 +15,7 @@ The rules, applied in every builder:
   2. Panels are marked with a bold lower-case letter and nothing else. No chips, no
      sentence-length headings, no colour. What a panel shows is the legend's job.
   3. Colour encodes data. It never marks emphasis. Commentary is not set in red.
-  4. One type scale, below, with a 6.0 pt floor at final size.
+  4. One type scale, below, with a floor (FLOOR) at final size.
   5. No decoration: no drop shadows, no rounded cards, no stroke effects behind text.
   6. Text that states a finding rather than labelling a mark belongs in the legend or
      in a supplementary note, not on the canvas.
@@ -101,7 +101,7 @@ W_MM = 170.0
 H_MM_MAX = 173.0          # graphic only; the rest of the 225 mm belongs to the legend
 
 # ---------------------------------------------------------------- the deleteriousness ramp
-# TOL_DEL replaces RdBu_r wherever a value is drawn diverging about a baseline (Figure 5's BRCA1
+# TOL_DEL replaces RdBu_r wherever a value is drawn diverging about a baseline (Figure S6's BRCA1
 # quilt, its four structure renders and their shared colour bar).
 #
 # RdBu_r is ColorBrewer-safe for colour-vision deficiency -- its extremes sit 0.399 (deuteranopia)
@@ -119,7 +119,7 @@ H_MM_MAX = 173.0          # graphic only; the rest of the 225 mm belongs to the 
 #     protanopia ends      0.705  (RdBu_r 0.356)
 #
 # so it is better in greyscale AND under both simulated dichromacies. The four structure PNGs are
-# rendered from an undeposited PDB tree and cannot be re-rendered here; tools/recolour_brca1_
+# saved by hand from 3Dmol pages of the deposited model-1 PDBs (FIGURES.md); tools/recolour_brca1_
 # structures.py re-maps them pixelwise onto this ramp so the panel does not disagree with itself.
 TOL_DEL_NODES = [(0.00, "#5C8DBB"), (0.25, "#A8C8E0"), (0.50, "#F7F6F3"),
                  (0.68, "#E9A183"), (0.85, "#BC3A2E"), (1.00, "#5A0D0A")]

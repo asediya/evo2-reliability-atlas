@@ -134,7 +134,7 @@ def main():
         b = np.array(Parallel(n_jobs=a.jobs)(delayed(one3)(k) for k in range(a.nboot))); b = b[np.isfinite(b)]
         lo, hi = np.percentile(b, [2.5, 97.5])
         print(f"  {lab:28s} n={len(yy):4d} (pos {int(yy.sum())})  Evo2 {ae2:.3f} [{lo:.3f},{hi:.3f}] | GERP {ag2:.3f}")
-    print(f"\n  reference: causal common eQTLs Evo2 = 0.498 (properly LD-matched)")
+    print(f"\n  reference: causal common eQTLs Evo2 = 0.498 (within-eGene controls)")
 
 
 if __name__ == "__main__":

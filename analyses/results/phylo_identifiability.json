@@ -280,5 +280,5 @@
   }
  ],
  "median_separation_between_truth_0_and_1": 0.785,
- "conclusion": "Across every tree shape tried, the ML estimate of lambda piles up at the boundaries and its 5-95%% range spans most of [0,1] whatever the truth. Nine tips with seven of them at an identical divergence depth cannot identify lambda, so a PGLS standard error computed from an estimated lambda would be reporting the boundary the optimiser hit, not a property of the data. The manuscript's position is correct."
+ "conclusion": "Across every tree shape tried, the ML estimate of lambda piles up at the boundaries and its 5-95% range spans most of [0,1] whatever the truth. Nine tips with seven of them at an identical divergence depth cannot identify lambda, so a PGLS standard error computed from an estimated lambda would be reporting the boundary the optimiser hit, not a property of the data. The manuscript's position is correct."
 }

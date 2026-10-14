@@ -5,7 +5,7 @@ Two tests on n~1.6M ClinVar (labels exist, so we can actually validate):
       other half. If it holds AND is non-trivial, the certificate is a valid new object at scale.
   (2) TRANSPORT under a real covariate shift: calibrate lambda on CODING variants, test on NONCODING.
       Does the missed-positive guarantee survive a within-human distribution shift?
-Verdict guides the NC-vs-retarget decision after the naive cross-SPECIES gate failed.
+The naive cross-species gate is build_crc_certificate.py.
   python src/ccs/build_crc_clinvar.py   -> logs/crc_clinvar.md
 """
 import glob, os, json

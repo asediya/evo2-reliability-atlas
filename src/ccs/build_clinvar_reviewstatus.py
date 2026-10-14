@@ -6,7 +6,7 @@ range from a single submitter with no assertion criteria (0 stars) to expert-pan
 guideline review (3-4 stars), so "adjudicated" is only defensible if the result survives filtering
 to reviewed assertions. This measures that instead of softening the wording on faith.
 
-Reads CLNREVSTAT from the deposited ClinVar VCF, joins it to the human atlas positives, and
+Reads CLNREVSTAT from the ClinVar VCF, joins it to the human atlas positives, and
 recomputes discrimination at >=1 star. AUROC is computed here with scipy's Mann-Whitney U so the
 answer does not depend on the same helper the rest of the pipeline uses.
 

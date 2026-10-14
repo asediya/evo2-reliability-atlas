@@ -23,7 +23,7 @@ IN = "data/interim"
 # species -> file stems. win = windows panel (holds `label`); gerp = conservation stem;
 # evo2_1b = 1B score stem. The 40B streaming and API stems are derived by convention below.
 # NOTE: phyloP is disabled for pig/sheep/horse/dog because the on-disk *_gerp_phylop
-# tracks were byte-identical copies of GERP (fabricated, not a genuine phyloP track), so
+# tracks are byte-identical copies of GERP (not a genuine phyloP track), so
 # GERP is the SOLE conservation baseline. best_cons is GERP (this is a no-op for the
 # reported AUROC/deltas: GERP already dominated the copied phyloP everywhere).
 SPECIES = {
@@ -100,7 +100,7 @@ def build_species(sp, cfg):
                 row[f"auroc_{col}"] = None
                 row[f"cov_{col}"] = cov
 
-    # conservation baseline = GERP (sole baseline; phyloP is excluded as fabricated). The
+    # conservation baseline = GERP (sole baseline; phyloP is excluded as a GERP copy). The
     # `auroc_best_cons` key name is kept for downstream compatibility, but it is exactly GERP.
     row["auroc_best_cons"] = row.get("auroc_gerp")
 

@@ -68,7 +68,7 @@ def main():
     W("Lift 95% CIs and the resolution flag are the deposited bootstrap intervals "
       "(`reports/fig4_matrix.json`, seed 20260719, 2,000 resamples); a lift is `resolved` only when "
       "its interval excludes 1. Chicken is the one species whose interval spans 1 (not distinguishable "
-      "from random refusal), which the table now flags.\n")
+      "from random refusal), which the table flags.\n")
     W("| Species | n | errors | refused | errors removed | lift | lift 95% CI | resolved |")
     W("|---|--:|--:|--:|--:|--:|:--|:--:|")
     tot_ref = tot_rem = 0
@@ -168,7 +168,7 @@ def main():
 def per_species_operating_point():
     """Table S16: sensitivity, specificity and PPV per species at the deployed 0.5 threshold.
 
-    the paper reports macro AUROC 0.943 and never reports the quantity a
+    The paper reports macro AUROC 0.943; this table reports the quantity a
     veterinary geneticist would act on. At the operating point the paper recommends, sensitivity in
     the eight label-poor species is 0.659 and as low as 0.333 in goat.
     """
@@ -185,7 +185,7 @@ def per_species_operating_point():
            "|---|--:|--:|--:|:--|--:|--:|"]
     MX = _matrix()
     tp_nh = pos_nh = 0
-    sens_nh = []          # per-species sensitivities, for the unweighted species mean (M5)
+    sens_nh = []          # per-species sensitivities, for the unweighted species mean
     for s in SPECIES:
         k = (d["species"] == s).to_numpy()
         y, p = lab[k], pred[k]

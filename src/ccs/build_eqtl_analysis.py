@@ -1,12 +1,12 @@
 """eQTL/regulatory arm result: does Evo2-40B's variant-effect signal recognise CAUSAL cis-regulatory
-variants (high-PIP fine-mapped pig eQTLs) over non-causal LD partners in the same eGene windows?
+variants (high-PIP fine-mapped pig eQTLs) over non-causal variants in the same eGene windows?
 
 Evo2 score = |log P(ref) - log P(alt)| at the variant position (evo2_40b_neg magnitude) = how strongly
 the model "cares" about the base. Hypothesis: causal regulatory bases sit at more functional/constrained
 positions, so |LLR| is larger. We report:
   (1) global AUROC (causal vs non-causal), signed + magnitude
   (2) within-eGene test: is the causal variant ranked above its own non-causal cis-neighbours?
-      (precision@1 per gene + mean causal rank-percentile) -- the LD-controlled, fair contrast
+      (precision@1 per gene + mean causal rank-percentile) -- the within-eGene contrast
 Either outcome is publishable: signal => Evo2 reads cis-regulation; ~0.5 => a regulatory blind spot
 that the calibration layer must flag (both feed the paper). Runs after eQTL scoring.
   python src/ccs/build_eqtl_analysis.py
@@ -57,7 +57,7 @@ def main():
     # (mean k = 12.44 over the 1,430 eGenes that survive the single-class filter below, holding
     # 17,783 of the 20,000 variants -- NOT 20000/1430 = 13.99, which mismatches the full panel's
     # numerator with the kept-gene denominator) the analytic null is 0.4381, and a permutation returns
-    # 0.4379 (SD 0.0049). Printing "0.5 = chance" here understated the null by 0.062 and would
+    # 0.4379 (SD 0.0049). Printing "0.5 = chance" here would understate the null by 0.062 and would
     # have made a below-chance result look merely mediocre. Higher is BETTER.
     #
     # precision@1 likewise needs its own null: with ~3.5 causal of ~14 variants per eGene,
@@ -81,7 +81,7 @@ def main():
     verdict = ("SIGNAL" if auroc_mag >= 0.55 else "WEAK" if auroc_mag >= 0.52 else "BLIND-SPOT")
     lines = [
         "# eQTL / regulatory arm: Evo2-40B vs fine-mapped causal pig cis-eQTLs (Sscrofa11.1)", "",
-        f"- Panel: {npos} causal (PIP>=0.9) + {nneg} non-causal cis variants from the SAME eGenes (LD-controlled).",
+        f"- Panel: {npos} causal (PIP>=0.9) + {nneg} non-causal cis variants from the SAME eGenes.",
         f"- Global AUROC (|LLR| magnitude): **{auroc_mag:.3f}**   (signed LLR: {auroc_sgn:.3f})",
         f"- Baseline AUROC (|z| eQTL-association strength): {auroc_absz:.3f}  (fine-mapping input; not causal per se)",
         f"- Within-eGene precision@1 (causal is top-scoring of its cis set): **{prec1:.3f}** "
@@ -91,7 +91,7 @@ def main():
         f"averaged over every causal variant, not the best one per gene)",
         "",
         f"**{verdict}** — " + {
-            "SIGNAL": "Evo2 ranks causal cis-regulatory variants above LD-matched non-causal neighbours: it reads cis-regulation, not just coding constraint.",
+            "SIGNAL": "Evo2 ranks causal cis-regulatory variants above non-causal neighbours from the same eGene: it reads cis-regulation, not just coding constraint.",
             "WEAK": "Evo2 shows a faint but above-chance regulatory signal; report as a partial capability the calibration layer should down-weight.",
             "BLIND-SPOT": "Evo2 does NOT distinguish causal from non-causal cis-regulatory variants (~chance). Honest negative: a regulatory blind spot the trust-layer must flag.",
         }[verdict],

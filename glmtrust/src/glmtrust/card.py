@@ -221,7 +221,7 @@ def render_card(rep, title="glmtrust audit", subtitle=None) -> str:
 
     L.append("<h2>Accuracy &mdash; covered subset against the panel it is reported for</h2>")
     L.append('<div class="tablewrap"><table><thead><tr><th>scorer</th><th>covered</th>'
-             "<th>must-answer</th><th>penalty</th><th>reach alone</th></tr></thead><tbody>")
+             "<th>must-answer</th><th>change</th><th>reach alone</th></tr></thead><tbody>")
     for s in rep.scorers:
         _adds_nothing = s.values_add_nothing
         cls = ' class="flag"' if _adds_nothing else ""
@@ -231,7 +231,7 @@ def render_card(rep, title="glmtrust audit", subtitle=None) -> str:
         L.append("<tr%s><td>%s</td><td class='num'>%s</td><td class='num'>%s</td>"
                  "<td class='num'>%s</td><td class='num'>%s%s</td></tr>"
                  % (cls, _e(s.name), _n(s.auroc_covered), _n(s.auroc_must_answer),
-                    _n(-s.penalty), _n(s.miss_auroc), tail))
+                    _n(0.0 - s.penalty), _n(s.miss_auroc), tail))
     L.append("</tbody></table>")
     L.append('<p class="note">&ldquo;Reach alone&rdquo; discards the scores entirely and keeps only '
              "whether a value was produced. Pooled over one panel it equals 0.5 + gap/2; it is "

@@ -1,6 +1,6 @@
 """Evaluate the variant-delta BRCA1 positive control: AUROC of evo2_40b_neg (=logP(ref)-logP(alt),
 higher=more damaging) vs the positive-class label. This is the SAME scorer/metric as the atlas — a
-harness-validation positive control for this scorer, in which the paper's 8192bp mean-LL path runs out of GPU memory. Binning-
+harness-validation positive control for this scorer; the 8,192-bp mean-LL readout is scored separately. Binning-
 free rank AUROC (Mann-Whitney U / N_pos N_neg), no sklearn needed.
 
   python src/ccs/eval_brca1_delta.py
@@ -49,11 +49,11 @@ def main():
     a, npos, nneg = auroc(score, pos)
 
     lines = [
-        "# BRCA1 positive control — variant-delta (evo2_40b_neg), block-streaming harness",
+        "# BRCA1 positive control — variant-delta (evo2_40b_neg)",
         "",
         f"Scored {d.height} BRCA1 SNVs ({npos} loss-of-function / {nneg} functional or intermediate) with the SAME variant-delta",
-        "scorer + 1001bp windows as the cross-species atlas (score_evo2_40b_local.py). The paper's 8192bp",
-        "mean-LL protocol exhausts GPU memory in this harness (vortex fftconv) even at batch 2 — this validates OUR harness.",
+        "scorer + 1001bp windows as the cross-species atlas (score_evo2_40b_local.py). This validates the",
+        "single-position harness; the 8,192-bp mean-LL readout is reported separately.",
         "",
         f"- **AUROC (evo2_40b_neg vs pathogenic) = {a:.3f}**",
         f"- mean evo2_40b_neg: pathogenic {score[pos].mean():.3f} vs benign {score[~pos].mean():.3f} "

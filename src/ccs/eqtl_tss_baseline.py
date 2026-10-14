@@ -118,7 +118,7 @@ def main():
     print("  within-eGene mean AUROC over %d genes: %.4f" % (len(per), wg))
 
     # factual summary, not a hard-coded conclusion string.
-    summary = ("TSS distance separates causal from control eQTLs at AUROC %.4f [%.4f, %.4f] "
+    summary = ("TSS distance separates candidate causal from control eQTLs at AUROC %.4f [%.4f, %.4f] "
                "(n=%d); Evo 2 on the same panel reads 0.488 [0.478, 0.497]."
                % (auc, lo, hi, len(yy)))
     print("\nSUMMARY: %s" % summary)

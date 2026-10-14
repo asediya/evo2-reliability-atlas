@@ -357,7 +357,7 @@ In this constructed background, 432 genes are unreachable by at least one predic
 | splice donor variant | 250 | 250 | 0.7952 | [0.7546, 0.8339] | 0.072 | < 0.00002 |
 | synonymous variant | 250 | 250 | 0.7902 | [0.7491, 0.8296] | 0.072 | < 0.00002 |
 
-All values are the Evo 2-1B checkpoint on the 1,001-bp window readout. Intervals are percentile bootstrap at B = 200,000. MDE is the Hanley–McNeil minimum detectable difference from chance at 80% power. The p value is adjusted for the family-wise error rate (FWER) across the eight rungs by Westfall–Young max-T over 50,000 permutations — a separate resampling from the B = 200,000 bootstrap above. The smallest p that permutation count can resolve is 1/50,001 = 0.00002, so the seven cells shown as "< 0.00002" are bounds, not estimates.
+All values are the Evo 2-1B checkpoint on the 1,001-bp window readout. Intervals are percentile bootstrap at B = 200,000. MDE is the Hanley–McNeil minimum detectable difference from chance at 80% power. The p-value is adjusted for the family-wise error rate (FWER) across the eight rungs by Westfall–Young max-T over 50,000 permutations — a separate resampling from the B = 200,000 bootstrap above. The smallest p that permutation count can resolve is 1/50,001 = 0.00002, so the seven cells shown as "< 0.00002" are bounds, not estimates.
 Every rung is resolved against its own minimum detectable difference and survives family-wise control across the eight.
 
 ## Table S20. Negative controls

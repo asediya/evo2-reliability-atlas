@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Effective sample size and small-sample intervals.
 
-Three things the review asked for and the paper did not do.
+Three checks on the eQTL and macro intervals.
 
 1. THE eQTL INTERVAL UNDER NON-INDEPENDENCE (2.1). The panel holds 20,000 distinct variants, so
    nothing is duplicated - but 5,000 causal variants fall in 1,430 eGenes, i.e. 3.50 credible-set
@@ -66,7 +66,7 @@ def main():
     # Score convention: keep the deleteriousness orientation used
     # throughout the paper (higher = more deleterious). Do NOT flip the sign to force AUROC > 0.5 --
     # an AUROC below 0.5 is the actual, reportable result (causal eQTLs score BELOW their non-causal
-    # controls), and the earlier auto-flip put this artifact in the opposite sign from the manuscript
+    # controls), and an auto-flip would put this artifact in the opposite sign from the manuscript
     # and from every other deposited file (all of which carry 0.4888).
     genes = d["gene_id"].to_numpy()
     obs = roc_auc_score(y, s)
@@ -112,7 +112,7 @@ def main():
     mcse = float(np.sqrt(max(p, 1.0 / NPERM) * (1 - p) / NPERM))
     print("\nPERMUTATION at %s (labels permuted within eGene)" % format(NPERM, ","))
     print("  null mean %.4f  sd %.4f" % (perm.mean(), perm.std()))
-    print("  two-sided p = %.4f  (Monte Carlo SE %.4f; the published value was 0.012 from 2,000)"
+    print("  two-sided p = %.4f  (Monte Carlo SE %.4f)"
           % (p, mcse))
 
     # ---- 3. BCa on the nine-species clustered macro difference (+0.108)

@@ -1,6 +1,6 @@
 {
  "_meta": {
-  "what": "per-species ECE of the UNCALIBRATED score, the 'none' side of Table 1",
+  "what": "per-species ECE of the UNCALIBRATED score, the 'none' side of the transfer comparison",
   "estimator": "min-max scale the raw score to [0,1] per species, then equal-width 10-bin ECE against the binary label",
   "note": "min-max scaling is a monotone rescaling, not a calibration: it leaves AUROC unchanged and is the weak baseline the transfer column is measured against",
   "source": "reports/_recon_pervariant_trust.parquet",

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """Build Additional file 2 (the code deposit) deterministically from the working tree.
 
-The manuscript's Availability statement commits the deposit to contain "all scripts under src/ and
+The deposit contains all scripts under src/ and
 tools/, together with the recompute-layer JSON files that carry all 211 traced published
-values", under the MIT License. This assembles exactly that, so the zip cannot silently drift from what the paper
+values, under the MIT License. This assembles exactly that, so the zip cannot silently drift from what the paper
 promises (a hand-built zip can miss new scripts and every JSON). Sorted entries and a
 fixed timestamp make the archive byte-reproducible.
 
@@ -33,7 +33,7 @@ def collect():
     files = set()
     for pat in ("src/**/*.py", "tools/**/*.py",
                 # the analysis layer written for this version: the new panels, the coverage
-                # accounting and the assembly. Absent, a reader cannot rebuild Results 4, 5 or 7.
+                # accounting and the assembly. Absent, a reader cannot rebuild the analyses they implement.
                 "analyses/scripts/**/*.py",
                 # the deposited glmtrust package: source, tests, examples, benchmarks, docs, packaging
                 "glmtrust/**/*.py", "glmtrust/**/*.md", "glmtrust/**/*.toml",
@@ -44,8 +44,8 @@ def collect():
                 # and the trust-layer summary it checks against, so the benchmark also runs
                 # from a glmtrust checkout outside this archive
                 "glmtrust/benchmarks/fixtures/*.json",
-                # six of eight figures could not be rebuilt from the deposit because
-                # the assets/ image tree was absent and named in no manifest. Only these ten files
+                # the figure builders read the assets/ image tree, which no manifest
+                # otherwise names. Only these ten files
                 # are read by any builder -- nine PhyloPic silhouettes and one structure crop, 1.1 MB
                 # against the 51 MB full tree, so the deposit gains reproducibility without the bulk.
                 "assets/silhouettes/*.png",
@@ -62,22 +62,22 @@ def collect():
                 ):
         files.update(glob.glob(pat, recursive=True))
     files.update(glob.glob("reports/*.json"))          # recompute layers holding published numbers
-    # The recompute layer for this version's new arms. Every number in Results 4, 5 and 7 is read
+    # The recompute layer for the analyses/scripts arms. Every number those arms report is read
     # from one of these, and without them the analysis scripts above have nothing to check against:
     # 224 kB against a 4 MB archive, so there is no size argument for leaving them out.
     files.update(glob.glob("analyses/results/*.json"))
     files.update(glob.glob("analyses/results/*.parquet"))
     files.update(glob.glob("reports/*.tsv"))           # the cattle sample table the Methods cite
     files.update(glob.glob("reports/*.parquet"))       # small recompute parquets (fig4_pervariant, etc.)
-    # 40 scripts write their results to logs/, and Notes S5 and S6 quote values from it that a
+    # 40 scripts write their results to logs/, and Note S58 quotes values from it that a
     # reader must be able to open. Ship the log outputs that carry reported
-    # numbers, and the superseded-artifact directory the README and COMPILED_RESULTS point at.
+    # numbers.
     # Those globs can also sweep in material that is not an analysis
     # output -- working notes rather than results -- and draft copies of the manuscript or its
     # abstract state declarations that differ from the manuscript's, which an editor would read as
     # a discrepancy.
     #
-    # Excluded by name, not by directory. logs/*.md is present so Notes S5 and S6
+    # Excluded by name, not by directory. logs/*.md is present so Note S58's pointers
     # would resolve, and the other 34 files there are genuine analysis output; that directory is
     # the COMPILED_RESULTS snapshot that README.md and COMPILED_RESULTS.md point at by name to say "do
     # not quote it", so dropping the directory would break two live pointers.
@@ -98,7 +98,7 @@ def collect():
     #  - __pycache__/.venv: never ship caches
     #  - _superseded_*: shipped-but-superseded figure code, ambiguous provenance
     #  - repro_state.json: the reproduction log is the stale 3,506-variant record and carries internal
-    #    planning notes; Note S7 documents the harness instead
+    #    planning notes; docs/REPRODUCING.md documents the harness instead
     #  - PROJECT_ROADMAP.md: planning doc with positioning strategy and internal notes
     #  - figure-screening/QC JSONs: internal design records that describe earlier figure versions, carry
     #    a working-directory absolute path, and are not authoritative for the submitted figures;
@@ -145,11 +145,11 @@ def collect():
                 # this deposit's blanket MIT with no attribution is not ours to do. Both directory
                 # names, se52/ and snpEff/, are excluded.
                 and not f.startswith("tools/snpEff/")
-                # Note S7 names consistency_check.py as one of three legs certifying
-                # that the manuscript carries no contradictions, and calls that certification
-                # "deposited". A blanket tools/manuscript/ exclusion would leave a referee unable to run the
-                # very check the paper cites as its guarantee. The rest of that plugin is authoring
-                # toolchain and stays out; the cited checker ships.
+                # docs/REPRODUCING.md documents consistency_check.py as the check
+                # that the manuscript carries no contradictions.
+                # A blanket tools/manuscript/ exclusion would leave a referee unable to run the
+                # very check it documents. The rest of that plugin is authoring
+                # toolchain and stays out; the checker ships.
                 and not (f.startswith("tools/manuscript/")
                          and not f.endswith("scripts/consistency_check.py"))
                 and not f.endswith("reports/repro_state.json")
@@ -173,8 +173,8 @@ def main():
             # The bit covers .md as well as .json and .parquet: without it, running the
             # documented `build_supplementary.py` on a clean extraction would rewrite
             # reports/supplementary_tables.md in "w" mode with its own tables only, destroying the
-            # appended S14-S24 -- including S22, S23 and S24, the three tables carrying the Abstract's
-            # human-scale claim -- and exit 0.
+            # export of Tables S1-S42 that tools/export_from_submission.py writes from Additional file 1
+            # -- and exit 0.
             # logs/ is inside the rule because it holds 34 shipped, MANIFESTED notes: without it,
             # running build_decision_panel.py on a clean extract would overwrite logs/decision_panel.md
             # before the read-only bit on reports/decision_panel.json stopped it, so the guard would
@@ -195,7 +195,7 @@ def main():
     n_py = sum(f.endswith(".py") for f in files)
     n_json = sum(f.endswith(".json") for f in files)
     print("wrote %s" % OUT)
-    print("  %d files total: %d .py (src+tools+glmtrust), %d recompute-layer .json, plus docs/packaging"
+    print("  %d files total: %d .py (src+tools+analyses+glmtrust), %d recompute-layer .json, plus docs/packaging"
           % (len(files), n_py, n_json))
     print("  %.0f KB" % (os.path.getsize(OUT) / 1024))
     # sanity: the scripts behind the newest table, the per-variant parquet the trust-layer tables are

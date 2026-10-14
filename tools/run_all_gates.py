@@ -76,7 +76,7 @@ NEEDS_DATA = [
 # Counted as GATES they would claim a verdict none of them can give. They are diagnostics, and
 # the runner prints them under their own heading and excludes them from the gate tally. Giving
 # them an invented pass criterion would be worse: the seed-dependence they measure is a PUBLISHED
-# result (Table S20), not a defect.
+# result for verify_seed_stability.py (Table S20), which is a gate, not one of these four.
 DIAGNOSTICS = [
     "src/ccs/check_human_prevalence.py",
     "tools/verify_gene_clustering.py",

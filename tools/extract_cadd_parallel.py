@@ -15,8 +15,8 @@ record is routinely split across two blocks and therefore across two workers. Ea
 this by discarding the bytes before its first newline (that partial record belongs to the previous
 worker) and by reading forward past the end of its own range until it completes the record it is in
 the middle of. Worker 0 keeps its leading bytes. Every record is emitted exactly once, by the worker
-that owns the block containing its FIRST byte -- the count is asserted at the end against a full
-single-stream pass being unnecessary, by checking that no record is lost at a boundary.
+that owns the block containing its FIRST byte; the run ends by printing how many keys two
+workers both emitted, which a boundary double count would make non-zero.
 
 Bare chromosome names in CADD (1, 2, X) match ClinVar's convention, so no prefix normalisation is
 needed here -- unlike AlphaMissense and the UCSC tracks.
@@ -36,8 +36,8 @@ from concurrent.futures import ProcessPoolExecutor
 # Guarded, and deliberately not at import time in a child: Windows spawns worker processes by
 # re-importing this module, and a spawned child's sys.stdout can be None. An unguarded reconfigure
 # there raises during import, the worker dies before running, and the pool reports only
-# BrokenProcessPool -- which reads like memory exhaustion and sent the first diagnosis in the wrong
-# direction entirely. The worker logic was correct the whole time.
+# BrokenProcessPool, which reads like memory exhaustion although the worker logic is
+# correct.
 try:
     sys.stdout.reconfigure(encoding="utf-8")
 except (AttributeError, ValueError):
@@ -71,7 +71,7 @@ def block_offsets(path, every=1):
                 offs.append(pos)
             pos += bsize
             i += 1
-            if xlen != 6:                     # extra subfields beyond BC: re-read properly
+            if xlen != 6:                     # extra subfields beyond BC are not parsed
                 pass
     offs.append(size - BGZF_EOF)
     return offs

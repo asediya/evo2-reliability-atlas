@@ -1,8 +1,8 @@
 """MASTER reliability-atlas table (development log, superseded): one row per species tying together every arm —
 discrimination (Evo2-40B vs conservation vs 1B), fidelity (block-streaming vs hosted r), calibration
 (ECE none -> transferred), what the FM adds over conservation (ΔFM, low-conservation AUROC), and the
-deployable trust budget (abstention error 100% -> min). This IS the "calibrated cross-species reliability
-atlas" the title promises. Merges the per-arm parquets; re-run after the atlas/analyses refresh.
+deployable trust budget (abstention error 100% -> min).
+Merges the per-arm parquets; re-run after the atlas/analyses refresh.
   python src/ccs/build_reliability_atlas.py
 """
 import os, sys, time

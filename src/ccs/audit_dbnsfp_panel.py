@@ -3,7 +3,7 @@
 
 DELIBERATELY NOT A LEADERBOARD. With 49 predictors there are 1,176 possible head-to-heads, and every
 one is exposed to the between-gene composition artefact that can reverse a
-two-scorer comparison: pooled across genes, the matched delta between AlphaMissense and REVEL reads
+two-scorer comparison: on the human ClinVar missense panel, pooled across genes, the matched delta between AlphaMissense and REVEL reads
 -0.0096, and within gene it reads +0.0124 -- the sign flips. A 1,176-cell ranking table built on the
 pooled statistic would be 1,176 instances of a known error, and it would look far more authoritative
 than it is.
@@ -144,11 +144,11 @@ def main():
     n_sig = sum(1 for r in out if not (r["class_gap_ci"][0] <= 0 <= r["class_gap_ci"][1]))
     n_big = sum(1 for r in out if abs(r["class_gap"]) >= 0.02)
 
-    # TWO CONVENTIONS, and reporting only the signed one was a real defect. Pooled over a panel the
+    # TWO CONVENTIONS, because the signed one alone misleads on this panel. Pooled over a panel the
     # missingness AUROC is the identity 0.5 + class_gap/2, so a predictor whose gap is NEGATIVE has
     # miss_auroc < 0.5 by construction and the signed test can never fire for it. On this panel 34
     # of 49 have a negative gap, because the missense-oriented predictors reach the negatives (85 to
-    # 90%) far more than the positives (35%). "0 of 49" was therefore near-guaranteed by panel
+    # 90%) far more than the positives (35%). a signed count of 0 is therefore near-guaranteed by panel
     # composition rather than earned.
     #
     # A missingness pattern that classifies systematically BACKWARDS is exactly as informative as one

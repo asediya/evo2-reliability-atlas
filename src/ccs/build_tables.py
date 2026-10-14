@@ -2,7 +2,7 @@
 
 Run: python -m src.ccs.build_tables
 Emits: reports/tables.json   (machine-readable, one entry per table)
-       reports/tables.md     (submission-ready markdown, GB style)
+       reports/tables.md     (the deposit's own tables D1-D4, Markdown)
 
 WHY A RECOMPUTE LAYER AND NOT A HAND-WRITTEN TABLE
 A table transcribed by hand can drift from the data unnoticed; every table here is derived instead.
@@ -12,7 +12,7 @@ ASSERTED against literals held in _assert_canonical so that a silent drift fails
 instead of reaching a table. That function opens no file; see its docstring.
 
 THE TWO PANELS ARE NOT THE SAME PANEL. Section 1 (8192 bp mean-LL) is n = 11,109 over 9 species; the
-GERP-comparable set (1001 bp) is n = 11,130. Table 1 carries both, in labelled columns, because the
+GERP-comparable set (1001 bp) is n = 11,130. Table D1 carries both, in labelled columns, because the
 readout is worth +0.092 AUROC pooled (section 2) and mixing them is the single easiest way to
 publish a wrong number here.
 """
@@ -90,7 +90,7 @@ def table2_trust(F4):
     # `platt_LOSO` and `trivial_sigmoid_LOSO` are BIT-IDENTICAL in this file — macro, pooled and every
     # per-species value, under all four binning estimators. That is not a coincidence and not a bug:
     # transferring a Platt map across species IS fitting a two-parameter global sigmoid, so they are one
-    # procedure under two names. Listing them as separate rows (as COMPILED_RESULTS 6a still does)
+    # procedure under two names. Listing them as separate rows
     # invites a reader to think two different methods happen to tie, which is the same misreading
     # section 6c documents for the deposited table. Collapsed to one labelled row.
     ident = all(grid[e].get("platt_LOSO", {}).get("macro") ==
@@ -231,9 +231,9 @@ def table4_baselines(F5):
 def _assert_canonical(T1, T2, T3, T4):
     """Assert the eight headline values against literals held here. A drift fails the build.
 
-    The expected values are written into this function, not read from a file. Earlier messages
-    said "COMPILED_RESULTS says ...", which named a document this module never opens and
-    implied a link that does not exist. What the gate catches is drift in the recompute-layer
+    The expected values are written into this function, not read from a file.
+    
+    What the gate catches is drift in the recompute-layer
     JSONs against the numbers the manuscript prints; reconciling the two is a manual step.
     """
     checks = [
@@ -259,12 +259,12 @@ def _md(T1, T2, T3, T4):
     L = []
     L.append("# Deposit tables — generated, do not edit by hand\n")
     L.append("Built by `src/ccs/build_tables.py` from the figure recompute layers; headline values are "
-             "asserted against literals in build_tables.py at build time. Regenerate rather than "
+             "asserted against literals in `build_tables.py` at build time. Regenerate rather than "
              "patch.\n")
     # These are NOT the tables printed in the manuscript. The D prefix makes the deposit tables
     # self-identifying without renumbering anything in the manuscript.
     # The manuscript's Table 1 is the eight-splice-predictor reach table,
-    # five columns, no species and no readout; the six-column cross-species table is Table 2, and
+    # five columns, no species and no readout; the eight-column cross-species table is Table 2, and
     # it reports BOTH readouts. The two tables also differ in panel: Table 2's per-species n are
     # the locus-clustered panels (goat 99, horse 781, cat 1,365, cattle 2,068, dog 2,497) against
     # D1's (98, 766, 1,362, 2,067, 2,496), so the point estimates coincide at 3 dp while the

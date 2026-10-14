@@ -8,7 +8,7 @@ Palette is Okabe-Ito throughout. Colour encodes series identity only:
 "candidate causal eQTL" is vermillion in every panel it appears in, Mendelian/coding competence is
 blue, the positive control is orange, chance is neutral ink. Never red-vs-green.
 
-EVERY number is read from reports/fig3_stats.json (computed by src/ccs/fig3_stats.py). No float is
+EVERY number is read from reports/: fig3_stats.json (computed by src/ccs/fig3_stats.py), eqtl_pervariant.parquet, eqtl_blindspot_probe.json and eqtl_tss_baseline.json. No float is
 typed by hand in this module.
 
 Run:  python -m src.ccs.fig3_rebuild
@@ -157,7 +157,7 @@ def _interval_row(ax, y, v, lo, hi, colour, marker="o", size=17):
 
 # ------------------------------------------------- a. the scale plane: where the labels are organised
 def panel_a(ax, axtop, axright, box):
-    """Every one of the 20,000 variants placed at its distance from its own eGene's lead variant.
+    """Every variant but the eGene leads placed at its distance from its own eGene's lead variant.
 
     This arm's null is usually reported as a number. The number is not the finding; the SCALE
     MISMATCH is. Fine-mapped credible sets are organised at 10^5 bp -- a candidate causal variant
@@ -274,7 +274,7 @@ def panel_b(ax, box):
               mincnt=1, linewidths=0, zorder=2)
     ax.plot([LO, HI], [LO, HI], color=BEDROCK, lw=.8, ls=(0, (4, 2)), zorder=4)
     # Not on the canvas: the sign-test share ("scores above its own gene's controls in
-    # 46.4 % of the 2,783 matched pairs") is a finding, the Results states it, and the cloud
+    # 46.4 % of the 2,783 matched pairs") is a finding, the Figure S2 legend states it, and the cloud
     # straddling the drawn diagonal shows it. The red note is kept because it is not a finding
     # about what is drawn -- it says what is ABSENT from the panel, which nothing else here can.
     # Top left, above the diagonal, where the plane holds no pair: at the bottom right the dashed

@@ -241,7 +241,7 @@ def main():
 
     fig.text(0.098, 0.965, "Trustworthy about the wrong thing", fontsize=TITLE, fontweight="bold",
              ha="left", va="top", color=INK)
-    fig.text(0.098, 0.932, _wrap("Evo 2-40B on 11,130 cross-species disease variants. The model is a "
+    fig.text(0.098, 0.932, _wrap("Evo 2-40B on 11,130 variants from nine species. The model is a "
                                  "specificity machine, and every confidence-based trust layer protects the "
                                  "specificity it already has rather than the sensitivity it lacks.", 168, PANEL),
              fontsize=PANEL, color=MUTED, ha="left", va="top", style="italic", linespacing=1.35)

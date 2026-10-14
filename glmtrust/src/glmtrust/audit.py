@@ -590,7 +590,7 @@ class AuditReport:
                     else "  <- interval on this gain undefined" if s.values_gain_undefined
                     else "")
             L.append("  %-*s %10.4f %13.4f %+9.4f %14s %12s%s"
-                     % (w, shown, s.auroc_covered, s.auroc_must_answer, -s.penalty,
+                     % (w, shown, s.auroc_covered, s.auroc_must_answer, 0.0 - s.penalty,
                         "--" if not math.isfinite(s.miss_auroc) else "%.4f" % s.miss_auroc,
                         "--" if not math.isfinite(s.lex_gain) else "%+.4f" % s.lex_gain, mark))
         L.append("  'reach alone' discards the scores and keeps only whether a value was produced.")
@@ -989,9 +989,9 @@ def audit(labels, scorers, strata=None, n_boot: int = 2000, seed: int = 0,
                                                  a.class_gap, lvl, *a.class_gap_ci))
         if a.penalty >= min_penalty:
             rep.warnings.append(
-                "%s cannot score %d of %d variants; answering all of them at chance costs %.4f "
+                "%s cannot score %s of %s variants; answering all of them at chance costs %.4f "
                 "AUROC (%.4f -> %.4f)."
-                % (sc.name, int((~fin).sum()), int(y.size), a.penalty, cov, ma))
+                % (sc.name, format(int((~fin).sum()), ","), format(int(y.size), ","), a.penalty, cov, ma))
 
     if n_boot < ROUGH_BOOT:
         rep.warnings.append("intervals from bootstrap resampling use only %d draws (n_boot); below "

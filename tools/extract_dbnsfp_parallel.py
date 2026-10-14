@@ -6,7 +6,7 @@ predictor scores. The panel needs 1.48 million rows and about 40 of those column
 CADD extraction, so the same approach applies: BGZF blocks are independently compressed, the file
 can be decompressed out of order, and a single `gzip -dc` pipeline cannot exploit that.
 
-Columns kept: chr/pos/ref/alt (the join key), genename and Ensembl_geneid, and every *_score column.
+Columns kept: chr/pos/ref/alt (the join key), genename and Ensembl_geneid, and every *_score and *_rankscore column.
 The gene columns are the point of using dbNSFP rather than the per-scorer files: the between-gene
 composition artefact that can reverse a missense head-to-head can only be
 controlled if gene travels with the scores, and here it does.

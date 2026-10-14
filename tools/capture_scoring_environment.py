@@ -393,8 +393,8 @@ def main():
             "window_bp": args.window,
             "command": args.command,
             "_note": "These four are declared on the command line, not detected. If any is null, "
-                     "re-run with the corresponding flag — a null here is the same gap the "
-                     "referees flagged.",
+                     "re-run with the corresponding flag."
+                     "",
         },
     }
     todo = []

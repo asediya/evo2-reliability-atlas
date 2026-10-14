@@ -3,7 +3,7 @@
 
 The most attackable result in the paper: Evo 2 reads 0.488 on fine-mapped pig cis-eQTLs while a
 positional rule — distance to the gene's transcription start site — reads 0.651. The obvious
-objection is that the controls are wrong, not the model: causal eQTLs sit closer to the TSS than
+objection is that the controls are wrong, not the model: candidate causal eQTLs sit closer to the TSS than
 PIP-low controls do, so any method with positional information wins, and any method without it is
 being asked to beat a confound rather than to predict biology.
 
@@ -234,7 +234,7 @@ def main():
           % matched["tss_baseline_collapsed_to_chance"])
     print("  ARM 2 (TraitGym design):           TSS baseline collapsed to chance? %s"
           % caliper["tss_baseline_collapsed_to_chance"])
-    print("    matched %s of %s causals at a %.2f-dex caliper; dropped %s for want of a partner"
+    print("    matched %s of %s candidate causal variants at a %.2f-dex caliper; dropped %s for want of a partner"
           % ("{:,}".format(caliper["causals_matched"]),
              "{:,}".format(caliper["causals_available"]), caliper["caliper_dex"],
              "{:,}".format(caliper["causals_dropped_for_want_of_a_match"])))
@@ -253,7 +253,7 @@ def main():
              "[%.4f, %.4f]" % tuple(matched["auroc_tss_proximity_ci95"]),
              matched["tss_baseline_collapsed_to_chance"]))
     print()
-    print("    median log10 TSS distance, causal vs control")
+    print("    median log10 TSS distance, candidate causal vs control")
     print("      unmatched  %.3f vs %.3f" % (base["median_logdist_causal"],
                                              base["median_logdist_control"]))
     print("      matched    %.3f vs %.3f" % (matched["median_logdist_causal"],

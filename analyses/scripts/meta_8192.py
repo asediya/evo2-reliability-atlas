@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """C1, applied to the headline arm: Evo 2 at 8,192 bp against GERP, per species, properly pooled.
 
-The first meta-analysis ran on the 1,001-bp arm because that is the only one with deposited
+meta_analysis.py runs on the 1,001-bp arm because that is the only one with deposited
 per-species intervals. The paper's headline is the 8,192-bp arm — "Evo 2 led GERP in all nine
 species, macro +0.108" — and `readout_headtohead.json` records the per-species deltas with no
 interval at all. Without a standard error there is nothing to pool.

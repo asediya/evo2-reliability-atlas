@@ -1,6 +1,6 @@
 """BAT One-Health arm — build the polymorphism/SFS-lite panel from the 10-sample Myoluc2.0 VCF.
 
-With only 10 bats (coarse allele counts, AN<=20) we do NOT chase fine frequencies. Instead the SFS-lite
+With only 10 libraries (coarse allele counts, AN<=20) we do NOT chase fine frequencies. Instead the SFS-lite
 test (analog of the cattle Idea-1 selection-spectrum, but coarse): among REAL segregating bat SNVs,
 bin by minor-allele COUNT and ask whether Evo2 deleteriousness FALLS as the allele becomes more common
 (singletons = recently arisen / less filtered = more deleterious; common = tolerated). A negative

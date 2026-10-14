@@ -19,7 +19,7 @@ permutation swaps their scores within a variant. For the ClinVar family the null
 carries no information about the label within a rung, so the permutation shuffles labels inside the
 rung and leaves rung sizes fixed.
 
-Per-class bootstrap intervals are also recomputed at B = 50,000 instead of 2,000, since the cores
+Per-class bootstrap intervals are not computed here; heavy_intervals.py recomputes them at B = 200,000, since the cores
 are there and the per-class cells are small enough that the interval endpoints are the part a
 reader will quote.
 

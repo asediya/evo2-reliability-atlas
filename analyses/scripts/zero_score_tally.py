@@ -12,7 +12,7 @@ the model expressed no preference at all, and there are only two ways to get it:
   did read the two alleles as equally likely at that site.
 
 Worth counting for two reasons. A whole panel of zeros is the signature of a var_off fault, which
-cost seven hours of 40B time once already (`tools/check_var_off.py` now guards it). And a score of
+`tools/check_var_off.py` guards against. And a score of
 exactly zero sits at the centre of the score distribution, so under a rank-based abstention rule
 these variants land in a tie block, which the paper's selective layer has to say something about.
 

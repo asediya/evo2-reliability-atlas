@@ -1,8 +1,8 @@
-"""Figure 3 statistics layer — computes EVERY number the figure plots, with real stratified-bootstrap
+"""Figure 3 statistics layer — computes the AUROCs and intervals that panels c and d plot, with real stratified-bootstrap
 confidence intervals, and writes reports/fig3_stats.json.
 
-Why this module exists: the previous figure hard-coded a flat coding line (the data rises 0.898->0.942)
-and five invented CI half-widths (0.020/0.020/0.025/0.020/0.024). No float in the rebuilt figure may be
+
+No float in the figure may be
 typed by hand — everything is read from the JSON this script emits.
 
 Orientation convention: mean-LL delta columns are NEGATED (deleteriousness convention);
@@ -93,7 +93,7 @@ def main():
         scale["eqtl"][name] = {"auroc": a, "lo": lo, "hi": hi, "n_pos": np_, "n_neg": nn}
     out["scale"] = scale
 
-    # ---------- 2. ECDF: causal vs LD-matched control, WITHIN the eQTL substrate (no confound) ----------
+    # ---------- 2. ECDF: causal vs within-eGene control, WITHIN the eQTL substrate ----------
     a40 = np.abs(d["evo40"].to_numpy())
     m = ~np.isnan(a40)
     causal = a40[m & (y == 1)]; ctrl = a40[m & (y == 0)]
@@ -147,8 +147,8 @@ def main():
     # The coding deviation must be measured at the SAME readout as the eQTL one it is divided by.
     # coding_ref["Evo2-40B"] = 0.943 is the 8,192-bp mean-log-likelihood
     # figure, while the eQTL AUROC above is the 1,001-bp single-position one. That mismatch would print a
-    # 37-fold ratio on the figure -- a readout-mismatched comparison inside the one control whose
-    # argument is that readouts must be matched, and contradicting the manuscript's 31-fold. The
+    # 37-fold ratio -- a readout-mismatched comparison inside the one control whose
+    # argument is that readouts must be matched. The
     # matched coding reference is the nine-species 1,001-bp mean from the deposited table layer.
     _t1 = json.load(open("reports/tables.json", encoding="utf-8"))["T1"]["rows"]
     coding_1001 = sum(r["auroc_1001"] for r in _t1) / len(_t1)
@@ -156,15 +156,15 @@ def main():
     out["null"]["abs_dev_coding"] = abs(coding_1001 - 0.5)
     out["null"]["readout"] = "both deviations at the 1,001-bp single-position readout"
     out["null"]["dev_ratio_coding_over_eqtl"] = out["null"]["abs_dev_coding"] / out["null"]["abs_dev_eqtl"]
-    # The figure prints an integer; take the same rounding the manuscript states ("roughly 31-fold")
-    # so the canvas cannot disagree with the text. The exact ratio stays deposited above.
+    # An integer display value, truncated by int().
+    # The exact ratio stays deposited above.
     out["null"]["dev_ratio_display"] = int(out["null"]["dev_ratio_coding_over_eqtl"])
 
     # ---------- 6. ROBUSTNESS: is context or readout the bottleneck? (from deposited D_robustness) ----------
     cells = {(c["window"], c["readout"]): c["auroc"] for c in D0["D_robustness"]["cells"]}
     rob = {"cells": D0["D_robustness"]["cells"], "untested": D0["D_robustness"].get("untested", [])}
-    # Each factor is varied on its own. The cell labelled 8192/single-pos is scored on 1,002-bp
-    # windows (data/interim/eqtl_windows.parquet), so comparing it with (2048, single-pos) would run
+    # Each factor is varied on its own. Were the single-pos cell labelled 8192 -- it is scored on 1,002-bp
+    # windows (data/interim/eqtl_windows.parquet) -- comparing it with (2048, single-pos) would run
     # the window arm in the wrong direction, and comparing (8192, mean-LL) with it would make the
     # readout arm move the window at the same time. The matched pairs below avoid both.
     if (1002, "single-pos") in cells and (2048, "single-pos") in cells:

@@ -95,9 +95,9 @@ def main():
         vid.append(r["variant_id"])
         refs.append(seq)
         alts.append(alt)
-        # `off`, not `off + 1`. Two lines above, `off = HALF` is the index the window was actually
+        # `off`, not `off + 1`. Above, `off = HALF` is the index the window was actually
         # built at, and `alt` is constructed by substituting there. Recording off + 1 would contradict
-        # the construction on the very next line: the scorer would then read a flanking base for both
+        # that construction: the scorer would then read a flanking base for both
         # ref and alt and return exactly zero for every variant. The off + 1 "atlas convention"
         # belongs to the 1,002-bp atlas windows, not to these 1,001-bp ones.
         offs.append(off)                            # 0-based index of the variant in the window

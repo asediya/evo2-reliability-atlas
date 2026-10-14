@@ -1,8 +1,8 @@
-"""OOD / ABSTENTION arm (Fig 4): turn the calibration crown-jewel into a deployable SELECTIVE-PREDICTION
+"""OOD / ABSTENTION arm (Figure S4): turn the calibration crown-jewel into a deployable SELECTIVE-PREDICTION
 rule. A vet-genomics tool must know when NOT to answer. Using the TRANSFERRED calibrated probability
-(honest LOSO map from label-rich relatives, [[calibration-transfer]]), define confidence = |2p-1| and
-abstain on the least-confident variants. If the confidence is meaningful, discrimination on the RETAINED
-set rises as coverage falls (risk-coverage curve), and beats random abstention (AURC).
+(honest LOSO map from label-rich relatives, calibration_transfer.py), define confidence = |2p-1| and
+abstain on the least-confident variants. If the confidence is meaningful, error on the RETAINED
+set falls as coverage falls (risk-coverage curve), and beats random abstention (AURC).
 
 Pooled cross-species = the deployment picture (one calibrated Evo2 used across many species). CPU-only;
 runs on whatever species already have 40B scores. Writes logs/abstention.md + dashboard status.

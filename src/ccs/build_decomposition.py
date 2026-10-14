@@ -121,7 +121,7 @@ def main():
     pa_cf = cv_auroc(np.column_stack([FM, CS]), Y)
 
     lines = ["# Idea 2: decompose Evo2-40B vs conservation — what does the FM add?", "",
-             "Conservation = GERP (backfilled with phyloP). AUROC of conservation-only (C), Evo2-only (F), "
+             "Conservation = GERP. AUROC of conservation-only (C), Evo2-only (F), "
              "combined (C+F, 5-fold CV logistic). ΔFM = C+F − C = signal the FM adds beyond conservation.", "",
              "| species | n | pos | C (cons) | F (Evo2) | C+F | ΔFM | Spearman(F,C) | Evo2 AUROC @low-cons |",
              "|---|---|---|---|---|---|---|---|---|"]

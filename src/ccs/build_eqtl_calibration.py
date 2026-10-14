@@ -101,7 +101,7 @@ def main():
     disc = "discriminates" if max(auroc_signed, auroc_mag) >= 0.55 else "does NOT discriminate (~chance)"
     if max(auroc_signed, auroc_mag) < 0.55:
         verdict = "REGULATORY BLIND SPOT"
-        interp = ("Evo2 does not distinguish causal cis-eQTLs from LD-matched non-causal (~chance), so it is "
+        interp = ("Evo2 does not distinguish causal cis-eQTLs from within-eGene non-causal controls (~chance), so it is "
                   "uninformative for regulatory causality — a blind spot the calibrated trust-layer must flag "
                   "(abstain / maximum uncertainty on regulatory variants). Honest negative, on-thesis.")
     elif e_tr <= e_or * 1.5 or e_tr <= 0.06:
@@ -115,7 +115,7 @@ def main():
                   "over/under-trusts them. The trust-layer must recalibrate per variant type.")
 
     lines = ["# PLAN #2 — eQTL as CALIBRATION: does reliability transfer coding->regulatory? (regulatory reliability gap)", "",
-             f"Panel: {npos} causal (PIP>=0.9) + {nneg} non-causal LD-partner cis-eQTLs (pig, Sscrofa11.1).", "",
+             f"Panel: {npos} causal (PIP>=0.9) + {nneg} within-eGene non-causal cis-eQTLs (pig, Sscrofa11.1).", "",
              "## Discrimination (context — the TraitGym/LOL-EVE-claimed axis)",
              f"- AUROC (signed LLR): **{auroc_signed:.3f}** | AUROC (|LLR|): **{auroc_mag:.3f}** -> Evo2 {disc}.", "",
              "## Calibration transfer CODING -> REGULATORY (the novel axis)",

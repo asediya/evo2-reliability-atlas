@@ -2,9 +2,9 @@
 """A3 step 1 — emit the reference window's own mean log-likelihood, which the deposited scorer throws away.
 
 `score_evo2_meanll.py` computes MLL(ref) into `ref_ll_cache` and then writes only the difference
-`alt_ll - ref_ll`. No deposited or interim artefact retains it, so the Nullsettes objection — that
+`alt_ll - ref_ll`. Without this script the strand subset's MLL(ref) is lost, and the Nullsettes objection — that
 a genomic language model's accuracy at detecting loss of function collapses as the likelihood of
-the reference window itself falls — cannot be tested from what is on disk.
+the reference window itself falls — could not be tested on it.
 
 This scores the REFERENCE windows on their own, which is exactly MLL(ref). Combined with the
 deposited delta it also recovers MLL(alt) = delta + MLL(ref), so one extra pass gives all three.

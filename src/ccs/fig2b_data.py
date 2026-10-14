@@ -1,6 +1,6 @@
 """Figure 2 per-variant backbone: join per-species Evo2 scores to labels, compute ROC / Cohen's d / bootstrap
 CIs, and ASSERT every AUROC reconciles with the verified atlas (reports/compiled_results.parquet). Writes a
-per-variant parquet (for the raincloud / ROC-fan / beeswarm panels) + a summary json. Fails loudly on drift.
+per-variant parquet (for Figure 9's panel b) + a summary json. Fails loudly on drift.
 """
 import json, os
 import numpy as np
@@ -9,7 +9,7 @@ from scipy.stats import rankdata
 import sys
 
 # A referee on a cp437 console or with LC_ALL=C otherwise gets a traceback and a nonzero
-# exit from a run that succeeded; build_tables.py even wrote its outputs first.
+# exit from a run that succeeded.
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
@@ -68,7 +68,7 @@ def main():
     pv.write_parquet("reports/fig2_pervariant.parquet")
     json.dump(summ, open("reports/fig2b_summary.json", "w"), indent=1)
     print(f"\nwrote reports/fig2_pervariant.parquet ({pv.height} variants) + reports/fig2b_summary.json")
-    print("ALL 9 AUROCs reconcile with the verified atlas — panels B/C/G are safe to build.")
+    print("ALL 9 AUROCs reconcile with the verified atlas — Figure 9's panels a and b are safe to build.")
 
 
 if __name__ == "__main__":

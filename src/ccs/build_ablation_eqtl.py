@@ -1,4 +1,4 @@
-"""Build the eQTL harness/context ABLATION panels (answers reviewer critique #2).
+"""Build the eQTL harness/context ABLATION panels.
 
 Critique #2: the 1001-bp window + single-position left-context readout (both set by GPU memory)
 could MANUFACTURE the regulatory blind spot — Evo2-40B is at chance on causal cis-eQTLs (AUROC 0.496)

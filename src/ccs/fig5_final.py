@@ -41,7 +41,7 @@ WHAT THE FIGURE DOES AND DOES NOT CLAIM
 
 INPUTS (all produced by src/ccs/fig5_stats.py unless noted)
   reports/fig5_reach.json                          <- fig5_stats.main()
-  data/processed/conservation/{build}_gerp.parquet <- deposited GERP tracks
+  data/processed/conservation/{build}_gerp.parquet <- the undeposited data/ tree (FIGURES.md)
   reports/cnn_baseline.parquet                     <- src/ccs/cnn_baseline.py
   reports/fig2_data.json                           <- Fig 2, reused for verdict consistency only
 
@@ -179,7 +179,7 @@ def plate_cells(sp):
 
     Uses fig5_stats.order_by_position, which parses the id FROM THE RIGHT. A left-anchored regex
     cannot cross the underscore inside a RefSeq accession (NC_058368.1_...), so it returns
-    None and assigns one constant key to every unparsed variant -- 100% of cat's and horse's pathogenic
+    None and assigns one constant key to every unparsed variant -- 100% of cat's and horse's positive
     cells and ~89% of dog's would then be positioned by numpy's internal sort state. A literal dither, on
     exactly the half the thesis rests on.
     """
@@ -376,7 +376,7 @@ def panel_b(ax):
     # because of where it falls in the list, and the reader's eye zig-zags to read the row in
     # order. Nine horizontal names need ~169 pt and this axis is ~159 pt, so they genuinely do not
     # fit flat -- but rotated 90 deg each name is ~7 pt wide, the row needs ~85 pt, and one
-    # baseline fits easily. This is also the treatment Figure 9c and Figure 10e already use for
+    # baseline fits easily. This is also the treatment Figure S4e already uses for
     # species names, so the set gains a convention instead of a third variant.
     # xlim/ylim are set FIRST: label_row measures in the axes' own units.
     _span = YTOP - (-0.66)

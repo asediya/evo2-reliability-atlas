@@ -2,7 +2,7 @@
 """Deposit the phylogenetic-collapse sensitivity the manuscript quotes.
 
 The manuscript states that collapsing the nine species to one unit per taxonomic order leaves the
-macro Evo 2 advantage essentially unchanged, and that every one-representative-per-clade choice
+macro Evo 2 advantage essentially unchanged, and that every one-representative-per-order choice
 lands in a narrow band. Without this script none of those values would exist in any deposited
 artefact, only in the manuscript prose, so the one phylogenetic-sensitivity claim in the paper
 would be the one claim a referee could not check.
@@ -17,7 +17,7 @@ evidence. Two checks:
 
   collapse   average the deltas within each order, then take the unweighted mean over orders, so
              each order contributes once regardless of how many species represent it
-  choices    take every combination of one representative per clade and report the range, which
+  choices    take every combination of one representative per order and report the range, which
              bounds how much the answer depends on which relative happens to be in the panel
 
     python analyses/scripts/phylo_collapse_sensitivity.py

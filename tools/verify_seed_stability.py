@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """Is the published "2 of 9" a finding, or an artefact of seed=0?
 
-An adversarial pass claimed chicken sits on the significance boundary of the covered-subset contrast,
-and that whether its bootstrap interval excludes zero is decided by the RNG. If true, a count printed
-in the manuscript is a property of one arbitrary seed.
+Chicken may sit on the significance boundary of the covered-subset contrast,
+so that whether its bootstrap interval excludes zero is decided by the RNG. If true, a count printed
+in Additional file 1 is a property of one arbitrary seed.
 
 Re-runs the contrast across many seeds and counts how often each species is called significant. A
 species called significant on every seed, or on none, is stable. One near half is a coin flip wearing

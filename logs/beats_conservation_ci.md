@@ -1,6 +1,6 @@
 # STEP 2 - does Evo2-40B beat conservation (GERP)? One-sided bootstrap p + BH-FDR across 9 species
 
-Baseline = GERP (sole conservation baseline; the fabricated byte-identical phyloP copies are no longer used). The atlas statistic `p_40b_gt_cons` is the bootstrap fraction P(delta>0); we convert it to a one-sided p-value  p = 1 - P(delta>0)  and apply Benjamini-Hochberg at q<=0.05.
+Baseline = GERP (sole conservation baseline; the byte-identical phyloP copies of GERP are not used). The atlas statistic `p_40b_gt_cons` is the bootstrap fraction P(delta>0); we convert it to a one-sided p-value  p = 1 - P(delta>0)  and apply Benjamini-Hochberg at q<=0.05.
 
 AUROC Evo2, n and pos are the full panel's; AUROC GERP, Δ and P(Δ>0) are on the variants GERP scores (`reports/evo2_vs_conservation.parquet`), so Δ is not the difference of the two printed AUROCs.
 

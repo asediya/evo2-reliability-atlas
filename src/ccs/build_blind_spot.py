@@ -4,7 +4,7 @@ variants but is at CHANCE on REGULATORY variants, and the calibrated abstention 
 Three converging lines, all from on-disk data:
   (A) within-atlas per-consequence AUROC (class positives vs the SAME pooled matched negatives,
       within-species z-scored) -> missense/nonsense high, splicing lower, regulatory ~chance.
-  (B) independent regulatory panel: pig causal cis-eQTL vs LD-matched non-causal (from eqtl log).
+  (B) independent regulatory panel: pig candidate causal cis-eQTL vs within-eGene non-causal (from eqtl log).
   (C) abstention targeting: the coding-trained trust layer abstains MORE on regulatory (from eqtl log).
 Reuses annotate_consequence's WIN/POS config so loading is the scripts' own code.
   python src/ccs/build_blind_spot.py -> logs/blind_spot.md
@@ -101,7 +101,7 @@ def main():
         L.append(f"| {e} | {n} | {'%.3f' % a if a is not None else 'n<5'} |")
     L += ["", f"**CODING pooled (missense+nonsense+frameshift+start-lost) n={len(coding_pos)}: AUROC = {auc_coding:.3f}**",
           f"**REGULATORY n={len(reg_pos)}: AUROC = {'%.3f' % auc_reg if auc_reg is not None else 'n<5 (too few OMIA regulatory positives)'}**", "",
-          "## (B) Independent regulatory panel (pig causal cis-eQTL vs LD-matched non-causal)",
+          "## (B) Independent regulatory panel (pig candidate causal cis-eQTL vs within-eGene non-causal)",
           f"Evo2-40B AUROC(|LLR|) = **0.496** (chance) — see logs/eqtl_regulatory.md. Coding positive control on the",
           "same score column reaches 0.82-0.95, so the regulatory failure is real, not a scoring bug.", "",
           "## (C) The abstention layer targets the blind spot",

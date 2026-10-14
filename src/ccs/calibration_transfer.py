@@ -226,7 +226,7 @@ def baseline_report(data, rich):
           f"- Brier is effectively tied (median sigmoid={med_br_sig:.3f} vs isotonic={med_br_iso:.3f}); "
           "a 2-param sigmoid buys the same reliability as the nonparametric transfer.",
           f"- The base-rate constant is a genuine floor and both calibrators clear it.",
-          f"- Transfer ECE is **prevalence-SENSITIVE** and non-monotone: FINE near the ~9% deployment prevalence; at 25% it improves in "
+          f"- Transfer ECE is **prevalence-SENSITIVE** and non-monotone: FINE near the ~9% panel construction ratio; at 25% it improves in "
           f"{len(down25)} species ({', '.join(down25)}) and already rises in {len(up25)} ({', '.join(up25)}); at a balanced 50% it rises in "
           f"{up50} of {len(recs)}.{dogtxt}",
           "- Takeaway: the calibration-transfer win is real but NOT better than a trivial global sigmoid, "

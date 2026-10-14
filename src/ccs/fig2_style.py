@@ -1,4 +1,4 @@
-"""Shared visual system for Figure 2 (Cross-Species Reliability Atlas). One import so all 8 panels read as
+"""Shared visual system for the atlas plates (Figures 9 and 10, Figure S7). One import so their panels read as
 one object: clade palette, pathogenic/benign pair, PhyloPic silhouette loader (tinted), radial-tree layout."""
 import os
 import numpy as np
@@ -138,7 +138,7 @@ def layout_tree(node=TREE, y=None):
 
 def radial_positions(n=9, top_leaf="human", span_deg=336, gap_center_deg=90):
     """Angles (radians) for the 9 leaves around a circle: LEAF_ORDER kept contiguous (no branch crossing),
-    rotated so `top_leaf` sits at 12 o'clock, leaving a gap at the bottom."""
+    rotated so `top_leaf` sits at 12 o'clock, leaving a gap between the last and first leaves."""
     step = np.deg2rad(span_deg) / (n - 1)
     base = np.array([np.pi / 2 - i * step for i in range(n)])   # clockwise from top
     base -= (base[LEAF_ORDER.index(top_leaf)] - np.pi / 2)      # rotate so top_leaf at 90 deg

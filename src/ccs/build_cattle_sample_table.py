@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-"""Emit the cattle sample table the Methods promise is deposited.
+"""Emit the cattle sample table the Data Availability statement points to.
 
-The Methods state that the 7,394 individuals behind the cattle allele-frequency panel are described
+Additional file 1 (Note S31) states that the 7,394 samples behind the cattle allele-frequency panel are described
 by "the deposited sample table", and that "the individual accessions are in the deposited sample
-table for anyone who wishes to reconstruct it". No such table was in the deposit, so that sentence
-was false about its own archive. This writes it from the PLINK2 .psam files the panel was actually
+table for anyone who wishes to reconstruct it".
+This writes it from the PLINK2 .psam files the panel was actually
 built from, so the claim is backed by the artefact rather than by a promise.
 
     python src/ccs/build_cattle_sample_table.py

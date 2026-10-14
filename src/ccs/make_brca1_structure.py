@@ -85,7 +85,7 @@ def main():
     # ---- 3Dmol HTML: chain-specific Evo2 coloring (BARD1 stays gray), Zn spheres, labeled residues ----
     chain_id = chain.id
     # C3HC4 cross-brace RING zinc cage = 7 Cys + His41 (all in the 1-103 RING structure). Show all 8 ligand
-    # side-chains as sticks, but TEXT-label only His41 (the non-Cys ligand) + C61 (pathogenic) so the small
+    # side-chains as sticks, but TEXT-label only C24 and C61 (one per zinc site) so the small
     # composite panel stays legible; the full ligand set is named in panel a + the caption.
     stick_res = [24, 27, 39, 41, 44, 47, 61, 64] if (a.domain == "ring" and a.color == "evo2") else []
     # label two SPATIALLY SEPARATED ligands (one per zinc site) so the tags don't collide:

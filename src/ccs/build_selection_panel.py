@@ -1,6 +1,6 @@
 import sys
 """Idea 1: escape the disease-label ceiling using PURIFYING SELECTION as genome-scale, label-free
-ground truth. Stratified-sample variants across the site-frequency spectrum from the ~7,400-individual
+ground truth. Stratified-sample variants across the site-frequency spectrum from the ~7,400-sample
 population panel (data/interim/geno_pgen/*.afreq, 44.5M variants). If Evo2 is real, its predicted
 deleteriousness should RISE as allele frequency FALLS (rare = kept rare by selection = damaging).
 

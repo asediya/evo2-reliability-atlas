@@ -138,7 +138,7 @@ score into three things a user can actually act on:
 ```bash
 pip install glmtrust            # from PyPI (when published)
 # or, from a checkout:
-pip install -e ".[io]"          # [io] adds polars for parquet input in the CLI
+pip install -e "./glmtrust[io]"          # [io] adds polars for parquet input in the CLI
 ```
 
 Requires Python ≥ 3.9 and `numpy`, `scipy`, `scikit-learn`.

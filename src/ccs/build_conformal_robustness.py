@@ -1,6 +1,6 @@
 """STEP 2 hardening: DE-RISK the conformal claim (the #1 reviewer-fatal item).
 
-The draft over-claims a 'distribution-free finite-sample GUARANTEE on a zero-label species'. Two honest fixes:
+It would over-claim to state a 'distribution-free finite-sample GUARANTEE on a zero-label species'. Two honest fixes:
   (1) reframe as coverage under a STATED, TESTED cross-species exchangeability assumption;
   (2) a PREVALENCE-SHIFT robustness experiment: resample the held-out targets to a range of pathogenic
       prevalences (5%..50%) and show MONDRIAN (class-conditional) coverage holds ~nominal across all of
@@ -108,7 +108,7 @@ def main():
               f"The class-conditional (Mondrian) guarantee is {'ROBUST' if holds else 'approximately robust'} to the "
               "prevalence/imbalance shift that a reviewer would attack -- which is why it, not marginal coverage, is the headline.",
               "",
-              "**Honest reframing (replaces the over-claim):** we do NOT claim a distribution-free finite-sample guarantee "
+              "**Honest reframing:** we do NOT claim a distribution-free finite-sample guarantee "
               "on an unseen species; cross-species transport violates exact exchangeability. We claim, and here TEST, "
               "coverage under a stated cross-species exchangeability assumption -- empirically it holds (Mondrian ~nominal) "
               "and degrades gracefully, and the observed OVER-coverage comes from ties in the isotonic posterior, which "

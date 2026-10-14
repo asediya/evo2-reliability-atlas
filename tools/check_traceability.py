@@ -11,7 +11,7 @@ drifted. It is deliberately a SECOND layer, not a replacement for tools/verify_f
                        artifact, only a wrong quotation of one.
 
 Both matter and neither substitutes for the other. Saying otherwise would overstate what a
-cross-reading proves, which is the distinction the reviewer prompt asks referees to observe.
+cross-reading proves.
 
 The table is BUILT by tools/build_traceability_table.py, which resolves each candidate and keeps only
 those that resolve and agree. Rebuild it after any change to the recompute layer.

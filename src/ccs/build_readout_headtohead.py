@@ -4,7 +4,7 @@ BOTH methods can score.
 Why this exists. The main-text co-scoreable comparison is reported at the 1,001-bp
 single-position readout, where the pooled estimate is a near-tie (Evo2 0.8805 vs GERP 0.8780). But
 the paper's own headline discrimination uses the 8,192-bp mean-log-likelihood readout, which is
-worth ~+0.071 AUROC. This script asks the question the paper never did: on the variants GERP can
+worth ~+0.071 AUROC. This script asks: on the variants GERP can
 score, does the field-standard readout change the head-to-head?
 
 It is a like-for-like test: same variants (finite GERP), same panels, Evo 2 scored at 8,192-bp
