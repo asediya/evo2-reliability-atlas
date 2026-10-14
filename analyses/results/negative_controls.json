@@ -10,7 +10,7 @@
     {
       "control": "Reference likelihood alone, splicing panel",
       "expectation_if_false": "The same, on a panel with cell-measured labels",
-      "observed": "0.5122 [0.4925, 0.5323] at 1B; 0.5736 [0.5519, 0.5961] at 7B, the largest of the four and the reading that counts most against us",
+      "observed": "0.5122 [0.4921, 0.5326] at 1B; 0.5736 [0.5509, 0.5966] at 7B, the largest of the four and the reading that counts most against us",
       "artefact": "analyses/results/mfass_evo2_vs_specialists.json"
     },
     {

@@ -63,7 +63,7 @@ def main():
     rows.append((
         "Reference likelihood alone, splicing panel",
         "The same, on a panel with cell-measured labels",
-        "%.4f [0.4925, 0.5323] at 1B; %.4f [0.5519, 0.5961] at 7B, the largest of the four and "
+        "%.4f [0.4921, 0.5326] at 1B; %.4f [0.5509, 0.5966] at 7B, the largest of the four and "
         "the reading that counts most against us"
         % (m["models"]["1b"]["ref_likelihood_alone"], m["models"]["7b"]["ref_likelihood_alone"]),
         "analyses/results/mfass_evo2_vs_specialists.json"))
