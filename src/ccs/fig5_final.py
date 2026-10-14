@@ -52,6 +52,8 @@ from pathlib import Path
 import numpy as np
 import polars as pl
 import matplotlib as mpl
+# Agg is pinned, as in fig3_rebuild.py: the active backend sets the page size and the text layout.
+mpl.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 
