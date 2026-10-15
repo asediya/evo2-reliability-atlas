@@ -30,4 +30,4 @@ started from the same base image and installed `evo2` at launch. The checkpoints
 Institute releases on Hugging Face: `evo2_40b`, `evo2_7b` and `evo2_1b_base`, with `evo2_7b_base`
 as the 7B rung of the splicing and ClinVar panel ladders.
 
-Which script produced which scores is set out in Additional file 1, Note S30.
+Which script produced which scores is set out in Additional file 1, Note S26.

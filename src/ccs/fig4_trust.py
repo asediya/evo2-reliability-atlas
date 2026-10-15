@@ -299,7 +299,7 @@ def panel_a(fig, gs_slice):
         # "highest local error ... BUT 82% of missed positives sit LEFT of it, out in
         # confidently-negative territory" would make two claims: it would name the band and then
         # argue with the reader about what the band means. The label names the band, with every
-        # number; the argument belongs to the legend and Additional file 1 Note S59.
+        # number; the argument belongs to the legend and Additional file 1 Note S3.
         # Grey, unbolded, and set in the strip's own headroom rather than haloed over the profile
         # curve, so the caption does not sit on the line it describes.
         axm.annotate(f"Band: logit {h0:+.1f} to {h1:+.1f} — {_rate:.0%} local error, "
@@ -472,7 +472,7 @@ def panel_a(fig, gs_slice):
     del n_over, n_thin
     # The argument that refusal is not class-neutral ("731 of 893 errors are MISSED positives and
     # only 26% of those are caught, against 77% of the 162 harmless over-calls") belongs to the
-    # legend and Additional file 1 Note S43, not to the canvas in red bold. Its five
+    # legend and Additional file 1 Note S10, not to the canvas in red bold. Its five
     # numbers do not: they are the census of the dots this panel draws, so they stay as one plain
     # grey line that counts the marks rather than interpreting them.
     # The wrap width is DERIVED from the axes box so the block cannot reach past the grid's right
@@ -580,11 +580,11 @@ def panel_b(ax):
              .transformed(ax.transAxes.inverted()).y0) - 0.035
     # Counted, not asserted, and not set on the canvas: "all four straddle zero" holds
     # only if ece_mass splits tied scores on row order. With ties binned by value, mass15 leaves
-    # the null and favours transfer; Notes S43 and S48 state the count.
+    # the null and favours transfer; Notes S36 and S37 state the count.
     #
     # This line does not argue. A clause such as "... — 88% of the pooled mass favours transfer,
     # A COIN-FLIP RATHER THAN AN EFFECT" is the reading of the posteriors, not the posteriors.
-    # That clause is the legend's and Note S48's to make. The three counts stay, because they measure
+    # That clause is the legend's and Note S37's to make. The three counts stay, because they measure
     # the four densities drawn above and appear nowhere else on the canvas.
     NR = R["null_robustness"]
     n_ind, n_est = NR["n_indistinguishable"], NR["n_macro_estimators"]
@@ -594,7 +594,7 @@ def panel_b(ax):
     # bootstrap densities of one contrast. And spell the dissenter with the key's own label:
     # "mass15" is a raw dict key matching none of the four labels drawn in the key below the axes.
     dis = ", ".join(lab[k] for k in NR["dissenting"]) or "none"
-    _ = (n_ind, n_est, frac, dis)   # stated in Notes S43 and S48; not set on the canvas
+    _ = (n_ind, n_est, frac, dis)   # stated in Notes S36 and S37; not set on the canvas
 
 
 # ---------------------------------------------------------------- c. what abstention buys
@@ -681,7 +681,7 @@ def panel_dm(ax):
     First, a POOLED ECE misleads. Pooling nine species whose base rates run from 4 % to 30 % lets one
     species' over-confidence cancel another's under-confidence inside a shared reliability bin, so
     the transfer appears to cut calibration error tenfold. This module's own header rejects pooled
-    ECE for exactly that reason. The pooled gap is also three times the upper bound Note S66
+    ECE for exactly that reason. The pooled gap is also three times the upper bound Note S36
     places on any advantage of the transfer, and printing it would contradict panel b, which plots
     the paired macro delta-ECE entirely between -0.015 and +0.005.
 
@@ -692,7 +692,7 @@ def panel_dm(ax):
     0.0541/0.0501 from platt_LOSO, and matches Table S23 to four decimals in none of the nine
     species under either. reports/calibration_transfer.parquet, which tabulates the same quantity,
     disagrees with both and with S23 (goat isotonic 0.0555 against S23's 0.0564). The isotonic
-    column IS the right one -- it carries the 248 distinct values Note S44 attributes to it -- so
+    column IS the right one -- it carries the 248 distinct values Note S36 attributes to it -- so
     this is a lineage gap in the trivial arm, not a wrong column. Printing any of the three pairs
     on the plate would put a fourth number into circulation that no table backs.
 

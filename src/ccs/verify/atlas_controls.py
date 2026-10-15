@@ -4,7 +4,6 @@
 The controls in `reports/verify_controls.json`
 are computed on `data/interim/verify_table.parquet` -- a 1,999-variant subset, scored with an
 exploratory evo2+phylop *ensemble* that is not a manuscript result.
-(delete this line)
 This script computes both controls on the panel the paper reports:
 
   * Panel: the same nine per-species scoring-window tables `build_atlas.py` assembles (11,130
@@ -12,8 +11,7 @@ This script computes both controls on the panel the paper reports:
     the hosted path, exactly as `build_atlas.py`).
   * Composition control: a classifier restricted to two composition variables -- reference
     trinucleotide (the 3-mer centred on the variant), on which the atlas negatives are matched, and
-    local GC over a 101-bp window, on which they are not (the window of `build_matched_negatives.py`,
-    W=101, which builds a separate GC-matched cattle panel). Reported as an out-of-fold AUROC with a
+    local GC over a 101-bp window, on which they are not. Reported as an out-of-fold AUROC with a
     TWO-SIDED verdict |AUROC - 0.5| < 0.10, plus the trinucleotide-spectrum chi-square and the GC
     Mann-Whitney test (the direct "is it matched" statistics, which do not overfit at small n).
   * Spatial control: Evo 2-40B ALONE (not the ensemble), full panel vs after dropping negatives
@@ -50,7 +48,7 @@ WIN = {
     "cattle": "cattle_ensvar_scoring_windows", "dog": "dog_cf3_scoring_windows",
     "human": "human_scoring_windows",
 }
-GCW = 50  # +/-50 bp -> 101-bp window, matching build_matched_negatives.py (W=101)
+GCW = 50  # +/-50 bp -> 101-bp window
 
 
 def load_score(sp):

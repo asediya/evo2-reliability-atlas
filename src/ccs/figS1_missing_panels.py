@@ -6,7 +6,7 @@
 WHAT IS DRAWN. The posterior is the p column of reports/fig4_pervariant.parquet: the two-parameter Platt
 map fitted leave-one-species-out on the donor pool and applied to the held-out species, at the 1,001-bp
 single-token readout. It is the posterior Figure S4 plots and the selective-prediction results use
-(Methods; Additional file 1, Note S59), so this figure and those results describe one object.
+(Methods; Additional file 1, Note S37), so this figure and those results describe one object.
 
 One small panel per species, in the species tree's order (Figure 9), and a last panel with all 11,130
 calls pooled. In every panel, ten equal-mass bins: each marker is a tenth of that panel's variants,
@@ -16,7 +16,7 @@ equal-width bins hold too few variants to estimate a frequency. The panel titles
 of positives, because the one panel built 1:1 (human) is the one the transferred map fits worst.
 
 NO ECE ON THE PLATE. Expected calibration error is a family of estimators whose members disagree on this
-posterior (Note S44); Table S23 gives the per-species values under the estimator the paper uses, and a
+posterior (Note S36); Table S23 gives the per-species values under the estimator the paper uses, and a
 single number printed here under another estimator would be one more unanchored ECE.
 
 House style (src/ccs/style_gb.py): 170 mm wide, PANEL 12.0 / AXIS 9.0 / TICK 8.4 / ANNOT 7.4 on a

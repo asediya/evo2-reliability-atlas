@@ -3,7 +3,7 @@
 
 At 1B and 7B, agreement between a window and its reverse complement gets *worse* as capacity grows:
 Pearson 0.577 -> 0.442, and the AUROC an arbitrary strand choice moves grows 0.018 -> 0.028, which
-is 7.6x then 11.8x the 0.0024 pooled margin of the 1,001-bp near-tie (Note S12). The obvious reply is
+is 7.6x then 11.8x the 0.0024 pooled margin of the 1,001-bp near-tie (Note S28). The obvious reply is
 that the trend reverses at the deployed scale. This measures whether it does.
 
 The same run also carries the reference-likelihood confound at 8,192 bp: MLL(ref) scored on its own,

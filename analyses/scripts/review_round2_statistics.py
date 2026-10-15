@@ -20,7 +20,7 @@ S10 The 85% knee was chosen on the panel its benefit is then reported on, which 
     eight species and re-measure the risk reduction it delivers on the ninth, once per species.
 
 S12 On the human ClinVar missense panel a gene-clustered bootstrap interval runs 5.9 times wider than
-    the closed-form one (Additional file 1, Note S28), and the manuscript leaves that sentence next to
+    the closed-form one (Additional file 1, Note S8), and the manuscript leaves that sentence next to
     its own headline without saying whether the headline survives it. Re-run the random-effects pool with every per-species DeLong
     standard error inflated, and report at what inflation the interval first touches zero.
 

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """Emit the cattle sample table the Data Availability statement points to.
 
-Additional file 1 (Note S31) states that the 7,394 samples behind the cattle allele-frequency panel are described
-by "the deposited sample table", and that "the individual accessions are in the deposited sample
-table for anyone who wishes to reconstruct it".
+Additional file 1 (Note S41) states that the 7,394 samples behind the cattle allele-frequency panel are described
+by "the deposited sample table", and that "The sample identifiers are in the deposited sample table (built from the PLINK2
+.psam files)".
 This writes it from the PLINK2 .psam files the panel was actually
 built from, so the claim is backed by the artefact rather than by a promise.
 

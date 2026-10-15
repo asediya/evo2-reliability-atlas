@@ -47,8 +47,7 @@ manual and the page loads 3Dmol.js unversioned from a CDN, so that step is repro
 rather than in bytes: a re-render matched BRCT within 0.1% on aspect and drew RING 1.5% wider.
 
 The table below is authoritative for the figures it maps. Among the other `src/ccs/fig*` modules, `fig2_data`, `fig3_data`, `fig3_stats`, `fig4_asym_stats`, `fig4_matrix_stats`,
-`fig4_reconcile`, `fig5_stats` and `fig6_stats` are sources of published numbers (`fig4_asym` and
-`fig4_matrix` only draw what the two `_stats` modules write),
+`fig4_reconcile`, `fig5_stats` and `fig6_stats` are sources of published numbers,
 `fig7_atlas.py` and `fig8_readout.py` read the atlas through `fig2_measure` and `fig2_style` and draw with
 `style_main`, the style module shared with Figures 1 to 8, and `fig2_split.py` draws Figure S7 from
 `fig2_measure`.
@@ -61,7 +60,7 @@ python -m src.ccs.fig5_final
 
 Use the `-m` form. The builders import sibling modules (`fig5_final` imports `fig5_stats`); most fall back to
 a flat import when run as a file, but `fig4_trust` and `fig5_final` also use relative imports that only resolve
-under `-m`, and `tools/stage_figures.py` runs every builder that way.
+under `-m`.
 
 ## Two numbering systems
 
@@ -73,12 +72,11 @@ Read this before matching any filename to any figure.
 2. **Submission numbering** — Figures 1 to 10 and Additional file 1's Figures S1 to S12.
 
 Three builder output names carry their figure's number (`Figure2.pdf`, `figS1_missing_panels.pdf`
-and `FigureS7_measurement_supp.pdf`) and the rest do not, so the table below is the map.
-`tools/stage_figures.py` stages builder outputs to the names in its last column and must be edited
-with this table, never separately. It agrees with Additional file 1's Note S58 on which builders
+and `FigureS7_measurement_supp.pdf`) and the rest do not, so the table below is the map;
+its last column gives the submitted file name for Figures 1 to 10 (`fig1.pdf` to `fig10.pdf`); Additional file 1's figures are embedded in that document, so the names given for them are labels only. The table agrees with Additional file 1's Note S44 on which builders
 need the undeposited `data/` tree (Figures S3, S5 and S6).
 
-| Figure | Builder output | Live builder | Recompute layer it draws from | Staged as |
+| Figure | Builder output | Live builder | Recompute layer it draws from | Submission name |
 |---|---|---|---|---|
 | Figure 1 | `FigureConcept.pdf` | **Additional file 3** `figures/build_concept.py` | none: a constructed toy panel of 16 variants and three predictors, whose verdicts the builder asserts | `fig1.pdf` |
 | Figure 2 | `Figure2.pdf` | **Additional file 3** `figures/build_fig2.py` | `figures/dbnsfp_49.csv`, `figures/fig2_raster.json` and `figures/dbnsfp_49_provenance.csv`, from `tables/dbnsfp_reach_panel.parquet` and `tables/dbnsfp_predictors.csv` | `fig2.pdf` |
@@ -117,18 +115,8 @@ Of the rows whose builder output carries a number, every one but Figures 2, S1 a
 with it, which is why the table is written down rather than inferred: `fig6_final.py` writes `Figure6_curator.pdf`, which is Additional file 1's
 Figure S3.
 
-**`tools/stage_figures.py` applies the map in the table above for the figures built here.**
-It holds the builder-to-deliverable mapping and copies builder outputs to the staged names. Its
-`--check` mode reports any deliverable that is behind its builder without changing anything. It does
-not handle Figures 1 to 8 or Figures S8 to S12: those are built in Additional file 3 and copied in, and that
+Figures 1 to 8 and Figures S8 to S12 are built in Additional file 3, and that
 archive's `figures/README.md` says how to build them.
-
-```bash
-python tools/stage_figures.py       # copies builder outputs to the staged names
-                                    # NEEDS CCS_TABLES and data/: it rebuilds rather than renames, so
-                                    # it stops at the first builder whose input is absent (with only
-                                    # Additional file 3's tables, at a missing conservation parquet)
-```
 
 `fig5_final.py` builds Additional file 1's Figure S5.
 
@@ -136,6 +124,5 @@ python tools/stage_figures.py       # copies builder outputs to the staged names
 class-asymmetry plane and the operating-point intervals, emitting `reports/fig4_asym.json` and
 `fig4_matrix.json`; `reports/fig4_leak.json`, the leakage control, is a deposited input with no
 in-deposit writer (`reports/DATA_MANIFEST.md`). Those JSONs are quoted in the text rather than opened
-by the renderer; `fig4_asym.py`, `fig4_matrix.py` and `fig4_leak.py` draw from them, and no submitted
-figure uses their drawings. `fig4_reconcile.py` and
+by the renderer. `fig4_reconcile.py` and
 `fig4_field_stats.py` emit the artefacts the renderer does open. `fig4_trust.py` is the *renderer*.

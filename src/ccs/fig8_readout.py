@@ -207,7 +207,7 @@ for key, lab, mask in STRATA:
                     a1=a1, a8=a8, lo=lo, hi=hi, mask=mask))
 SD = {s["label"]: s for s in STR}
 assert SD["coding"]["n"] + SD["non-coding"]["n"] == SD["unmatched"]["n"]
-# The strata's sizes and 8,192-bp AUROCs as Additional file 1's Notes S27 and S59 print them, and the readout
+# The strata's sizes and 8,192-bp AUROCs as Additional file 1's Notes S3 and S16 print them, and the readout
 # gains. Both readouts are read on the same variants, so the gains are variant-matched, and the unmatched
 # row reads the paper's pooled +0.092.
 for lab, n8, a8, gain in (("unmatched", "11,109", "0.973", "+0.092"),
@@ -219,7 +219,7 @@ for lab, n8, a8, gain in (("unmatched", "11,109", "0.973", "+0.092"),
     published("%s: variants behind the 1,001-bp value (variant-matched)" % lab, n8, F.thousands(s["n1"]))
     published("%s: pooled AUROC at 8,192 bp" % lab, a8, F.fnum(s["a8"], 3))
     published("%s: readout gain, variant-matched" % lab, gain, F.signed(s["a8"] - s["a1"]))
-published("pooled readout gain on the 11,109 (Table S1, Note S43)", "+0.092",
+published("pooled readout gain on the 11,109 (Table S1, Note S18)", "+0.092",
           F.signed(SD["unmatched"]["a8"] - SD["unmatched"]["a1"]))
 published("pooled missense AUROC at 1,001 bp", "0.799", F.fnum(SD["missense"]["a1"], 3))
 # the main text's pooled missense stratum, with the locus-clustered interval panel b draws
@@ -306,7 +306,7 @@ published("species-mean margin, 1,001 bp (Fig. 10c)", "+0.047 [−0.009, +0.104]
 published("species-mean margin, 8,192 bp (Fig. 10c)", "+0.108 [+0.058, +0.159]", brack(*HM["m8"]))
 GAIN_T = MEAS._tint([H[s]["m8"] - H[s]["m1"] for s in ORDER])
 published("paired change in margin", "+0.061 (+0.027 to +0.095)", paren(*GAIN_T))
-published("positive-bearing loci: goat, chicken, human (Note S59)", "1 in goat and 19 in chicken to 908 in human",
+published("positive-bearing loci: goat, chicken, human (Note S3)", "1 in goat and 19 in chicken to 908 in human",
           "%d in goat and %d in chicken to %d in human" % tuple(H[s]["pos_loci"] for s in ("goat", "chicken", "human")))
 _est = [s for s in ORDER if s not in MEAS.NO_CLUSTER_INTERVAL]
 published("8,192 bp: species with a positive margin", "all nine",
@@ -383,9 +383,9 @@ published("GERP per base against averaged over the windows (MS)", "0.831 to 0.58
                                                         F.fnum(WM["w8"][0], 3)))
 published("Evo 2 at 8,192 bp on the same variants (MS)", "0.939", F.fnum(WM["e8"][0], 3))
 published("Evo 2 at 1,001 bp on the same variants", "0.878", F.fnum(WM["e1"][0], 3))
-published("window average below GERP per base (Note S11)", "eight of the nine",
+published("window average below GERP per base (Note S28)", "eight of the nine",
           {8: "eight of the nine", 9: "nine of the nine"}.get(sum(WIN[s]["w8"] < WIN[s]["g"] for s in ORDER), "other"))
-published("GERP, per base to the 8,192-bp window (Note S11)", "−0.301 (−0.439 to −0.163)",
+published("GERP, per base to the 8,192-bp window (Note S28)", "−0.301 (−0.439 to −0.163)",
           paren(*MEAS._tint([WIN[s]["w8"] - WIN[s]["g"] for s in ORDER])))
 # derived, not a printed value: on d's 9,528 variants Evo 2's own gain is the paired change c prints
 assert paren(*MEAS._tint([WIN[s]["e8"] - WIN[s]["e1"] for s in ORDER])) == paren(*GAIN_T)

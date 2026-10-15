@@ -5,7 +5,7 @@ Every rung here is scored by `src/ccs/score_evo2_40b_local.py` on the same 1,001
 readout, the panel and the window length are held fixed and only the checkpoint moves. That is the
 whole point: the deposited 1B and 7B scores for these panels come from the BioNeMo window-sum
 scorer, so reading them against a streamed 40B number would move capacity and readout together --
-the confound Note S36 avoids for the strand ladder by holding panel and window fixed.
+the confound Note S38 avoids for the strand ladder by holding panel and window fixed.
 
 One difference between rungs is NOT capacity and the table says so per row. Evo 2 ships two lines:
 the 8k-trained checkpoints (`evo2_1b_base`, `evo2_7b_base`, `evo2_40b_base`) and the

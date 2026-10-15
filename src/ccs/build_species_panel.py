@@ -1,6 +1,6 @@
 """CP2 — build a per-species OMIA positives panel from the parsed multispecies table.
 
-Generalizes build_omia_panel.py to any annex species. Positives come straight from the
+Positives come straight from the
 HGVS-parsed multispecies parquet (chrom_label already Ensembl-style for the annex species);
 we keep only SNVs on chromosomes present in the target genome .fai, so downstream
 window-extraction + ref-allele verification can run against the local reference FASTA.

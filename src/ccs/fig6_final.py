@@ -622,7 +622,7 @@ def panel_c(ax):
     # claim is cross-species generality.
     # THE BAND IS THE SPECIES MEAN, the paper's primary aggregation everywhere else: the unweighted
     # mean of the nine lifts with its t interval on 8 degrees of freedom (+0.071 [+0.029, +0.113] in
-    # Note S15 and the Analyses). The n-weighted mean (+0.054, species-clustered interval) lets human's
+    # Note S17 and the Analyses). The n-weighted mean (+0.054, species-clustered interval) lets human's
     # and dog's panels carry half the weight; it is kept in the legend, not on the plate.
     from scipy import stats as _st
     _v = np.array([r["a_cf"] - r["a_c"] for r in rows], float)
@@ -706,8 +706,8 @@ def panel_c(ax):
     # on the rendered axes, so a change of type size or box fails the build instead of shipping
     # a label that the diagonal runs through. Nothing else catches it:
     # no text-vs-text pair overlaps (the tick labels are the only neighbours and they are a
-    # separate artist), and tools/inkunder.py averages edge density over the whole span box, so three
-    # thin strokes across a wide label dilute below its 10% bar.
+    # separate artist), and an edge-density average over the whole span box would let three
+    # thin strokes across a wide label dilute below a 10% bar.
     # The four-line split below makes it fit.
     # The budget is arithmetic, not taste: on square axes the diagonal runs corner to corner, so a
     # right-aligned line whose top edge sits at axes-y t may be at most (0.99 - t) * 104.9 pt wide.

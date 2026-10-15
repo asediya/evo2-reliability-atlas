@@ -451,7 +451,7 @@ def panel_e(ax, box):
             bbox=dict(facecolor="white", edgecolor="none", alpha=0.88, pad=0.9))
     ax.plot([XLO + 0.012], [gy - 0.20], marker="D", ms=3.4, color=POS, clip_on=False, zorder=5)
     # White plate, like the two section headers above: the chance rule at x = 0.5 runs straight
-    # through this label (14.1% edge density under it, tools/inkunder.py).
+    # through this label (14.1% edge density under it).
     ax.text(XLO + 0.028, gy - 0.20, "Circular by construction", fontsize=FOOT, color=MUTED,
             ha="left", va="center",
             bbox=dict(facecolor="white", edgecolor="none", alpha=0.88, pad=0.9))

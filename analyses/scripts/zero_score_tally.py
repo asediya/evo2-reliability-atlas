@@ -11,8 +11,8 @@ the model expressed no preference at all, and there are only two ways to get it:
   a numerical tie -- the two logits are equal after reduced-precision inference. The model really
   did read the two alleles as equally likely at that site.
 
-Worth counting for two reasons. A whole panel of zeros is the signature of a var_off fault, which
-`tools/check_var_off.py` guards against. And a score of
+Worth counting for two reasons. A whole panel of zeros is the signature of a var_off fault.
+And a score of
 exactly zero sits at the centre of the score distribution, so under a rank-based abstention rule
 these variants land in a tie block, which the paper's selective layer has to say something about.
 

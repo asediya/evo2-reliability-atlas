@@ -21,7 +21,7 @@ carry them, and none of them is data:
      tandem BRCT + BACH1 phosphopeptide"). The PDB accessions themselves stay on the canvas as
      the column subtitles; only the composition detail is in the legend.
 Two numeric values are therefore not on the canvas -- 0.73 (the 1B notebook AUROC) and 103 (the RING
-construct's last residue) -- and the legend states 0.73 (Note S43) but not the construct bounds.
+construct's last residue) -- and the legend states 0.73 (Note S10) but not the construct bounds.
 """
 import sys, os
 import json
@@ -130,7 +130,7 @@ def load_heatmap():
 # (make_brca1_structure.py, label_res = [24, 61]) bakes its labels into the raster at a size the
 # renderer picks, and here that came out at roughly 2.2 pt: a third of style_gb.FLOOR, unreadable
 # at print size, and invisible to EVERY gate in this repo because raster text is not in the PDF's
-# text layer. pdfcheck sees no span, the 6.5 pt floor is never tested.
+# text layer. A text-layer check sees no span, so the 6.5 pt floor is never tested.
 #
 # Re-rendering needs the 3Dmol/browser pipeline, which is not available here, so the baked labels
 # are covered on their own white plates and redrawn as real text at ANNOT. They also read "CYS24"
@@ -280,7 +280,7 @@ def main():
     # both must stay anchored near the same residues.
     # The caption's second line is counted, not asserted. Every ligand is loss-of-function in the
     # experiment (worst class LOF, rank 2), but not every one is deleterious in Evo 2: ranked among
-    # the 326 scored residues, seven sit above the 90th percentile and C47 at the 56th (Note S43).
+    # the 326 scored residues, seven sit above the 90th percentile and C47 at the 56th (Note S10).
     _pct = {int(r_): 100.0 * (k_ - 1) / (len(ev) - 1)
             for r_, k_ in zip(res, rankdata(ev, method="average"))}
     _worst = dict(zip(rs["residue"].to_list(), rs["sge_worst"].to_list()))
@@ -455,7 +455,7 @@ def main():
         # the cloud, and shrinkA holds the leader off the text box instead of letting it start inside it.
         # NO PATH EFFECT. A white halo (withStroke, 2.4 pt) would make matplotlib
         # render these three strings as vector PATHS and leave only an alpha-0 copy in the PDF text
-        # layer -- so pdfcheck could not measure their type size, could not test them for
+        # layer -- so a text-layer check could not measure their type size, could not test them for
         # collisions, and would report bboxes that do not correspond to the painted glyphs. The
         # labels sit in bands the scatter does not enter (nothing above 0.0129 except residue 1837,
         # and the 0.0105-0.0120 band is empty between x 1.0 and 2.4) and shrinkA holds the leader off
@@ -500,7 +500,7 @@ def main():
     plt.rcParams.update({"mathtext.fontset": "custom", "mathtext.default": "regular",
                          "mathtext.rm": "Arial", "mathtext.it": "Arial:italic",
                          "mathtext.bf": "Arial:bold"})
-    pstr = f"{p_all / 10.0 ** pe:.0f} $\\times$ 10$^{{{pe}}}$"   # 7 x 10^-24, as AF1 Note S43
+    pstr = f"{p_all / 10.0 ** pe:.0f} $\\times$ 10$^{{{pe}}}$"   # 7 x 10^-24, as AF1 Note S10
     axV.legend(handles=[Line2D([0], [0], marker=DOM_MARK[0], color="none", markerfacecolor=RING_C, markersize=6.5, label="RING"),
                         Line2D([0], [0], marker=DOM_MARK[1], color="none", markerfacecolor=BRCT_C, markersize=6.5, label="BRCT"),
                         # "linker", without "(n = 11)": the count ran the row out of the marker-free
@@ -510,8 +510,8 @@ def main():
                # "start-loss (res 1)" ring and its leader land: the pink circle would enclose the "N"
                # of "RING", so the key would read as though it were the thing being annotated. A ring
                # is a path, not a text span, so a text-vs-text collision count is blind by
-               # construction; tools/inkunder.py, which redacts the text and measures the ink
-               # underneath, puts the word there on 25% cover at 14.7% edge density, the worst on the
+               # construction; redacting the text and measuring the ink
+               # underneath puts the word there on 25% cover at 14.7% edge density, the worst on the
                # page. The marker-free rectangle at x < 0.7, y > 0.0105 is 60 x 68 pt: too small for
                # the nine-line stats card (209 pt wide, which is why it sits under the panel), ample
                # for three legend rows. The 0.86 matters -- flush at 1.0 the key would cross the
@@ -541,7 +541,7 @@ def main():
              # rₛ either: Arial has no subscript s, and a mathtext subscript prints under the 7.0 pt
              # floor. The legend and the Notes write the same statistic as rₛ.
              # No p-value on the plate: its exponent, set as a superscript, rendered at 5.2 pt, under the
-             # 7.0 pt floor, and the interval beside it already carries the inference; Note S43 prints
+             # 7.0 pt floor, and the interval beside it already carries the inference; Note S10 prints
              # it (p = 7 x 10^-24).
              f"Per-residue Spearman correlation  (n = {len(ev)})\n"
              f" RING {rho_ring:+.2f} (n = {n_ring})  ·  BRCT {rho_brct:+.2f} (n = {n_brct})\n"

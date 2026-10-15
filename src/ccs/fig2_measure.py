@@ -298,7 +298,7 @@ def panel_c(ax):
     ax.set_xticks([slot_x[t] for t in ticks])
     ax.set_xticklabels(["%d My" % t for t in ticks], fontsize=ANNOT)
     # 16.5 pt below the axis line, in points. At 12.5 pt this row would collide with the tick labels
-    # above it by 1.47 pt (tools/pdfcheck.py): a tick label at ANNOT ends 2.2 pt of tick + 3.5 pt of
+    # above it by 1.47 pt: a tick label at ANNOT ends 2.2 pt of tick + 3.5 pt of
     # pad + one 8.5 pt line box below the axis, 14.2 pt, and the row must start under that.
     _names = mtransforms.offset_copy(ax.get_xaxis_transform(), fig=ax.figure, y=-16.5,
                                      units="points")
@@ -381,7 +381,7 @@ def panel_d(axP, axS):
                    linespacing=1.35)
     SG.spines(axP)
     # TEXT OFF THE DATA. Text set across the point cloud is unreadable and hides the data it
-    # describes (see tools/inkunder.py).
+    # describes.
     # The key carries the one thing a reader cannot get anywhere else: WHICH MARK IS WHICH. It is
     # a real legend with proxy handles rather than a sentence, so the key cannot drift from the
     # marks it names, and it sits in the panel's empty lower-left corner on a white patch.
@@ -406,7 +406,7 @@ def panel_d(axP, axS):
     # Species whose positive class does not support a cluster-robust interval, so the variant-level
     # bootstrap this strip draws is NOT an honest uncertainty for them. Goat's nine positives occupy
     # two loci, eight of them inside a 570-bp span, giving Kish's effective count of 1.2 independent
-    # positives (Methods; Additional file 1: Note S29); Table 2 accordingly prints goat's AUROC as
+    # positives (Methods; Additional file 1: Note S19); Table 2 accordingly prints goat's AUROC as
     # "0.959 (no interval)" and calls it a descriptive point estimate. Drawing goat the same solid
     # interval and the same bold value as cattle would assert, on this plate, the significance the Methods
     # elsewhere refuse -- and half of the panel's own "2 of 9" count rests on it. The estimate is

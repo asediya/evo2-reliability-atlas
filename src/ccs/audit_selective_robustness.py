@@ -17,7 +17,7 @@ per-variant 8,192-bp trust-layer output, three ways:
 Honest by construction: it reports whatever the data say. Run on BOTH readout arms -- the deployable
 8,192-bp one (reports/fig4_pervariant_8192.parquet -> reports/selective_robustness.json) and the
 1,001-bp headline layer (reports/fig4_pervariant.parquet -> reports/selective_robustness_1001.json),
-because Note S66, which cites this test, is written at 1,001 bp and the two arms give
+because Note S36, which cites this test, is written at 1,001 bp and the two arms give
 materially different pooled error detection (0.81 against 0.586).
 
     python src/ccs/audit_selective_robustness.py
@@ -33,7 +33,7 @@ from sklearn.metrics import roc_auc_score
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-# Both readout arms, because Note S66, which cites this test, is written at 1,001 bp.
+# Both readout arms, because Note S36, which cites this test, is written at 1,001 bp.
 # Running only the 8,192-bp arm would leave that paragraph quoting an 8,192-bp pooled error-detection
 # AUROC (0.81) one sentence after an unmatched 1,001-bp figure for human (0.474) -- exactly the
 # readout mixing this paper's headline forbids. The two arms disagree materially (0.81 against

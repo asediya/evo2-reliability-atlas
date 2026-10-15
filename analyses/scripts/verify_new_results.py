@@ -127,11 +127,8 @@ def main():
           % (_ran, "; " + ", ".join(extra) if extra else ""))
     if _ran == 0:
         # A VACUOUS PASS IS NOT A PASS. From the archive alone every CASES entry skips or needs
-        # an undeposited input, so returning 0 would claim a pass having re-run NOTHING, and
-        # tools/run_all_gates.py would count it among the passes.
-        # Exit 3 is this archive's "stopped at an undeposited path"
-        # convention, which the runner files as NODATA; check_var_off.py and
-        # verify_species_gene_structure.py already use it.
+        # an undeposited input, so returning 0 would claim a pass having re-run NOTHING.
+        # Exit 3 is this archive's "stopped at an undeposited path" convention.
         print()
         print("  RESULT: NO DATA -- 0 of %d registered artefacts could be re-run, and that is"
               % len(CASES))

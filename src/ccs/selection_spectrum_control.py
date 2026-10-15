@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """Is the label-free frequency gradient a mutational-spectrum or genotype-quality artifact?
 
-Note S31 (Additional file 1) weighs two alternative explanations for the cattle site-frequency-spectrum result:
-(delete this line)
+Note S41 (Additional file 1) weighs two alternative explanations for the cattle site-frequency-spectrum result:
 
   1. the panel is not mutational-context-matched, and rare variants differ systematically in
      mutational spectrum, so a score that depends on context could produce the gradient with no
@@ -17,7 +16,7 @@ mutational spectrum — and ask whether the frequency-deleteriousness relationsh
 type. If it does, the gradient is not composition.
 
 For (2) the PLINK2 allele-frequency tables carry OBS_CT, the observed allele count at each site,
-which would proxy call rate, but it is constant on these imputed genotypes (Note S31), so the restriction below keeps every site.
+which would proxy call rate, but it is constant on these imputed genotypes (Note S41), so the restriction below keeps every site.
 
     python src/ccs/selection_spectrum_control.py
     -> reports/selection_spectrum_control.json
@@ -84,7 +83,7 @@ def main():
     print("  class composition by MAF quintile (%% of bin):")
     classes = sorted(set(cls))
     print("    %-6s %s" % ("class", "  ".join("Q%d" % (i+1) for i in range(5))))
-    # Store the per-quintile fractions, not only the swing (max - min): Notes S31 and S41 of Additional file 1 print the
+    # Store the per-quintile fractions, not only the swing (max - min): Note S41 of Additional file 1 prints the
     # per-quintile fractions themselves ("C>T falls from 41.4% of the rarest quintile to 34.7% of
     # the commonest while T>C rises from 25.3% to 32.5%"), and with only the swing deposited the
     # derived value would reconcile while the operands could not be checked.

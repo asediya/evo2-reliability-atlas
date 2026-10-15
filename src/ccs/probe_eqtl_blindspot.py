@@ -37,8 +37,8 @@ sys.stdout.reconfigure(encoding="utf-8")
 EMB = os.environ.get("CCS_EQTL_EMB", "data/interim/eqtl_emb.npz")
 CAND = "data/interim/eqtl_candidates.parquet"
 # These two live under data/processed/, not data/interim/. Every sibling reads them there
-# (fig3_data.py, fig3_stats.py for the 1B file; analyze_ablation.py, build_eqtl_abstention.py and
-# seven others for the 40B file); pointing at data/interim/ instead makes the two reference AUROCs
+# (fig3_data.py and fig3_stats.py for both files; analyze_ablation.py, eqtl_cluster_and_bca.py and
+# tools/verify_from_data.py for the 40B file); pointing at data/interim/ instead makes the two reference AUROCs
 # below fall silently to "n/a", and the comparison this script exists to make does not run.
 ZS_1B = "data/processed/scores_cloud/eqtl_abl_8192_1b_ll.parquet"   # 1B zero-shot mean-LL
 ZS_40B = "data/processed/scores/eqtl_evo2_40b.parquet"              # 40B zero-shot single-position

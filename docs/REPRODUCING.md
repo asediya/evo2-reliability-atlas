@@ -21,7 +21,7 @@ them in content and geometry but not pixel for pixel.
 
 Scripts that read the undeposited `data/` tree need more, and none of it is required for anything
 above: `duckdb` and `pybigtools` for the panel and phyloP builders, `pyBigWig` for the older GERP
-and phyloP queries, `pyfaidx` for window extraction, `pyliftover` for the dog lift-over panel,
+and phyloP queries, `pyfaidx` for window extraction,
 `biopython` and `freesasa` for the BRCA1 structure figure, `joblib` where a script parallelises, `requests` for the BRCA1 panel download,
 and `torch`, `transformers`, `fair-esm`, `evo2` and `vortex` on a GPU scoring host.
 
@@ -75,8 +75,7 @@ python tools/verify_from_data.py    # the count is printed by the run itself; fr
 `build_tables.py` runs from a clone and prints `8 canonical values asserted, all match`.
 `verify_from_data.py` reads the raw score and label files, so from a clone it re-derives the 23
 checks it can, lists each of the other sections with the input it could not reach, and exits **3** — this archive's
-"stopped at an undeposited path" code, which `tools/run_all_gates.py` files as NODATA rather than
-PASS. That is the intended behaviour: it is the one check that recomputes from raw data instead of
+"stopped at an undeposited path" code. That is the intended behaviour: it is the one check that recomputes from raw data instead of
 from the deposited layer, so it cannot be made to pass without that data. It is not a broken
 script. All ten of its
 sections appear in the summary table whether or not they could run, so a section that was skipped
@@ -109,8 +108,7 @@ Building the figures writes `reports/figures/*.pdf` and `*.png`. Those are build
 shipped files, so they are in no skipped directory and carry no skipped suffix, and running
 `python3 check_manifest.py` afterwards reports them as **undeclared** and exits 1. That is the
 integrity check working correctly on files the archive never shipped, not a packaging fault:
-delete them, or run the check on a fresh extract. (`src/ccs/check_overlaps.py` removes the three
-it writes for exactly this reason, and takes `--keep` if you want them.)
+delete them, or run the check on a fresh extract.
 
 These three read `data/` and exit non-zero without it. The builder-output name is not the figure
 number, which is why `FIGURES.md` exists:
@@ -139,7 +137,7 @@ python analyses/scripts/trust_layer_8192_fair.py
 each; not every listed path is produced by the published analysis.
 
 `analyses/scripts/maf_stratified_auroc.py` recomputes the allele-frequency-stratified and -matched eQTL
-AUROCs of Additional file 1's Note S17 and checks every value printed from them. It reads the allele
+AUROCs of Additional file 1's Note S33 and checks every value printed from them. It reads the allele
 frequencies that `analyses/scripts/build_piggtex_maf.py` computes into the undeposited `data/interim/`
 from PigGTEx's genotype release, a 0.9 GB download whose URL and MD5 its docstring gives (extraction takes
 about 7.1 GB). Without them it checks the printed values against the deposited
@@ -176,48 +174,13 @@ result; the write is what fails. From a writable copy the same command exits 0 a
 
 ## What certifies the current numbers
 
-`tools/repro_runner.py` and `tools/compare_repro.py` are deposited for inspection; they diff a run
-against a sealed baseline that is not part of this deposit. The current numbers are certified by
-three things that do run here:
+The current numbers are certified by three things that run here:
 
 - `build_tables.py`'s canonical-assertion gate, which fails the build on drift
 - `tools/verify_from_data.py`, which re-derives from raw score and label files the number of
   values its own roll-up prints, and
   imports nothing from the analysis pipeline
 - per-figure regeneration from the deposited JSONs
-
-## Manuscript integrity check
-
-It asks whether the manuscript agrees with itself: every registered quantity is collected from the
-manuscript, the supplementary prose and the supplementary tables, and any quantity resolving to more
-than one distinct value is a contradiction.
-
-It needs all three. Two of them ship here: `reports/supplementary_prose.md` and
-`reports/supplementary_tables.md` are EXPORTS of the submitted Additional file 1, written by
-`tools/export_from_submission.py`, and are picked up automatically. Do NOT regenerate them with
-`src/ccs/build_supplementary.py`, which does not produce the submitted table set (see
-`reports/DATA_MANIFEST.md`). The manuscript is deliberately not duplicated in this archive, because two copies
-of it would eventually disagree, so it has to be named:
-
-```bash
-# No Markdown manuscript ships in Additional file 2 -- the manuscript reaches referees through
-# the journal, not through this archive. Render one from the submitted .docx first:
-python - <<'EOF'
-import docx  # python-docx, pinned in requirements.txt
-d = docx.Document('01_Manuscript_GigaScience_v2.0.docx')
-out = [p.text for p in d.paragraphs if p.text.strip()]
-for t in d.tables:
-    for r in t.rows:
-        out.append(' | '.join(c.text.strip().replace('\n', ' ') for c in r.cells))
-open('Manuscript.md', 'w', encoding='utf-8').write('\n\n'.join(out))
-EOF
-python tools/manuscript/scripts/consistency_check.py --manuscript Manuscript.md
-```
-
-On the submitted manuscript it reports zero contradictions across fifteen registered quantities
-(the count is printed by the run itself; do not take it from this file). A
-missing input exits **2** with a `MISSING INPUT` message instead of reporting a partial scan as
-clean, which is what a clone gives you if the flag is left off.
 
 ## The traceability table
 

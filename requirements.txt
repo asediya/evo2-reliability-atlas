@@ -2,7 +2,7 @@
 # NOT DIRECTLY INSTALLABLE, and not meant to be: see the note at the foot of this file.
 # Generated from the imports of the tracked source. These versions RECORD the environment
 # that produced every published number; they are not a floor the analysis requires. A later run
-# reproduced the table and supplementary builders under Python 3.11.15 with numpy
+# reproduced the table builder under Python 3.11.15 with numpy
 # 2.4.6 and pandas 2.3.3, so read the pins as provenance rather than as a constraint.
 # analyses/scripts/build_piggtex_maf.py and maf_stratified_auroc.py ran under Python 3.13.13 with numpy
 # 2.5.2, pandas 3.0.5, scipy 1.18.0 and pyarrow 25.0.1.
@@ -22,14 +22,12 @@ polars==1.42.1
 pyarrow==24.0.0
 pybigtools==0.3.0
 pyfaidx==0.9.0.4
+# python-docx: no file in this archive imports it; it is recorded as part of the environment that
+# produced the published numbers.
 python-docx==1.2.0
-# Imported by seven tracked files. Four spell it `import fitz` (check_figure_clearance.py,
-# stage_figures.py, src/ccs/fig2_split.py, and src/ccs/style_main.py, which uses it
-# only for the page check it runs on each main figure it writes), two `import pymupdf`
-# (check_overlaps.py, inkunder.py), and tools/pdfcheck.py
-# carries it in a comma list, which is why a grep for "import fitz" alone undercounts.
-# check_figure_clearance.py, one of them, sits in run_all_gates.py's NEEDS_DATA list, not among the
-# four self-contained gates. Deliberately
+# Imported by two tracked files, both as `import fitz`: src/ccs/fig2_split.py and
+# src/ccs/style_main.py, which uses it
+# only for the page check it runs on each main figure it writes. Deliberately
 # unpinned: every other line here records the version that produced a published number, and
 # pymupdf serves only the figure-geometry checks.
 pymupdf
@@ -50,7 +48,6 @@ transformers==4.44.2
 #                       and conservation_full.py import it.
 #                       The deposited conservation VALUES are cached, so no published number depends
 #                       on installing it; the phyloP cross-check uses pybigtools, pinned above.
-#   pyliftover          dog_liftover_panel.py
 #   fair-esm            score_esm_baseline.py, build_proteingym_grounding.py
 
 # `pip install -r requirements.txt` FAILS as written, and that is a

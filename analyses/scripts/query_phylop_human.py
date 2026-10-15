@@ -4,7 +4,7 @@
 Same contract as src/ccs/query_gerp.py: NaN where the track has no value, chromosome
 names tried both bare and chr-prefixed. Written separately rather than reusing that script because
 this one has to parse positions out of the atlas variant_id, and because the output belongs in the
-analyses/results/ tree, which reach_mechanism.py reads.
+analyses/results/ tree.
 
     python analyses/scripts/query_phylop_human.py
 """

@@ -75,7 +75,7 @@ def _get(d, path):
     return d
 
 
-# Every value Additional file 1 (Notes S17 and S65) and the manuscript print from this record, as printed:
+# Every value Additional file 1 (Notes S33 and S34) and the manuscript print from this record, as printed:
 # (what, key path in the record, format, printed text). The joint MAF + TSS designs are recorded, not printed.
 PUBLISHED = [
     ("panel variants with a frequency", "coverage.n_with_maf", "{:,}", "20,000"),

@@ -6,8 +6,7 @@ and include the 85% coverage the Results recommend: six in-species-oracle points
 with no column saying so, cannot support the claim the artefact is named for.
 
 This is a builder and not an edit. `analyze_trust_layer.py` writes that path, so arms added to
-the parquet by hand would be deleted silently by its next run, as hand edits to
-`reports/supplementary_tables.md` are by its builder. Anything that has to survive belongs in a builder.
+the parquet by hand would be deleted silently by its next run. Anything that has to survive belongs in a builder.
 
 Idempotent by design: it keeps whatever legacy rows it finds (the six in-species-oracle points need
 the undeposited data tree to recompute) and rewrites every arm it can derive from the deposit.

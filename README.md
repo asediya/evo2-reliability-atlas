@@ -33,10 +33,7 @@ know" instead of guessing.
 > its contents from the zip; `.git` is not included either. Provenance for every path is in
 > `reports/DATA_MANIFEST.md`.
 >
-> `tools/build_code_zip.py`'s `collect()` covers the code tree; `check_manifest.py`,
-> `LICENSING.md`, the BRCA1 `.pdb` models and `README.md` under `data/raw/structures/`, the
-> Figure S6 structure PNGs under `reports/figures/`, and `MANIFEST.sha256` itself are added beside
-> it. Every shipped file except `MANIFEST.sha256` itself is declared in it, since the manifest cannot list
+> Every shipped file except `MANIFEST.sha256` itself is declared in `MANIFEST.sha256`, since the manifest cannot list
 > itself, and `check_manifest.py` verifies every declared file; it prints how many it listed and how many it
 > found, and the two agree.
 
@@ -129,24 +126,18 @@ results can be checked, not because you need them to use `glmtrust`. `container/
 the container the Evo 2 scores were produced in, with the versions its archived build carries.
 
 `analyses/scripts/omia_effect_audit.py` sets snpEff's first consequence term against OMIA's curated
-variant effect on the atlas positives (Supplementary Note S62) and writes
+variant effect on the atlas positives (Supplementary Note S13) and writes
 `reports/omia_effect_audit.json`, which holds counts and AUROCs only. It reads OMIA's variant table,
 which carries no open licence and is therefore not deposited; the script's docstring names the download.
 
-Three dog scripts, `src/ccs/dog_liftover_panel.py`, `src/ccs/build_dog_neg.py` and
-`src/ccs/build_dog_windows.py`, implement a ROS_Cfam_1.0 lift-over route that did not build the
-deposited dog panel; that panel is on CanFam3.1 with no lift-over, as the Methods state.
-
-`src/ccs/build_matched_negatives.py` matches each positive to background variants of the same mutation
-type and the nearest local GC. It builds a separate cattle OMIA panel (`data/interim/omia_matched_panel.parquet`)
-and none of the atlas's negatives, which are matched on trinucleotide context and alternate allele only;
+The atlas's negatives are matched on trinucleotide context and alternate allele only;
 GC is left unmatched, as `reports/atlas_controls.json` reports.
 
 The step that drew the atlas's negatives in the seven species whose pools come from Ensembl variation,
 reading each species' variant pool from its variation file and matching it to the positives, is not
 deposited. It fails silently: a pool that misses part of the genome still yields a full draw. The sheep
 pool covers only the start of its variation file, whose chromosomes are sorted as text, and ends within
-chromosome 2, and the chicken file lacks seven chromosomes that carry positives (Supplementary Note S62).
+chromosome 2, and the chicken file lacks seven chromosomes that carry positives (Supplementary Note S13).
 A rebuild should check that the negatives reach every chromosome carrying a positive; for the deposited
 atlas, the last section of `scripts/table2_cluster_aware_ci.py` in Additional file 3 counts this.
 
@@ -155,7 +146,7 @@ transcription start site (`analyses/results/eqtl_tss_distance.parquet`). The pan
 are not deposited. `analyses/scripts/build_piggtex_maf.py` computes them into the undeposited
 `data/interim/` from PigGTEx's molQTL genotype release (CC BY-NC 4.0), which its docstring identifies by
 URL and MD5, and `analyses/scripts/maf_stratified_auroc.py` recomputes from them the frequency-stratified
-and frequency-matched AUROCs of Supplementary Note S17 and checks every value printed from them.
+and frequency-matched AUROCs of Supplementary Note S33 and checks every value printed from them.
 `analyses/results/eqtl_maf_matched_auroc.json` holds those summary statistics and no per-variant
 frequency; without the frequencies the script checks the printed values against it and exits 3.
 

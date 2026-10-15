@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Per-species UNCALIBRATED expected calibration error -- the 'none' side of the transfer comparison.
 
-WHY THIS FILE EXISTS. Note S66 of Additional file 1 quotes the 'none' side as a species mean.
+WHY THIS FILE EXISTS. Note S36 of Additional file 1 quotes the 'none' side as a species mean.
 The 'transfer' side sources cleanly to reports/fig4_reconciliation.json (ece_grid.width10.
 isotonic_LOSO). Without this file the 'none' side would appear in NO deposited artefact, with the
 estimator behind it defined nowhere in the paper, so the quoted value could not be checked

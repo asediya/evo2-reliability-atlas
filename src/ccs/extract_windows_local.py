@@ -1,5 +1,5 @@
 """Extract ref/alt sequence windows by random-access into a .fai-indexed FASTA.
-Pure-Windows replacement for extract_windows.py (no samtools/WSL dependency).
+Pure-Windows implementation (no samtools/WSL dependency).
 
 Window W=1002 bp, variant base at 0-based offset 501. Verifies the reference allele
 against the genome (ref_ok) — the trust check that OMIA coordinates match the build.

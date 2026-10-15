@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 """INDEPENDENT verification gate: re-derive every headline from raw data and assert.
 
-WHY THIS EXISTS. Two of the project's other gates cannot catch a wrong number:
+WHY THIS EXISTS. Two other kinds of gate cannot catch a wrong number:
 
-  * repro_runner.py + compare_repro.py prove the pipeline is DETERMINISTIC. They re-run the
-    deposited scripts and diff the output. A script that computes the wrong thing reproduces its
-    wrong answer perfectly.
-  * consistency_check.py matches declared values as STRINGS in the prose. It never opens a parquet.
+  * Re-running the deposited scripts and diffing the output proves the pipeline is DETERMINISTIC.
+    A script that computes the wrong thing reproduces its wrong answer perfectly.
+  * Matching declared values as STRINGS in the prose never opens a parquet.
     "BRCA1 AUROC 0.874" passes because the characters 0.874 appear, not because 0.874 is true.
 
 This file closes that gap. It recomputes each headline FROM THE RAW SCORE AND LABEL FILES, using
@@ -608,7 +607,7 @@ def sec_matched():
     # is 0.0344. Both are pinned so they cannot be confused.
     check("matched", "drop as printed (0.034)", cm["macro"]["drop"], 0.034, tol=0.0006)
     check("matched", "drop of the rounded means", cm["macro"]["drop_of_rounded"], 0.035, tol=1e-9)
-    # replicate spread, quoted in Additional file 1 Note S13 as 0.002 to 0.008
+    # replicate spread, quoted in Additional file 1 Note S20 as 0.002 to 0.008
     sds = [r["replicate_sd"] for r in cm["per_species"]]
     check("matched", "replicate sd lower bound", min(sds), 0.002, tol=0.0006)
     check("matched", "replicate sd upper bound", max(sds), 0.008, tol=0.0006)
@@ -641,9 +640,9 @@ def main():
         except FileNotFoundError as exc:
             # A SECTION THAT CANNOT REACH ITS INPUT IS SKIPPED, NOT FAILED. The undeposited data
             # tree is documented and expected; recording it as a FAILURE would make a clean archive
-            # report failures and force tools/run_all_gates.py to choose between
+            # report failures and force a gate runner to choose between
             # burying real numerical failures under NODATA and reporting a data-less archive as
-            # broken. Separating the two is what lets that runner keep genuine mismatches visible.
+            # broken. Separating the two is what lets a runner keep genuine mismatches visible.
             RESULTS.append((None, name, "SECTION SKIPPED, input not in this archive: %s" % exc,
                             None, None, SECTION_EV.get(name, "lit")))
         except Exception as exc:
