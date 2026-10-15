@@ -290,7 +290,7 @@ def main():
                "RING zinc cage · 7 Cys + His41\nLOF in experiment · %d of %d deleterious in Evo 2"
                % (n_del, len(ZINC_LIG)),
                ha="center", va="bottom", fontsize=SG.ANNOT, color=INK_, linespacing=LEAD)
-    axAnn.annotate("C61G · pathogenic", xy=(lx[61], 0.20), xytext=(xs_lig[-1] + N * 0.045, 0.10),
+    axAnn.annotate("C61G · pathogenic", xy=(lx[61], 0.20), xytext=(xs_lig[-1] + N * 0.045, 0.16),
                    ha="left", va="center", fontsize=SG.ANNOT, color=LOF_C,
                    arrowprops=dict(arrowstyle="-", color=LOF_C, lw=0.5))
     # House style: a bold lower-case letter and nothing else; the legend names each panel.
@@ -347,19 +347,19 @@ def main():
     # The norm stops at the 3rd and 97th percentiles of the scores (load_heatmap), and every score
     # beyond either end prints in that end's colour; the pointed ends say the scale is clipped.
     cb = fig.colorbar(im, cax=cax, extend="both")
-    # Everything between the bar and the trim is on a 40 pt budget: tick, pad, "0.010", labelpad,
-    # and two stacked lines of rotated label. Raising the leading to LEAD widened the label by
-    # 1.8 pt and pushed its last line 0.9 pt OFF the page, so the bar, the gridspec's right edge
-    # and both pads each give a little back and this label keeps a 1.3 pt tighter leading than the
-    # rest — still 0.4 pt clear of its own glyph box, which is all the leading has to buy here.
-    cb.set_label("Evo 2  −Δ mean-LL\n(8,192 bp) · red = deleterious", fontsize=SG.ANNOT, labelpad=2.5,
-                 linespacing=1.30)
+    # The bar's label is set UNDER the bar, horizontal and right-aligned to the bar's column, not
+    # rotated beside it: rotated, its two lines ran 34 mm against a 10 mm bar, hung 11.5 mm below the
+    # quilt into the row of panels b and c, and stood beside the SGE key as if it belonged to it.
+    # Under the quilt's right end nothing else is set (its x-label ends 9 mm to the left).
+    fig.text(1.0 - 1.5 / SG.W_MM, pH.y0 - 2.6 * PT, "Evo 2  −Δ mean-LL (8,192 bp)\nred = deleterious",
+             fontsize=SG.ANNOT, ha="right", va="top", color=INK_, linespacing=LEAD)
     # Explicit ticks and explicit labels. Shortening the bar to clear the SGE key handed the
     # locator a 34 pt run and it dropped to "0.00"/"0.01" -- two decimals on a scale whose real
-    # maximum is 0.01486, which reads as if the ramp topped out at one hundredth. (flag-only: no new text; lines 359-362 describe two ticks and 'a ramp keyed at its ends', but line 363 sets three ticks, cb.set_ticks([0.000, 0.001, 0.010]), labelled the same at line 364. A correct fix spans lines 359-362.)
-    # the three the 195 mm plate carried: this norm is not linear, so 0.005 and 0.010 sit 7.4 pt
-    # apart at this length and their labels overlap. A ramp keyed at its ends is the honest form
-    # here -- the panel asks the reader to compare cells, not to read values off the bar.
+    # maximum is 0.01486, which reads as if the ramp topped out at one hundredth.
+    # Three ticks: the two ends and 0.001, next to the norm's centre (the median of the experimentally
+    # functional substitutions, +0.00097). The norm is not linear, so an evenly spaced 0.005 would
+    # sit 7.4 pt from 0.010 at this length and the two labels would overlap; the panel asks the
+    # reader to compare cells, not to read values off the bar.
     cb.set_ticks([0.000, 0.001, 0.010])
     cb.ax.set_yticklabels(["0.000", "0.001", "0.010"])
     cb.ax.tick_params(labelsize=SG.ANNOT, length=2, pad=1.2)
@@ -387,7 +387,9 @@ def main():
         fig.text(KX2 - 0.001, y, lab, fontsize=SG.ANNOT, va="center", color=CAP)
 
     # ---- b: 2x2 structure grid ----
-    sgs = gs[5:7, 0].subgridspec(2, 2, hspace=0.0, wspace=0.04)
+    # hspace 0.035: about 1 mm between the rows. At 0 the two RING renders touched, and their BARD1
+    # ribbons, cut flat at the render edges, read as one chain with a seam.
+    sgs = gs[5:7, 0].subgridspec(2, 2, hspace=0.035, wspace=0.04)
     grid = [["ring_evo2", "brct_evo2"], ["ring_sge", "brct_sge"]]
     rowlab = ["Predicted\n(Evo 2)", "Measured\n(SGE)"]; collab = ["RING", "BRCT"]
     pdbid = ["PDB 1JM7", "PDB 1T29"]; colc = [0.19, 0.40]; grid_top = 0.50
@@ -402,7 +404,7 @@ def main():
             ax.imshow(_im)
             if grid[i][j] == "ring_evo2":
                 _relabel_cys(ax, _im.shape[1], _im.shape[0])
-            ax.set_anchor("S" if i == 0 else "N")     # pack the two rows toward the shared centre -> no mid gap
+            ax.set_anchor("S" if i == 0 else "N")     # pack the two rows toward the shared centre
             if j == 0:
                 # Right edge 0.5 mm clear of the structure render, so the label does not sit on the
                 # BARD1 ribbon at the render's left edge. The clearance is in millimetres, not a
@@ -476,7 +478,7 @@ def main():
     if 1 in rmap:
         # BELOW and right of the residue, in the band under the cloud's right flank that no marker
         # enters: seated above it at (1.72, 0.0044) the label's first letters sat on BRCT markers.
-        _tag(1, "Start-loss (res 1)", (2.02, 0.0009), MISS_C, arrow="->")
+        _tag(1, "Res 1 · start-loss", (2.02, 0.0009), MISS_C, arrow="->")
     # (residue 1775 / M1775R under-call is discussed in the legend, NOT ringed on-figure: any leader to it
     #  would have to cross the dense cloud and could misread as a spurious negative trend in a no-fit plot.)
 
@@ -486,14 +488,14 @@ def main():
     # 173 mm and the block ends 4 pt off the foot), so the room comes from here. Measured at
     # labelpad 3: 3.2 pt of real ink between the tick digits and this label, 2.6 pt between this
     # label and the block.
-    axV.set_xlabel("Measured deleteriousness   (SGE, −function score)", fontsize=SG.AXIS, labelpad=3)
+    axV.set_xlabel("Measured deleteriousness (SGE, −function score)", fontsize=SG.AXIS, labelpad=3)
     # The default locator emits a −0.002 y-tick that lies OUTSIDE ylim; matplotlib still draws its
     # label, pinned at the axes corner, where it collides with the x-axis label. Pin the ticks inside
     # the range instead — and carry the top one to 0.015, because the data really does reach 0.0149.
     # A top tick at 0.012, with anything floating over the scatter above 0.0098, makes the top third
     # of this panel read as empty when it is not empty, only covered.
     axV.set_yticks([0.000, 0.005, 0.010, 0.015])
-    axV.set_ylabel("Evo 2 predicted deleteriousness   (per residue)", fontsize=SG.AXIS)
+    axV.set_ylabel("Evo 2 predicted deleteriousness (per residue)", fontsize=SG.AXIS)
     pe = int(np.floor(np.log10(p_all))) if p_all > 0 else -300
     plt.rcParams.update({"mathtext.fontset": "custom", "mathtext.default": "regular",
                          "mathtext.rm": "Arial", "mathtext.it": "Arial:italic",
@@ -546,7 +548,7 @@ def main():
              f" Pooled {rho_all:+.2f}  [{rlo:+.2f}, {rhi:+.2f}]\n"
              f"Variant-level discrimination  (n = {n_lof + n_neg:,})\n"
              f" AUROC = {auroc_pt:.3f}  [{alo:.3f}, {ahi:.3f}]  ·  LOF ({n_lof:,}) vs FUNC+INT ({n_neg:,})\n"
-             f"  95% CIs: site-clustered / residue bootstrap",
+             f" 95% CIs: site-clustered / residue bootstrap",
              fontsize=SG.ANNOT, color=INK_, ha="left", va="top", linespacing=1.40)
 
     # TITLE AND STANDFIRST LIVE IN THE MANUSCRIPT LEGEND (house style, src/ccs/style_gb.py).

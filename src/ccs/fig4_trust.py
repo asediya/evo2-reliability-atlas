@@ -447,8 +447,9 @@ def panel_a(fig, gs_slice):
     ax.set_yticks([])
     # the boundary is named on its own tick rather than floated as a label -- anywhere it floated
     # it landed on the profile line or on the field
-    ax.set_xticks([-8, -4, 0, 2, 4])
-    ax.set_xticklabels(["-8", "-4", "0\nDecision boundary, p = 0.5", "2", "4"], linespacing=1.3)
+    # one step, 4, on both sides of the boundary; a tick at 2 would sit on the boundary's label
+    ax.set_xticks([-8, -4, 0, 4])
+    ax.set_xticklabels(["-8", "-4", "0\nDecision boundary, p = 0.5", "4"], linespacing=1.3)
     ax.tick_params(labelsize=FOOT)
     ax.set_xlabel("Signed log-odds, logit(p)      ←  Confidently negative        "
                   "Confidently positive  →", fontsize=AXIS, labelpad=1)
@@ -509,13 +510,8 @@ def panel_a(fig, gs_slice):
     ax.text(_kx(50.3), _yk, f"Bin holds 1\u2013{MIN_N - 1} calls: too few to rate",
             transform=ax.transAxes, ha="left", va="center", fontsize=FOOT, color=INK,
             clip_on=False, zorder=9)
-    # 1.0 pt here and 1.4 pt on the two caption lines below, not 2.6. On the 173 mm canvas 2.6 pt
-    # puts this block's last line 2.7 pt into panel c's letter: the block hangs from panel a's foot
-    # in POINTS while the row beneath it is placed in millimetres. hspace is not the lever -- raising
-    # it shrinks the axes as fast as it opens the gap, so the letters barely move (1.06 -> 1.22
-    # buys 0.5 pt and costs enough axes height to collide eight of panel a's own cell labels).
-    # The 4 pt comes out of leading that is not needed: at 2.6 pt the pitch is 1.38x the type
-    # size, and 1.4 pt still leaves 1.32x.
+    # 1.0 pt here, not 2.6: the block hangs from panel a's foot in POINTS while the row beneath it
+    # is placed in millimetres, and the spacer row under panel a (main) is sized for this key line.
     y = y - _lh - _axfrac(ax, 1.0 / 72.0 * fig.dpi)
 
     for txt, kw in [
@@ -565,7 +561,7 @@ def panel_b(ax):
     # so a second line would push the b/c key down into panel e's letter. One shorter line keeps
     # the key high. The full wording is in the manuscript legend; the axis needs the quantity, not
     # the sentence.
-    ax.set_xlabel("Δ ECE   (isotonic − sigmoid), macro over species", fontsize=AXIS)
+    ax.set_xlabel("Δ ECE (isotonic − sigmoid), macro over species", fontsize=AXIS)
     _spines(ax, keep=("bottom",))
     # Legend below the axes, not inside it: in the upper right it lay across the two widest posteriors.
     y_lg = _below(ax, -0.05)
@@ -634,7 +630,7 @@ def panel_c(ax):
     assert _ylo < _all.min() and _all.max() < _yhi, "a curve leaves the y range"
     assert min(t for t in ax.get_yticks() if _ylo <= t <= _yhi) < min(hon[i], orc.min()), \
         "no tick below the marked minimum"
-    ax.set_xlabel("Coverage  (fraction still called)", fontsize=AXIS)
+    ax.set_xlabel("Coverage (fraction still called)", fontsize=AXIS)
     ax.set_ylabel("Macro error", fontsize=AXIS)
     y_lg = _below(ax, -0.05)                     # measured: below the x-label, whatever height it took
     # Handles and column gaps tightened (1.7/0.45/1.0 -> 1.2/0.35/0.8) and the anchor clamped
@@ -737,7 +733,7 @@ def panel_dm(ax):
     for _axis in (ax.xaxis, ax.yaxis):
         _axis.set_major_formatter(_FF(lambda v, _: "0" if abs(v) < 1e-9 else "%g" % v))
     ax.set_xlabel("Probability under one global sigmoid", fontsize=AXIS)
-    ax.set_ylabel("Probability under leave-one-species-out\nisotonic transfer", fontsize=AXIS,
+    ax.set_ylabel("Probability under\nleave-one-species-out\nisotonic transfer", fontsize=AXIS,
                   linespacing=1.35)
     _spines(ax)
     # Three short lines in the upper-left corner, each ending left of the dotted x = 0.5 rule.
@@ -815,6 +811,9 @@ def panel_e(ax):
     for _t, _s in zip(_tl, sp):
         _t.set_color(FAIL if _s.lower() in HELD_OUT else INK)
     ax.set_ylim(0, 1.19); ax.set_xlim(-0.5, len(sp) - 0.5)
+    # Shortest form (0, 0.5, 1), as on panel d's probability axes beside it.
+    from matplotlib.ticker import FuncFormatter as _FF
+    ax.yaxis.set_major_formatter(_FF(lambda v, _: "0" if abs(v) < 1e-9 else "%g" % v))
     # Coverage is bought with silence and the price is not the same in every cell: 43% in human,
     # 70% in cat. One pooled figure charges all nine the same 61%, which is the accounting error
     # this paper exists to name, so every Mondrian point carries its own rate.
@@ -864,14 +863,14 @@ def main():
 
     # Grid geometry:
     #   top 9.8 mm. There is no on-canvas title, so the grid starts just under the panel-a letter.
-    #   hspace 1.06. The gap between rows has to hold the block under panel a AND the next row's
-    #     panel letter; a smaller gap puts panel c's letter on the last line of that block.
-    #     hspace is a fraction of the AVERAGE AXES HEIGHT, so the gap comes out of the axes rows
-    #     and has to be rescaled whenever the canvas height changes.
+    #   rows 1 and 3 are spacers, not one shared hspace. The gap under panel a holds its one key
+    #     line and the b/c letters; the gap under b/c holds their legends and the d/e letters, so
+    #     it is the deeper of the two. The spacers sum to 1.802 units, so rows a, b/c and d/e keep
+    #     their heights, and each gap leaves about 9 pt of clear paper between key and letter.
     #   bottom 0.125 and row 0 at 1.22. Panel a's nine species rows get a 9.45 pt pitch, +0.50 pt
-    #     clear of the label glyph box, and the cropped plate is 168.1 mm, inside the 173 mm
-    #     graphic budget with 4.9 mm to spare.
-    gs = GridSpec(3, 2, height_ratios=[1.22, 0.48, 0.85], hspace=1.06, wspace=0.34,
+    #     clear of the label glyph box, and the cropped plate is 169.8 mm, inside the 173 mm
+    #     graphic budget.
+    gs = GridSpec(5, 2, height_ratios=[1.22, 0.748, 0.48, 1.054, 0.85], hspace=0.0, wspace=0.34,
                   left=0.150, right=0.955, top=_fy(9.8), bottom=0.125)
 
     panel_a(fig, gs[0, :])
@@ -882,10 +881,10 @@ def main():
     from .style_gb import letter_x as _letter_x
     _mark(fig.text, _letter_x(fig), _fy(6.2), "a",
           f"n = {PV.height:,}  ·  rows ordered by sample size", x_right=0.955)
-    axb = fig.add_subplot(gs[1, 0]); panel_b(axb)
-    axc = fig.add_subplot(gs[1, 1]); panel_c(axc)
-    axdm = fig.add_subplot(gs[2, 0]); panel_dm(axdm)
-    axe = fig.add_subplot(gs[2, 1]); panel_e(axe)
+    axb = fig.add_subplot(gs[2, 0]); panel_b(axb)
+    axc = fig.add_subplot(gs[2, 1]); panel_c(axc)
+    axdm = fig.add_subplot(gs[4, 0]); panel_dm(axdm)
+    axe = fig.add_subplot(gs[4, 1]); panel_e(axe)
     # Both panels of a row must be DRAWN before either letter is placed: _plab_row measures the
     # clearance each panel needs and takes the row maximum.
     _plab_row([(axb, "b"), (axc, "c")])   # "No robust gain over a pooled sigmoid" / "…but refusing does"

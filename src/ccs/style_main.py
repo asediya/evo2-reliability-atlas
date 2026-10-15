@@ -133,7 +133,8 @@ CONSEQ = BLUES9[1:]
 DEPTH = LinearSegmentedColormap.from_list("depth", ["#FFFFFF"] + BLUES9[2:7])
 AUC_CMAP = LinearSegmentedColormap.from_list("auc", BLUES9[1:])
 SCORE_CMAP = LinearSegmentedColormap.from_list("score", BLUES9[1:])
-SHARE_CMAP = LinearSegmentedColormap.from_list("share", BLUES9[:8])
+# the share ramp starts at the second Blues step, so a share of 0 is a pale tile that still parts from the page
+SHARE_CMAP = LinearSegmentedColormap.from_list("share", BLUES9[1:8])
 # the share of a slice a predictor declines, from lit (answers all of it) to PAIR_NONE (declines all of it)
 DECLINE_CMAP = LinearSegmentedColormap.from_list("decline", ["#A9DCF6", PAIR_RIGHT, "#2C79AE", "#173C5C", PAIR_NONE])
 

@@ -18,6 +18,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import numpy as np
 
 import fig2_measure as MEAS
 # The house style module. Imported the same way as figtext: relative when this file is
@@ -79,11 +80,11 @@ def build_supplement(N):
          pooled value printed in a note above it;
       b  the GERP plane with its paired per-species strip (fig2_measure.panel_d).
 
-    Set in the supplementary house style (style_gb), saved through the _save guard below.
-    than they were as a third and a fourth panel; every string they print is the one they printed
-    there. Two placements changed, both on panel a (see panel_c): the row of group names under its
-    tick labels, which collided with them by 1.47 pt on the measurement plate, now clears them, and
-    its y-label is back at the default pad now that no panel sits to its left.
+    Set in the supplementary house style (style_gb), saved through the _save guard below. Panel a's
+    row of group names sits under its tick labels and clears them, and its y-label takes the default
+    pad, since no panel sits to its left. The seven species that share one divergence are named
+    directly under their own intervals, in their text-safe colours. Panel b's key sits above the
+    plane rather than on it, and its hexbin carries a count scale in the gutter beside it.
     """
     fig = plt.figure(figsize=(W_MM * MM, H3_MM * MM))
     # Panel a's top edge is set by the two-line note above it, which must stay on the canvas;
@@ -92,18 +93,63 @@ def build_supplement(N):
     axB1 = fig.add_axes([0.115, 0.305, 0.440, 0.255])
     axB2 = fig.add_axes([0.720, 0.305, 0.200, 0.255])
     _pool, _dist, _k = MEAS.panel_c(axA)
-    # A species key for panel a. (delete; also delete 'strip of the panel beside it; on a plate of its own the panel needs its own key.' at the start of line 96, keeping 'Entries run')
-    # strip of the panel beside it; on a plate of its own the panel needs its own key. Entries run
-    # down the columns in the tree order (fig2_style.LEAF_ORDER) of panel b's strip and of every other
-    # species plate. Words in ink, colour on the markers only.
-    from matplotlib.lines import Line2D
-    _rows = sorted(MEAS._load()[0]["forest"], key=lambda r: MEAS.S.LEAF_ORDER.index(r["species"]))
-    _h = [Line2D([], [], ls="none", marker="o", markersize=4.2, markerfacecolor=MEAS.S.species_color(r["species"]),
-                 markeredgecolor="white", markeredgewidth=.4) for r in _rows]
-    axA.legend(_h, [r["species"][:1].upper() + r["species"][1:] for r in _rows], loc="lower right", ncol=3, frameon=False,
-               fontsize=SG.ANNOT, handletextpad=.25, columnspacing=1.1, labelspacing=.35,
-               borderaxespad=.3)
+    # Panel a's species, named where they stand. Human and chicken each have a divergence of their
+    # own and are named by the tick row; the seven that share 92 My are dodged across their slot, so
+    # each is named directly under its own interval, on one baseline just above the axis line, in
+    # its text-safe colour (fig2_style.species_text_color, >= 4.5:1), the colour panel b's strip uses
+    # for the same names. Each name is placed at the x of its own marker, found by its marker colour.
+    import matplotlib.colors as mcolors
+    from matplotlib.collections import PathCollection
+    _forest = MEAS._load()[0]["forest"]
+    _cnt = {}
+    for _r in _forest:
+        _cnt[_r["divergence_my"]] = _cnt.get(_r["divergence_my"], 0) + 1
+    _shared = [_r["species"] for _r in _forest if _cnt[_r["divergence_my"]] > 1]
+    _by_colour = {mcolors.to_hex(MEAS.S.species_color(sp)): sp for sp in _shared}
+    assert len(_by_colour) == len(_shared), "two shared-slot species share a marker colour"
+    _xs = {}
+    for _c in axA.collections:
+        if isinstance(_c, PathCollection) and len(_c.get_offsets()) == 1:
+            _sp = _by_colour.get(mcolors.to_hex(_c.get_facecolor()[0]))
+            if _sp is not None:
+                _xs[_sp] = float(_c.get_offsets()[0][0])
+    assert set(_xs) == set(_shared), (sorted(_xs), sorted(_shared))
+    _name_tf = matplotlib.transforms.offset_copy(axA.get_xaxis_transform(), fig=fig, y=1.5, units="points")
+    for _sp, _x in _xs.items():
+        axA.text(_x, 0, _sp[:1].upper() + _sp[1:], transform=_name_tf, fontsize=SG.ANNOT, ha="center",
+                 va="bottom", color=MEAS.S.species_text_color(_sp), clip_on=False, zorder=7)
     MEAS.panel_d(axB1, axB2)
+    # Panel b's key, moved off the plane: one row above its top-left corner, on the letter's line, so
+    # that no catalogued allele or hexagon sits under it. Same handles, same words, same grey.
+    _lg0 = axB1.get_legend()
+    _hd, _lb = _lg0.legend_handles, [t.get_text() for t in _lg0.get_texts()]
+    _lg0.remove()
+    _lg = axB1.legend(_hd, _lb, loc="lower left", bbox_to_anchor=(0.0, 1.0), ncol=2, frameon=False,
+                      borderpad=0.0, handletextpad=0.5, columnspacing=1.6, borderaxespad=0.4,
+                      fontsize=SG.ANNOT)
+    for _t in _lg.get_texts():
+        _t.set_color(SG.MUTED)
+    # The hexbin, stroked in its own fill: unstroked hexagons leave hairline seams between
+    # neighbours in most PDF renderers.
+    from matplotlib.collections import PolyCollection
+    _hb = [c for c in axB1.collections if isinstance(c, PolyCollection)]
+    assert len(_hb) == 1, "panel b draws one hexbin"
+    _hb = _hb[0]
+    _hb.set_edgecolor("face")
+    _hb.set_linewidth(0.3)
+    # Its count scale, in the gutter between the plane and the strip, at the foot of the plane.
+    _cmax = float(np.nanmax(_hb.get_array()))
+    _ticks = [t for t in (1, 10, 100, 1000) if t <= _cmax]
+    _pB = axB1.get_position()
+    _cax = fig.add_axes([_pB.x1 + 4.0 / W_MM, _pB.y0, 1.3 / W_MM, 0.5 * _pB.height])
+    _cb = fig.colorbar(_hb, cax=_cax)
+    _cb.set_ticks(_ticks)
+    _cb.set_ticklabels(["{:,}".format(t) for t in _ticks])
+    _cb.minorticks_off()
+    _cb.ax.tick_params(labelsize=SG.ANNOT, length=2, pad=1.2, width=0.4)
+    _cb.outline.set_linewidth(0.3)
+    # One line, no longer than the bar: the decade ticks (1, 10, ...) evenly spaced say "log".
+    _cb.set_label("Variants per bin", fontsize=SG.ANNOT, labelpad=2.0)
     _LX = SG.letter_x(fig)
     for ax, letter in ((axA, "a"), (axB1, "b")):
         pos = ax.get_position()

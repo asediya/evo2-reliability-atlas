@@ -331,7 +331,7 @@ def panel_a_resid(ax, ax_cb=None):
                         fontweight="bold", zorder=5,
                         # a hatched (negative) cell keeps its hatch, knocked out behind the numeral by a
                         # box in the cell's own colour
-                        bbox=(dict(boxstyle="square,pad=0.12", ec="none",
+                        bbox=(dict(boxstyle="square,pad=0.22", ec="none",
                                    fc=ENRICH((R[i, k] + v) / (2.0 * v))) if R[i, k] < 0 else None))
 
     keep = [0, 2, 4, 6, 8, NX]
@@ -347,7 +347,7 @@ def panel_a_resid(ax, ax_cb=None):
     ax.get_xticklabels()[-1].set_ha("right")
     ax.set_yticks(np.arange(NY + 1) - 0.5)
     ax.set_yticklabels([_edge(e) for e in ye], fontsize=MINPT)
-    ax.set_xlabel("Minor allele frequency in cattle   (folded MAF; both axes equal-count bins)",
+    ax.set_xlabel("Minor allele frequency in cattle (folded MAF; both axes equal-count bins)",
                   fontsize=AXIS)
     # ONE line, not two. "(variant-delta ~1 kb, equal-count bins)" moves to the
     # legend and to the x-label: rotated, two lines of that length are both
@@ -687,6 +687,8 @@ def panel_c(ax):
     # because it is a single object. The y axis is unaffected: its labels stack, they do not abut.
     tk = np.arange(0.70, 1.001, 0.05)
     ax.set_xticks(np.arange(0.70, 1.001, 0.10)); ax.set_yticks(tk)
+    # Two decimals on both axes: they carry the same quantity.
+    ax.set_xticklabels([f"{v:.2f}" for v in np.arange(0.70, 1.001, 0.10)])
     ax.set_aspect("equal", adjustable="box")
     ax.set_xlabel("Conservation alone — AUROC", fontsize=AXIS)
     ax.set_ylabel("Conservation + Evo 2\nAUROC", fontsize=AXIS, linespacing=1.2)
@@ -694,6 +696,8 @@ def panel_c(ax):
     _spines(ax)
     # the y axis stops at the 1.00 rule: above it is the band of rotated species names
     ax.spines["left"].set_bounds(lo, 1.0)
+    # and the x axis stops at AUROC 1.0 too: the headroom right of it holds the stats block only
+    ax.spines["bottom"].set_bounds(lo, 1.0)
     # the lower-right, below the diagonal, is the only region with no sticks and no label leaders --
     # in the upper-left the leaders would run straight through this text.
     # Everything here must fit UNDER the diagonal, which on square axes means a right-aligned line at
@@ -897,7 +901,7 @@ def main():
     # panel b needs an x-axis label -- it carries the strongest
     # result in the figure. One shared label under the lattice. The ticks are
     # plain log10 exponents, so the label names the log10 axis.
-    fig.text(0.542, T(132.9), "log10 minor allele frequency in cattle   (equal-count bins)",
+    fig.text(0.542, T(132.9), "Minor allele frequency in cattle (log10; equal-count bins)",
              fontsize=AXIS, color=INK, ha="center", va="top")
 
     # panel c holds aspect='equal' (the diagonal must read as 45 degrees), so its BOX must be square in
@@ -922,7 +926,7 @@ def main():
             (None, 78.0, "b", "…and it is not conservation in disguise — except where conservation ends",
              f"phyloP quintiles · reach {C['reach']:.1%}"),
             (None, 140.5, "c", "The same, on the labelled panels", None),
-            (0.4000, 140.5, "d", "A second clade — but not a matched window", None)):
+            (0.3465, 140.5, "d", "A second clade — but not a matched window", None)):
         y_ = T(y_mm)
         # House style: a bold lower-case letter, no reversed-out chip, no heading. `title`
         # is kept in the table above as documentation of what each panel is; the legend
@@ -931,7 +935,8 @@ def main():
         # letter_x) rather than a figure fraction typed to this plate's own rail, which would put
         # them at 50.9 pt while other figures in the set put theirs at 5.8 pt.
         from .style_gb import letter_x as _letter_x
-        _lx, _ha = (_letter_x(fig), "left") if x_ is None else (x_, "center")
+        # A right-column letter starts at its panel's bounding-box left edge (panel d's y title).
+        _lx, _ha = (_letter_x(fig), "left") if x_ is None else (x_, "left")
         fig.text(_lx, y_, letter, fontsize=PANEL, fontweight="bold", ha=_ha, va="bottom",
                  color=INK)
         if note:
@@ -1006,8 +1011,8 @@ def panel_e_lattice(ax):
             # at all -- a collision the span-overlap check scores as clean because it fuses them
             # into a single span.
 
-    ax.set_xticks(np.arange(len(macs)) + .5); ax.set_xticklabels(macs, fontsize=FOOT)
-    ax.set_yticks(np.arange(len(ans)) + .5); ax.set_yticklabels([int(a) for a in ans], fontsize=FOOT)
+    ax.set_xticks(np.arange(len(macs)) + .5); ax.set_xticklabels(macs, fontsize=MINPT)
+    ax.set_yticks(np.arange(len(ans)) + .5); ax.set_yticklabels([int(a) for a in ans], fontsize=MINPT)
     ax.set_xlabel("Minor allele count", fontsize=AXIS)
     ax.set_ylabel("Allele number called", fontsize=AXIS)
     ax.tick_params(length=0)
@@ -1040,7 +1045,7 @@ def panel_e_lattice(ax):
     cb_d = ax.figure.colorbar(im, cax=cax_d, orientation="horizontal",
                               ticks=[0.0, 1.0, 2.0, 3.0])
     cb_d.ax.set_xticklabels(["1", "10", "100", "1,000"])
-    cb_d.set_label("Variants per cell  (log scale)", fontsize=MINPT, labelpad=2.0)
+    cb_d.set_label("Variants per cell (log scale)", fontsize=MINPT, labelpad=2.0)
     cb_d.ax.tick_params(labelsize=MINPT, length=1.5, width=0.4, pad=1.5)
     cb_d.outline.set_linewidth(0.4)
 

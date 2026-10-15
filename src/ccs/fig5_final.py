@@ -171,7 +171,8 @@ def _plab(ax, letter, text=None, left=False):
     else:
         ax.text(-0.115, 1.085, letter, transform=ax.transAxes, fontsize=PANEL, fontweight="bold",
                 va="bottom", ha="center", color=INK, zorder=8)
-    ax.plot([-0.040, 1.0], [1.062, 1.062], transform=ax.transAxes, color="#C4BFB8", lw=0.6,
+    # A left-column rule starts at the axes' own left edge, the margin panel a's rule and text use.
+    ax.plot([0.0 if left else -0.040, 1.0], [1.062, 1.062], transform=ax.transAxes, color="#C4BFB8", lw=0.6,
             clip_on=False, zorder=5)
 
 
@@ -491,6 +492,12 @@ def panel_d(ax):
         "auroc", [(0.00, "#FBF8F5"), (0.35, "#9DD1EF"), (0.90, "#519CC7"), (1.00, "#1C6C99")])
     vmin, vmax = 0.45, 0.95
     ax.imshow(M, cmap=cmap, vmin=vmin, vmax=vmax, aspect="auto", interpolation="nearest", zorder=2)
+    # White gaps between the cells: abutting tiles lose their row edges wherever neighbours share a
+    # tone (the Evo 2 column reads as one block). Above the tiles, under the numerals and the outline.
+    for i in range(1, M.shape[0]):
+        ax.axhline(i - 0.5, color="white", lw=0.6, zorder=3)
+    for j in range(1, M.shape[1]):
+        ax.axvline(j - 0.5, color="white", lw=0.6, zorder=3)
     for i in range(M.shape[0]):
         for j in range(M.shape[1]):
             v = M[i, j]
@@ -627,8 +634,12 @@ def main():
     # Panels b and c sit side by side in ONE row and panel a takes the remaining height. Its plates
     # are sized from their own box, so that height becomes larger cells and taller short strips --
     # which the positive-class halves on chicken/goat/sheep/pig need to show a hole texture.
-    gs = fig.add_gridspec(3, 2, height_ratios=[131.0, 7.0, 33.5], hspace=0.0, wspace=0.42,
-                          left=0.092, right=0.972, top=0.95000, bottom=0.11800)
+    # The spacer row (12.77) and bottom (0.090) are solved together so that panel a and panels b/c
+    # keep their absolute heights and only the gap between them grows, to about 10.7 mm: at 7.0 and
+    # 0.118 the letters b and c stood 1.3 mm under panel a's last count row, nearer a than their own
+    # panels.
+    gs = fig.add_gridspec(3, 2, height_ratios=[131.0, 12.77, 33.5], hspace=0.0, wspace=0.42,
+                          left=0.092, right=0.972, top=0.95000, bottom=0.09000)
 
     tot = sum(R[s]["n"] for s in TREE)
     sb = sum(round(R[s]["reach_neg"] * R[s]["n_neg"]) for s in TREE)

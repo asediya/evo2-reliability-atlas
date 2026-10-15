@@ -88,8 +88,10 @@ def main():
         col = SG.INK if pooled else S.EVO2
         ax.plot([0, 1], [0, 1], lw=.6, ls=(0, (3, 2)), color=SG.RULE, zorder=1)
         xs, ys = reliability(p_all[m], y_all[m])
-        ax.plot(xs, ys, lw=.8, color=col, zorder=2)
-        ax.scatter(xs, ys, s=11, color=col, edgecolor="white", linewidth=.4, zorder=3)
+        # Unclipped: a bin at frequency 0 (or probability near 0) lies on the axes edge, and a
+        # clipped marker there would print as a half-disc.
+        ax.plot(xs, ys, lw=.8, color=col, zorder=2, clip_on=False)
+        ax.scatter(xs, ys, s=11, color=col, edgecolor="white", linewidth=.4, zorder=3, clip_on=False)
         ax.set_xlim(0, 1); ax.set_ylim(0, 1)
         ax.set_xticks([0, .5, 1]); ax.set_yticks([0, .5, 1])
         ax.set_xticklabels(["0", "0.5", "1"] if r == 1 else [])

@@ -38,9 +38,12 @@ MM = 1 / 25.4
 # Authored at 180 the figure is silently downscaled at typesetting, shrinking
 # every font ~5.6% with no author review.
 #
-# Height 173 mm is within style_gb.H_MM_MAX (graphic only; the rest of the journal's 225 mm
+# Height 170 mm is within style_gb.H_MM_MAX (graphic only; the rest of the journal's 225 mm
 # belongs to the legend the typesetter sets beneath it).
-W_MM, H_MM = SG.W_MM, 173
+W_MM, H_MM = SG.W_MM, 170
+# The box table below is written against a top edge DY mm above the page's, so the panel-a letter
+# sits as close to the top as the letters of the other S-figures do.
+DY = 3.0
 assert H_MM <= SG.H_MM_MAX and W_MM <= SG.W_MM
 
 # The type scale is the contract's, not this module's. Nothing here is
@@ -86,7 +89,7 @@ class Box:
     """An axes rectangle in mm from the page's top-left, plus the fig-fraction rect."""
 
     def __init__(self, x0, x1, ytop, ybot):
-        self.x0, self.x1, self.ytop, self.ybot = x0, x1, ytop, ybot
+        self.x0, self.x1, self.ytop, self.ybot = x0, x1, ytop - DY, ybot - DY
         self.w, self.h = x1 - x0, ybot - ytop
 
     @property
@@ -99,10 +102,10 @@ class Box:
 # Panel a is a plane, not a ledger, and it needs the width; the two score distributions are
 # panel a's own right-hand marginal.
 CGAP = 4.5                     # the axis break in panel c
-# Laid out for the 173 mm canvas (style_gb.H_MM_MAX: a 300-word legend
+# Laid out for the 170 mm canvas (style_gb.H_MM_MAX: a 300-word legend
 # measures 47 mm, and graphic plus legend must fit the journal's 225 mm ceiling).
-# These are ABSOLUTE millimetres from the top edge, so changing the page height alone does not move
-# them, and a box that outruns the page prints off the paper. A span that falls fully off the page is
+# These are millimetres from a fixed top edge (the page's top plus DY; Box subtracts DY), so changing
+# the page height alone does not move them, and a box that outruns the page prints off the paper. A span that falls fully off the page is
 # absent from PyMuPDF extraction entirely, so a gate would report overhanging labels rather than a
 # truncated panel, and the PNG would still look clean.
 # Height is NOT shared uniformly. Panel d is a ledger: 10 rows plus a header and a key on a
@@ -231,13 +234,16 @@ def panel_a(ax, axtop, axright, box):
     # leading at 8.6 pt whatever height this marginal is given.
     _t = axtop.transAxes
     _drop = ScaledTranslation(0.0, -8.6 / 72.0, axtop.figure.dpi_scale_trans)
+    # Both labels ride 2 pt above the box top, so the descenders of the lower line clear the
+    # candidate causal curve where it rises under "bp".
+    _up = ScaledTranslation(0.0, 2.0 / 72.0, axtop.figure.dpi_scale_trans)
     # The medians are formatted from the values the dotted lines are drawn at, so the label and its
     # line cannot disagree. The candidate causal median of 1,840 distances is a half-integer,
     # 89,783.5 bp, and prints rounded to the nearest base pair.
-    axtop.text(0.045, 0.98, "Candidate causal, median {:,.0f} bp".format(med["candidate causal"]), transform=_t,
+    axtop.text(0.045, 0.98, "Candidate causal, median {:,.0f} bp".format(med["candidate causal"]), transform=_t + _up,
                fontsize=FOOT, ha="left", va="top", color=FAIL_T)
     axtop.text(0.045, 0.98, "Non-causal control, median {:,.0f} bp".format(med["non-causal control"]),
-               transform=_t + _drop,
+               transform=_t + _drop + _up,
                fontsize=FOOT, ha="left", va="top", color=EQTL_T)
 
     bs = np.linspace(YLO, YHI, 60)
@@ -296,8 +302,9 @@ def panel_b(ax, box):
 def panel_d_scale(axt, axb, boxt):
     """Two sub-axes sharing the model-scale axis, each spanning the SAME 0.120 of AUROC over the
     SAME height, so the two slopes can be compared by eye without the two thirds of empty axis that
-    a single 0.5-1.0 scale forced. The change over the 40x range is a bracket beside each series,
-    measured against the axis, instead of the two sentences that floated in that void.
+    a single 0.5-1.0 scale forced. The change over the 40x range is printed beside each series, with
+    a bracket measured against the axis wherever the change is at least 0.02 AUROC; a shorter bracket
+    fuses into a glyph, so the eQTL series carries its value alone.
     """
     sc = S["scale"]
     models = ["1B", "7B", "40B"]
@@ -308,13 +315,14 @@ def panel_d_scale(axt, axb, boxt):
     hi = [sc["eqtl"][m]["hi"] for m in models]
 
     SPAN = 0.120                                   # identical data range in both sub-axes
-    XLO, XHI = -0.62, 2.80
+    XLO, XHI = -0.70, 2.80                         # XLO leaves "Chance" clear of the 1B band edge
     BR, BRLAB = 2.15, 2.26                         # bracket stem and its label
 
     def bracket(ax, a, b, colour, text):
-        ax.plot([BR, BR], [a, b], color=colour, lw=0.7, zorder=5)
-        for e in (a, b):
-            ax.plot([BR - 0.06, BR + 0.06], [e, e], color=colour, lw=0.7, zorder=5)
+        if abs(b - a) >= 0.02:
+            ax.plot([BR, BR], [a, b], color=colour, lw=0.7, zorder=5)
+            for e in (a, b):
+                ax.plot([BR - 0.06, BR + 0.06], [e, e], color=colour, lw=0.7, zorder=5)
         ax.text(BRLAB, (a + b) / 2, text, fontsize=FOOT, color=colour, ha="left", va="center")
 
     # ---- upper: whole-atlas macro, the competence reference
@@ -435,7 +443,7 @@ def panel_e(ax, box):
     # The rule sits 0.45 of a row above the gap's centre: at the centre it ran through the top of the
     # two group labels hung under it.
     ax.plot([XLO, XDATA], [gy + 0.45, gy + 0.45], color=RULE, lw=0.5, zorder=1)
-    ax.text(XDATA, ys_seq[0] + 0.52, "Scores tested here", fontsize=SG.FLOOR, color=MUTED,
+    ax.text(XDATA, ys_seq[0] + 0.52, "Scores tested here", fontsize=FOOT, color=MUTED,
             ha="right", va="center",
             bbox=dict(facecolor="white", edgecolor="none", alpha=0.88, pad=0.9))
     ax.text(XDATA, gy - 0.20, "Other signals on the same panel", fontsize=FOOT, color=MUTED,
@@ -476,7 +484,7 @@ def panel_e(ax, box):
     ez = sc["Evo2-40B"]
     # The comparison ("vs within-eGene non-causal control") is the legend's: at the head of this
     # line it sat under panel b's axis title and read as its second line.
-    _prov(ax, box, ["Sequence n = %s/%s    GERP n = %s–%s (reach)    probe gene-grouped over %s eGenes"
+    _prov(ax, box, ["Sequence n = %s/%s    GERP n = %s–%s (reach)    Probe gene-grouped over %s eGenes"
                     % (f"{ez['n_pos']:,}", f"{ez['n_neg']:,}", f"{gn[0]:,}", f"{gn[-1]:,}",
                        f"{probe['n_egenes']:,}")])
 
