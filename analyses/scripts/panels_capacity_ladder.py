@@ -152,7 +152,8 @@ def main():
         "_caveat_training_line": (
             "1B exists only as an 8k-trained checkpoint, so the ladder sits on the 8k line. The 40B "
             "rung is evo2_40b, which is context-extended, because that is the checkpoint the rest "
-            "of this paper reports. A 1B-to-7B comparison is therefore a clean capacity contrast; "
+            "of this paper reports. A 1B-to-7B comparison is therefore the one step between two 8k-trained "
+            "checkpoints, though they differ in training data as well as in parameter count; "
             "any comparison reaching the 40B rung also spans the context-extension training, and "
             "evo2_40b_base would be needed to close that."),
         "bootstrap": {"B": B, "seed": SEED, "unit": "variant"},

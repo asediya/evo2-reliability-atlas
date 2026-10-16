@@ -16717,7 +16717,8 @@
     "dog": 35,
     "human": 37
    },
-   "pct_in_tie_blocks": 98.08625336927224
+   "pct_distinct_value_deficit": 98.08625336927224,
+   "pct_in_nonsingleton_tie_blocks": 99.6585804132974
   },
   "trivial_sigmoid_LOSO": {
    "distinct_confidence_values_cohort": 8792,
@@ -16733,7 +16734,8 @@
     "dog": 1968,
     "human": 1975
    },
-   "pct_in_tie_blocks": 21.006289308176097
+   "pct_distinct_value_deficit": 21.006289308176097,
+   "pct_in_nonsingleton_tie_blocks": 34.91464510332435
   },
   "oracle_isotonic": {
    "distinct_confidence_values_cohort": 292,
@@ -16749,7 +16751,8 @@
     "dog": 63,
     "human": 91
    },
-   "pct_in_tie_blocks": 97.37646001796946
+   "pct_distinct_value_deficit": 97.37646001796946,
+   "pct_in_nonsingleton_tie_blocks": 99.12848158131177
   }
  },
  "prior_shift": {
@@ -18138,7 +18141,8 @@
    "frac_over_calls_caught": 0.7716049382716049,
    "frac_missed_pathogenic_caught": 0.2612859097127223
   },
-  "_note": "signed logit axis; equal-COUNT treads so every tread rests on equal evidence; refusal corridor |logit|<t is exactly the least-confident 15% within each species"
+  "_boundary_rule": "strict corridor |logit| < percentile(|logit|, 15) within each species",
+  "_note": "signed logit axis; equal-COUNT treads so every tread rests on equal evidence; refusal corridor |logit|<t is exactly the least-confident 15% within each species. The 15% boundary falls inside blocks of TIED confidence, so n_refused depends on how the boundary is resolved: this strict corridor gives 1,673, the ceiling rank rule used by reports/fig4_leak.json gives 1,674, and rounding to nearest gives 1,669. The one variant between the first two is a correct call, so errors_captured and every lift here are identical under either rule -- the two files do not disagree about anything derived."
  },
  "deposited_reconciliation": {
   "oracle": {

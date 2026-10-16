@@ -276,8 +276,8 @@ def main():
         per_sp = {s: int(np.unique(np.abs(2 * post[s][0][m] - 1)).size) for s in sps}
         # 100*(1 - n_distinct/n) is a distinct-value
         # deficit, NOT the share of observations sitting in a non-singleton tie block, and the
-        # two differ: on the deposited isotonic posterior the deficit is 97.83% while the true
-        # tie-block share is 99.63%. The selective layer sorts by confidence and breaks ties by
+        # two differ: on the isotonic_LOSO posterior below the deficit is 98.09% while the true
+        # tie-block share is 99.66%. The selective layer sorts by confidence and breaks ties by
         # row order, so the tie-block share is the quantity that says how much of the ordering
         # is decided by position rather than by confidence. Both are emitted, under names that
         # say what they are; the ambiguous name `pct_in_tie_blocks` is not used for either.

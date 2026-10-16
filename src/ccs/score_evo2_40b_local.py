@@ -223,7 +223,7 @@ def main():
     # 7B scores for the splicing and ClinVar panels come from the BioNeMo window-sum scorer, so a
     # 40B number from here cannot be read against them as a capacity rung: the readout moves too.
     ap.add_argument("--model", default="evo2_40b",
-                    help="checkpoint to stream: evo2_40b (default), evo2_7b, evo2_1b_base")
+                    help="checkpoint to stream: evo2_40b (default), evo2_7b, evo2_7b_base, evo2_1b_base")
     a = ap.parse_args()
 
     panels = []
