@@ -808,6 +808,6 @@ ap.add_argument("--out", default=os.path.join(REPORTS, "figures", "Figure8_reado
 ap.add_argument("--png", default=None)
 args = ap.parse_args()
 png = args.png or os.path.splitext(args.out)[0] + ".png"
-cv.save(args.out, png)
+cv.save(args.out, png, top_mm=F.SUBMIT_TOP_MM)
 print("species-mean margin %s at 1,001 bp -> %s at 8,192 bp; paired change %s; readout +%.3f species mean"
       % (brack(*HM["m1"]), brack(*HM["m8"]), brack(*GAIN_T), SP_M8 - SP_M1))

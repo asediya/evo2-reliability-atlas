@@ -34,7 +34,8 @@ figure that draws them.
 
 `Canvas` lays everything out in millimetres from the top-left corner, so a gap that clears a glyph keeps its
 size, and `Canvas.save` refuses a plate that breaks the contract: wrong width, too tall, type at a size outside
-the scale, a stroke outside the four widths, anything off the page, or a font other than Arial.
+the scale, a stroke outside the four widths, anything off the page, or a font other than Arial. A submitted main figure
+keeps a blank band of SUBMIT_TOP_MM across its top, and the check refuses ink inside it.
 """
 import os
 
@@ -47,6 +48,9 @@ from matplotlib.patches import FancyBboxPatch, Rectangle
 
 MM = 1 / 25.4
 W_MM, H_MAX_MM = 170.0, 173.0
+# Blank band above a submitted main figure, a quarter inch: the submission system prints a 10-pt label across
+# the top edge of each figure page of the review copy, so the graphic starts below it. Not counted in H_MAX_MM.
+SUBMIT_TOP_MM = 6.35
 # the type scale (pt), style_gb.py's: panel letter, axis title, tick label, annotation, dense-list floor
 PANEL, AXIS, TICK, ANNOT, FLOOR = 12.0, 9.0, 8.4, 7.4, 7.0
 TYPE = ANNOT             # a label, key entry or printed value unless its role says otherwise
@@ -666,8 +670,8 @@ class Canvas:
         return self.fig.text(x / self.W, 1 - base / self.H, s, fontsize=size, color=INK if color is None else color,
                              fontweight="bold" if bold else "normal", ha="left", va="baseline")
 
-    def save(self, pdf, png=None, png_dpi=300, crop=True):
-        _save(self.fig, pdf, png, png_dpi, crop)
+    def save(self, pdf, png=None, png_dpi=300, crop=True, top_mm=0.0):
+        _save(self.fig, pdf, png, png_dpi, crop, top_mm)
 
 
 def _tidy_minus(fig):
@@ -682,7 +686,7 @@ def _tidy_minus(fig):
                 t.set_text(n)
 
 
-def _save(fig, pdf, png=None, png_dpi=300, crop=True):
+def _save(fig, pdf, png=None, png_dpi=300, crop=True, top_mm=0.0):
     os.makedirs(os.path.dirname(os.path.abspath(pdf)), exist_ok=True)
     _tidy_minus(fig)
     bb = None
@@ -695,6 +699,10 @@ def _save(fig, pdf, png=None, png_dpi=300, crop=True):
         bottom_in = (buf.shape[0] - 1 - rows.max()) / fig.dpi if rows.size else 0.0
         y0 = min(max(0.0, bottom_in - 3.0 * MM), fig.get_figheight())
         bb = matplotlib.transforms.Bbox([[0.0, y0], [fig.get_figwidth(), fig.get_figheight()]])
+    if top_mm:
+        # the band above the canvas: savefig paints the page beyond the figure in the figure's face colour
+        y0 = bb.y0 if bb is not None else 0.0
+        bb = matplotlib.transforms.Bbox([[0.0, y0], [fig.get_figwidth(), fig.get_figheight() + top_mm * MM]])
     # No creation date in the file: the same figure then builds to the same bytes, and the paper carries
     # no process dates. Matplotlib stamps CreationDate unless it is set to None.
     fig.savefig(pdf, dpi=600, bbox_inches=bb, metadata={"CreationDate": None})
@@ -710,7 +718,13 @@ def _save(fig, pdf, png=None, png_dpi=300, crop=True):
     sp = [(s["bbox"], s["text"], s["size"], s["font"]) for b in pg.get_text("dict")["blocks"]
           for ln in b.get("lines", []) for s in ln["spans"] if s["text"].strip()]
     fonts = sorted({f[3] for f in pg.get_fonts()})
-    strokes = [d["width"] for d in pg.get_drawings() if d.get("color") is not None and d.get("width")]
+    drawings = pg.get_drawings()
+    strokes = [d["width"] for d in drawings if d.get("color") is not None and d.get("width")]
+    band = top_mm * 72 / 25.4
+    in_band = [t for bb_, t, _, _ in sp if bb_[1] < band - 0.01]
+    in_band += ["drawing" for d in drawings if d["rect"].y0 < band - 0.01 and (d.get("color") is not None or
+                (d.get("fill") is not None and tuple(d["fill"]) != (1.0, 1.0, 1.0)))]
+    in_band += ["image" for im in pg.get_image_info() if im["bbox"][1] < band - 0.01]
     doc.close()
     out = [(t, bb_) for bb_, t, _, _ in sp
            if bb_[0] < -0.01 or bb_[1] < -0.01 or bb_[2] > r.width + 0.01 or bb_[3] > r.height + 0.01]
@@ -733,6 +747,7 @@ def _save(fig, pdf, png=None, png_dpi=300, crop=True):
     assert not black, "%s: Arial Black on the plate: %s" % (pdf, black[:12])
     assert not offstroke, "%s: stroke widths outside %s: %s" % (pdf, LW_SET, offstroke)
     assert not alien, "%s: non-Arial fonts: %s" % (pdf, alien)
-    assert abs(w_mm - W_MM) < 0.05 and h_mm <= H_MAX_MM + 0.05, (w_mm, h_mm)
+    assert not in_band, "%s: ink in the %.2f-mm band above the figure: %s" % (pdf, top_mm, in_band[:12])
+    assert abs(w_mm - W_MM) < 0.05 and h_mm - top_mm <= H_MAX_MM + 0.05, (w_mm, h_mm, top_mm)
     print("wrote %s  %.1f x %.1f mm  %d spans  min type %.2f pt  fonts %s"
           % (os.path.basename(pdf), w_mm, h_mm, len(sp), min(z for _, _, z, _ in sp), fonts))

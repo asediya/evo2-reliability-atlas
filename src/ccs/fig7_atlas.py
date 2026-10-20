@@ -798,7 +798,7 @@ def build(out, png):
     cv.letter(X_A, LETTER_Y, "a")
     cv.letter(X_B, LETTER_Y, "b")
     cv.letter(X_A, C_TOP, "c")
-    cv.save(out, png)
+    cv.save(out, png, top_mm=F.SUBMIT_TOP_MM)
 
 
 def main():
