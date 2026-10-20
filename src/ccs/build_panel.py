@@ -1,13 +1,13 @@
-"""Build the Week-1 cattle variant panel from CattleGTEx QTLtools output.
+"""Build a cattle cis-eQTL variant panel from CattleGTEx QTLtools output; the panel enters no reported analysis.
 
 Positives: lead cis-eQTL of BH-FDR<thr significant eGenes (from *.permutations files, col11 beta perm-p).
 Negatives: cross-locus, TSS-distance-matched non-associated variants (from *.nominals, p>0.9).
-Provisional (permutation lead, not fine-mapped; MAF-matching deferred to the genotype stage).
+Positives are permutation leads, not fine-mapped, and negatives are not frequency-matched.
 
 Output: labeled_variants.parquet [variant_id, chrom, pos, ref, alt, gene, tissue, label, dist, source_p]
 
-Runs in the Windows uv venv (duckdb multithreaded + polars):
-  python build_panel.py --eqtl-dir <dir> --out labeled.parquet --neg-per-pos 4 --fdr 0.05
+Run (needs duckdb and polars):
+  python src/ccs/build_panel.py --eqtl-dir <dir> --out labeled.parquet --neg-per-pos 4 --fdr 0.05
 """
 import argparse, glob, os
 import numpy as np

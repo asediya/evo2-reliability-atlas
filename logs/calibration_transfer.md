@@ -16,4 +16,4 @@ Label-rich sources (isotonic fit): ['sheep', 'horse', 'cat', 'cattle', 'dog', 'h
 
 **Verdict:** transfer beat no-calibration on 3/3 label-poor species; median ECE transfer=0.050 vs oracle=0.013 (closer = transfer works).
 
-> See `logs/calibration_baseline.md` for the honest head-to-head against a pooled global sigmoid (Platt) + base-rate baselines, equal-mass ECE, Brier, and the prevalence-fragility grid.
+> See `logs/calibration_baseline.md` for the head-to-head against a pooled global sigmoid (Platt) + base-rate baselines, equal-mass ECE, Brier, and the prevalence-fragility grid.

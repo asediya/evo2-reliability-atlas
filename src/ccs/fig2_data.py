@@ -16,7 +16,7 @@ from scipy.stats import spearmanr
 
 # The verification table prints Greek deltas. Under Windows' cp1252 console default that raises
 # UnicodeEncodeError *after* fig2_data.json has been written, so the script would exit 1 while
-# its output is correct -- a referee re-running it would see a failure that is not one.
+# its output is correct -- a reader re-running it would see a failure that is not one.
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 

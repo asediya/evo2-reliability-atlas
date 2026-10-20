@@ -1,15 +1,15 @@
-"""CROSS-SPECIES CONFORMAL PREDICTION — upgrade the trust layer from a
-heuristic calibrated probability to a DISTRIBUTION-FREE, finite-sample COVERAGE GUARANTEE, and test
-whether the guarantee TRANSFERS across species.
+"""CROSS-SPECIES CONFORMAL PREDICTION — add split-conformal prediction sets to the calibrated
+probability, and test whether their coverage carries across species.
 
 Split-conformal: fit the isotonic map + the conformal quantile on LABEL-RICH species, then emit
 prediction SETS on a LABEL-POOR target it never saw. For a chosen error rate alpha, the set is
 guaranteed (under exchangeability) to contain the true label with prob >= 1-alpha. Binary sets:
-{benign}/{pathogenic} = a confident call; {both} = a principled ABSTENTION; {} = out-of-distribution.
+{benign}/{pathogenic} = a confident call; {both} = an ABSTENTION; {} = out-of-distribution.
 We report EMPIRICAL coverage vs nominal (1-alpha) on held-out species + set-size efficiency, for
 marginal AND Mondrian (class-conditional, robust to the ~10:1 imbalance) conformal.
 
-The test is whether cross-species coverage tracks 1-alpha on a species with no labels. CPU-only.
+The test is whether cross-species coverage tracks 1-alpha on a species with no labels. CPU-only; with
+fewer than two label-rich species it exits with an error naming the score and window files that are absent.
   python src/ccs/build_conformal.py
 """
 import os, sys, time
@@ -35,6 +35,26 @@ def ev(m):
 def st(m):
     os.makedirs("logs/status", exist_ok=True)
     with open(ST, "w", encoding="utf-8") as f: f.write(m + "\n")
+
+
+def missing_inputs():
+    """The per-species inputs `load` reads that are not on disk, named in the error when too few load."""
+    miss = []
+    for sp in WIN:
+        for f in (f"data/processed/scores/{sp}_evo2_40b_local_scores.parquet", f"data/interim/{WIN[sp]}.parquet"):
+            if not os.path.exists(f):
+                miss.append(f)
+    return miss
+
+
+def stop(why):
+    """Exit non-zero, naming every absent input: nothing here can be computed without them."""
+    miss = missing_inputs()
+    st(f"STOPPED | {why}"); ev(f"stopped: {why}")
+    raise SystemExit(f"build_conformal: {why}, so nothing was computed.\n"
+                     + (f"Missing inputs ({len(miss)}):\n" + "".join(f"  {f}\n" for f in miss) if miss else "")
+                     + "These files under data/ are not part of the code deposit; "
+                       "reports/DATA_MANIFEST.md lists every data/ path and its public source.")
 
 
 def load(sp):
@@ -102,7 +122,7 @@ def main():
     rich = [sp for sp in data if int(data[sp][1].sum()) >= RICH_MIN]
     poor = [sp for sp in data if sp not in rich]
     if len(rich) < 2:
-        st(f"WAIT | need >=2 rich sources (have {rich})"); return
+        stop(f"{len(rich)} label-rich species (>= {RICH_MIN} positives) loaded, at least 2 needed (have {rich})")
 
     # pooled rich -> stratified FIT/CAL split (fit the isotonic on FIT, conformal-calibrate q on CAL)
     Xr = np.concatenate([data[s][0] for s in rich]); Yr = np.concatenate([data[s][1] for s in rich])
@@ -137,11 +157,11 @@ def main():
 
     tgt = [r for r in rows if r["role"] == "TARGET"]
     mean_cov_tgt = float(np.mean([r["cov_mond"] for r in tgt])) if tgt else float("nan")
-    lines = ["# Cross-species conformal prediction — a coverage-controlled trust layer that transfers across species (under a stated, tested exchangeability assumption)", "",
+    lines = ["# Cross-species conformal prediction — coverage on zero-label species, under an exchangeability assumption that cross-species transport breaks", "",
              f"Conformal quantile calibrated on label-rich species; applied to held-out TARGETS: {poor}. "
              f"Nominal coverage 1-alpha = 0.90 (alpha=0.10) for the main table.", "",
              "## Per-species coverage & set-size (alpha=0.10, nominal 90%)",
-             "Two honest constructions, each with coverage AND set sizes from its OWN membership rule. "
+             "Two constructions, each with coverage AND set sizes from its OWN membership rule. "
              "Mondrian holds ~0.97 by abstaining heavily; marginal holds ~0.95 overall as near-singletons "
              "but drops POSITIVE-class coverage.", "",
              "| species | role | n | pos | Mondrian cov | Mond cov benign | Mond cov path | Mond abstain{both} | "
@@ -152,7 +172,7 @@ def main():
                      f"| {r['cov_ben']:.3f} | {r['cov_path']:.3f} | **{r['abstain']:.3f}** "
                      f"| {r['cov_marg']:.3f} | {r['cov_ben_marg']:.3f} | {r['cov_path_marg']:.3f} | {r['abstain_marg']:.3f} |")
     lines += ["", f"Mean Mondrian coverage on held-out TARGETS = **{mean_cov_tgt:.3f}** vs nominal 0.90.", "",
-              "## Coverage sweep on held-out label-poor targets — does empirical coverage track the guarantee?",
+              "## Coverage sweep on held-out label-poor targets — does empirical coverage track the nominal level?",
               "Mondrian coverage/abstention vs marginal coverage/abstention, each internally consistent. "
               "Note the marginal predictor's POSITIVE-class coverage collapses well below nominal.",
               "| alpha | nominal 1-alpha | Mondrian cov | Mond path cov | Mond abstain | marginal cov | marg path cov | marg abstain |",
@@ -174,7 +194,7 @@ def main():
               "breaks, so it is NOT a distribution-free finite-sample guarantee. "
               f"No single predictor gives both {mean_cov_tgt:.2f} coverage AND {100 * sing:.1f}% singletons: the near-singleton (marginal) "
               f"construction drops positive-class coverage to {min(pcm):.3f}-{max(pcm):.3f}.",
-              "", "Honest caveat: exchangeability across species is imperfect, so coverage is approximate/assumption-"
+              "", "Caveat: exchangeability across species is imperfect, so coverage is approximate/assumption-"
               "conditional; Mondrian is reported because marginal coverage skews under class imbalance."]
     open(MD, "w", encoding="utf-8").write("\n".join(lines) + "\n")
     pl.DataFrame(rows).write_parquet("data/processed/conformal_per_species.parquet")

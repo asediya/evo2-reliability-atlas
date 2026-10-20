@@ -11,7 +11,7 @@ This script computes both controls on the panel the paper reports:
     local GC over a 101-bp window, on which they are not. Reported as an out-of-fold AUROC with a
     TWO-SIDED verdict |AUROC - 0.5| < 0.10, plus the trinucleotide-spectrum chi-square and the GC
     Mann-Whitney test (the direct "is it matched" statistics, which do not overfit at small n).
-  * Spatial control: Evo 2-40B ALONE (not the ensemble), full panel vs after dropping negatives
+  * Spatial control: Evo 2-40B alone, full panel vs after dropping negatives
     within 50 kb of a same-chromosome positive.
 
 Features come from the stored `ref_seq`/`var_off` in the window tables, so no FASTA access or

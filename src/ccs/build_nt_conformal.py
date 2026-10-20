@@ -1,9 +1,10 @@
 """Does the conformal trust layer (distribution-free under exchangeability) transfer on a 2nd backbone?
 
-Mirror of build_conformal.py but on Nucleotide Transformer scores (nt_neg = -nt_llr). Conformal coverage
-is distribution-free by construction, so the guarantee should hold on NT too -- a WEAK discriminator just
-produces larger sets / more {both} abstentions while COVERAGE is preserved. That is the cleanest possible
-'model-agnostic trust layer' result: the guarantee is a property of the method, not the model.
+Mirror of build_conformal.py but on Nucleotide Transformer scores (nt_neg = -nt_llr). Under exchangeability
+conformal coverage does not depend on the model, so a WEAK discriminator should produce larger sets / more
+{both} abstentions rather than lower coverage; across species that assumption is the one cross-species
+transport breaks, for NT as for Evo 2. With fewer than two label-rich species it exits with an error naming
+the score and window files that are absent.
 
   python src/ccs/build_nt_conformal.py   -> logs/nt_conformal.md
 """
@@ -59,7 +60,13 @@ def main():
     rich = [sp for sp in data if int(data[sp][1].sum()) >= RICH_MIN]
     poor = [sp for sp in data if sp not in rich]
     if len(rich) < 2:
-        print(f"need >=2 rich sources (have {rich})"); return
+        miss = [f for sp in WIN for f in (f"data/processed/scores/{sp}_nt_atlas.parquet", f"data/interim/{WIN[sp]}.parquet")
+                if not os.path.exists(f)]
+        raise SystemExit(f"build_nt_conformal: {len(rich)} label-rich species (>= {RICH_MIN} positives) loaded, at least 2 "
+                         f"needed (have {rich}), so nothing was computed.\n"
+                         + (f"Missing inputs ({len(miss)}):\n" + "".join(f"  {f}\n" for f in miss) if miss else "")
+                         + "These files under data/ are not part of the code deposit; "
+                           "reports/DATA_MANIFEST.md lists every data/ path and its public source.")
 
     Xr = np.concatenate([data[s][0] for s in rich]); Yr = np.concatenate([data[s][1] for s in rich])
     (fit_i, cal_i), = list(StratifiedKFold(2, shuffle=True, random_state=0).split(Xr, Yr))[:1]

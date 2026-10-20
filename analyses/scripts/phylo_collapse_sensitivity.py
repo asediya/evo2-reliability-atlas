@@ -5,7 +5,7 @@ The manuscript states that collapsing the nine species to one unit per taxonomic
 macro Evo 2 advantage essentially unchanged, and that every one-representative-per-order choice
 lands in a narrow band. Without this script none of those values would exist in any deposited
 artefact, only in the manuscript prose, so the one phylogenetic-sensitivity claim in the paper
-would be the one claim a referee could not check.
+would be the one claim a reader could not check.
 
 This recomputes it from the per-species deltas the meta-analysis already deposits, and writes the
 result. Nothing here is typed from memory; the numbers the manuscript quotes are

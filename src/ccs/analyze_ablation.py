@@ -1,4 +1,4 @@
-"""Analyze the eQTL harness/context ablation: Evo2-40B causal-vs-noncausal AUROC under each
+"""Analyze the eQTL harness/context ablation: Evo2-40B candidate-causal-vs-control AUROC under each
 (window, readout) harness, vs the 1002-bp single-position baseline (headline 0.496).
 
 For each score file present, AUROC is computed two ways to match the baseline's reporting:
@@ -67,7 +67,7 @@ def main():
 
     L = ["# eQTL harness/context ablation - does the regulatory blind spot survive a better harness?", "",
          "Question: could the 1001-bp window + single-position readout MANUFACTURE the regulatory blind",
-         "spot? Causal (n=1000) vs non-causal (n=1000) pig cis-eQTLs, Evo2-40B,",
+         "spot? Candidate causal (n=1000) vs control (n=1000) pig cis-eQTL variants, Evo2-40B,",
          "re-scored under each harness. Baseline = original 1002-bp single-position (AUROC 0.496). AUROC on |score|",
          "magnitude (matches baseline |LLR|); signed oriented >=0.5. 95% CI = 1000x bootstrap on |score|.", "",
          "| harness | window(bp) | readout | n | AUROC(|score|) | 95% CI | AUROC(signed) | status |",
@@ -81,8 +81,8 @@ def main():
           "- AUROC stays ~0.5 (CI includes 0.5) across windows & readouts => regulatory blind spot is a MODEL",
           "  property, not a harness artifact.",
           "- AUROC rises materially (CI excludes 0.5) under mean-LL / larger windows => partly a scoring artifact",
-          "  => re-scope the regulatory claim honestly.",
-          "", "Caveat (separate): causal cis-eQTLs are common/weakly-selected, so a fitness-trained",
+          "  => re-scope the regulatory claim.",
+          "", "Caveat (separate): candidate causal cis-eQTLs are common/weakly-selected, so a fitness-trained",
           "model being near chance here may be EXPECTED, not a representational failure. This ablation isolates the",
           "harness confound only; the construct-validity question is addressed in the manuscript text."]
     open("logs/eqtl_ablation.md", "w", encoding="utf-8").write("\n".join(L) + "\n")

@@ -8,7 +8,8 @@ to reviewed assertions. This measures that instead of softening the wording on f
 
 Reads CLNREVSTAT from the ClinVar VCF, joins it to the human atlas positives, and
 recomputes discrimination at >=1 star. AUROC is computed here with scipy's Mann-Whitney U so the
-answer does not depend on the same helper the rest of the pipeline uses.
+answer does not depend on the same helper the rest of the pipeline uses. Without the VCF, the human
+windows or either score file it exits with an error naming the absent inputs.
 
     python src/ccs/build_clinvar_reviewstatus.py
       -> reports/clinvar_reviewstatus.json
@@ -74,9 +75,15 @@ def read_revstat():
 
 
 def main():
-    if not os.path.exists(VCF):
-        print("ClinVar VCF absent at %s -- cannot answer this question here." % VCF)
-        return
+    miss = [f for f in (VCF, WIN) if not os.path.exists(f)]
+    if not (os.path.exists(S1001) or os.path.exists(S8192)):
+        miss += [S1001, S8192]
+    if miss:
+        raise SystemExit("build_clinvar_reviewstatus: input not found, so %s was not written.\n"
+                         "Missing inputs (%d):\n%s"
+                         "These files under data/ are not part of the code deposit; "
+                         "reports/DATA_MANIFEST.md lists every data/ path and its public source."
+                         % (OUT, len(miss), "".join("  %s\n" % f for f in miss)))
     rev = read_revstat()
     print("CLNREVSTAT parsed for %d ClinVar records" % len(rev))
 

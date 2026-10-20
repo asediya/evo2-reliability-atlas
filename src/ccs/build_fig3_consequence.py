@@ -3,8 +3,8 @@
 
 The per-consequence AUROC gradient (nonsense -> missense -> splicing ->
 regulatory) is the in-panel evidence for the coding-to-regulatory decay. This file deposits it as a
-recompute artefact, because the producing scripts write to `logs/`, which is not part of the code
-deposit.
+recompute artefact, because the scripts that produced the gradient wrote it only to logs the code
+deposit does not carry.
 
 Estimator, stated explicitly so that no reader has to reverse-engineer it. For each consequence
 class, each species' positives of that class are scored against that same species' population

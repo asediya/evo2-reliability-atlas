@@ -1,8 +1,8 @@
-# Conservation-matched discrimination: is Evo2-40B's AUROC real pathogenicity or a region confound?
+# Conservation-matched discrimination: does Evo2-40B's AUROC survive matching negatives on conservation?
 
 Negatives are resampled (quantile-binned on the POSITIVE GERP distribution, up to 5:1, 40 reps, seed 0)
-so they carry the SAME conservation profile as the positives. If AUROC survives, the signal is
-pathogenicity, not conserved-region-vs-intergenic. goat excluded (<10 positives).
+so they carry the SAME conservation profile as the positives. If AUROC survives, the signal is not
+conserved-region-vs-intergenic separation. goat excluded (<10 positives).
 
 | species | n | pos | AUROC (all-neg) | AUROC (cons-matched) | drop | conservation-alone |
 |---|---|---|---|---|---|---|
@@ -17,9 +17,8 @@ pathogenicity, not conserved-region-vs-intergenic. goat excluded (<10 positives)
 
 **Mean across 8 species: AUROC(all-neg) 0.869 -> conservation-matched **0.834** (drop +0.034).**
 
-**Verdict:** Evo2-40B's discrimination SURVIVES conservation-matching (mean ~0.83, range 0.76-0.91) — it is
-REAL pathogenicity signal, NOT merely conserved-region-vs-intergenic separation. This addresses the region
-confound flagged in the audit. Honest scope: the signal is real but MODEST and does not cleanly beat
+**Verdict:** Evo2-40B's discrimination SURVIVES conservation-matching (mean ~0.83, range 0.76-0.91), so it is
+not merely conserved-region-vs-intergenic separation. The signal is MODEST and does not cleanly beat
 conservation (see beats-conservation FDR = 2/9); the FM adds orthogonal signal (decomposition dFM +0.020),
-it does not dominate the conservation baseline. Matching is on GERP; a consequence/genic match is a further
-control a reviewer may request.
+it does not dominate the conservation baseline. Matching is on GERP; a consequence/genic match would be a
+further control.

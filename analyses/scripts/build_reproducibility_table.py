@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""Build the reviewer-facing reproducibility table: every headline number, its artefact, its check.
+"""Build the reproducibility table: every headline number, its artefact, its check.
 
-A reviewer receives a PDF. They cannot run anything, and a sentence saying that code and data are
+A reader receives a PDF. They cannot run anything, and a sentence saying that code and data are
 available buys nothing, because every paper says it. What they can do in ninety seconds is take one
 number from the abstract, find it in a table, and see the file it came from and the check that binds
 it there. That converts a claim about rigour into a standing offer to be caught.

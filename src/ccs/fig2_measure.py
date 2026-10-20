@@ -282,10 +282,16 @@ def panel_c(ax):
         for r, dx in zip(rows, xs):
             c = S.species_color(r["species"])
             x = slot_x[my] + dx
-            ax.plot([x, x], [r["lo"], r["hi"]], lw=.7, color=S._shade(c, -0.55), alpha=1.0,
-                    zorder=6)
+            # A species whose positives do not support a cluster-robust interval (goat: Table 2
+            # prints "0.959 (no interval)") is drawn as an open marker with no whisker, as panel
+            # d's strip draws it; its name carries the dagger (fig2_split.py).
+            weak = r["species"] in NO_CLUSTER_INTERVAL
+            if not weak:
+                ax.plot([x, x], [r["lo"], r["hi"]], lw=.7, color=S._shade(c, -0.55), alpha=1.0,
+                        zorder=6)
             ax.scatter(x, r["auroc"], s=4 + 34 * (r["n"] / 3000.0), marker="o",
-                       facecolor=c, edgecolor="white", lw=.4, zorder=5)
+                       facecolor=("white" if weak else c), edgecolor=(c if weak else "white"),
+                       lw=(0.7 if weak else .4), zorder=(7 if weak else 5))
     XLO, XHI = -0.6, x0 - 1.0 + 0.6
     ax.set_xlim(XLO, XHI); ax.set_ylim(.72, 1.005)
     # The ticks are the divergences the forest carries, and the names under them are computed from

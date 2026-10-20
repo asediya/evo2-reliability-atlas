@@ -3,8 +3,8 @@ scores), Evo2-1B, and conservation baselines (GERP / phyloP), with bootstrap CIs
 40B-vs-conservation and 40B-vs-1B deltas, and a streaming-vs-API 40B cross-check (Pearson r) that
 proves the block-streaming path reproduces the hosted reference.
 
-Idempotent: reads whatever score files currently exist and reports coverage, so the orchestrator
-can re-run it as the 40B scores accumulate. Writes data/processed/atlas_40b.parquet + .md + .json.
+Idempotent: reads whatever score files exist and reports coverage. Writes
+data/processed/atlas_40b.parquet + .md + .json; if no species loads it exits with an error and writes nothing.
 
   python src/ccs/build_atlas.py            # all species
   python src/ccs/build_atlas.py --species cattle dog
@@ -140,6 +140,11 @@ def main():
             rows.append(build_species(sp, SPECIES[sp]))
         except FileNotFoundError as e:
             print(f"  {sp}: missing windows ({e})")
+    if not rows:
+        raise SystemExit("build_atlas: no species could be loaded (each missing file is named above), so "
+                         "data/processed/atlas_40b.{parquet,json,md} were not written.\n"
+                         "The per-species window and score files under data/ are not part of the code deposit; "
+                         "reports/DATA_MANIFEST.md lists every data/ path and its public source.")
     tab = pl.DataFrame(rows)
     os.makedirs("data/processed", exist_ok=True)
     tab.write_parquet("data/processed/atlas_40b.parquet")

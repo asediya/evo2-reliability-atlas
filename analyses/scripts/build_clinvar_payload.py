@@ -5,7 +5,7 @@ Two things this addresses, and the first matters more than the second.
 
 **Evo 2 must be a participant, not only the auditor.** The paper charges CADD, REVEL and
 AlphaMissense a must-answer penalty on 1.4 M ClinVar variants; leaving Evo 2 uncharged on the same
-panel is an asymmetry a referee sees immediately. Scoring Evo 2 here puts it into the league table
+panel is an asymmetry a reader sees immediately. Scoring Evo 2 here puts it into the league table
 it critiques, with its own reach, its own class gap and its own identified interval beside the
 other 49.
 

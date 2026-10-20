@@ -1,6 +1,6 @@
 """Conservation-matched discrimination: how much of Evo2-40B's AUROC survives when the negatives
-are forced to have the SAME conservation (GERP) profile as the positives? (Removes the audit's
-region confound: positives sit in conserved sequence, genome-wide negatives don't.)
+are forced to have the SAME conservation (GERP) profile as the positives? (Removes the region
+confound: positives sit in conserved sequence, genome-wide negatives do not.)
 
 Reuses build_decomposition.merged() so loading is the SCRIPT's own code, not a reimplementation.
 For each species: unmatched AUROC (all negs) vs conservation-matched AUROC vs conservation-alone AUROC.
@@ -68,22 +68,21 @@ for sp in SPECIES:
 if rows:
     mean_all = float(np.mean([r[3] for r in rows])); mean_m = float(np.mean([r[4] for r in rows]))
     print(f"\nMEAN across {len(rows)} species: AUROC(all-neg)={mean_all:.3f}  AUROC(cons-matched)={mean_m:.3f}  drop={mean_all-mean_m:+.3f}")
-    L = ["# Conservation-matched discrimination: is Evo2-40B's AUROC real pathogenicity or a region confound?", "",
+    L = ["# Conservation-matched discrimination: does Evo2-40B's AUROC survive matching negatives on conservation?", "",
          "Negatives are resampled (quantile-binned on the POSITIVE GERP distribution, up to 5:1, 40 reps, seed 0)",
-         "so they carry the SAME conservation profile as the positives. If AUROC survives, the signal is",
-         "pathogenicity, not conserved-region-vs-intergenic. goat excluded (<10 positives).", "",
+         "so they carry the SAME conservation profile as the positives. If AUROC survives, the signal is not",
+         "conserved-region-vs-intergenic separation. goat excluded (<10 positives).", "",
          "| species | n | pos | AUROC (all-neg) | AUROC (cons-matched) | drop | conservation-alone |",
          "|---|---|---|---|---|---|---|"]
     for sp, n, pos, a_all, a_m, sd, a_cons in rows:
         L.append(f"| {sp} | {n} | {pos} | {a_all:.3f} | **{a_m:.3f}** +/- {sd:.3f} | {a_all-a_m:+.3f} | {a_cons:.3f} |")
     L += ["", f"**Mean across {len(rows)} species: AUROC(all-neg) {mean_all:.3f} -> conservation-matched **{mean_m:.3f}** "
           f"(drop {mean_all-mean_m:+.3f}).**", "",
-          "**Verdict:** Evo2-40B's discrimination SURVIVES conservation-matching (mean ~0.83, range 0.76-0.91) — it is",
-          "REAL pathogenicity signal, NOT merely conserved-region-vs-intergenic separation. This addresses the region",
-          "confound flagged in the audit. Honest scope: the signal is real but MODEST and does not cleanly beat",
+          "**Verdict:** Evo2-40B's discrimination SURVIVES conservation-matching (mean ~0.83, range 0.76-0.91), so it is",
+          "not merely conserved-region-vs-intergenic separation. The signal is MODEST and does not cleanly beat",
           "conservation (see beats-conservation FDR = 2/9); the FM adds orthogonal signal (decomposition dFM +0.020),",
-          "it does not dominate the conservation baseline. Matching is on GERP; a consequence/genic match is a further",
-          "control a reviewer may request."]
+          "it does not dominate the conservation baseline. Matching is on GERP; a consequence/genic match would be a",
+          "further control."]
     open("logs/conservation_matched.md", "w", encoding="utf-8").write("\n".join(L) + "\n")
     print("wrote logs/conservation_matched.md")
 

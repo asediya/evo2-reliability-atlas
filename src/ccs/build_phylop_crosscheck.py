@@ -3,7 +3,7 @@
 Motivation. The cross-species conservation baseline in this paper is GERP, because GERP is the only
 per-base conservation score available uniformly for all nine assemblies (verified against the UCSC
 download server: UCSC phyloP tracks exist for chicken/human only; cattle's comes from Zenodo, see below).
-This script is the robustness check a reviewer would ask for: on the three species where a genuine
+This script is the robustness check a reader would ask for: on the three species where a genuine
 phyloP track DOES exist, does phyloP agree with GERP as a conservation baseline for discriminating
 pathogenic from population variants? If yes, the choice of GERP is validated.
 

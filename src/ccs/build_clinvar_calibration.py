@@ -21,7 +21,7 @@ SCORES = {"Evo2-EVEE probe": "pathogenicity", "AlphaMissense": "gt_alphamissense
 # circular (near-perfect AUROC, label pearson ~0.957); it is EXCLUDED from the model-agnostic median.
 EXTERNAL = {"AlphaMissense", "CADD", "REVEL"}
 CIRCULAR = {"Evo2-EVEE probe"}
-SAMPLE_N = 150_000   # sub-sample so the null baselines below run in the SAME regime the audit flagged
+SAMPLE_N = 150_000   # sub-sample so the null baselines below run in the same size regime as the real scores
 POS = {"pathogenic", "likely_pathogenic"}
 NEG = {"benign", "likely_benign"}
 
@@ -77,7 +77,7 @@ def main():
           .when(pl.col("label").is_in(list(NEG))).then(0).otherwise(None).alias("y"))
     df = df.drop_nulls(subset=["y"])
     # Sub-sample ~150k rows (do NOT run the full 1.6M). The null baselines below are only
-    # honest in the SAME size regime; at ~150k, isotonic degenerates toward the base-rate constant.
+    # comparable in the same size regime; at ~150k, isotonic degenerates toward the base-rate constant.
     full_h = df.height
     if df.height > SAMPLE_N:
         df = df.sample(n=SAMPLE_N, seed=0)
@@ -108,7 +108,7 @@ def main():
                              auroc=round(auc, 3), ece_raw=round(e_raw, 3), ece_cal=round(e_cal, 3),
                              cov=round(cov, 3), abstain=round(abst, 2), bss=round(bss, 3)))
 
-    # --- HONEST NULL BASELINES: prove the ECE-collapse is isotonic regression, not skill ---
+    # --- NULL BASELINES: show the ECE-collapse is isotonic regression, not skill ---
     y_all = df["y"].to_numpy().astype(int)
     n_all = len(y_all); base = float(y_all.mean())
     rng = np.random.default_rng(0)
@@ -140,10 +140,10 @@ def main():
 
     lines = ["# The trust layer on the ClinVar benchmark (EVEE, model-agnostic)", "",
              f"Shards used: {len(shards)}. Panel = {full_h:,} pathogenic/benign ClinVar variants, **sub-sampled to "
-             f"{df.height:,} rows (seed 0, base rate {base:.4f})** so the honest null baselines run in the same size "
-             "regime the audit flagged. Raw score treated as a naive probability (min-max) for ECE; isotonic 4-fold CV; "
+             f"{df.height:,} rows (seed 0, base rate {base:.4f})** so that the null baselines run in the same size "
+             "regime as the real scores. Raw score treated as a naive probability (min-max) for ECE; isotonic 4-fold CV; "
              "split-conformal Mondrian coverage at nominal 0.90. `Brier skill` = reliability GAIN over the base-rate "
-             "constant (resolution the constant lacks); it is the honest headline, NOT the near-zero absolute calibrated ECE.", "",
+             "constant (resolution the constant lacks); it is the headline, not the near-zero absolute calibrated ECE.", "",
              "| VEP score | stratum | n | pos | AUROC | ECE raw | ECE calibrated | Brier skill | conformal cov | abstain |",
              "|---|---|---|---|---|---|---|---|---|---|"]
     for r in rows:

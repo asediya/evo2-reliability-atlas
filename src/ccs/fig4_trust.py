@@ -23,7 +23,7 @@ import numpy as np, polars as pl
 import matplotlib as mpl
 # Caption text is wrapped by measuring against fig.canvas.get_renderer(), so the line breaks
 # depend on the ACTIVE backend: built under macosx the breaks differ from the same build under
-# Agg, which is what any headless Linux rebuild (a referee, CI, a Zenodo re-run) gets. Pinning
+# Agg, which is what any headless Linux rebuild (a reader's, CI, a Zenodo re-run) gets. Pinning
 # Agg here makes the figure reproduce identically everywhere. fig2_split.py already does this.
 mpl.use("Agg")
 import matplotlib.pyplot as plt
@@ -269,7 +269,7 @@ def panel_a(fig, gs_slice):
         axm.spines[sname].set_visible(False)
     # The strip is 2.4 mm tall and cannot carry both its own caption and the hot-zone callout; the
     # caption sits in the block below, where there is room.
-    # Mark where risk actually concentrates: the LONGEST CONTIGUOUS run above twice the cohort rate.
+    # Mark where risk actually concentrates: the LONGEST CONTIGUOUS run above twice the pooled rate.
     # Taking min/max of every qualifying bin would span almost the whole populated axis and say nothing.
     base = M["n_err"] / M["n"]
     over = (pc >= MIN_N) & (pr > 2 * base)
@@ -302,8 +302,10 @@ def panel_a(fig, gs_slice):
         # number; the argument belongs to the legend and Additional file 1 Note S3.
         # Grey, unbolded, and set in the strip's own headroom rather than haloed over the profile
         # curve, so the caption does not sit on the line it describes.
+        # "the pooled rate (8.0%)": the pooled error rate of all nine species, printed with its
+        # value, since "cohort" is the paper's word for population cohorts.
         axm.annotate(f"Band: logit {h0:+.1f} to {h1:+.1f} — {_rate:.0%} local error, "
-                     f"{_rate / base:.1f}× the cohort rate",
+                     f"{_rate / base:.1f}× the pooled rate ({base:.1%})",
                      xy=(h0, np.nanmax(pr) * 0.55), xytext=(LO + 0.2, np.nanmax(pr) * 2.13),
                      fontsize=FOOT, color=MUTED, ha="left", va="top",
                      linespacing=1.40, arrowprops=dict(arrowstyle="->", color="#9A9A9A", lw=0.5),
@@ -320,6 +322,7 @@ def panel_a(fig, gs_slice):
         bx = a_.get_position()
         a_.set_position([bx.x0 + DX, bx.y0, bx.width - DX, bx.height])
     ax.set_xlim(LO, HI); ax.set_ylim(len(RW), 0)
+    _rate_labels = []
     for i, r in enumerate(RW):
         cnt = np.array(r["count"], float)
         rate = np.array([np.nan if v is None else v for v in r["rate"]], float)
@@ -384,14 +387,29 @@ def panel_a(fig, gs_slice):
                 transform=ax.get_yaxis_transform(), color=FAIL, alpha=0.85, lw=0, zorder=8,
                 clip_on=False)
         # the raw error count is derivable from n and the rate; the RATE is the comparable quantity
-        ax.text(-0.013, i + 0.50, f"{r['n']:,} calls · {r['base_rate']:.1%} err",
-                transform=ax.get_yaxis_transform(), ha="right", va="center",
-                fontsize=FOOT, color=MUTED, zorder=9)
+        # "error" in full, and a comma rather than " · ": the longest label, human's, must still
+        # end short of its own error-rate bar (checked after the loop).
+        _rl = ax.text(-0.013, i + 0.50, f"{r['n']:,} calls, {r['base_rate']:.1%} error",
+                      transform=ax.get_yaxis_transform(), ha="right", va="center",
+                      fontsize=FOOT, color=MUTED, zorder=9)
+        _rate_labels.append((_rl, -0.350 + 0.0675 * r["base_rate"] / rmax))
         res = r.get("lift_resolved", True)
         ax.text(HI + 0.84, i + 0.50, (f"{r['lift']:.1f}×" if res else f"{r['lift']:.1f}× n.s."),
                 ha="right", va="center", fontsize=FOOT,
                 color=(CODING if res else MUTED), zorder=9)
     ax.axvline(0, color="#8E8880", lw=0.5, zorder=5)
+    # Each row's rate label must clear the right end of its own bar by at least 1.5 pt. The label's
+    # width is the font's own advance (TextToPath, unhinted), which is what the PDF sets; a width
+    # read off the 100-dpi raster canvas is hinted and runs several per cent wide at this size.
+    from matplotlib.textpath import TextToPath as _T2P
+    _axw_pt = ax.get_position().width * W_MM * 72.0 / 25.4
+    for _rl, _bar_end in _rate_labels:
+        _w = _T2P().get_text_width_height_descent(_rl.get_text(), _rl.get_fontproperties(),
+                                                  ismath=False)[0]
+        _gap = (-0.013 - _bar_end) * _axw_pt - _w
+        if _gap < 1.5:
+            raise AssertionError("panel a: %r ends %.1f pt from its error-rate bar"
+                                 % (_rl.get_text(), _gap))
 
     # ---- COLUMN HEADERS. Three marks in this panel need a key, and the journal's rule puts keys
     # in the graphic: the red bar
@@ -405,7 +423,9 @@ def panel_a(fig, gs_slice):
     # behind the words would cut the curve in two.
     ax.text(-0.350, -2.35, "Bar = that species' error rate", transform=ax.get_yaxis_transform(),
             ha="left", va="center", fontsize=FOOT, color=MUTED, clip_on=False, zorder=9)
-    ax.text(-0.350, -1.15, "* = never in the 1,001-bp training pool",
+    # The asterisk marks the three species that are never a calibration donor (a donor needs 50
+    # positives): the text calls them held out. "Training" would read as Evo 2's pretraining data.
+    ax.text(-0.350, -1.15, "* = held out, never a calibration donor",
             transform=ax.get_yaxis_transform(), ha="left", va="center", fontsize=FOOT, color=MUTED,
             clip_on=False, zorder=9)
     # NO transform on these two: HI is a DATA x, and the lift column above is placed in data
@@ -732,9 +752,10 @@ def panel_dm(ax):
     from matplotlib.ticker import FuncFormatter as _FF
     for _axis in (ax.xaxis, ax.yaxis):
         _axis.set_major_formatter(_FF(lambda v, _: "0" if abs(v) < 1e-9 else "%g" % v))
-    ax.set_xlabel("Probability under one global sigmoid", fontsize=AXIS)
-    ax.set_ylabel("Probability under\nleave-one-species-out\nisotonic transfer", fontsize=AXIS,
-                  linespacing=1.35)
+    # The trust layer's posterior is a positive-class probability, named as the text names it.
+    ax.set_xlabel("Positive-class probability, one global sigmoid", fontsize=AXIS)
+    ax.set_ylabel("Positive-class probability,\nleave-one-species-out\nisotonic transfer",
+                  fontsize=AXIS, linespacing=1.35)
     _spines(ax)
     # Three short lines in the upper-left corner, each ending left of the dotted x = 0.5 rule.
     k_ul = ax.text(0.035, 0.965, "Shaded: they disagree\nRed: a call crossing\nthe decision boundary",

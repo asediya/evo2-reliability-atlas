@@ -23,7 +23,7 @@ row on each run, so the table cannot drift from the artifacts without failing.
 NOT RUNNABLE FROM THE DEPOSIT. It reads logs/number_traceability.json, the reading-agent map,
 which is a working note rather than a result and is not deposited, so this script exits with a
 FileNotFoundError from a clean archive. That is intended: the deposited artefact is the OUTPUT,
-reports/traceability_table.json, and the check a referee runs is tools/check_traceability.py,
+reports/traceability_table.json, and the check a reader runs is tools/check_traceability.py,
 which re-resolves every row of that table against the artefacts it names and does run from the
 deposit. Rebuilding the map itself is not clone-runnable; re-verifying it is.
 """

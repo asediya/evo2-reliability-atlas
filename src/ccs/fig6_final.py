@@ -251,6 +251,40 @@ def _check_under_diagonal(ax, lines, fontsize, min_pt=1.0):
             "line, drop one, or lower the stack:\n  " + "\n  ".join(bad))
 
 
+def _segments_cross(p1, p2, q1, q2):
+    """True when the closed segments p1-p2 and q1-q2 share a point (orientation test)."""
+    def _o(a, b, c):
+        v = (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
+        return 0 if abs(v) < 1e-12 else (1 if v > 0 else -1)
+
+    def _on(a, b, c):
+        return (min(a[0], b[0]) - 1e-12 <= c[0] <= max(a[0], b[0]) + 1e-12
+                and min(a[1], b[1]) - 1e-12 <= c[1] <= max(a[1], b[1]) + 1e-12)
+    o1, o2, o3, o4 = _o(p1, p2, q1), _o(p1, p2, q2), _o(q1, q2, p1), _o(q1, q2, p2)
+    if o1 != o2 and o3 != o4:
+        return True
+    return ((o1 == 0 and _on(p1, p2, q1)) or (o2 == 0 and _on(p1, p2, q2))
+            or (o3 == 0 and _on(q1, q2, p1)) or (o4 == 0 and _on(q1, q2, p2)))
+
+
+def _check_leaders_do_not_cross(segs):
+    """Refuse to ship panel c with two species' leaders touching anywhere.
+
+    `segs` is [(species, [point, point, ...]), ...]: each leader as a polyline in data units. Raised,
+    not asserted, for the reason _check_under_diagonal gives.
+    """
+    bad = []
+    for i in range(len(segs)):
+        for j in range(i + 1, len(segs)):
+            (si, pi), (sj, pj) = segs[i], segs[j]
+            for a, b in zip(pi, pi[1:]):
+                for c, d in zip(pj, pj[1:]):
+                    if _segments_cross(a, b, c, d):
+                        bad.append(f"{si} x {sj}")
+    if bad:
+        raise AssertionError("panel c: species leaders cross: " + ", ".join(sorted(set(bad))))
+
+
 def _ink_on(rgba):
     """style_gb.ink_on, imported lazily -- this module is run both as ccs.fig6_final and bare."""
     try:
@@ -588,8 +622,8 @@ def panel_b(fig, gs_slice):
 def panel_c(ax):
     """LIFT PLANE — the same question on the labelled disease panels.
 
-    Each species is placed at its CONSERVATION-ONLY AUROC (x) and rises to its COMBINED
-    conservation+Evo2 AUROC (y). The diagonal is 'conservation alone', so the STICK HEIGHT is the lift
+    Each species is placed at its CONSERVATION-ONLY AUROC (x; the conservation score is per-base GERP)
+    and rises to its COMBINED GERP+Evo2 AUROC (y). The diagonal is 'GERP alone', so the STICK HEIGHT is the lift
     the foundation model adds, and the x-position asks whether the lift depends on how strong
     conservation already is.
 
@@ -668,11 +702,24 @@ def panel_c(ax):
         if not moved:
             break
     y_lab = hi - span * 0.215
+    # ELBOW LEADERS. A straight leader from each dot to its spread-out name can cross another
+    # species' leader just above that species' dot, so a name reads onto the wrong dot. Each leader
+    # therefore rises VERTICALLY from its own dot to one common height just above the highest dot,
+    # then slants to its name. Every slanted part runs between the same two heights, and the solver
+    # above keeps the names in the order of their dots' x, so no two slanted parts can cross; the
+    # vertical parts sit below that height, where no slanted part goes.
+    y_elb = max(r["a_cf"] for r in lab) + span * 0.024
+    if not y_elb < y_lab - span * 0.012:
+        raise AssertionError("panel c: no room between the highest dot and the species names")
+    segs = []
     for r, xl in zip(lab, lx_):
-        ax.plot([r["a_c"], xl], [r["a_cf"] + span * 0.012, y_lab - span * 0.012],
-                color="#B9B4AD", lw=0.35, zorder=4)
+        pts = [(r["a_c"], r["a_cf"] + span * 0.012), (r["a_c"], y_elb), (xl, y_lab - span * 0.012)]
+        ax.plot([p_[0] for p_ in pts], [p_[1] for p_ in pts], color="#B9B4AD", lw=0.35, zorder=4,
+                solid_joinstyle="miter")
+        segs.append((r["sp"], pts))
         ax.text(xl, y_lab, r["sp"][:1].upper() + r["sp"][1:], fontsize=MINPT, color=INK, ha="center", va="bottom",
                 rotation=90)
+    _check_leaders_do_not_cross(segs)
 
     ax.set_xlim(lo, hi); ax.set_ylim(lo, hi)
     # The rule alone, with no label: it lands exactly on the existing 1.00 y tick, so the tick
@@ -690,8 +737,11 @@ def panel_c(ax):
     # Two decimals on both axes: they carry the same quantity.
     ax.set_xticklabels([f"{v:.2f}" for v in np.arange(0.70, 1.001, 0.10)])
     ax.set_aspect("equal", adjustable="box")
-    ax.set_xlabel("Conservation alone — AUROC", fontsize=AXIS)
-    ax.set_ylabel("Conservation + Evo 2\nAUROC", fontsize=AXIS, linespacing=1.2)
+    # The conservation score here is per-base GERP (Note S17), named as such: the only conservation
+    # track named elsewhere on this plate is panel b's phyloP, and "conservation" alone would be
+    # read as that one.
+    ax.set_xlabel("GERP alone, AUROC", fontsize=AXIS)
+    ax.set_ylabel("GERP + Evo 2,\nAUROC", fontsize=AXIS, linespacing=1.2)
     ax.tick_params(labelsize=MINPT)
     _spines(ax)
     # the y axis stops at the 1.00 rule: above it is the band of rotated species names
@@ -870,7 +920,7 @@ def main():
             (None, 78.0, "b", "…and it is not conservation in disguise — except where conservation ends",
              f"phyloP quintiles · reach {C['reach']:.1%}"),
             (None, 140.5, "c", "The same, on the labelled panels", None),
-            (0.3465, 140.5, "d", "A second clade — but not a matched window", None)):
+            (0.3465, 140.5, "d", "A second clade — but not a matched window", "bat")):
         y_ = T(y_mm)
         # House style: a bold lower-case letter, no reversed-out chip, no heading. `title`
         # is kept in the table above as documentation of what each panel is; the legend
@@ -883,7 +933,23 @@ def main():
         _lx, _ha = (_letter_x(fig), "left") if x_ is None else (x_, "left")
         fig.text(_lx, y_, letter, fontsize=PANEL, fontweight="bold", ha=_ha, va="bottom",
                  color=INK)
-        if note:
+        if note == "bat":
+            # Panel d's own tag, on its header line as panel a's is: the lattice is the bat pilot,
+            # not cattle, and the pilot status belongs on the panel (fig6_free.json bat._note).
+            # The binomial is set in italic, so the tag is two runs: the roman tail right-aligned
+            # at the margin, the italic name ending where the tail begins. The tail's width is the
+            # font's own advance (TextToPath, unhinted), which is what the PDF sets; a width read
+            # off the 100-dpi raster canvas is hinted and runs about 7% wide at this size.
+            from matplotlib.textpath import TextToPath as _T2P
+            B = J["bat"]
+            _tail = fig.text(0.972, y_ + 0.002, f" · {B['build']} · n = {B['n']:,} · pilot",
+                             fontsize=MINPT, color=MUTED, ha="right", va="bottom")
+            _w_pt = _T2P().get_text_width_height_descent(_tail.get_text(),
+                                                         _tail.get_fontproperties(), ismath=False)[0]
+            _x0 = 0.972 - _w_pt / (W_MM * 72.0 / 25.4)
+            fig.text(_x0, y_ + 0.002, B["species"], fontsize=MINPT, color=MUTED, ha="right",
+                     va="bottom", style="italic")
+        elif note:
             fig.text(0.972, y_ + 0.002, note, fontsize=MINPT, color=MUTED, ha="right",
                      va="bottom")
 

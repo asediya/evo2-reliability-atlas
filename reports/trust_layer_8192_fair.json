@@ -901,7 +901,12 @@
     "pooled_max": 0.6243486073674753,
     "macro_median": 0.48913544378798357,
     "macro_min": 0.486556462485598,
-    "macro_max": 0.5237465548990946
+    "macro_max": 0.5237465548990946,
+    "abstention_median": 0.703414195867026,
+    "pooled_below_always_abstain": 0,
+    "macro_below_always_abstain": 97,
+    "seed_0_is_lowest_pooled": true,
+    "seed_0_is_lowest_macro": true
    }
   },
   "readout_8192_donors_50_positives": {
@@ -937,7 +942,12 @@
     "pooled_max": 0.14447745071563597,
     "macro_median": 0.1723655608728818,
     "macro_min": 0.16923213275856364,
-    "macro_max": 0.19424596134210675
+    "macro_max": 0.19424596134210675,
+    "abstention_median": 0.0671527590242146,
+    "pooled_below_always_abstain": 100,
+    "macro_below_always_abstain": 100,
+    "seed_0_is_lowest_pooled": false,
+    "seed_0_is_lowest_macro": false
    }
   },
   "readout_8192_deposited_posterior": {
@@ -973,7 +983,12 @@
     "pooled_max": 0.14609775857412907,
     "macro_median": 0.1944525348725116,
     "macro_min": 0.17463556743243858,
-    "macro_max": 0.2037245998649202
+    "macro_max": 0.2037245998649202,
+    "abstention_median": 0.06724277612746422,
+    "pooled_below_always_abstain": 100,
+    "macro_below_always_abstain": 100,
+    "seed_0_is_lowest_pooled": false,
+    "seed_0_is_lowest_macro": false
    }
   }
  },

@@ -16,7 +16,8 @@ WHAT THE LEGEND CARRIES. Three blocks of prose are not on the canvas; the legend
 carry them, and none of them is data:
   1. "reference notebook, 1B: 0.73  ->  reproduces, not beats" -- editorial commentary, which on
      the canvas runs through "res 1837 . max Evo 2" (a true bbox collision).
-  2. the three-line note about independent min/max scaling of the panel b maps.
+  2. the three-line note that each panel b map is scaled independently, between its own 5th and
+     95th percentiles (make_brca1_structure.py).
   3. the PDB composition line ("RING 1JM7 . BRCA1 1-103 + BARD1 (gray) + 2 Zn2+ / BRCT 1T29 .
      tandem BRCT + BACH1 phosphopeptide"). The PDB accessions themselves stay on the canvas as
      the column subtitles; only the composition detail is in the legend.
@@ -73,7 +74,12 @@ RING_TXT, BRCT_TXT = SG.text_safe(RING_C), SG.text_safe(BRCT_C)
 SGE_FUNC, SGE_INT, SGE_LOF = "#FDBE85", "#E6550D", "#7F2704"
 LOF_C = "#B12A20"          # deleterious/pathogenic highlight (C61G) — same sense as the red del. pole
 MISS_C = "#D81B8C"         # 'model miss' highlight (start-loss), decoupled from deleteriousness red
-DOM_MARK = {0: "o", 1: "^", 2: "s"}   # RING circle, BRCT triangle, linker square — redundant (non-colour) key
+DOM_MARK = {0: "o", 1: "^", 2: "s"}   # RING circle, BRCT triangle, outside-both square — redundant (non-colour) key
+# A quilt cell with no score (the reference base, or a substitution SGE did not score) is NaN. Drawn
+# transparent it prints page white, 3.6 dE from the ramp's own centre (#F7F6F3), so a near-median
+# substitution would read as a blank. Blanks take a neutral grey 10.6 dE from the nearest ramp
+# colour instead, distinct from the Domain track's #EDEDED.
+QUILT_BLANK = "#C8C8C8"
 CAP = SG.MUTED             # secondary ink: provenance, keys, units
 ZINC_LIG = [24, 27, 39, 41, 44, 47, 61, 64]   # C3HC4 RING zinc cage: 7 Cys + His41
 
@@ -130,25 +136,60 @@ def load_heatmap():
 # (make_brca1_structure.py, label_res = [24, 61]) bakes its labels into the raster at a size the
 # renderer picks, and here that came out at roughly 2.2 pt: a third of style_gb.FLOOR, unreadable
 # at print size, and invisible to EVERY gate in this repo because raster text is not in the PDF's
-# text layer. A text-layer check sees no span, so the 6.5 pt floor is never tested.
+# text layer. A text-layer check sees no span, so the type floor is never tested.
 #
-# Re-rendering needs the 3Dmol/browser pipeline, which is not available here, so the baked labels
-# are covered on their own white plates and redrawn as real text at ANNOT. They also read "CYS24"
-# and "CYS61" while the legend and panel a use the one-letter form (C61G), so the redraw settles
-# that too. If the render is ever regenerated these fractions must be re-measured -- they are
-# fractions, not pixels, so they survive a change of resolution but not a change of view.
+# Re-rendering needs the 3Dmol/browser pipeline, which is not available here, so each baked label
+# is covered by a white patch the size of its OWN box (about 7.7 x 3.1 pt) and the residue is named
+# again as real text at ANNOT, in clear paper beside the ribbon, on a 0.5 pt leader. The baked labels
+# also read "CYS24" and "CYS61" while the legend and panel a use the one-letter form (C61G), so the
+# redraw settles that too. If the render is ever regenerated these fractions must be re-measured --
+# they are fractions, not pixels, so they survive a change of resolution but not a change of view.
 _CYS_BOX = {"C24": (0.6333, 0.7241, 0.5110, 0.5450),
             "C61": (0.6509, 0.7300, 0.7577, 0.7873)}
+# 3Dmol anchors a residue label's top-left corner at the atom it labels (the C-alpha, atom: 'CA'),
+# so each leader ends at that corner of its box. The names sit where the render has no ink within
+# 1.5 pt of the name's box, chosen to keep the leader short and off the ribbon: C24 directly above
+# its zinc loop, C61 in the clear pocket right of the cage.
+_CYS_LABEL = {"C24": (0.656, 0.386), "C61": (0.905, 0.649)}
 
 
 def _relabel_cys(ax, ncol, nrow):
-    """Cover the ~2.2 pt baked residue labels and redraw them legibly."""
-    # No separate cover patch: "C24" at 6.8 pt sets to about 14 x 6 pt and the baked box is
-    # 7.7 x 3.1 pt, so the replacement's own white bbox, centred on the same point, hides it.
+    """Cover the ~2.2 pt baked residue labels and name the two cysteines beside the ribbon."""
+    from matplotlib.textpath import TextToPath
+    fig = ax.figure
+    # The render's scale in render pixels per point, read off the drawn axes: imshow keeps the
+    # aspect, so one scale serves both directions. Read before set_anchor, which moves the
+    # axes but does not rescale it.
+    fig.canvas.draw()
+    _x0 = ax.transData.transform((0.0, 0.0))[0]
+    _x1 = ax.transData.transform((float(ncol), 0.0))[0]
+    k = ncol / (abs(_x1 - _x0) * 72.0 / fig.dpi)
+    # A white patch on the baked box only, padded by 2 render pixels, so that no more of the
+    # structure is blanked than the baked label itself already hides.
+    pad = 2.0
     for name, (fx0, fx1, fy0, fy1) in _CYS_BOX.items():
-        ax.text(0.5 * (fx0 + fx1) * ncol, 0.5 * (fy0 + fy1) * nrow, name, fontsize=SG.ANNOT,
-                ha="center", va="center", color=SG.INK, zorder=5, clip_on=False,
-                bbox=dict(facecolor="white", edgecolor="none", alpha=1.0, pad=1.4))
+        ax.add_patch(Rectangle((fx0 * ncol - pad, fy0 * nrow - pad), (fx1 - fx0) * ncol + 2 * pad,
+                               (fy1 - fy0) * nrow + 2 * pad, facecolor="white", edgecolor="none",
+                               zorder=4))
+        # No bbox: the name sits on clear paper, centred on _CYS_LABEL. Set on its baseline so its
+        # glyph box is known exactly: the advance and the cap height from the font itself.
+        t = ax.text(0.0, 0.0, name, fontsize=SG.ANNOT, ha="center", va="baseline", color=SG.INK,
+                    zorder=6, clip_on=False)
+        w_pt, h_pt, d_pt = TextToPath().get_text_width_height_descent(name, t.get_fontproperties(),
+                                                                      ismath=False)
+        cap = (h_pt - d_pt) * k                        # glyph height above the baseline, render px
+        cx, cy = _CYS_LABEL[name][0] * ncol, _CYS_LABEL[name][1] * nrow
+        t.set_position((cx, cy + cap / 2.0))           # image rows run DOWN: the baseline is below
+        # The 0.5 pt leader starts 0.8 pt off the glyph box and ends at the C-alpha the baked
+        # label is anchored at (the box's top-left corner).
+        hx, hy = (w_pt / 2.0 + 0.8) * k, cap / 2.0 + 0.8 * k
+        tx, ty = fx0 * ncol, fy0 * nrow
+        dx, dy = tx - cx, ty - cy
+        f = min(hx / abs(dx) if dx else np.inf, hy / abs(dy) if dy else np.inf)
+        if not f < 1.0:
+            raise AssertionError(f"{name}: the label sits on its own residue")
+        ax.plot([cx + f * dx, tx], [cy + f * dy, ty], color=SG.INK, lw=0.5, zorder=6,
+                solid_capstyle="butt", clip_on=False)
 
 
 def autocrop(path):
@@ -324,7 +365,9 @@ def main():
     # grey and this quilt carries no signal. See style_gb.TOL_DEL_NODES for the measurements.
     # The four structure renders in panel b were re-mapped onto the same ramp by
     # tools/recolour_brca1_structures.py, so panel a, panel b and the shared bar still agree.
-    im = axH.imshow(M, aspect="auto", cmap=SG.tol_del_cmap(), norm=norm, interpolation="nearest")
+    _qcm = SG.tol_del_cmap()
+    _qcm.set_bad(QUILT_BLANK)
+    im = axH.imshow(M, aspect="auto", cmap=_qcm, norm=norm, interpolation="nearest")
     axH.set_yticks(range(4)); axH.set_yticklabels(list("ACGT"), fontsize=SG.TICK)
     axH.set_ylabel("Evo 2\nalt base", fontsize=SG.AXIS, linespacing=LEAD)
     # No "coding" in the label: 369 of the 1,326 columns (1,090 of the 3,893 substitutions) carry no
@@ -370,9 +413,10 @@ def main():
         fig.text(KX2, y, lab, fontsize=SG.ANNOT, va="center", color=CAP)
     # experiment-track KEY: real swatches (not colour-name text), CVD-safe ordinal ramp.
     # As one 24 mm line the header would overrun the page or sit on the domain raster, so it is
-    # wrapped onto four short lines, the widest of which ("subs per site:") is 38 pt.
+    # wrapped onto four short lines. The strip's subject is substitutions already, so the last
+    # line says "per site" without an abbreviation.
     # FLOOR: a four-line key in a fixed reservation beside the colour swatches.
-    fig.text(KX, pS.y1 + 1.0 * PT, "SGE class\n(Findlay 2018)\nworst of ≤3\nsubs per site:",
+    fig.text(KX, pS.y1 + 1.0 * PT, "SGE class\n(Findlay 2018)\nworst of ≤3\nper site:",
              fontsize=SG.FLOOR, va="top", color=CAP, linespacing=LEAD)
     # Each swatch is a patch in the strip's own colour, not a "■" glyph: a glyph is type and must
     # clear 4.5:1 on white, which SGE_FUNC cannot, and a darkened FUNC would key a colour the strip
@@ -435,7 +479,8 @@ def main():
     # ---- c: quantified -- predicted vs measured (continuous, per residue), coloured by domain ----
     axV = fig.add_subplot(gs[5:7, 1])
     dom_r = np.where(res <= 109, 0, np.where((res >= 1642) & (res <= 1863), 1, 2))
-    # The 11 linker residues are drawn over the two domains. Drawn behind them, ten of the eleven grey
+    # The 11 residues outside both domains (1631-1641, just N-terminal of the BRCT bounds; not the
+    # BRCT1-BRCT2 linker, which lies inside them) are drawn over the two domains. Drawn behind them, ten of the eleven grey
     # squares would sit under the RING and BRCT cloud, and the legend names them.
     dcol = {0: RING_C, 1: BRCT_C, 2: LINK_C}; zt = {2: 4, 0: 3, 1: 3}
     for k in (2, 0, 1):
@@ -470,9 +515,12 @@ def main():
     # sit in bands the scatter does not enter (nothing lies above 0.0129 except residue 1837, and
     # the 0.0105–0.0120 band is empty between x 1.0 and 2.4).
     if 1837 in rmap:
-        _tag(1837, "Res 1837 · max Evo 2", (1.62, 0.01435), "#33506F", ha="right")
+        # Each extreme is annotated in its own domain's colour, as its marker is: 1837 is BRCT.
+        _tag(1837, "Res 1837 · max Evo 2", (1.62, 0.01435), BRCT_TXT, ha="right")
     if 96 in rmap:
-        _tag(96, "Res 96 · max SGE", (2.30, 0.01125), "#33506F", ha="right")
+        # Seated in the empty 0.0105-0.0120 band, low in it: the key's two-line third row
+        # ("Outside both / domains") owns the band's left half at x < 1.0.
+        _tag(96, "Res 96 · max SGE", (2.65, 0.01075), RING_TXT, ha="right")
     # honest model-miss: start-loss (residue 1) -- SGE LOF, Evo 2 near baseline. Coloured MISS (magenta),
     # decoupled from the deleteriousness-red used elsewhere.
     if 1 in rmap:
@@ -503,10 +551,10 @@ def main():
     pstr = f"{p_all / 10.0 ** pe:.0f} $\\times$ 10$^{{{pe}}}$"   # 7 x 10^-24, as AF1 Note S10
     axV.legend(handles=[Line2D([0], [0], marker=DOM_MARK[0], color="none", markerfacecolor=RING_C, markersize=6.5, label="RING"),
                         Line2D([0], [0], marker=DOM_MARK[1], color="none", markerfacecolor=BRCT_C, markersize=6.5, label="BRCT"),
-                        # "linker", without "(n = 11)": the count ran the row out of the marker-free
-                        # corner and onto a BRCT marker; the legend gives it.
-                        Line2D([0], [0], marker=DOM_MARK[2], color="none", markerfacecolor=LINK_C, markersize=6.5, label="Linker")],
-               # UPPER LEFT AT y = 0.86. At lower right this key would sit exactly where the
+                        # Without "(n = 11)", and on two lines: the marker-free corner this key sits
+                        # in is about 60 pt wide, and the legend gives the count.
+                        Line2D([0], [0], marker=DOM_MARK[2], color="none", markerfacecolor=LINK_C, markersize=6.5, label="Outside both\ndomains")],
+               # UPPER LEFT AT y = 0.93. At lower right this key would sit exactly where the
                # "start-loss (res 1)" ring and its leader land: the pink circle would enclose the "N"
                # of "RING", so the key would read as though it were the thing being annotated. A ring
                # is a path, not a text span, so a text-vs-text collision count is blind by
@@ -516,10 +564,13 @@ def main():
                # the nine-line stats card (209 pt wide, which is why it sits under the panel), ample
                # for three legend rows. The 0.86 matters -- flush at 1.0 the key would cross the
                # "res 1837 - max Evo 2" leader label by 3.8 pt, trading an ink collision for a worse
-               # text one. Measured at 0.86: ZERO spans on textured ink anywhere in the figure, and
-               # the text grazes are 0.08 pt.
-               loc="upper left", bbox_to_anchor=(0.0, 0.86),
+               # text one. 0.93, not lower: the third row is two lines, and lower its first line
+               # "Outside both" would end on the BRCT triangle at (0.83, 0.0102).
+               loc="upper left", bbox_to_anchor=(0.0, 0.93),
                frameon=False, fontsize=SG.TICK, handletextpad=0.25, borderpad=0.2)
+    # The two-line entry takes the module's LEAD, like every other multi-line label here.
+    for _t in axV.get_legend().get_texts():
+        _t.set_linespacing(LEAD)
     for s in ("top", "right"): axV.spines[s].set_visible(False)
     fig.text(0.5, grid_top + 10 * PT, "c", fontsize=SG.PANEL, fontweight="bold", color=INK_,
              va="bottom", ha="left")

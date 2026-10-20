@@ -3,7 +3,7 @@
 > **Development log.** Both branches of the decision template below survive under `## Read`, two of six harness rows are `TOO_FEW` or `PENDING`, and a baseline is quoted as 0.496 where its own row reads 0.521. Nothing here is a manuscript result; the published eQTL values are 0.488 at the 1,001-bp readout and 0.498 at 8,192 bp.
 
 Question: could the 1001-bp window + single-position readout MANUFACTURE the regulatory blind
-spot? Causal (n=1000) vs non-causal (n=1000) pig cis-eQTLs, Evo2-40B,
+spot? Candidate causal (n=1000) vs control (n=1000) pig cis-eQTL variants, Evo2-40B,
 re-scored under each harness. Baseline = original 1002-bp single-position (AUROC 0.496). AUROC on |score|
 magnitude (matches baseline |LLR|); signed oriented >=0.5. 95% CI = 1000x bootstrap on |score|.
 
@@ -22,6 +22,6 @@ magnitude (matches baseline |LLR|); signed oriented >=0.5. 95% CI = 1000x bootst
 - AUROC rises materially (CI excludes 0.5) under mean-LL / larger windows => partly a scoring artifact
   => re-scope the regulatory claim.
 
-Caveat (separate): causal cis-eQTLs are common/weakly-selected, so a fitness-trained
+Caveat (separate): candidate causal cis-eQTLs are common/weakly-selected, so a fitness-trained
 model being near chance here may be EXPECTED, not a representational failure. This ablation isolates the
 harness confound only; the construct-validity question is addressed in the manuscript text.

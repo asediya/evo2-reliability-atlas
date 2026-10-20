@@ -5,7 +5,7 @@ The deposited calibration numbers must survive contact with their own estimator 
 choices. Problems this script resolves:
   (1) The transfer-vs-trivial verdict FLIPS with (binning x aggregation): pooled equal-width says isotonic
       transfer wins by ~10x; pooled and macro equal-mass both say the trivial
-      sigmoid wins. A headline a referee can invert by rebinning is not a headline.
+      sigmoid wins. A headline a reader can invert by rebinning is not a headline.
   (2) reports/COMPILED_RESULTS.md (not deposited) appears to MIX aggregations across rows of one table (its oracle/trivial
       match pooled values while its isotonic matches a macro value).
   (3) Two different ECE estimators live in the codebase (10 equal-width bins in calibration_transfer.py,
@@ -129,7 +129,7 @@ def build_posteriors(data, rich):
     """Per-species posteriors for every method. All transferable methods are LOSO-consistent."""
     # With data/ absent every species is skipped, and np.concatenate on an empty list would die
     # on "need at least one array to concatenate", naming neither data/ nor a missing file, so a
-    # referee could not tell the disclosed data boundary from a bug.
+    # reader could not tell the disclosed data boundary from a bug.
     if not data:
         sys.exit("fig4_reconcile: no species could be loaded, so there is nothing to reconcile.\n"
                  "This build reads the per-species score parquets under data/processed/, which are "

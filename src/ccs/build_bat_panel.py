@@ -8,7 +8,7 @@ Spearman = Evo2 tracks purifying selection in a wild zoonotic-host bat, ~65 My f
 
 CPU-only. Reads the joint-call VCF (data/interim/bat/bat.vcf.gz) via the bat-map container's bcftools,
 samples SNVs per allele-count bin, then reuses extract_windows_local.py for ref/alt windows + ref-match
-against Myoluc2.0. Waits gracefully if the VCF isn't ready yet.
+against Myoluc2.0. Exits with an error naming the VCF and the genome if either is absent.
   python src/ccs/build_bat_panel.py --per-bin 6000
 """
 import os
@@ -54,8 +54,13 @@ def main():
     ap.add_argument("--seed", type=int, default=0)
     a = ap.parse_args()
 
-    if not os.path.exists(VCF):
-        st("WAIT | bat VCF not ready yet (mapping/calling in progress)"); return
+    miss = [f for f in (VCF, GENOME) if not os.path.exists(f)]
+    if miss:
+        st("STOPPED | not found: " + ", ".join(miss))
+        raise SystemExit("build_bat_panel: input not found, so nothing was computed.\n"
+                         f"Missing inputs ({len(miss)}):\n" + "".join(f"  {f}\n" for f in miss)
+                         + "These files under data/ are not part of the code deposit; "
+                           "reports/DATA_MANIFEST.md lists every data/ path and its public source.")
     if not os.path.exists(TSV) or os.path.getsize(TSV) == 0:
         st("RUNNING | exporting biallelic-SNV AF table from VCF (bcftools)")
         ev("exporting biallelic SNV AC/AN table from the 10-sample VCF")

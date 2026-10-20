@@ -4,7 +4,7 @@
 The new per-class cells are small. Splicing essential-splice carries 246 variants of which 238 are
 positive, and the ClinVar 3' UTR rung carries 54 positives. At B = 2,000 the 2.5th and 97.5th
 percentiles of a bootstrap distribution are each estimated from about 50 draws, so the interval
-endpoints, which are the part a reader quotes and a referee checks, carry visible Monte Carlo noise
+endpoints, which are the part a reader quotes and checks, carry visible Monte Carlo noise
 of their own. That is avoidable arithmetic and the cores are idle.
 
 Two things are reported that the 2,000-draw version could not support:

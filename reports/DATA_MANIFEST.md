@@ -22,6 +22,8 @@ Five artefacts in the deposit are inputs rather than outputs: deposited scripts 
 
 Two further files are records that no deposited script writes: `reports/eqtl_pervariant_meta.json` and `reports/gerp_pervariant_meta.json` describe the two parquets above.
 
+One deposited record has a writer but records an analysis that did not run: `reports/clinvar_stratified_calib.parquet` is the output of part 2 of `src/ccs/analyze_trust_layer.py`, the consequence-stratified ClinVar calibration, whose join of scores and windows left a single label class. The file therefore holds one row, that note and the number of joined variants with a finite score, and no reported value uses it.
+
 
 ## Public sources of the raw inputs
 
@@ -34,7 +36,7 @@ Exact releases and assembly accessions are in the manuscript Methods and Data Av
 - **Label-free panels:** the cattle population allele-frequency panel and the pilot bat cohort VCF described in Methods.
 
 
-## Path inventory (147 distinct templates; `<var>` = a species, sample, model size, scorer or file stem)
+## Path inventory (149 distinct templates; `<var>` = a species, sample, model size, scorer or file stem)
 
 
 ### `analyses/data/` — Inputs of the analyses/scripts/ arms — splicing, ClinVar and strand-ladder scores and windows.
@@ -103,6 +105,7 @@ Exact releases and assembly accessions are in the manuscript Methods and Data Av
 - `data/interim/eqtl_piggtex_maf_meta.json`
 - `data/interim/eqtl_windows.parquet`
 - `data/interim/full_phylop.parquet`
+- `data/interim/geno_pgen/*.afreq`
 - `data/interim/geno_pgen/*.psam`
 - `data/interim/human_scoring_windows.parquet`
 - `data/interim/omia_multispecies_positives.parquet`
@@ -110,6 +113,7 @@ Exact releases and assembly accessions are in the manuscript Methods and Data Av
 - `data/interim/pig_scoring_windows.parquet`
 - `data/interim/pig_scoring_windows_real.parquet`
 - `data/interim/pig_windows.parquet`
+- `data/interim/readout2x2/<var>_2x2.parquet`
 - `data/interim/selection_candidates.parquet`
 - `data/interim/selection_phylop.parquet`
 

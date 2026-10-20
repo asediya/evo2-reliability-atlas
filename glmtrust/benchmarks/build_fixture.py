@@ -2,7 +2,7 @@
 """Build the checked-in fixture the trust-layer benchmark falls back to.
 
 WHY. reproduce_paper_trust_layer.py reads data/processed/scores_cloud/*.parquet. That tree is not
-part of the code deposit, so a referee who installs glmtrust from Additional file 2 and runs the
+part of the code deposit, so a reader who installs glmtrust from Additional file 2 and runs the
 benchmark gets "scores not found" and cannot check the one claim the package makes about itself.
 
 This writes the minimum the benchmark needs — species, variant_id and the 8,192-bp mean-log-

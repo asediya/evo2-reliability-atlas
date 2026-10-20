@@ -414,7 +414,7 @@ def panel_b(ax):
             fontsize=FOOT, ha="left", va="center", color=PATHO_C, linespacing=1.3, clip_on=False)
     ax.text(1.008, (1 - hs) / 2, "%.1f%%\ncatalogued" % (100 * (sco.label == 1).mean()),
             fontsize=FOOT, ha="left", va="center", color=MUTED, linespacing=1.3, clip_on=False)
-    ax.text(0.0, YTOP - 0.02, "%s unscored; Evo 2 reads them at %.3f"
+    ax.text(0.0, YTOP - 0.02, "%s unscored; Evo 2 AUROC on them %.3f"
             % ("{:,}".format(int(d.silent.sum())), a_sil),
             fontsize=FOOT, ha="left", va="top", color=INK)
 
@@ -512,12 +512,29 @@ def panel_d(ax):
             if v < 0.50:
                 ax.add_patch(plt.Rectangle((j - 0.5, i - 0.5), 1, 1, fill=False, ec=FAIL, lw=1.0,
                                            zorder=5))
+    # COLUMN NAMES ON TWO FIXED BASELINES. Set as two-line tick labels, each name's line advance
+    # follows its own glyphs, and "species held out" sits 0.68 pt higher than "trained here" and
+    # "zero-shot". Each line is therefore its own row of text, seated with va="baseline" at a fixed
+    # distance in points under the matrix, so all three first lines share one baseline and all
+    # three second lines another.
+    from matplotlib.transforms import ScaledTranslation as _ST
     ax.set_xticks(range(len(conds)))
-    ax.set_xticklabels([c for c, _ in conds], fontsize=FOOT, linespacing=1.45)
+    ax.set_xticklabels([])
+    _dpi = ax.figure.dpi_scale_trans
+    for _k, _drop in enumerate(COLNAME_BASELINES_PT):
+        _tf = ax.get_xaxis_transform() + _ST(0.0, -_drop / 72.0, _dpi)
+        for j, (c, _) in enumerate(conds):
+            ax.text(j, 0.0, c.split("\n")[_k], transform=_tf, fontsize=FOOT, ha="center",
+                    va="baseline", color=INK, clip_on=False)
     ax.set_yticks(range(len(order))); ax.set_yticklabels([o[:1].upper() + o[1:] for o in order], fontsize=FOOT)
     ax.tick_params(length=0)
     for s in ("top", "right", "left", "bottom"):
         ax.spines[s].set_visible(False)
+
+
+# Baselines of panel c's two rows of column names, in points below the matrix's lower edge.
+# The pitch is the 10.03 pt line advance the two-line tick labels gave at linespacing 1.45.
+COLNAME_BASELINES_PT = (11.18, 21.21)
 
 
 def _lin(c):
@@ -718,7 +735,7 @@ def main():
     fig.savefig(base + ".png", dpi=600)
     # The 4k screen export is produced HERE so it has a producer in the repo: an export in
     # reports/figures with no script anywhere in src/ or scripts/ that could have made it is an orphan
-    # a reviewer could mistake for the figure of record.
+    # a reader could mistake for the figure of record.
     fig.savefig(base + "_4k.png", dpi=4096 / (W_MM * MM))
     return fig
 

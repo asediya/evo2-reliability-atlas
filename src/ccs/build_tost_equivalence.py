@@ -2,7 +2,7 @@
 
 Why this exists. Over the 9,532 co-scoreable variants Evo 2 and
 GERP read 0.8805 vs 0.8780. Calling them "statistically indistinguishable" would rest
-on a failure to reject, which low power would explain equally well and which a referee is right
+on a failure to reject, which low power would explain equally well and which a reader is right
 to reject as evidence of absence. A null needs an equivalence test against a justified smallest
 effect size of interest (SESOI). The margin below was set after the data were seen, as the Methods state.
 

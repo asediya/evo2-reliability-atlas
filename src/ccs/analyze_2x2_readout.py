@@ -26,6 +26,9 @@ CORRECTNESS GATE: d_full is an independent, on-pod recomputation of the 8,192-bp
 reproduce B. If pooled |AUROC(d_full) - AUROC(B)| exceeds 0.015 the on-pod readout is not trustworthy
 and NOTHING here should be folded into the manuscript.
 
+Per species it reads the 2x2 readout file (by default data/interim/readout2x2/{sp}_2x2.parquet) and the
+two score files A and B; if no species loads, it exits with an error naming them and writes nothing.
+
     python src/ccs/analyze_2x2_readout.py [readout2x2_dir]
     -> reports/readout_2x2_decomposition.json
 """
@@ -72,7 +75,7 @@ def main():
     for sp in SP:
         f2 = os.path.join(DIR, "%s_2x2.parquet" % sp)
         if not os.path.exists(f2):
-            print("  %-8s (2x2 not pulled yet, skipping)" % sp)
+            print("  %-8s %s absent, skipping" % (sp, f2))
             continue
         d = pl.read_parquet(f2).select(["variant_id", "d_full", "d_cen1001", "d_single"])
         a = pl.read_parquet(A_FILE % sp).select(["variant_id", pl.col("evo2_40b_neg").alias("A_1001_single")])
@@ -109,8 +112,11 @@ def main():
                per[sp]["context_term"], per[sp]["aggregation_term"], per[sp]["total_advantage"]))
 
     if not per:
-        print("\nNo species pulled yet — run after the job completes and files are pulled.")
-        return
+        raise SystemExit("analyze_2x2_readout: no species could be loaded, so %s was not written.\n"
+                         "For each species it reads %s/<species>_2x2.parquet, %s and %s.\n"
+                         "These files under data/ are not part of the code deposit; "
+                         "reports/DATA_MANIFEST.md lists every data/ path and its public source."
+                         % (OUT, DIR, A_FILE % "<species>", B_FILE % "<species>"))
 
     # ---- macro (mean across species) with across-species SE
     def macro(key, sub):

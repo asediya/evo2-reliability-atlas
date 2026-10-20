@@ -10,7 +10,7 @@ import polars as pl
 from sklearn.metrics import roc_auc_score, average_precision_score
 import sys
 
-# A referee on a cp437 console or with LC_ALL=C otherwise gets a traceback and a nonzero
+# A reader on a cp437 console or with LC_ALL=C otherwise gets a traceback and a nonzero
 # exit from a run that succeeded.
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")

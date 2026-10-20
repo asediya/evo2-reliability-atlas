@@ -8,7 +8,8 @@ isotonic for a panel of post-hoc calibrators, ranked by transferred ECE/Brier pe
               isotonic at small n; here = logistic on [ln(s), -ln(1-s)] over a min-max-squashed score
 
 If transfer holds/improves across all three (esp. beta on the label-poor targets), the calibration-transfer result is
-method-agnostic, not an isotonic quirk. CPU-only, re-analyzes scores on disk.
+method-agnostic, not an isotonic quirk. CPU-only, re-analyzes scores on disk; with fewer than two label-rich
+species it exits with an error naming the score and window files that are absent.
   python src/ccs/build_calibration_methods.py
 """
 import os, sys, time
@@ -34,6 +35,26 @@ def ev(m):
 def st(m):
     os.makedirs("logs/status", exist_ok=True)
     with open(ST, "w", encoding="utf-8") as f: f.write(m + "\n")
+
+
+def missing_inputs():
+    """The per-species inputs `load` reads that are not on disk, named in the error when too few load."""
+    miss = []
+    for sp in WIN:
+        for f in (f"data/processed/scores/{sp}_evo2_40b_local_scores.parquet", f"data/interim/{WIN[sp]}.parquet"):
+            if not os.path.exists(f):
+                miss.append(f)
+    return miss
+
+
+def stop(why):
+    """Exit non-zero, naming every absent input: nothing here can be computed without them."""
+    miss = missing_inputs()
+    st(f"STOPPED | {why}"); ev(f"stopped: {why}")
+    raise SystemExit(f"build_calibration_methods: {why}, so nothing was computed.\n"
+                     + (f"Missing inputs ({len(miss)}):\n" + "".join(f"  {f}\n" for f in miss) if miss else "")
+                     + "These files under data/ are not part of the code deposit; "
+                       "reports/DATA_MANIFEST.md lists every data/ path and its public source.")
 
 
 def load(sp):
@@ -97,7 +118,7 @@ def main():
     rich = [sp for sp in data if int(data[sp][1].sum()) >= RICH_MIN]
     poor = [sp for sp in data if sp not in rich]
     if len(rich) < 2:
-        st(f"WAIT | need >=2 rich sources (have {rich})"); return
+        stop(f"{len(rich)} label-rich species (>= {RICH_MIN} positives) loaded, at least 2 needed (have {rich})")
     METHODS = ["isotonic", "platt", "beta"]
 
     rows = []

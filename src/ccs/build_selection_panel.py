@@ -1,14 +1,14 @@
-import sys
 """Escape the disease-label ceiling using PURIFYING SELECTION as genome-scale, label-free
 ground truth. Stratified-sample variants across the site-frequency spectrum from the ~7,400-sample
 population panel (data/interim/geno_pgen/*.afreq, 44.5M variants). If Evo2 is real, its predicted
 deleteriousness should RISE as allele frequency FALLS (rare = kept rare by selection = damaging).
 
 This step is CPU-only: sample the candidate variants, evenly across frequency bins, for later Evo2
-scoring (needs the GPU). Output: selection_candidates.parquet.
+scoring (needs the GPU). Output: selection_candidates.parquet. Without the .afreq files it exits with
+an error naming the path pattern it found no file for.
   python src/ccs/build_selection_panel.py --per-bin 6000
 """
-import argparse, glob, os, time
+import argparse, glob, os, sys, time
 import polars as pl
 
 AF = "data/interim/geno_pgen"
@@ -34,6 +34,11 @@ def main():
     st("RUNNING | reading 44.5M-variant frequency panel"); ev("stratified-sampling the site frequency spectrum")
 
     files = sorted(glob.glob(f"{AF}/*.afreq"))
+    if not files:
+        st(f"STOPPED | no file matches {AF}/*.afreq")
+        raise SystemExit(f"build_selection_panel: no file matches {AF}/*.afreq, so nothing was computed.\n"
+                         "The per-chromosome allele-frequency files under data/ are not part of the code deposit; "
+                         "reports/DATA_MANIFEST.md lists every data/ path and its public source.")
     ov = {"#CHROM": pl.String, "ID": pl.String, "REF": pl.String, "ALT": pl.String,
           "ALT_FREQS": pl.Float64, "OBS_CT": pl.Int64}
     lf = pl.concat([pl.scan_csv(f, separator="\t", schema_overrides=ov) for f in files], how="vertical")

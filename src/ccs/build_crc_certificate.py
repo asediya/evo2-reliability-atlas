@@ -15,6 +15,7 @@ substantial across zero-label targets. CPU-only.
   python src/ccs/build_crc_certificate.py   -> logs/crc_certificate.md
 """
 import os
+import sys
 import numpy as np
 import polars as pl
 from sklearn.isotonic import IsotonicRegression
@@ -101,6 +102,11 @@ def main():
         print("  RESULT: NO DATA -- 0 (alpha x zero-label-target) cases were evaluated, because")
         print("  the window panels this certificate reads are not part of the code deposit (see")
         print("  reports/DATA_MANIFEST.md). Nothing was examined, so this is NOT a pass.")
+        miss = [f for sp in WIN for f in (f"data/processed/scores/{sp}_evo2_40b_local_scores.parquet",
+                                          f"data/interim/{WIN[sp]}.parquet") if not os.path.exists(f)]
+        if miss:
+            print("  Missing inputs (%d):" % len(miss))
+            print("".join("    %s\n" % f for f in miss), end="")
         return 3
     passed = holds >= 0.7 * len(tgt) and nontrivial >= 0.5 * len(tgt)
     lines += ["## VERDICT",
@@ -120,4 +126,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

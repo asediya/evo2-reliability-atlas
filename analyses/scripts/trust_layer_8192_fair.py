@@ -321,7 +321,8 @@ def decision(raw, y_raw, pcal, y_cal, order):
            "C_two_label_sets": two_label, "C_empty_sets": empty,
            "macro": {"A": macro_cost(decA, yr, sp_r), "B": macro_cost(decB, yc, sp_c), "C": macro_cost(decC, yc, sp_c),
                      "D": macro_cost(decD, yc, sp_c), "abstain": macro_cost(np.full(len(yc), "A"), yc, sp_c)}}
-    out["C_seed_sweep"] = [(cost_of(d, yc)[0], macro_cost(d, yc, sp_c)) for d in (policy_C(pc, yc, sp_c, sd)[0] for sd in range(100))]
+    out["C_seed_sweep"] = [(cost_of(d, yc)[0], macro_cost(d, yc, sp_c), cost_of(d, yc)[1])
+                           for d in (policy_C(pc, yc, sp_c, sd)[0] for sd in range(100))]
     return out
 
 
@@ -421,7 +422,7 @@ def jrec_i(g, vs, counts, pool, slopes):
 
 
 def jrec_ii(r):
-    cp = [c[0] for c in r["C_seed_sweep"]]; cm = [c[1] for c in r["C_seed_sweep"]]
+    cp = [c[0] for c in r["C_seed_sweep"]]; cm = [c[1] for c in r["C_seed_sweep"]]; ca = [c[2] for c in r["C_seed_sweep"]]
     return {"pooled_cost": {k: r[k][0] for k in ("A", "B", "C", "D", "abstain")},
             "abstention_rate": {k: r[k][1] for k in ("A", "B", "C", "D", "abstain")},
             "macro_cost": dict(r["macro"]),
@@ -429,7 +430,12 @@ def jrec_ii(r):
             "policy_C_abstentions": {"two_label_sets": r["C_two_label_sets"], "empty_sets": r["C_empty_sets"]},
             "policy_C_split_seeds_0_99": {"pooled_median": float(np.median(cp)), "pooled_min": float(min(cp)),
                                           "pooled_max": float(max(cp)), "macro_median": float(np.median(cm)),
-                                          "macro_min": float(min(cm)), "macro_max": float(max(cm))}}
+                                          "macro_min": float(min(cm)), "macro_max": float(max(cm)),
+                                          "abstention_median": float(np.median(ca)),
+                                          "pooled_below_always_abstain": int(sum(c < r["abstain"][0] for c in cp)),
+                                          "macro_below_always_abstain": int(sum(c < r["macro"]["abstain"] for c in cm)),
+                                          "seed_0_is_lowest_pooled": bool(cp[0] == min(cp)),
+                                          "seed_0_is_lowest_macro": bool(cm[0] == min(cm))}}
 
 
 def jrec_iii(c, rich, th):

@@ -4,13 +4,13 @@ Can a calibration map (raw Evo2-40B score -> trustworthy probability) learned on
 transfer to LABEL-POOR species that can't calibrate themselves? For every species we compute:
 
   ECE_none      : no calibration (min-max score)            -- floor baseline
-  ECE_transfer  : isotonic fit on OTHER label-rich species  -- leave-one-species-out (honest transfer)
+  ECE_transfer  : isotonic fit on OTHER label-rich species  -- leave-one-species-out (transfer)
   ECE_oracle    : isotonic fit on the species ITSELF (4-fold CV) -- the unbeatable upper bound
   ECE_nearest   : isotonic fit on same-clade rich relatives  -- "calibrate from your nearest relative"
 
 The claim is validated if ECE_transfer approaches ECE_oracle and beats ECE_none, especially on the
-label-poor species. Runs on whatever species already have 40B scores (CPU only; safe with the
-atlas run). Writes live progress to the dashboard.
+label-poor species. CPU only. With fewer than three scored species, or fewer than two label-rich
+ones, it exits with an error naming the score and window files that are absent.
   python src/ccs/calibration_transfer.py
 """
 import os, time
@@ -42,6 +42,26 @@ def ev(m):
 def st(m):
     os.makedirs("logs/status", exist_ok=True)
     with open(ST, "w") as f: f.write(m + "\n")
+
+
+def missing_inputs():
+    """The per-species inputs `load` reads that are not on disk, named in the error when too few load."""
+    miss = []
+    for sp in WIN:
+        for f in (f"data/processed/scores/{sp}_evo2_40b_local_scores.parquet", f"data/interim/{WIN[sp]}.parquet"):
+            if not os.path.exists(f):
+                miss.append(f)
+    return miss
+
+
+def stop(why):
+    """Exit non-zero, naming every absent input: nothing here can be computed without them."""
+    miss = missing_inputs()
+    st(f"STOPPED | {why}"); ev(f"stopped: {why}")
+    raise SystemExit(f"calibration_transfer: {why}, so nothing was computed.\n"
+                     + (f"Missing inputs ({len(miss)}):\n" + "".join(f"  {f}\n" for f in miss) if miss else "")
+                     + "These files under data/ are not part of the code deposit; "
+                       "reports/DATA_MANIFEST.md lists every data/ path and its public source.")
 
 
 def load(sp):
@@ -88,8 +108,7 @@ def ece_mass(p, y, bins=10):
     chicken under a row permutation. This file and fig4_reconcile.py share this one definition.
 
     Where ties are heavy the effective bin count drops below `bins`: goat's nominal ten bins
-    collapse to five. That is the honest consequence of a coarse posterior, and the manuscript says
-    so rather than papering over it.
+    collapse to five. That is the consequence of a coarse posterior, and the manuscript says so.
     """
     import numpy as _np
     e = 0.0
@@ -225,7 +244,7 @@ def baseline_report(data, rich):
     up25 = [r["species"] for r in recs if r["prev25"] > r["prev09"]]
     down25 = [r["species"] for r in recs if r["prev25"] <= r["prev09"]]
     up50 = sum(1 for r in recs if r["prev50"] > r["prev09"])
-    L += ["", "## Verdict (honest)", "",
+    L += ["", "## Verdict", "",
           f"- Global sigmoid is **on par with** isotonic transfer: sigmoid wins {sig_wins}/{len(both)} species "
           f"on equal-width ECE (median ECE sigmoid={med_sig:.3f} vs isotonic={med_iso:.3f}).",
           f"- Brier is effectively tied (median sigmoid={med_br_sig:.3f} vs isotonic={med_br_iso:.3f}); "
@@ -245,13 +264,13 @@ def baseline_report(data, rich):
 
 def main():
     st("RUNNING | loading scored species")
-    ev("paper-grade calibration transfer started (LOSO + oracle + nearest-relative)")
+    ev("calibration transfer started (LOSO + oracle + nearest-relative)")
     data = {sp: r for sp in WIN if (r := load(sp)) is not None}
     if len(data) < 3:
-        st("WAIT | need >=3 scored species"); ev(f"only {len(data)} scored; waiting"); return
+        stop(f"{len(data)} of {len(WIN)} species loaded, at least 3 needed")
     rich = [sp for sp in data if int(data[sp][1].sum()) >= RICH_MIN]
     if len(rich) < 2:
-        st(f"WAIT | need >=2 label-rich sources (have {rich})"); ev(f"sources so far: {rich}"); return
+        stop(f"{len(rich)} label-rich species (>= {RICH_MIN} positives) loaded, at least 2 needed (have {rich})")
     ev(f"{len(data)} species; SOURCES(>= {RICH_MIN}+): {rich}")
 
     rows = []
@@ -287,7 +306,7 @@ def main():
     med_or = np.median([r["ece_oracle"] for r in rows if r["ece_oracle"] is not None])
     lines += ["", f"**Verdict:** transfer beat no-calibration on {beat}/{len(poor)} label-poor species; "
               f"median ECE transfer={med_tr:.3f} vs oracle={med_or:.3f} (closer = transfer works).",
-              "", "> See `logs/calibration_baseline.md` for the honest head-to-head against a pooled global "
+              "", "> See `logs/calibration_baseline.md` for the head-to-head against a pooled global "
               "sigmoid (Platt) + base-rate baselines, equal-mass ECE, Brier, and the prevalence-fragility grid."]
     open("logs/calibration_transfer.md", "w", encoding="utf-8").write("\n".join(lines) + "\n")
     print("\n".join(lines))

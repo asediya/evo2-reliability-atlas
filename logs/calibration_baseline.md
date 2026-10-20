@@ -66,7 +66,7 @@ Binned by value with `ece_mass` (tied posteriors share a bin). The global-sigmoi
 | dog | 0.091 | 0.05 | 0.028 | 0.137 |
 | human | 0.5 | 0.062 | 0.071 | 0.117 |
 
-## Verdict (honest)
+## Verdict
 
 - Global sigmoid is **on par with** isotonic transfer: sigmoid wins 4/9 species on equal-width ECE (median ECE sigmoid=0.048 vs isotonic=0.050).
 - Brier is effectively tied (median sigmoid=0.041 vs isotonic=0.040); a 2-param sigmoid buys the same reliability as the nonparametric transfer.

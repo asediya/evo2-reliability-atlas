@@ -12,7 +12,8 @@ only the probability needs shifting). We show TWO things on the transferred (LOS
   (B) DEPLOYMENT-PREVALENCE ROBUSTNESS: sweep pi_t from 1:1 down to 1:1000; the UNcorrected probabilities
       become badly miscalibrated at low prevalence, but the Elkan-corrected ones stay calibrated.
 
-= "prevalence-robust cross-species calibration", an adjacent, unclaimed methods contribution. CPU-only.
+= "prevalence-robust cross-species calibration", an adjacent, unclaimed methods contribution. CPU-only; with
+fewer than two label-rich species it exits with an error naming the score and window files that are absent.
   python src/ccs/build_prevalence_correction.py
 """
 import os, sys, time
@@ -37,6 +38,26 @@ def ev(m):
 def st(m):
     os.makedirs("logs/status", exist_ok=True)
     with open(ST, "w", encoding="utf-8") as f: f.write(m + "\n")
+
+
+def missing_inputs():
+    """The per-species inputs `load` reads that are not on disk, named in the error when too few load."""
+    miss = []
+    for sp in WIN:
+        for f in (f"data/processed/scores/{sp}_evo2_40b_local_scores.parquet", f"data/interim/{WIN[sp]}.parquet"):
+            if not os.path.exists(f):
+                miss.append(f)
+    return miss
+
+
+def stop(why):
+    """Exit non-zero, naming every absent input: nothing here can be computed without them."""
+    miss = missing_inputs()
+    st(f"STOPPED | {why}"); ev(f"stopped: {why}")
+    raise SystemExit(f"build_prevalence_correction: {why}, so nothing was computed.\n"
+                     + (f"Missing inputs ({len(miss)}):\n" + "".join(f"  {f}\n" for f in miss) if miss else "")
+                     + "These files under data/ are not part of the code deposit; "
+                       "reports/DATA_MANIFEST.md lists every data/ path and its public source.")
 
 
 def load(sp):
@@ -76,7 +97,7 @@ def main():
     rich = [sp for sp in data if int(data[sp][1].sum()) >= RICH_MIN]
     poor = [sp for sp in data if sp not in rich]
     if len(rich) < 2:
-        st(f"WAIT | need >=2 rich sources (have {rich})"); return
+        stop(f"{len(rich)} label-rich species (>= {RICH_MIN} positives) loaded, at least 2 needed (have {rich})")
 
     # source prior = base rate the pooled calibration map was fit at
     Yr = np.concatenate([data[s][1] for s in rich]); Xr = np.concatenate([data[s][0] for s in rich])

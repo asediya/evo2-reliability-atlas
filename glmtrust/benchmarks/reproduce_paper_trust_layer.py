@@ -28,7 +28,7 @@ except ImportError:
 from glmtrust import group_selective_report, leave_one_group_out
 from glmtrust.metrics import auroc
 
-# A referee on a cp437 console or with LC_ALL=C otherwise gets a traceback and a nonzero
+# A reader on a cp437 console or with LC_ALL=C otherwise gets a traceback and a nonzero
 # exit from a run that succeeded; build_tables.py even wrote its outputs first.
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")

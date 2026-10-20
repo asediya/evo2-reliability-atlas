@@ -110,13 +110,19 @@ def build_supplement(N):
     _xs = {}
     for _c in axA.collections:
         if isinstance(_c, PathCollection) and len(_c.get_offsets()) == 1:
-            _sp = _by_colour.get(mcolors.to_hex(_c.get_facecolor()[0]))
+            # A filled marker carries its colour in the face; the open marker of a species drawn
+            # without an interval (MEAS.NO_CLUSTER_INTERVAL) carries it in the edge.
+            _fc = mcolors.to_hex(_c.get_facecolor()[0])
+            _sp = _by_colour.get(_fc) if _fc != "#ffffff" else _by_colour.get(
+                mcolors.to_hex(_c.get_edgecolor()[0]))
             if _sp is not None:
                 _xs[_sp] = float(_c.get_offsets()[0][0])
     assert set(_xs) == set(_shared), (sorted(_xs), sorted(_shared))
     _name_tf = matplotlib.transforms.offset_copy(axA.get_xaxis_transform(), fig=fig, y=1.5, units="points")
     for _sp, _x in _xs.items():
-        axA.text(_x, 0, _sp[:1].upper() + _sp[1:], transform=_name_tf, fontsize=SG.ANNOT, ha="center",
+        # The dagger marks a species drawn without an interval, as in panel b's strip and Table 2.
+        axA.text(_x, 0, _sp[:1].upper() + _sp[1:] + (MEAS.DAGGER if _sp in MEAS.NO_CLUSTER_INTERVAL else ""),
+                 transform=_name_tf, fontsize=SG.ANNOT, ha="center",
                  va="bottom", color=MEAS.S.species_text_color(_sp), clip_on=False, zorder=7)
     MEAS.panel_d(axB1, axB2)
     # Panel b's key, moved off the plane: one row above its top-left corner, on the letter's line, so

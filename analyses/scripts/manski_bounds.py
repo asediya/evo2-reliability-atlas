@@ -2,7 +2,7 @@
 """Apply the partial-identification bounds to OUR OWN claim, not just to the 49 other predictors.
 
 The theorem note demonstrates on dbNSFP that 93% of pairwise rankings are unidentified. The obvious
-next question, and the one a referee will ask first, is whether the paper's own headline survives
+next question, and the one a reader will ask first, is whether the paper's own headline survives
 its own argument: **is "Evo 2 beats GERP" identified?**
 
 Setup. Evo 2 answers every variant, so rho = 1 and its interval collapses to a point. GERP has

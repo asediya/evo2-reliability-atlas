@@ -1,9 +1,9 @@
-# Cross-species conformal prediction — a coverage-controlled trust layer that transfers across species (under a stated, tested exchangeability assumption)
+# Cross-species conformal prediction — coverage on zero-label species, under an exchangeability assumption that cross-species transport breaks
 
 Conformal quantile calibrated on label-rich species; applied to held-out TARGETS: ['goat', 'chicken', 'pig']. Nominal coverage 1-alpha = 0.90 (alpha=0.10) for the main table.
 
 ## Per-species coverage & set-size (alpha=0.10, nominal 90%)
-Two honest constructions, each with coverage AND set sizes from its OWN membership rule. Mondrian holds ~0.97 by abstaining heavily; marginal holds ~0.95 overall as near-singletons but drops POSITIVE-class coverage.
+Two constructions, each with coverage AND set sizes from its OWN membership rule. Mondrian holds ~0.97 by abstaining heavily; marginal holds ~0.95 overall as near-singletons but drops POSITIVE-class coverage.
 
 | species | role | n | pos | Mondrian cov | Mond cov benign | Mond cov path | Mond abstain{both} | marginal cov | marg cov benign | marg cov path | marg abstain{both} |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -19,7 +19,7 @@ Two honest constructions, each with coverage AND set sizes from its OWN membersh
 
 Mean Mondrian coverage on held-out TARGETS = **0.970** vs nominal 0.90.
 
-## Coverage sweep on held-out label-poor targets — does empirical coverage track the guarantee?
+## Coverage sweep on held-out label-poor targets — does empirical coverage track the nominal level?
 Mondrian coverage/abstention vs marginal coverage/abstention, each internally consistent. Note the marginal predictor's POSITIVE-class coverage collapses well below nominal.
 | alpha | nominal 1-alpha | Mondrian cov | Mond path cov | Mond abstain | marginal cov | marg path cov | marg abstain |
 |---|---|---|---|---|---|---|---|
@@ -29,4 +29,4 @@ Mondrian coverage/abstention vs marginal coverage/abstention, each internally co
 
 **VERDICT:** at the 1,001-bp readout, overall cross-species conformal coverage meets the nominal target on species with NO labels — Mondrian (class-conditional) holds 0.97 coverage under the ~10:1 imbalance, but ONLY by abstaining on 50.5-65.7% of target variants (it OVER-covers = conservative, not free). The prediction SETS are interpretable: singleton = confident call, {both} = abstention. This coverage rests on a cross-species exchangeability assumption that cross-species transport breaks, so it is NOT a distribution-free finite-sample guarantee. No single predictor gives both 0.97 coverage AND 99.9% singletons: the near-singleton (marginal) construction drops positive-class coverage to 0.222-0.571.
 
-Honest caveat: exchangeability across species is imperfect, so coverage is approximate/assumption-conditional; Mondrian is reported because marginal coverage skews under class imbalance.
+Caveat: exchangeability across species is imperfect, so coverage is approximate/assumption-conditional; Mondrian is reported because marginal coverage skews under class imbalance.

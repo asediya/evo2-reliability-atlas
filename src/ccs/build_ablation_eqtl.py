@@ -11,7 +11,7 @@ Read:
     (a model property, not our harness).
   - if AUROC rises with a better harness => the blind spot is partly a scoring artifact.
 
-Deterministic stratified sample: 1000 causal (label=1, PIP>=0.9) + 1000 non-causal (label=0), taken by
+Deterministic stratified sample: 1000 candidate causal (label=1, PIP>=0.9) + 1000 controls (label=0), taken by
 variant_id sort (reproducible). Windows re-extracted from the pig genome (Sscrofa11.1) at W in
 {2048, 4096}; the native 1002-bp windows are subset from the existing panel.
 
@@ -84,7 +84,7 @@ def main():
     outdir = Path("data/interim/ablation"); outdir.mkdir(parents=True, exist_ok=True)
     sample.select(["variant_id", "label", "chrom", "pos", "ref", "alt", "pip", "absz"]).write_parquet(
         outdir / "eqtl_abl_sample.parquet")
-    print(f"sample: {caus.height} causal + {ncau.height} non-causal = {sample.height}", flush=True)
+    print(f"sample: {caus.height} candidate causal + {ncau.height} controls = {sample.height}", flush=True)
 
     # native 1002-bp: subset the existing windows (identical to what produced the 0.496 baseline)
     w = pl.read_parquet("data/interim/eqtl_windows.parquet")

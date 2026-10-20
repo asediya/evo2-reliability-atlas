@@ -38,8 +38,12 @@ def auroc(score, pos):
 
 
 def main():
-    if not os.path.exists(SC):
-        print(f"scores not ready: {SC}"); return
+    miss = [f for f in (SC, LAB) if not os.path.exists(f)]
+    if miss:
+        raise SystemExit(f"eval_brca1_delta: input not found, so {OUT} was not written.\n"
+                         f"Missing inputs ({len(miss)}):\n" + "".join(f"  {f}\n" for f in miss)
+                         + "These files under data/ are not part of the code deposit; "
+                           "reports/DATA_MANIFEST.md lists every data/ path and its public source.")
     sc = pl.read_parquet(SC)
     lab = pl.read_parquet(LAB)
     d = sc.join(lab, on="variant_id", how="inner").filter(

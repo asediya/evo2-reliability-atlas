@@ -99,7 +99,10 @@ def mde(npos, nneg, alpha=0.05, power=0.80):
 def main():
     src = next(((s, p) for s, p in SOURCES if os.path.exists(p)), None)
     if src is None:
-        print("  no ClinVar scores yet - run PANEL=clinvar through analyses/scripts/score_mfass_evo2.py")
+        print("clinvar_evo2_participant: %s was not written. It reads the first of these that exists:\n%s"
+              "(analyses/scripts/score_mfass_evo2.py with PANEL=clinvar writes the 1B and 7B files.)\n"
+              "MISSING INPUT: none of the three exists; the code deposit does not carry them."
+              % (OUT, "".join("  %s\n" % p for _, p in SOURCES)))
         return 1
     size, path = src
     d = pl.read_parquet(path)
@@ -121,8 +124,10 @@ def main():
     # ---- 1. reach. Evo 2 answers every variant, so covered == must-answer by construction.
     cov = np.isfinite(delta)
     a_cov = auroc(y[cov], -delta[cov])
-    filled = np.where(np.isfinite(delta), -delta, 0.0)            # CAFA full-evaluation fill
-    a_ma = auroc(y, filled)
+    # Must-answer AUROC under the Methods rule (a pair with an unscored variant counts one half),
+    # as analyses/scripts/mfass_reach.py computes it; at full reach rho = 1 and it equals a_cov.
+    rho = float(cov[y == 1].mean() * cov[y == 0].mean())
+    a_ma = 0.5 + (a_cov - 0.5) * rho
     lo, hi = boot(y[cov], -delta[cov])
     res["reach"] = {"coverage": float(cov.mean()), "auroc_covered": a_cov,
                     "ci": [lo, hi], "auroc_must_answer": a_ma,

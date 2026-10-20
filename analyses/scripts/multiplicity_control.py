@@ -8,7 +8,7 @@ Two of the new results are read class by class, and each is a family of tests re
 
 Reporting five or eight bootstrap intervals side by side and reading the pattern is exactly the
 practice that produces a per-class story from noise. Uncorrected, nothing controls for
-that, and a referee is entitled to ask. This applies Westfall and Young's max-T permutation, which
+that, and a reader is entitled to ask. This applies Westfall and Young's max-T permutation, which
 controls the family-wise error rate while respecting the strong correlation between classes rather
 than assuming independence as Bonferroni would.
 

@@ -66,6 +66,13 @@ BEDROCK = "#3A3A3A"   # the single chance datum, drawn identically everywhere
 RULE = SG.RULE        # light structure: the group separators in a and d
 INK = SG.INK
 MUTED = SG.MUTED
+# The hexagon ramp for panels a and b. On a log scale the lowest count, one, maps to the bottom of
+# the ramp, and plain "Greys" is pure white there: a variant (or a matched pair) alone in its cell
+# would be drawn white on white, which is not drawn at all. The ramp therefore starts at
+# Greys(0.25), #D9D9D9, so a single count is visible, and keeps the full-dark top.
+from matplotlib.colors import LinearSegmentedColormap as _LSC
+HEX_CMAP = _LSC.from_list("greys_from_025",
+                          [plt.get_cmap("Greys")(0.25 + 0.75 * t) for t in np.linspace(0, 1, 64)])
 
 # Every line on this canvas is at or above SG.LINE_MIN (0.3 pt): 0.5 pt structure, 0.6 pt axes,
 # 0.7 pt brackets and break marks, 0.9-1.0 pt data: the journal's ceiling for a line is 1 pt.
@@ -186,18 +193,26 @@ def panel_a(ax, axtop, axright, box):
     lx = np.log10(m.dist.to_numpy())
     sc = m.evo2_40b_score.to_numpy()
     y = m.label.to_numpy()
-    XLO, XHI, YLO, YHI = 2.0, 6.4, -5.0, 5.0
+    # The plane holds EVERY non-lead variant. The nearest sits 4 bp from its lead and the scores run
+    # from -7.45 to +9.05, so a 100 bp floor and a +/-5 score window would leave 183 variants
+    # undrawn -- 37 of them candidate causals, 20 of those left of the 1,001-bp guide, which is where
+    # this panel makes its argument. The limits therefore cover the data, and the build stops if a
+    # variant ever falls outside them, so the panel cannot drop points in silence.
+    XLO, XHI, YLO, YHI = 0.5, 6.4, -8.0, 9.5
     keep = (lx >= XLO) & (lx <= XHI) & (sc >= YLO) & (sc <= YHI)
+    if not keep.all():
+        raise AssertionError("panel a: %d of %d non-lead variants fall outside the plane"
+                             % (int((~keep).sum()), len(keep)))
 
     ax.hexbin(lx[keep & (y == 0)], sc[keep & (y == 0)], gridsize=(46, 22),
-              extent=(XLO, XHI, YLO, YHI), cmap="Greys", bins="log", mincnt=1, linewidths=0,
+              extent=(XLO, XHI, YLO, YHI), cmap=HEX_CMAP, bins="log", mincnt=1, linewidths=0,
               zorder=2)
     ax.scatter(lx[keep & (y == 1)], sc[keep & (y == 1)], s=.9, marker="o", color=FAIL, alpha=.30,
                lw=0, zorder=3)
     for w, lab in ((1001, "1,001 bp"), (8192, "8,192 bp")):
         ax.axvline(np.log10(w), color=CODING, lw=.8, ls=(0, (3, 2)), zorder=5)
-        ax.text(np.log10(w) - .04, YHI - .25, lab, fontsize=FOOT, rotation=90, ha="right",
-                va="top", color=CODING)
+        ax.text(np.log10(w) - .04, YHI - 0.025 * (YHI - YLO), lab, fontsize=FOOT, rotation=90,
+                ha="right", va="top", color=CODING)
     # The denominator matters and is stated -- in the LEGEND. A variant that IS its eGene's lead sits
     # at distance zero, cannot be placed on a log axis, and is not in this panel at all; how many
     # candidate causals remain (1,840) and what share of them lies inside the 1,001-bp window (4.7 %)
@@ -210,8 +225,8 @@ def panel_a(ax, axtop, axright, box):
           % ("{:,}".format(n_off), 100 * inside, "{:,}".format(len(m)),
              "{:,}".format(int(m.gene_id.nunique()))))
     ax.set_xlim(XLO, XHI); ax.set_ylim(YLO, YHI)
-    ax.set_xticks([2, 3, 4, 5, 6])
-    ax.set_xticklabels(["100 bp", "1 kb", "10 kb", "100 kb", "1 Mb"], fontsize=TICK)
+    ax.set_xticks([1, 2, 3, 4, 5, 6])
+    ax.set_xticklabels(["10 bp", "100 bp", "1 kb", "10 kb", "100 kb", "1 Mb"], fontsize=TICK)
     ax.set_xlabel("Distance from the variant to its own eGene's lead credible-set variant",
                   fontsize=AXIS)
     ax.set_ylabel("Evo 2-40B score", fontsize=AXIS)
@@ -276,25 +291,49 @@ def panel_b(ax, box):
     ok = cau.ctrl.notna()
     x = cau.evo2_40b_score.to_numpy()[ok.to_numpy()]
     yv = cau.ctrl.to_numpy()[ok.to_numpy()]
-    LO, HI = -5.0, 5.0
-    k = (x >= LO) & (x <= HI) & (yv >= LO) & (yv <= HI)
-    ax.hexbin(x[k], yv[k], gridsize=26, extent=(LO, HI, LO, HI), cmap="Greys", bins="log",
-              mincnt=1, linewidths=0, zorder=2)
-    ax.plot([LO, HI], [LO, HI], color=BEDROCK, lw=.8, ls=(0, (4, 2)), zorder=4)
+    # The plane holds EVERY matched pair: candidate scores run from -8.5 to +6.3 and median-control
+    # scores from -4.2 to +6.9, so a +/-5 window would drop 24 of the 2,783 while the note below
+    # says that only the pairs that do not exist are missing. The build stops if a pair ever falls
+    # outside. The two axes cover their own data ranges, so the plane is not square in data units;
+    # the identity line still runs at y = x.
+    XLO, XHI, YLO, YHI = -9.0, 7.0, -5.0, 7.5
+    k = (x >= XLO) & (x <= XHI) & (yv >= YLO) & (yv <= YHI)
+    if not k.all():
+        raise AssertionError("panel b: %d of %d matched pairs fall outside the plane"
+                             % (int((~k).sum()), len(k)))
+    hb = ax.hexbin(x[k], yv[k], gridsize=26, extent=(XLO, XHI, YLO, YHI), cmap=HEX_CMAP,
+                   bins="log", mincnt=1, linewidths=0, zorder=2)
+    ax.plot([max(XLO, YLO), min(XHI, YHI)], [max(XLO, YLO), min(XHI, YHI)], color=BEDROCK, lw=.8,
+            ls=(0, (4, 2)), zorder=4)
     # Not on the canvas: the sign-test share ("scores above its own gene's controls in
     # 46.4 % of the 2,783 matched pairs") is a finding, the Figure S2 legend states it, and the cloud
     # straddling the drawn diagonal shows it. The red note is kept because it is not a finding
     # about what is drawn -- it says what is ABSENT from the panel, which nothing else here can.
-    # Top left, above the diagonal, where the plane holds no pair: at the bottom right the dashed
-    # diagonal ran through the note's first line.
-    ax.text(LO + .3, HI - .3, "%s of the %s candidate causals\nhave no in-gene comparator:\n"
-            "not plotted" % ("{:,}".format(int((~ok).sum())), "{:,}".format(len(cau))),
-            fontsize=FOOT, ha="left", va="top", color=FAIL_T, linespacing=1.4)
-    ax.set_xlim(LO, HI); ax.set_ylim(LO, HI)
+    # It sits in a band of its own above the plane (the y axis runs on to YTOP and its spine stops
+    # at YHI): no part of the plane is free of pairs once every pair is drawn, and at the bottom
+    # right the dashed diagonal would run through it.
+    YTOP = 12.5
+    note = ax.text(XLO + 0.03 * (XHI - XLO), YTOP - 0.03 * (YTOP - YLO),
+                   "%s of the %s candidate causals have no\nin-gene comparator: not plotted"
+                   % ("{:,}".format(int((~ok).sum())), "{:,}".format(len(cau))),
+                   fontsize=FOOT, ha="left", va="top", color=FAIL_T, linespacing=1.4)
+    ax.set_xlim(XLO, XHI); ax.set_ylim(YLO, YTOP)
+    ax.set_yticks([-5, 0, 5])
     ax.set_xlabel("The candidate causal variant's own score", fontsize=AXIS)
     ax.set_ylabel("Median score of the controls\nin the same eGene", fontsize=AXIS,
                   linespacing=1.35)
     _spines(ax)
+    ax.spines["left"].set_bounds(YLO, YHI)
+    # Measured, not assumed: the note must clear the highest hexagon and stay inside the axes.
+    fig = ax.figure
+    fig.canvas.draw()
+    r_ = fig.canvas.get_renderer()
+    nb, axb_ = note.get_window_extent(r_), ax.get_window_extent(r_)
+    hex_top = float(hb.get_offsets()[:, 1].max() + hb.get_paths()[0].vertices[:, 1].max())
+    hex_top_px = ax.transData.transform((XLO, hex_top))[1]
+    if not (nb.y0 > hex_top_px + 1.0 * fig.dpi / 72.0 and nb.x1 < axb_.x1 and nb.y1 < axb_.y1):
+        raise AssertionError("panel b: the note does not clear the plane (note %s, axes %s, "
+                             "highest hexagon at y %.1f px)" % (nb, axb_, hex_top_px))
     _prov(ax, box, ["One hexagon = a count of matched pairs, log-scaled"])
 
 

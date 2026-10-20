@@ -78,7 +78,7 @@
    "singleton_bins_dropped_from_correction": 0
   },
   "global_sigmoid": {
-   "_what": "a two-parameter sigmoid fitted once and used everywhere",
+   "_what": "a two-parameter sigmoid fitted once on ALL species pooled -- in-sample, not comparable with the LOSO arms",
    "l1_ece": {
     "width_10": 0.050597195138844114,
     "width_15": 0.05169612168866349,

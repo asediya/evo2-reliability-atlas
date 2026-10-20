@@ -43,7 +43,7 @@ OUT = "reports/DATA_MANIFEST.md"
 # on the bare inventory directory recorded them one level too shallow -- non-existent paths, in the
 # one document whose job is to tell a reader where an input lives.
 PAT = re.compile(r"(?:analyses/)?data/(?:[A-Za-z0-9_%{}*-]+/)*[A-Za-z0-9_%{}*.-]+?"
-                 r"\.(?:vcf\.gz|fa\.gz|tsv\.gz|gtf\.gz|gz|parquet|csv|vcf|fai|fa|bw|bed|txt|tsv|json|npy|xlsx|npz|pdb|chain|config|bim|psam|pgen|pvar)(?![A-Za-z0-9.])")
+                 r"\.(?:vcf\.gz|fa\.gz|tsv\.gz|gtf\.gz|gz|parquet|csv|vcf|fai|fa|bw|bed|txt|tsv|json|npy|xlsx|npz|pdb|chain|config|bim|psam|pgen|pvar|afreq)(?![A-Za-z0-9.])")
 
 
 def collect_paths():
@@ -132,7 +132,7 @@ def main():
         "need nothing from `data/`.\n"
         % _data_dependent_counts())
     # Three deposited artefacts are read by deposited scripts but written by
-    # none, so a reproducibility referee would find a hole in the provenance chain and could not tell a
+    # none, so a reader checking provenance would find a hole in the chain and could not tell a
     # deliberate deposited input from a leftover. The numbers themselves all reproduce; only the
     # origin needs documenting. Stated here because this file is where a reader looks for provenance.
     out.append(
@@ -163,7 +163,12 @@ def main():
         "(10 rows), read by `src/ccs/fig3_data.py`.\n\n"
         "Two further files are records that no deposited script writes: "
         "`reports/eqtl_pervariant_meta.json` and `reports/gerp_pervariant_meta.json` describe the two "
-        "parquets above.\n")
+        "parquets above.\n\n"
+        "One deposited record has a writer but records an analysis that did not run: "
+        "`reports/clinvar_stratified_calib.parquet` is the output of part 2 of "
+        "`src/ccs/analyze_trust_layer.py`, the consequence-stratified ClinVar calibration, whose join of "
+        "scores and windows left a single label class. The file therefore holds one row, that note and the "
+        "number of joined variants with a finite score, and no reported value uses it.\n")
     out.append(
         "\n## Public sources of the raw inputs\n\n"
         "Exact releases and assembly accessions are in the manuscript Methods and Data Availability; "
