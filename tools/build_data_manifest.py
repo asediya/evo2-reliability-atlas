@@ -72,8 +72,8 @@ def _data_dependent_counts():
     Scripts that need data/ are the majority, not a named exception to "reproduces without
     touching data/", so the count is measured rather than asserted.
 
-    Count what ships, using the deposit's own exclusion rule: the code deposit excludes
-    the superseded figure modules, so counting every file in the WORKING tree would quote a
+    Count what ships, using the deposit's own exclusion rule: the code deposit leaves out the
+    working tree's `_superseded_` folders, so counting every file in the WORKING tree would quote a
     denominator larger than the tree a reader holds -- in the one file whose header says it
     cannot drift.
     """
@@ -161,10 +161,9 @@ def main():
         "`analyses/scripts/`.\n"
         "- `reports/nt_vs_evo2.parquet` — the per-panel Nucleotide Transformer, Evo 2 and GERP AUROCs "
         "(10 rows), read by `src/ccs/fig3_data.py`.\n\n"
-        "Three further files are records that no deposited script writes: "
+        "Two further files are records that no deposited script writes: "
         "`reports/eqtl_pervariant_meta.json` and `reports/gerp_pervariant_meta.json` describe the two "
-        "parquets above, and `reports/verify_controls.json` holds an exploratory 1,999-variant controls run "
-        "that `reports/atlas_controls.json` supersedes.\n")
+        "parquets above.\n")
     out.append(
         "\n## Public sources of the raw inputs\n\n"
         "Exact releases and assembly accessions are in the manuscript Methods and Data Availability; "

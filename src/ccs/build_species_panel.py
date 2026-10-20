@@ -1,4 +1,4 @@
-"""CP2 — build a per-species OMIA positives panel from the parsed multispecies table.
+"""Build a per-species OMIA positives panel from the parsed multispecies table.
 
 Positives come straight from the
 HGVS-parsed multispecies parquet (chrom_label already Ensembl-style for the annex species);

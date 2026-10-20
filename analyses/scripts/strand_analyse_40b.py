@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """Extend the strand-consistency ladder to the deployed 40B model at 8,192 bp.
 
-At 1B and 7B, agreement between a window and its reverse complement gets *worse* as capacity grows:
-Pearson 0.577 -> 0.442, and the AUROC an arbitrary strand choice moves grows 0.018 -> 0.028, which
-is 7.6x then 11.8x the 0.0024 pooled margin of the 1,001-bp near-tie (Note S28). The obvious reply is
-that the trend reverses at the deployed scale. This measures whether it does.
+On the 389-variant, 1,002-bp strand panel, agreement between a window and its reverse complement is
+lower at 7B than at 1B: Pearson 0.577 -> 0.442, and the forward strand's AUROC differs from the
+strand average by 0.018 then 0.028. This measures the 40B rung on the 327-variant 8,192-bp panel, so
+panel and window change with capacity; strand_ladder.py, which holds both fixed, is the like-for-like
+ladder.
 
 The same run also carries the reference-likelihood confound at 8,192 bp: MLL(ref) scored on its own,
 which the deposited scorer computes and discards.
@@ -32,13 +33,15 @@ OUT = "analyses/results/strand_40b.json"
 MARGIN_1001 = 0.0024   # Evo 2 minus GERP, 1,001-bp single-position readout, 9,532 co-scorable variants
 MARGIN_8192 = 0.0960   # Evo 2 minus GERP, 8,192-bp readout, pooled random effects (meta_8192.json)
 MARGIN = MARGIN_8192   # this panel is 8,192 bp, so this is the commensurable one
-# Typed in from the earlier strand run (strand_analyse.py), which used a different and larger
-# panel than the 327 variants scored here. They are kept so this script can report whether the
+# Typed in from strand_analyse.py's results (strand_consistency_1b.json and _7b.json), which use a
+# different and larger panel (389 variants, 1,002-bp windows) than the 327 variants scored here. They are kept so this script can report whether the
 # 40B rung continues the 1B -> 7B trend, and they are NOT the published ladder. The published
 # ladder is strand_ladder.json, where 1B and 40B are measured on one identical 327-variant
 # panel and 1B reads pearson 0.7732, shift 0.0081. The two are not one series.
-LADDER = {"1B": {"pearson": 0.577, "shift": 0.018},
-          "7B": {"pearson": 0.442, "shift": 0.028}}
+LADDER = {"1B": {"pearson": 0.577, "shift": 0.018,
+                 "basis": "389 variants, 1,002-bp windows; shift = |AUROC forward - AUROC strand-averaged|"},
+          "7B": {"pearson": 0.442, "shift": 0.028,
+                 "basis": "389 variants, 1,002-bp windows; shift = |AUROC forward - AUROC strand-averaged|"}}
 RNG = np.random.default_rng(20260805)
 
 
@@ -105,7 +108,8 @@ def main():
     # the ladder: does the deployed model reverse the 1B -> 7B trend, or continue it?
     dep = res["readouts"].get("full", {})
     res["ladder"] = dict(LADDER, **{"40B": {"pearson": dep.get("pearson"),
-                                            "shift": dep.get("strand_choice_shift")}})
+                                            "shift": dep.get("strand_choice_shift"),
+                                            "basis": "327 variants, 8,192-bp windows; shift = |AUROC forward - AUROC reverse complement|"}})
     if dep.get("pearson") is not None:
         worsens = dep["pearson"] < LADDER["7B"]["pearson"]
         res["trend_continues"] = bool(worsens)

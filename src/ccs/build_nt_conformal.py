@@ -1,4 +1,4 @@
-"""STEP 1 (conformal half): does the DISTRIBUTION-FREE conformal trust layer transfer on a 2nd backbone?
+"""Does the conformal trust layer (distribution-free under exchangeability) transfer on a 2nd backbone?
 
 Mirror of build_conformal.py but on Nucleotide Transformer scores (nt_neg = -nt_llr). Conformal coverage
 is distribution-free by construction, so the guarantee should hold on NT too -- a WEAK discriminator just
@@ -89,7 +89,7 @@ def main():
     tgt = [r for r in rows if r["role"] == "TARGET"]
     mean_cov_tgt = float(np.mean([r["cov_mond"] for r in tgt])) if tgt else float("nan")
     mean_abst_tgt = float(np.mean([r["abstain"] for r in tgt])) if tgt else float("nan")
-    lines = ["# STEP 1 (conformal) - does the distribution-free trust layer transfer on Nucleotide Transformer?", "",
+    lines = ["# Conformal trust layer on Nucleotide Transformer - does cross-species coverage hold on a second backbone?", "",
              f"Conformal quantile calibrated on label-rich species; applied to held-out TARGETS: {poor}. Nominal 0.90.", "",
              "## Per-species coverage & set-size (alpha=0.10, nominal 90%) - NT backbone",
              "| species | role | n | pos | Mondrian cov | cov benign | cov pathogenic | singleton | abstain{both} |",
@@ -112,14 +112,14 @@ def main():
         ev = pl.read_parquet("data/processed/conformal_per_species.parquet")
         et = ev.filter(pl.col("role") == "TARGET")
         evo_cov = float(et["cov_mond"].mean()); evo_abst = float(et["abstain"].mean())
-        evo_line = (f"\n**MODEL-AGNOSTIC (conformal):** the coverage guarantee holds on BOTH backbones on zero-label targets "
-                    f"(mean Mondrian coverage: Evo2 {evo_cov:.3f}, NT {mean_cov_tgt:.3f}; both ~nominal 0.90). "
+        evo_line = (f"\n**MODEL-AGNOSTIC (conformal):** overall Mondrian coverage exceeds the nominal 0.90 on BOTH "
+                    f"backbones on zero-label targets (mean Mondrian coverage: Evo2 {evo_cov:.3f}, NT {mean_cov_tgt:.3f}). "
                     f"The weaker NT backbone abstains {'slightly LESS' if mean_abst_tgt < evo_abst else 'MORE'} (mean {{both}} rate: Evo2 {evo_abst:.2f} vs NT {mean_abst_tgt:.2f})"
                     + (", so abstention did not track backbone quality: coverage behaved as a property of the METHOD."
                        if mean_abst_tgt < evo_abst else " - coverage is a property of the METHOD, informativeness a property of the MODEL."))
-    lines += ["", f"**VERDICT:** conformal coverage {'TRACKS the nominal guarantee' if ok else 'is approximate'} on NT too - "
-              "coverage is preserved on a second architecture, under the same cross-species exchangeability caveat "
-              "as for Evo 2." + evo_line]
+    lines += ["", f"**VERDICT:** overall conformal coverage {'meets the nominal level' if ok else 'is approximate'} on NT too - "
+              "on a second architecture, under the same cross-species exchangeability assumption as for Evo 2, "
+              "which cross-species transport breaks, so it is not a distribution-free guarantee." + evo_line]
     os.makedirs("logs", exist_ok=True)
     open("logs/nt_conformal.md", "w", encoding="utf-8").write("\n".join(lines) + "\n")
     print("\n".join(lines))

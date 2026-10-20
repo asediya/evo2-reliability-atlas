@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""C5 — Grimm type-2 circularity: how much of a predictor's score is the gene, not the variant?
+"""Grimm type-2 circularity: how much of a predictor's score is the gene, not the variant?
 
 Grimm et al. name two circularity types. Type 2 is the one that bites a panel like this: genes
 whose variants are predominantly pathogenic, or predominantly benign, let a predictor score well
@@ -106,8 +106,8 @@ def main():
     out = {"_generated_by": "analyses/scripts/gene_balanced.py",
            "_panel": "human dbNSFP panel, %s variants, %s genes, %d predictors"
                      % ("{:,}".format(len(d)), "{:,}".format(len(g)), len(preds)),
-           "_why": "The manuscript cites Grimm for the concept of circularity and contains no "
-                   "gene-balanced evaluation. This supplies one for every deposited predictor.",
+           "_why": "The gene-balanced evaluation of Supplementary Note S8: pooled covered AUROC minus "
+                   "the unweighted mean of within-gene AUROCs, for every deposited predictor.",
            "_citation": "10.1002/humu.22768",
            "_min_per_class_for_within_gene": MIN_PER_CLASS,
            "n_genes_mixed": len(mixed), "n_genes_usable_within": len(usable),

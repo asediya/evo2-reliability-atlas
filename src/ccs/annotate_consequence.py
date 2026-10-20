@@ -27,8 +27,10 @@ ORDER = ["nonsense (stop-gain)", "frameshift", "start-lost", "extension (stop-lo
 
 
 def ev(m):
+    os.makedirs("logs/status", exist_ok=True)
     with open(EV, "a") as f: f.write(f"[{time.strftime('%H:%M:%S')}] conseq: {m}\n")
 def st(m):
+    os.makedirs("logs/status", exist_ok=True)
     with open(ST, "w") as f: f.write(m + "\n")
 
 

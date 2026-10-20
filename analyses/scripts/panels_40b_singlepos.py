@@ -5,8 +5,8 @@ WHAT THIS IS NOT: a capacity rung for Table S34. The deposited 1B and 7B scores 
 come from `analyses/scripts/score_mfass_evo2.py`, which sums the log-likelihood over the whole
 1,001-bp window. These 40B scores come from `src/ccs/score_evo2_40b_local.py`, which is a
 single-position next-token readout. Reading 40B from here against 1B from there moves the readout
-and the capacity at the same time, the confound Note S38 avoids for the strand ladder by holding
-panel and window length fixed.
+and the capacity at the same time, the confound that Note S38 limits for the strand ladder by
+holding panel and window length fixed.
 
 A 40B window-sum rung is not reachable with this pipeline: the window-sum path calls BioNeMo's
 `predict_evo2`, which loads the whole model onto the GPU, and its runner accepts 1b and 7b only.

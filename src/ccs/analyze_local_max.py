@@ -1,7 +1,6 @@
-"""MAX-CPU local analysis while the cloud scores: high-resolution bootstrap CIs + permutation tests
+"""MAX-CPU local analysis: high-resolution bootstrap CIs + permutation tests
 for every atlas AUROC (Evo2-40B, 1001bp scores) + the eQTL panels. Saturates all cores via
-joblib; produces paper-grade CI'd numbers the reviewers will demand. Reusable on the 8192 cloud
-scores the moment they land (same code path, different --scoredir).
+joblib. Reusable on the 8192 cloud scores (same code path, different --scoredir).
 
   python src/ccs/analyze_local_max.py --nboot 50000 --nperm 20000 --jobs 50
 """

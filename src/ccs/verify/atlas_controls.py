@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 """Composition and spatial controls computed on the FULL nine-species atlas with Evo 2-40B ALONE.
 
-The controls in `reports/verify_controls.json`
-are computed on `data/interim/verify_table.parquet` -- a 1,999-variant subset, scored with an
-exploratory evo2+phylop *ensemble* that is not a manuscript result.
 This script computes both controls on the panel the paper reports:
 
   * Panel: the same nine per-species scoring-window tables `build_atlas.py` assembles (11,130
@@ -216,8 +213,7 @@ def main():
     gc_clean = (gc_auc_macro < 0.55) and (n_gc_sig <= 1)
     j = {
         "_scope": "Composition + spatial controls on the FULL nine-species atlas (11,130 variants, "
-                  "1,001-bp readout) with Evo 2-40B alone. Supersedes reports/verify_controls.json, "
-                  "which used a 1,999-variant subset and an exploratory evo2+phylop ensemble.",
+                  "1,001-bp readout) with Evo 2-40B alone.",
         "n": n, "n_pos": int(y.sum()), "n_neg": int((y == 0).sum()),
         "n_window_ref_eq_alt": n_refeqalt,
         "composition": {

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-"""C1 — replace the nine-cluster percentile bootstrap with a random-effects meta-analysis.
+"""Pool the nine species by random-effects meta-analysis rather than by a nine-cluster percentile bootstrap.
 
-The manuscript already concedes that a nine-cluster percentile interval "undercovers regardless of
-how many resamples are drawn". That is a known property of few-cluster resampling and there is a
+A percentile interval on nine clusters undercovers (Additional file 1, Note S27), however many
+resamples are drawn. That is a known property of few-cluster resampling and there is a
 standard fix: treat the nine species as nine studies and pool them with the Hartung-Knapp-Sidik-
 Jonkman variance estimator, which has markedly better coverage than DerSimonian-Laird when k < 10
 (IntHout 2014; Röver, Knapp & Friede 2015 for the few-studies case and the modification used here).
@@ -197,10 +197,9 @@ def main():
                       "alongside). Interval by Hartung-Knapp-Sidik-Jonkman with Röver's "
                       "modification (never narrower than the classic random-effects interval). "
                       "Prediction interval by Higgins-Thompson-Spiegelhalter.",
-           "_why": "The manuscript concedes that its nine-cluster percentile bootstrap "
-                   "undercovers. This replaces it with the standard small-k treatment and adds "
-                   "two quantities the bootstrap cannot give: explicit heterogeneity, and an "
-                   "interval for a species not in the panel.",
+           "_why": "A nine-cluster percentile bootstrap undercovers. This gives the standard "
+                   "small-k treatment, which adds two quantities the bootstrap cannot give: explicit "
+                   "heterogeneity, and an interval for a species not in the panel.",
            "_citations": ["10.1186/1471-2288-14-25", "10.1186/s12874-015-0091-1",
                           "10.1002/jrsm.1164", "10.1002/jrsm.1316"],
            "evo2_minus_gerp": a, "readout_effect": b}

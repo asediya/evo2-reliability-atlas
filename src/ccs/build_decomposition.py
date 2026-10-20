@@ -1,5 +1,5 @@
-"""Idea 2: DECOMPOSE Evo2-40B vs conservation — does the foundation model just re-learn alignment-based
-conservation, or add orthogonal signal? (The #1 reviewer critique.) Using the atlas per-variant joins
+"""DECOMPOSE Evo2-40B vs conservation — does the foundation model just re-learn alignment-based
+conservation, or add orthogonal signal? Using the atlas per-variant joins
 (evo2_40b + GERP + label per species), we ask three things per species and pooled:
 
   (1) COMPLEMENTARITY: cross-validated logistic AUROC of conservation-only (C), Evo2-only (F), and
@@ -25,7 +25,7 @@ from scipy.stats import spearmanr
 IN = "data/interim"; SC = "data/processed/scores"; CO = "data/processed/conservation"
 SPECIES = {
     # Third element is the phyloP stem. It is None for EVERY species: the pig/sheep/horse/dog
-    # "*_gerp_phylop" files were found during auditing to be GERP with unaligned entries zero-filled,
+    # "*_gerp_phylop" files are GERP with unaligned entries zero-filled,
     # not genuine phyloP, so they must never be loaded. GERP (second element) is the sole
     # conservation baseline, matching build_atlas.py. Setting these to None makes the exclusion
     # explicit rather than an accident of file paths.
@@ -95,7 +95,7 @@ def z(a):
 
 def main():
     st("RUNNING | decomposing Evo2 vs conservation")
-    ev("Idea 2: Evo2-vs-conservation decomposition (complementarity + lineage-specific)")
+    ev("Evo2-vs-conservation decomposition (complementarity + lineage-specific)")
     rows = []; pool = []
     for sp in SPECIES:
         d = merged(sp)
@@ -120,7 +120,7 @@ def main():
     pa_c = roc_auc_score(Y, CS); pa_f = roc_auc_score(Y, FM)
     pa_cf = cv_auroc(np.column_stack([FM, CS]), Y)
 
-    lines = ["# Idea 2: decompose Evo2-40B vs conservation — what does the FM add?", "",
+    lines = ["# Decompose Evo2-40B vs conservation — what does the FM add?", "",
              "Conservation = GERP. AUROC of conservation-only (C), Evo2-only (F), "
              "combined (C+F, 5-fold CV logistic). ΔFM = C+F − C = signal the FM adds beyond conservation.", "",
              "| species | n | pos | C (cons) | F (Evo2) | C+F | ΔFM | Spearman(F,C) | Evo2 AUROC @low-cons |",

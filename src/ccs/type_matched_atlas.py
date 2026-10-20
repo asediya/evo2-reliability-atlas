@@ -67,7 +67,7 @@ def load(sp):
     if not (os.path.exists(cf) and os.path.exists(sf)):
         return None
     d = pl.read_parquet(sf).join(pl.read_parquet(cf), on="variant_id", how="inner")
-    # 8192 field-standard scores (capped cloud panels) where available
+    # 8192 reference-implementation scores (capped cloud panels) where available
     c8 = f"data/processed/scores_cloud/atlas8192_{sp}_meanll_8192.parquet"
     if os.path.exists(c8):
         d = d.join(pl.read_parquet(c8), on="variant_id", how="left")

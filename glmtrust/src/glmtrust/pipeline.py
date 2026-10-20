@@ -49,12 +49,12 @@ class TrustLayer:
 
         This default is deliberate: the class's
         own output is a per-variant selective call, and a transferred isotonic posterior is
-        tie-heavy at that job -- across the paper's 11,130 variants it takes 248 distinct values
-        against Platt's 8,792, so most variants land inside a tie block and the selective
-        ordering is decided by sort order rather than by confidence. The paper reports isotonic
-        for the ECE analysis and Platt for everything per-variant; the front door therefore
-        defaults to the one that matches what :meth:`predict` returns. Pass
-        ``calibration="isotonic"`` to reproduce the calibration-error arm.
+        tie-heavy at that job -- across the paper's 11,130 variants at the 1,001-bp readout it takes
+        248 distinct values against Platt's 8,842, so most variants land inside a tie block and the
+        selective ordering is decided by sort order rather than by confidence. At that readout the
+        paper reports isotonic for the ECE analysis and Platt for the per-variant tables; the
+        8,192-bp per-variant layer this package reproduces is isotonic. Pass
+        ``calibration="isotonic"`` to reproduce the 8,192-bp arm or the calibration-error arm.
     conformal : {'mondrian', 'split'}
         Class-conditional (Mondrian) or marginal split conformal.
     alpha : float

@@ -20,7 +20,7 @@ Five artefacts in the deposit are inputs rather than outputs: deposited scripts 
 - `reports/gerp_pervariant.parquet` — GERP per atlas variant (11,130 rows; species, source, variant_id, label, gerp, gerp_is_finite), read by `src/ccs/gerp_consequence.py` and two `analyses/scripts/`.
 - `reports/nt_vs_evo2.parquet` — the per-panel Nucleotide Transformer, Evo 2 and GERP AUROCs (10 rows), read by `src/ccs/fig3_data.py`.
 
-Three further files are records that no deposited script writes: `reports/eqtl_pervariant_meta.json` and `reports/gerp_pervariant_meta.json` describe the two parquets above, and `reports/verify_controls.json` holds an exploratory 1,999-variant controls run that `reports/atlas_controls.json` supersedes.
+Two further files are records that no deposited script writes: `reports/eqtl_pervariant_meta.json` and `reports/gerp_pervariant_meta.json` describe the two parquets above.
 
 
 ## Public sources of the raw inputs
@@ -34,7 +34,7 @@ Exact releases and assembly accessions are in the manuscript Methods and Data Av
 - **Label-free panels:** the cattle population allele-frequency panel and the pilot bat cohort VCF described in Methods.
 
 
-## Path inventory (148 distinct templates; `<var>` = a species, sample, model size, scorer or file stem)
+## Path inventory (147 distinct templates; `<var>` = a species, sample, model size, scorer or file stem)
 
 
 ### `analyses/data/` — Inputs of the analyses/scripts/ arms — splicing, ClinVar and strand-ladder scores and windows.
@@ -112,7 +112,6 @@ Exact releases and assembly accessions are in the manuscript Methods and Data Av
 - `data/interim/pig_windows.parquet`
 - `data/interim/selection_candidates.parquet`
 - `data/interim/selection_phylop.parquet`
-- `data/interim/verify_table.parquet`
 
 ### `data/processed/` — Scored outputs — Evo 2 / NT / conservation scores per panel.
 

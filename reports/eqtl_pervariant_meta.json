@@ -9,7 +9,7 @@
    "evo2_40b_score": "1,001-bp single-position variant delta"
   },
   "orientation": "ASSERTED, NOT INFERRED. Use the column as deposited: roc_auc_score(label, evo2_40b_score) = 0.4875, the published 0.488. Negating it returns 0.5125, which is 1 minus the same number and would turn a null into a positive result. This arm is a null and must stay one.",
-  "readout": "1,001-bp single-position variant delta; this panel was never scored at 8,192 bp",
+  "readout": "1,001-bp single-position variant delta; the 20,000-variant panel was scored at 8,192 bp only on a 2,000-variant subpanel (Supplementary Note S41)",
   "published": {
    "auroc": 0.4875,
    "ci95": [

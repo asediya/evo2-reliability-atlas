@@ -786,10 +786,10 @@
    "section": "Results \u2014 \"Calibration: scores are miscalibrated but any sim"
   },
   {
-   "value": "0.540",
+   "value": "0.536",
    "artifact": "reports/decision_panel.json",
-   "key": "backbones.Evo2-40B.C (lowest of A=0.5922, B=0.6422, C=0.5404)",
-   "resolved": 0.5403863432165319,
+   "key": "backbones.Evo2-40B.C (lowest of A=0.5922, B=0.6422, C=0.5361)",
+   "resolved": 0.53607367475292,
    "transform": "identity",
    "section": "Results \u2014 \"Calibration: scores are miscalibrated but any sim"
   },

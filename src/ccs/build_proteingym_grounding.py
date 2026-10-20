@@ -1,10 +1,9 @@
-"""ARM 1 (no-wet-lab attack): trust layer on EXPERIMENTAL fitness labels via ProteinGym DMS.
+"""Trust layer on EXPERIMENTAL fitness labels via ProteinGym DMS.
 
 Substitute millions of REAL deep-mutational-scan measurements for curated clinical labels. Score every
 single-mutant with ESM-2 (a frozen PROTEIN FM = cross-modality 3rd backbone) by fast wt-marginal LLR,
 take ProteinGym's experimental binary label (DMS_score_bin), and run the SAME trust layer: leave-one-
-ASSAY-out isotonic calibration transport. Shows calibration/coverage transport across
-different proteins on wet-lab-grade labels -> the only attack on the structurally-unfixable no-wet-lab cap.
+ASSAY-out isotonic calibration transport, across different proteins on wet-lab-grade labels.
 Native CPU (ESM-2 150M, one forward per protein).
   python src/ccs/build_proteingym_grounding.py   -> logs/proteingym_grounding.md
 """
@@ -88,14 +87,14 @@ def main():
     med_none = float(np.median([r["ece_none"] for r in per]))
     med_tr = float(np.median([r["ece_transfer"] for r in per]))
     beat = sum(1 for r in per if r["ece_transfer"] < r["ece_none"])
-    lines = ["# ARM 1 - trust layer on EXPERIMENTAL fitness (ProteinGym DMS + ESM-2, no-wet-lab attack)", "",
+    lines = ["# Trust layer on EXPERIMENTAL fitness (ProteinGym DMS + ESM-2)", "",
              f"{d.height:,} single mutants scored with ESM-2-150M (wt-marginal LLR); {len(good)} assays with >=15/class. "
              "Leave-one-ASSAY-out isotonic calibration transport across proteins; labels are REAL deep-mutational-scan "
              "measurements (DMS_score_bin), not clinical curation.", "",
              f"**Result:** median across {len(per)} held-out assays - zero-shot AUROC {med_auc:.3f}; calibration transport "
              f"cuts ECE {med_none:.3f} -> {med_tr:.3f} on EXPERIMENTAL labels; beats no-calibration on {beat}/{len(per)} "
-             "assays. The trust layer transports across PROTEINS on wet-lab-grade fitness data, on a protein FM (ESM-2) - "
-             "a cross-modality backbone AND the strongest available substitute for the no-new-experiments liability.", "",
+             "assays. On wet-lab-grade fitness data and a protein FM (ESM-2), a cross-modality backbone, the "
+             "transport neither helps nor harms calibration much.", "",
              "| held-out assay | n | pos | AUROC | ECE none | ECE transfer |", "|---|---|---|---|---|---|"]
     for r in sorted(per, key=lambda x: -x["n"])[:25]:
         lines.append(f"| {r['assay']} | {r['n']} | {r['pos']} | {r['auroc']} | {r['ece_none']} | **{r['ece_transfer']}** |")

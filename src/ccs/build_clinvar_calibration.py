@@ -1,7 +1,7 @@
 """The trust layer on the human ClinVar benchmark (n~825k), applied to frozen external scores.
 
 Uses the EVEE Zenodo shard (Evo2-embedding pathogenicity probe + raw reference predictors + ClinVar
-labels + region flags). Shows, on the benchmark every editor knows: (a) are SOTA VEP scores calibrated
+labels + region flags). Shows, on the standard human clinical benchmark: (a) are SOTA VEP scores calibrated
 out-of-the-box? (ECE + reliability); (b) our isotonic layer collapses ECE; (c) split-conformal coverage
 holds; (d) coding vs noncoding stratification (blind-spot check). Runs across MULTIPLE frozen scores
 (Evo2-EVEE probe, AlphaMissense, CADD, REVEL) -> a model-agnostic calibration result at scale. CPU-only,

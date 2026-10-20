@@ -1,7 +1,7 @@
-"""Cattle-comparable pig negatives: draw REAL common SNVs from the PigGTEx genotype panel
-(.bim, 3M variants on Sscrofa11.1) matched to the positives' trinucleotide context — instead
-of synthetic random-genome sites. Real segregating variants sit at positions that tolerate
-variation, so they are genuine (not artificially hard) negatives, matching CP1's cattle design.
+"""Pig negatives: common SNVs from the PigGTEx genotype panel (.bim, 3M variants on Sscrofa11.1),
+matched to the positives on trinucleotide context and alternate allele. Real segregating variants
+sit at positions that tolerate variation, so they are genuine (not artificially hard) negatives, as
+the cattle negatives are.
 
 Output: pig_scoring_windows_real.parquet [variant_id, ref_seq, alt_seq, var_off, label]
 """

@@ -74,7 +74,8 @@ probs, report = leave_one_group_out(score, y, groups=species)   # out-of-group p
 report["__macro__"]                          # AUROC and ECE averaged over groups
 ```
 
-The transferred *probability* is, in the study, no better than a global sigmoid; what transfers is the
+The transferred *probability* is, in the study, no better than a global sigmoid at the single-token
+readout, and at the 8,192-bp readout isotonic transfer lowers macro ECE by 0.007; what transfers is the
 selective ordering. Treat `leave_one_group_out` as the honest way to *measure* transfer, not a claim
 that it is good.
 

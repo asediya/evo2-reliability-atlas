@@ -1,28 +1,29 @@
 # -*- coding: utf-8 -*-
-"""Four statistical objections (S7, S8, S10, S12), settled from the deposit.
+"""Four statistical checks, computed from the deposit.
 
-Each one is a question the manuscript could not answer as written, and each is answerable from
-artefacts that are already deposited. Nothing here needs the data tree or the scoring stack.
+Each is answerable from artefacts that are already deposited. Nothing here needs the data tree or
+the scoring stack.
 
-S7  Multiplicity control is applied to two families and not declared for the rest. This does not
-    need a computation so much as an inventory: how many tests sit in each family, which of them
-    carry a correction, and which are read as estimates rather than as tests. The counts are taken
-    from the artefacts, not from the prose, so the declaration the Methods then make is checkable.
+Multiplicity families. Multiplicity control is applied to two families and not to the rest. This
+    does not need a computation so much as an inventory: how many tests sit in each family, which
+    of them carry a correction, and which are read as estimates rather than as tests. The counts are
+    taken from the artefacts, not from the prose, so the declaration in the Methods is checkable.
 
-S8  ClinVar intervals are drawn at B = 200 and printed to four decimals. The question is whether
+Monte Carlo error of B = 200 endpoints. ClinVar intervals are drawn at B = 200 and printed to four
+    decimals. The question is whether
     that printed precision is real. The Monte Carlo standard deviation of a percentile endpoint at
     B resamples is simulated directly and expressed as a multiple of the bootstrap standard error,
     which makes it comparable across panels; the same simulation at B = 2,000 gives the scale a
     reader should compare it against.
 
-S10 The 85% knee was chosen on the panel its benefit is then reported on, which the manuscript
-    concedes. The optimism that concession leaves unquantified is measurable: select the knee on
-    eight species and re-measure the risk reduction it delivers on the ninth, once per species.
+Out-of-sample choice of the 85% knee. The 85% knee is chosen on the panel its benefit is then
+    reported on (Additional file 1, Note S36). The optimism this leaves is measurable: select the
+    knee on eight species and re-measure the risk reduction it delivers on the ninth, once per species.
 
-S12 On the human ClinVar missense panel a gene-clustered bootstrap interval runs 5.9 times wider than
-    the closed-form one (Additional file 1, Note S8), and the manuscript leaves that sentence next to
-    its own headline without saying whether the headline survives it. Re-run the random-effects pool with every per-species DeLong
-    standard error inflated, and report at what inflation the interval first touches zero.
+Clustering inflation of the random-effects pool. On the human ClinVar missense panel a
+    gene-clustered bootstrap interval runs 5.9 times wider than the closed-form one (Additional file 1,
+    Note S8). Re-run the random-effects pool with every per-species DeLong standard error inflated,
+    and report at what inflation the interval first touches zero.
 
     python analyses/scripts/review_round2_statistics.py
 """
@@ -45,8 +46,8 @@ os.makedirs(OUT, exist_ok=True)
 RNG = np.random.default_rng(20260806)
 
 
-# ------------------------------------------------------------------ S7: multiplicity inventory
-def s7_multiplicity():
+# ------------------------------------------------------------------ multiplicity inventory
+def multiplicity_scope():
     meta = json.load(open("analyses/results/meta_8192.json", encoding="utf-8"))
     reach = json.load(open("reports/fig5_reach.json", encoding="utf-8"))
     audit = json.load(open("reports/human_reach_audit.json", encoding="utf-8"))
@@ -86,7 +87,7 @@ def s7_multiplicity():
     }
 
 
-# ------------------------------------------------------------------ S8: is B = 200 precision real
+# ------------------------------------------------------------------ is B = 200 precision real
 def _percentile_mc_sd(n, p, B, reps=400):
     """Monte Carlo sd of the 2.5%/97.5% percentile endpoints of a bootstrap at B resamples,
     expressed as a multiple of the bootstrap standard error of the same statistic.
@@ -109,7 +110,7 @@ def _percentile_mc_sd(n, p, B, reps=400):
             "mc_sd_as_multiple_of_se": float(np.mean([np.std(lo, ddof=1), np.std(hi, ddof=1)]) / se)}
 
 
-def s8_bootstrap_resolution():
+def bootstrap_resolution():
     audit = json.load(open("reports/human_reach_audit.json", encoding="utf-8"))
     B = audit["_meta"]["n_boot"]
     n = 20000                       # a tractable stand-in; the ratio below is scale-free in n
@@ -126,7 +127,7 @@ def s8_bootstrap_resolution():
     return out
 
 
-# ------------------------------------------------------------------ S10: held-out knee
+# ------------------------------------------------------------------ held-out knee
 def _risk_at(conf, correct, cov):
     order = np.argsort(-conf, kind="stable")
     err = 1 - correct[order]
@@ -134,7 +135,7 @@ def _risk_at(conf, correct, cov):
     return float(err[:k].mean())
 
 
-def s10_heldout_knee():
+def heldout_knee():
     """Select the operating point on eight species; re-measure its benefit on the ninth.
 
     The knee is chosen the way the paper chooses it -- the coverage beyond which further refusal
@@ -189,7 +190,7 @@ def s10_heldout_knee():
     }
 
 
-# ------------------------------------------------------------------ S12: does the pool survive SE inflation
+# ------------------------------------------------------------------ does the pool survive SE inflation
 def _pool(names, y, se):
     """Random-effects pool, using the deposit's own REML/HKSJ estimator rather than a second one.
 
@@ -197,11 +198,11 @@ def _pool(names, y, se):
     and a sensitivity analysis whose null case does not reproduce the headline settles nothing.
     """
     r = _meta.meta(list(names), list(map(float, y)), list(map(float, se)),
-                   "SE-inflation sensitivity", "S12")
+                   "SE-inflation sensitivity", "clustering inflation")
     return {"mu": r["pooled"], "tau2": r["tau2_reml"], "ci95": list(r["ci95_hksj_modified"])}
 
 
-def s12_se_inflation():
+def se_inflation():
     meta = json.load(open("analyses/results/meta_8192.json", encoding="utf-8"))
     ps = meta["per_species"]
     names = list(ps)
@@ -241,26 +242,27 @@ def s12_se_inflation():
 def main():
     out = {
         "_generated_by": "analyses/scripts/review_round2_statistics.py",
-        "_findings": ["S7", "S8", "S10", "S12"],
-        "S7_multiplicity_scope": s7_multiplicity(),
-        "S8_bootstrap_resolution": s8_bootstrap_resolution(),
-        "S10_heldout_knee": s10_heldout_knee(),
-        "S12_se_inflation": s12_se_inflation(),
+        "_sections": ["multiplicity families", "Monte Carlo error of B = 200 endpoints",
+                      "out-of-sample choice of the 85% knee", "clustering inflation of the random-effects pool"],
+        "multiplicity_scope": multiplicity_scope(),
+        "bootstrap_resolution": bootstrap_resolution(),
+        "heldout_knee": heldout_knee(),
+        "se_inflation": se_inflation(),
     }
     p = os.path.join(OUT, "review_round2_statistics.json")
     io.open(p, "w", encoding="utf-8", newline="\n").write(
         json.dumps(out, indent=1, ensure_ascii=False) + "\n")
     print("wrote", p)
-    s12 = out["S12_se_inflation"]
-    print("S12  1.0x %s" % s12["runs"]["1.00"]["ci95"])
-    print("S12  1.5x %s" % s12["runs"]["1.50"]["ci95"])
-    print("S12  5.9x %s" % s12["runs"]["5.90"]["ci95"])
-    print("S12  interval first touches zero at %sx" % s12["inflation_at_which_interval_first_touches_zero"])
-    print("S8   mc sd / se: B=200 %.3f, B=2000 %.3f"
-          % (out["S8_bootstrap_resolution"]["simulation"]["200"]["mc_sd_as_multiple_of_se"],
-             out["S8_bootstrap_resolution"]["simulation"]["2000"]["mc_sd_as_multiple_of_se"]))
-    k = out["S10_heldout_knee"]
-    print("S10  held-out mean risk reduction %.4f (in-sample best %.4f); %d species at or below zero"
+    infl = out["se_inflation"]
+    print("SE inflation  1.0x %s" % infl["runs"]["1.00"]["ci95"])
+    print("SE inflation  1.5x %s" % infl["runs"]["1.50"]["ci95"])
+    print("SE inflation  5.9x %s" % infl["runs"]["5.90"]["ci95"])
+    print("SE inflation  interval first touches zero at %sx" % infl["inflation_at_which_interval_first_touches_zero"])
+    print("B resolution  mc sd / se: B=200 %.3f, B=2000 %.3f"
+          % (out["bootstrap_resolution"]["simulation"]["200"]["mc_sd_as_multiple_of_se"],
+             out["bootstrap_resolution"]["simulation"]["2000"]["mc_sd_as_multiple_of_se"]))
+    k = out["heldout_knee"]
+    print("held-out knee  mean risk reduction %.4f (in-sample best %.4f); %d species at or below zero"
           % (k["mean_heldout_risk_reduction"], k["mean_insample_best_risk_reduction"],
              k["n_heldout_species_with_reduction_at_or_below_zero"]))
 

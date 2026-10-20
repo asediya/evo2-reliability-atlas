@@ -3,11 +3,10 @@
 
 WHY THIS FILE EXISTS. Note S36 of Additional file 1 quotes the 'none' side as a species mean.
 The 'transfer' side sources cleanly to reports/fig4_reconciliation.json (ece_grid.width10.
-isotonic_LOSO). Without this file the 'none' side would appear in NO deposited artefact, with the
-estimator behind it defined nowhere in the paper, so the quoted value could not be checked
-against the deposit and would look regenerable only from the absent data/ tree.
+isotonic_LOSO). This file deposits the 'none' side and the estimator behind it, so the quoted value
+can be checked against the deposit rather than only against the absent data/ tree.
 
-It is not. It regenerates from reports/_recon_pervariant_trust.parquet, which IS deposited:
+It regenerates from reports/_recon_pervariant_trust.parquet, which IS deposited:
 min-max scale each species' raw score to [0, 1], then take the equal-width 10-bin ECE against the
 binary label. That is a deliberately weak baseline -- min-max scaling is a monotone rescaling, not a
 calibration, so it preserves the ranking and fixes nothing about the probabilities. It is in the

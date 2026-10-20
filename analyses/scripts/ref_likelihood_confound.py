@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""A3 step 2 — is the score confounded by how likely the model finds the background window?
+"""Is the score confounded by how likely the model finds the background window?
 
 Nullsettes (arXiv:2506.10271) reports that genomic language models' accuracy at detecting loss of
 function collapses as the log-likelihood of the reference sequence itself falls. If that holds

@@ -1,6 +1,6 @@
 {
  "_generated_by": "analyses/scripts/eqtl_tss_matched.py",
- "_why": "The published pig panel matches controls on eGene only. A positional baseline reads 0.651 on it, so the model is being asked to beat a confound. This additionally matches on log10 TSS distance, following TraitGym's design as far as the deposited data allows.",
+ "_why": "The pig panel matches controls on eGene only, and a positional baseline reads 0.651 on it. This additionally matches on log10 TSS distance, following TraitGym's design as far as the deposited data allows.",
  "_falsification": "If the matching worked, the positional baseline MUST fall to chance on the matched panel. If it does not, the matching failed and nothing else here is interpretable.",
  "_not_matched_on": [
   "minor allele frequency",

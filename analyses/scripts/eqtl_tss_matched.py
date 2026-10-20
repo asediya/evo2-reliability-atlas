@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
-"""B5 — rebuild the pig regulatory panel with TSS-distance-matched controls.
+"""Rebuild the pig regulatory panel with TSS-distance-matched controls.
 
-The most attackable result in the paper: Evo 2 reads 0.488 on fine-mapped pig cis-eQTLs while a
-positional rule — distance to the gene's transcription start site — reads 0.651. The obvious
-objection is that the controls are wrong, not the model: candidate causal eQTLs sit closer to the TSS than
+Evo 2 reads 0.488 on fine-mapped pig cis-eQTLs while a positional rule — distance to the gene's
+transcription start site — reads 0.651. A natural concern is that the controls are wrong, not the
+model: candidate causal eQTLs sit closer to the TSS than
 PIP-low controls do, so any method with positional information wins, and any method without it is
 being asked to beat a confound rather than to predict biology.
 
 TraitGym (Benegas, Eraslan & Song 2025) matches controls on chromosome, consequence class, TSS
 distance, MAF and LD score. This applies the part of that design the deposited data supports:
-controls stay within the same eGene, as before, and are additionally matched on log10 TSS distance.
+controls stay within the same eGene, as in the paper's panel, and are additionally matched on log10 TSS
+distance.
 
 The test has a built-in falsification. If the matching works, the positional baseline must fall to
 chance on the matched panel BY CONSTRUCTION. If it does not fall, the matching failed and nothing
@@ -198,10 +199,9 @@ def main():
         caliper["auroc_tss_proximity_ci95"][0] <= 0.5 <= caliper["auroc_tss_proximity_ci95"][1])
 
     out = {"_generated_by": "analyses/scripts/eqtl_tss_matched.py",
-           "_why": "The published pig panel matches controls on eGene only. A positional baseline "
-                   "reads 0.651 on it, so the model is being asked to beat a confound. This "
-                   "additionally matches on log10 TSS distance, following TraitGym's design as "
-                   "far as the deposited data allows.",
+           "_why": "The pig panel matches controls on eGene only, and a positional baseline reads "
+                   "0.651 on it. This additionally matches on log10 TSS distance, following "
+                   "TraitGym's design as far as the deposited data allows.",
            "_falsification": "If the matching worked, the positional baseline MUST fall to chance "
                              "on the matched panel. If it does not, the matching failed and "
                              "nothing else here is interpretable.",

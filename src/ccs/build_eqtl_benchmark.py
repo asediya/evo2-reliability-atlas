@@ -26,8 +26,10 @@ EV = "logs/status/events.log"; ST = "logs/status/eqtl.status"
 
 
 def ev(m):
+    os.makedirs("logs/status", exist_ok=True)
     with open(EV, "a", encoding="utf-8") as f: f.write(f"[{time.strftime('%H:%M:%S')}] eqtl: {m}\n")
 def st(m):
+    os.makedirs("logs/status", exist_ok=True)
     with open(ST, "w") as f: f.write(m + "\n")
 
 

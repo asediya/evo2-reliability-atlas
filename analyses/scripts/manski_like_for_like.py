@@ -60,10 +60,11 @@ def main():
         "_generated_by": "analyses/scripts/manski_like_for_like.py",
         "_question": "How many species remain identified when Evo 2 is measured on the same panel "
                      "the GERP bound describes?",
-        "_why": "The published count compares a full-panel bound against a co-scorable-subset point "
-                "estimate. The subset excludes exactly the variants the bound exists to charge for.",
+        "_why": "A full-panel bound compared against a co-scorable-subset point estimate leaves out "
+                "exactly the variants the bound exists to charge for, so Evo 2 is measured here on the "
+                "full panel too.",
         "_sources": [MB, FP],
-        "n_identified_as_published": n_sub,
+        "n_identified_on_coscorable_subset": n_sub,
         "n_identified_like_for_like": n_full,
         "species_changing_verdict": sorted(s for s, r in rows.items() if r["changes_verdict"]),
         "per_species": rows,

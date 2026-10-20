@@ -135,10 +135,13 @@ def score_panel(inp, out, batch, tok, sh, limit=0, oracle=None, model_name="evo2
 
     # var_off must index the substituted base. It is the one thing this scorer cannot infer and
     # cannot survive getting wrong: the score is lp[alt_base] - lp[ref_base] at that offset, so if
-    # var_off points anywhere else the two bases are identical and EVERY delta is exactly 0.0. That
-    # happened -- the splicing and ClinVar panels were built 1,001 bp with the variant at index 500
-    # but carried var_off = 501, copied from the atlas windows, which are 1,002 bp. Seven hours of
-    # 40B scoring produced 7,626 identical zeros and exited 0. Checked here, before the model runs.
+    # var_off points anywhere else the two bases are identical and EVERY delta is exactly 0.0. A
+    # panel built 1,001 bp with the variant at index 500 but carrying the 1,002-bp atlas windows'
+    # var_off = 501 would score every variant 0.0 and still exit 0, so the offset is checked here,
+    # before the model runs. A record whose reference and alternate windows are identical
+    # everywhere (the atlas's one identical-window record, Additional file 1, Note S4) has no
+    # substitution to read: it is scored 0.0 without a model pass and reported, not refused.
+    same = []
     for i in range(len(vids)):
         o = int(voff[i])
         if not (0 <= o < len(ref[i])):
@@ -146,6 +149,9 @@ def score_panel(inp, out, batch, tok, sh, limit=0, oracle=None, model_name="evo2
                              % (o, len(ref[i]), vids[i]))
         if ref[i][o].upper() == alt[i][o].upper():
             d = [k for k, (x, y) in enumerate(zip(ref[i], alt[i])) if x != y]
+            if not d:
+                same.append(i)
+                continue
             raise SystemExit(
                 "var_off does not point at the substitution in %s: ref and alt both carry %r at "
                 "offset %d, so every delta would be exactly zero. The bases differ at %s. Fix the "
@@ -155,6 +161,15 @@ def score_panel(inp, out, batch, tok, sh, limit=0, oracle=None, model_name="evo2
     def flush(pairs):
         d = dict(scored); d.update(pairs)
         pl.DataFrame({"variant_id": list(d), col: list(d.values())}).write_parquet(out)
+
+    if same:
+        print("  %d identical-window record(s) scored 0.0 without a model pass: %s"
+              % (len(same), ", ".join(vids[i] for i in same)), flush=True)
+        scored.update({vids[i]: 0.0 for i in same})
+        keep = [i for i in range(len(vids)) if i not in set(same)]
+        vids = [vids[i] for i in keep]; ref = [ref[i] for i in keep]
+        alt = [alt[i] for i in keep]; voff = [voff[i] for i in keep]
+        flush({})
 
     if not vids:
         print(f"  nothing to score ({len(scored)} already in {out})", flush=True)

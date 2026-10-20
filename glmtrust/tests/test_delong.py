@@ -231,8 +231,8 @@ def test_is_much_faster_than_the_bootstrap_at_scale():
     # even against a 100x-truncated bootstrap, the closed form should win comfortably
     assert t_delong < t_boot20, "DeLong (%.3fs) not faster than 20 bootstrap draws (%.3fs)" % (
         t_delong, t_boot20)
-    # The previous second assertion was `math.isfinite(t_delong)` on a wall-clock difference, which
-    # cannot fail and so tested nothing. Assert the property that actually matters instead: being
+    # Asserting `math.isfinite(t_delong)` on a wall-clock difference could not fail and so would
+    # test nothing. Assert the property that actually matters instead: being
     # fast is worthless if the interval is wrong, so the closed form must still bracket its estimate.
     d, (lo, hi) = delong_delta_ci(y, a, b)
     assert lo < d < hi, "fast but not a valid interval: %.4f not inside [%.4f, %.4f]" % (d, lo, hi)

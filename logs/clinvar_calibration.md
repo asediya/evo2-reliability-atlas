@@ -1,4 +1,4 @@
-# IDEA 11 - the trust layer on the ClinVar benchmark (EVEE, model-agnostic)
+# The trust layer on the ClinVar benchmark (EVEE, model-agnostic)
 
 Shards used: 5. Panel = 1,599,200 pathogenic/benign ClinVar variants, **sub-sampled to 150,000 rows (seed 0, base rate 0.1712)** so the honest null baselines run in the same size regime the audit flagged. Raw score treated as a naive probability (min-max) for ECE; isotonic 4-fold CV; split-conformal Mondrian coverage at nominal 0.90. `Brier skill` = reliability GAIN over the base-rate constant (resolution the constant lacks); it is the honest headline, NOT the near-zero absolute calibrated ECE.
 

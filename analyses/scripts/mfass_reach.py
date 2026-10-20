@@ -8,13 +8,14 @@ Kitzman (Genome Biology 2023, doi:10.1186/s13059-023-03144-z, table S1) carry a 
 measured in cells in the five saturation assays; the sixth, 296 MLH1 variants, is curated from published results.
 If reach still dominates there, the thesis does not depend on curation at all.
 
-Ten published splicing predictors ship with these panels, and they miss variants for structural
+Eight published splicing predictors ship with these panels, and they miss variants for structural
 reasons: HAL is exonic, SPANR has a context requirement, S-Cap is defined near junctions. That
 missingness is exactly the object the paper is about, so it is measured here per variant class and
 per label rather than pooled.
 
 Reported for each predictor: coverage split by label, the covered AUROC, the must-answer AUROC
-under the CAFA full-evaluation fill, the reach penalty, and the Manski interval that the missing
+(CAFA's full evaluation with one half in place of its zero for a pair the predictor cannot order,
+0.5 + (A_cov - 0.5) rho, the paper's Methods rule), the reach penalty, and the Manski interval that the missing
 variants leave the true full-panel AUROC free to occupy.
 
     python analyses/scripts/mfass_reach.py
@@ -139,10 +140,10 @@ def main():
         r_neg = float(cov[y == 0].mean())
         a_cov = auroc(y[cov], s[cov])
         lo_ci, hi_ci = boot(y[cov], s[cov])
-        # CAFA full evaluation: an unanswered variant is scored, at the least informative value.
-        filled = np.where(cov, s, np.nanmin(s[cov]) - 1.0)
-        a_ma = auroc(y, filled)
         lo, hi, rho = bounds(a_cov, r_pos, r_neg)
+        # Must-answer AUROC: every positive-negative pair counts; a pair the predictor cannot order
+        # (either variant unscored) counts one half, so the value is 0.5 + (A_cov - 0.5) * rho.
+        a_ma = 0.5 + (a_cov - 0.5) * rho
         res["predictors"][p] = {
             "coverage": r_all, "coverage_pos": r_pos, "coverage_neg": r_neg,
             "class_dependent_gap": float(r_pos - r_neg),

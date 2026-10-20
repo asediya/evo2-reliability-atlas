@@ -280,9 +280,12 @@ def macro_cost(dec, y, spans):
     return float(np.mean([cost_of(dec[a:b], y[a:b])[0] for _, a, b in spans]))
 
 
-def policy_C(pcal, y, split_seed=0, alpha=0.10):
-    idx = np.arange(len(y)); rng = np.random.default_rng(split_seed); rng.shuffle(idx)
-    cut = len(idx) // 2; cal_i = idx[:cut]
+def policy_C(pcal, y, spans, split_seed=0, alpha=0.10):
+    # Quantiles from one half of a stratified 50/50 split of the pooled label-rich species (build_decision_panel.py),
+    # applied unchanged to every species.
+    rich_rows = np.concatenate([np.arange(a, b) for _, a, b in spans if int(y[a:b].sum()) >= RICH_MIN])
+    (_, cal_pos), = list(StratifiedKFold(2, shuffle=True, random_state=split_seed).split(rich_rows, y[rich_rows]))[:1]
+    cal_i = rich_rows[cal_pos]
     pc, yc = pcal[cal_i], y[cal_i]
 
     def qh(s):
@@ -290,7 +293,7 @@ def policy_C(pcal, y, split_seed=0, alpha=0.10):
     q0 = qh(pc[yc == 0]); q1 = qh(1 - pc[yc == 1])
     inB = pcal <= q0; inP = (1 - pcal) <= q1
     dec = np.full(len(y), "A"); dec[inB & ~inP] = "B"; dec[inP & ~inB] = "P"
-    return dec
+    return dec, float((inB & inP).mean()), float((~inB & ~inP).mean())
 
 
 def decision(raw, y_raw, pcal, y_cal, order):
@@ -309,13 +312,16 @@ def decision(raw, y_raw, pcal, y_cal, order):
     eP = (1 - pc) * C_FP; eB = pc * C_FN
     decB = np.full(len(yc), "A")
     decB[(eP <= eB) & (eP <= C_AB)] = "P"; decB[(eB < eP) & (eB <= C_AB)] = "B"
-    decC = policy_C(pc, yc)
-    out = {"A": cost_of(decA, yr), "B": cost_of(decB, yc), "C": cost_of(decC, yc),
+    decC, two_label, empty = policy_C(pc, yc, sp_c)
+    # A cost-aware threshold that never abstains: call positive where p >= C_FP / (C_FP + C_FN), the Bayes cut.
+    decD = np.where(pc >= C_FP / (C_FP + C_FN), "P", "B")
+    out = {"A": cost_of(decA, yr), "B": cost_of(decB, yc), "C": cost_of(decC, yc), "D": cost_of(decD, yc),
            "abstain": cost_of(np.full(len(yc), "A"), yc),
            "A_called_P": float((decA == "P").mean()),
+           "C_two_label_sets": two_label, "C_empty_sets": empty,
            "macro": {"A": macro_cost(decA, yr, sp_r), "B": macro_cost(decB, yc, sp_c), "C": macro_cost(decC, yc, sp_c),
-                     "abstain": macro_cost(np.full(len(yc), "A"), yc, sp_c)}}
-    out["C_seed_sweep"] = [(cost_of(d, yc)[0], macro_cost(d, yc, sp_c)) for d in (policy_C(pc, yc, sd) for sd in range(100))]
+                     "D": macro_cost(decD, yc, sp_c), "abstain": macro_cost(np.full(len(yc), "A"), yc, sp_c)}}
+    out["C_seed_sweep"] = [(cost_of(d, yc)[0], macro_cost(d, yc, sp_c)) for d in (policy_C(pc, yc, sp_c, sd)[0] for sd in range(100))]
     return out
 
 
@@ -323,7 +329,8 @@ def report_ii(label, r):
     print("\n  --- %s ---" % label)
     print("  %-38s %9s %9s %9s" % ("policy", "pooled", "abstain", "macro"))
     for k, nm in [("A", "A raw score, 0.5 threshold"), ("B", "B calibrated + reject option"),
-                  ("C", "C calibrated + Mondrian conformal"), ("abstain", "T1 always abstain (trivial)")]:
+                  ("C", "C calibrated + Mondrian conformal"), ("D", "D calibrated, cost-aware cut, no abstention"),
+                  ("abstain", "T1 always abstain (trivial)")]:
         print("  %-38s %9.4f %9.3f %9.4f%s" % (nm, r[k][0], r[k][1], r["macro"][k],
               "" if k == "abstain" else ("   beats T1: pooled %s, macro %s" % ("YES" if r[k][0] < r["abstain"][0] else "no",
                                                                                 "YES" if r["macro"][k] < r["macro"]["abstain"] else "no"))))
@@ -415,10 +422,11 @@ def jrec_i(g, vs, counts, pool, slopes):
 
 def jrec_ii(r):
     cp = [c[0] for c in r["C_seed_sweep"]]; cm = [c[1] for c in r["C_seed_sweep"]]
-    return {"pooled_cost": {k: r[k][0] for k in ("A", "B", "C", "abstain")},
-            "abstention_rate": {k: r[k][1] for k in ("A", "B", "C", "abstain")},
+    return {"pooled_cost": {k: r[k][0] for k in ("A", "B", "C", "D", "abstain")},
+            "abstention_rate": {k: r[k][1] for k in ("A", "B", "C", "D", "abstain")},
             "macro_cost": dict(r["macro"]),
             "policy_A_calls_pathogenic": r["A_called_P"],
+            "policy_C_abstentions": {"two_label_sets": r["C_two_label_sets"], "empty_sets": r["C_empty_sets"]},
             "policy_C_split_seeds_0_99": {"pooled_median": float(np.median(cp)), "pooled_min": float(min(cp)),
                                           "pooled_max": float(max(cp)), "macro_median": float(np.median(cm)),
                                           "macro_min": float(min(cm)), "macro_max": float(max(cm))}}
@@ -642,8 +650,11 @@ def main():
          "%s of %s by Brier score" % (WORD[cnt8[M_SIGF][1]], nine)),
         ("8,192 bp, every-other-species donors: transfer, unpenalised sigmoid", "0.0209 against 0.0279",
          "%.4f against %.4f" % (g8n["width10"][M_ISO]["macro"], g8n["width10"][M_SIGF]["macro"])),
-        ("8,192 bp, >=50-positive donors: pooled cost of policies B and C", "0.141 and 0.140",
+        ("8,192 bp, >=50-positive donors: pooled cost of policies B and C", "0.141 each",
+         "%.3f each" % r8["B"][0] if "%.3f" % r8["B"][0] == "%.3f" % r8["C"][0] else
          "%.3f and %.3f" % (r8["B"][0], r8["C"][0])),
+        ("8,192 bp, deposited posterior: reject option against a cost-aware threshold that never abstains",
+         "0.144 per variant against 0.146", "%.3f per variant against %.3f" % (r8d["B"][0], r8d["D"][0])),
         ("  pooled cost of always abstaining", "0.500", "%.3f" % r8["abstain"][0]),
         ("8,192 bp: Mondrian conformal over all %s variants" % "{:,}".format(sum(c8[s]["n"] for s in SP)),
          "abstains on no variant",

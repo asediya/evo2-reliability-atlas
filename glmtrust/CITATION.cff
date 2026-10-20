@@ -3,7 +3,6 @@ message: "If you use glmtrust, please cite the accompanying study."
 title: "glmtrust: a calibration, conformal and selective-prediction trust layer for genomic language-model variant-effect scores"
 type: software
 version: 0.1.1
-date-released: 2026-08-29
 license: MIT
 repository-code: "https://github.com/asediya/evo2-reliability-atlas"
 authors:
@@ -30,5 +29,5 @@ identifiers:
     value: "10.5281/zenodo.22046811"
     description: "Reserved Zenodo identifier of the one record that archives glmtrust 0.1.1 with the
       study's analysis code, recompute tables and reach panels (the article's Additional files 2 to 6); it
-      is released on acceptance and does not resolve before then. Reviewers hold the identical code as
-      Additional file 2."
+      is released on acceptance and does not resolve before then. Additional file 2 holds the
+      identical code."

@@ -172,9 +172,9 @@ and then exits 1 on `PermissionError: reports/tables.json`. The assertion passin
 result; the write is what fails. From a writable copy the same command exits 0 and regenerates
 `tables.json` byte-identically to the deposited file.
 
-## What certifies the current numbers
+## What certifies the numbers
 
-The current numbers are certified by three things that run here:
+The numbers are certified by three things that run here:
 
 - `build_tables.py`'s canonical-assertion gate, which fails the build on drift
 - `tools/verify_from_data.py`, which re-derives from raw score and label files the number of

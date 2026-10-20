@@ -33,6 +33,6 @@
       "gain_from_averaging": 0.0031458317729008423
     }
   },
-  "monotone_worsening": true,
-  "direction": "worsens with capacity"
+  "pearson_monotone_worsening": true,
+  "spearman_monotone_worsening": false
 }

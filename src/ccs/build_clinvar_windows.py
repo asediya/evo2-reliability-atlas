@@ -1,9 +1,9 @@
-"""ARM 2 prep: build raw-Evo2 scoring windows for a stratified ClinVar panel (retire EVEE circularity).
+"""Build raw-Evo2 scoring windows for a stratified ClinVar panel, free of the EVEE probe's circularity.
 
 Parse ClinVar (GRCh38) for pathogenic/benign SNVs, stratify by consequence (coding vs noncoding),
 sample a balanced ~50k panel, and extract 1001bp variant-centred windows from GRCh38 -> the exact
 {variant_id, ref_seq, alt_seq, var_off, label} schema score_evo2_40b_local.py consumes. Then Evo2-40B
-scores it on the GPU (after BRCA1) for the NON-circular ClinVar result.
+scores it on the GPU for the NON-circular ClinVar result.
   python src/ccs/build_clinvar_windows.py   -> data/interim/clinvar_evo2_windows.parquet
 """
 import gzip, os

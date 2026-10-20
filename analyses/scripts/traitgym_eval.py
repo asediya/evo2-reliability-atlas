@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""A1/B6 — an independent, human, properly matched regulatory benchmark, with no GPU.
+"""An independent, human, properly matched regulatory benchmark, with no GPU.
 
 TraitGym ships predictor scores alongside its matched panels, and among them are Evo 2 at 1B, 7B
 and 40B. So the comparison the paper most needs — does the regulatory blind spot appear on a human

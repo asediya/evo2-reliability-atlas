@@ -11,8 +11,8 @@ This recomputes it from the per-species deltas the meta-analysis already deposit
 result. Nothing here is typed from memory; the numbers the manuscript quotes are
 whatever this produces.
 
-The concern is that seven of the nine species are placental mammals sitting at an identical 92 My
-divergence from human, so treating nine tips as nine independent observations overstates the
+The concern is that seven of the nine species are non-human placental mammals sitting at an identical
+92 My divergence from human, so treating nine tips as nine independent observations overstates the
 evidence. Two checks:
 
   collapse   average the deltas within each order, then take the unweighted mean over orders, so
@@ -47,7 +47,7 @@ ORDER = {
     "goat": "Artiodactyla",
     "pig": "Artiodactyla",
     "horse": "Perissodactyla",
-    "chicken": "Aves",
+    "chicken": "Galliformes",
 }
 
 
@@ -82,9 +82,9 @@ def main():
         "_generated_by": "analyses/scripts/phylo_collapse_sensitivity.py",
         "_question": "Does the macro Evo 2 minus GERP advantage at 8,192 bp survive treating "
                      "closely related species as non-independent?",
-        "_why": "Seven of the nine species are placental mammals and TimeTree places seven of the "
-                "eight non-human species at an identical 92 My divergence from human, so nine tips "
-                "are not nine independent observations. This bounds how much that matters.",
+        "_why": "Seven of the nine species are non-human placental mammals, all at an identical 92 My "
+                "divergence from human in TimeTree, so nine tips are not nine independent "
+                "observations. This bounds how much that matters.",
         "_source": SRC,
         "_order_assignment": ORDER,
         "macro_delta_all_nine_species": all_nine,

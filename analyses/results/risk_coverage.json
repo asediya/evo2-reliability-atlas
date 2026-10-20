@@ -11,7 +11,7 @@
   "arXiv:1805.08206",
   "JMLR 11:1605"
  ],
- "_why": "The paper quotes selective prediction at one hand-chosen coverage, located on the panel it is then reported on. The curve makes that operating point a presentational choice rather than a fitted parameter.",
+ "_why": "The whole risk-coverage curve and its area, so that the 85% operating point, located on the panel it is reported on, reads as one point of the curve rather than as a fitted parameter.",
  "pooled": {
   "n": 11130,
   "error_rate": 0.08023360287511228,

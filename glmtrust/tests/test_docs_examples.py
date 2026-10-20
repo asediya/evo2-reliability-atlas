@@ -119,7 +119,7 @@ def test_cli_flags_named_in_the_readme_exist():
 
 @pytest.mark.parametrize("doc", ["index.md", "api.md"])
 def test_docs_do_not_reference_missing_attributes(doc):
-    """Catch a doc naming glmtrust.something that no longer exists."""
+    """Catch a doc naming glmtrust.something that does not exist."""
     text = open(os.path.join(DOCS, doc), encoding="utf-8").read()
     for mod, attr in re.findall(r"`glmtrust\.(\w+)\.(\w+)`", text):
         m = getattr(glmtrust, mod, None)

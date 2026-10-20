@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""A3 step 1 — emit the reference window's own mean log-likelihood, which the deposited scorer throws away.
+"""Emit the reference window's own mean log-likelihood, which the deposited scorer throws away.
 
 `score_evo2_meanll.py` computes MLL(ref) into `ref_ll_cache` and then writes only the difference
 `alt_ll - ref_ll`. Without this script the strand subset's MLL(ref) is lost, and the Nullsettes objection — that

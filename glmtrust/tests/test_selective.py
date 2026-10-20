@@ -74,8 +74,8 @@ def test_precision_operating_point_meets_its_target(data):
 
 
 def test_refusal_set_is_stable_under_ties():
-    # A stable sort makes the tie-break reproducible for one fixed input order, which is what the
-    # earlier form of this test checked. It does not make it reproducible across input orders: the
+    # A stable sort makes the tie-break reproducible for one fixed input order. It does not make it
+    # reproducible across input orders: the
     # position IS the row order, so permuting the rows moves the refused set. On the study's own
     # 8,192-bp panel that moved pooled capture over a range of 0.053 across 399 row orders, more than
     # twice the reproduction benchmark's tolerance for the same quantity.

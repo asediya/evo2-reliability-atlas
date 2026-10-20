@@ -1,11 +1,11 @@
-"""Query phyloP conservation at each variant (WSL, pyBigWig).
+"""Query phyloP conservation at each variant (pyBigWig).
 Cattle phyloP is per-chromosome bigWigs (Roslin/Zenodo, bosTau9=ARS-UCD1.2), internal
 contig names are 'chr1'..'chr29','chrX'. Our variants use bare '1'..'29','X'.
 
 Input: labeled_variants.parquet [variant_id, chrom, pos]
 Output: phylop.parquet [variant_id, phylop]  (higher = more conserved)
 
-  micromamba run -p ~/micromamba/envs/ccs-bio python query_phylop.py \
+  python src/ccs/query_phylop.py \
      --in labeled.parquet --bw-dir <phyloP_bigwig dir> --out phylop.parquet
 """
 import argparse, os, glob

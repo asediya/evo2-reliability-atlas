@@ -1,5 +1,5 @@
 {
-  "_scope": "Composition + spatial controls on the FULL nine-species atlas (11,130 variants, 1,001-bp readout) with Evo 2-40B alone. Supersedes reports/verify_controls.json, which used a 1,999-variant subset and an exploratory evo2+phylop ensemble.",
+  "_scope": "Composition + spatial controls on the FULL nine-species atlas (11,130 variants, 1,001-bp readout) with Evo 2-40B alone.",
   "n": 11130,
   "n_pos": 2240,
   "n_neg": 8890,

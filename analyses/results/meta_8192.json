@@ -1,6 +1,6 @@
 {
  "_generated_by": "analyses/scripts/meta_8192.py",
- "_why": "The paper's headline arm had no per-species uncertainty. This supplies it and pools it the way a nine-cluster panel should be pooled.",
+ "_why": "Per-species intervals for Evo 2 against GERP at 8,192 bp, pooled by random effects.",
  "_method": "DeLong structural components for the per-species SE; REML tau^2; HKSJ with Röver's modification; Higgins-Thompson-Spiegelhalter prediction interval.",
  "_citations": [
   "10.2307/2531595",

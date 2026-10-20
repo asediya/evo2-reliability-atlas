@@ -1,8 +1,8 @@
-"""STEP 2 hardening: is 'Evo2 beats conservation' REAL across species, after multiple-testing correction?
+"""Is 'Evo2 beats conservation' REAL across species, after multiple-testing correction?
 
-Reviewer-proofing. The atlas reports a per-species bootstrap statistic `p_40b_gt_cons` = P(delta > 0),
+The atlas reports a per-species bootstrap statistic `p_40b_gt_cons` = P(delta > 0),
 the bootstrap fraction of resamples where AUROC(Evo2-40B) > AUROC(conservation). That is NOT a p-value
-and it was never corrected for testing 9 species at once. Here we turn it into a proper one-sided
+and it is not corrected for testing 9 species at once. Here we turn it into a proper one-sided
 p-value  p = 1 - P(delta > 0)  for ALL 9 species and apply Benjamini-Hochberg FDR at q = 0.05, then
 report how many species survive.
 
@@ -70,10 +70,12 @@ def main():
 
     # order table by raw p ascending for readability
     rows.sort(key=lambda x: x["p"])
-    lines = ["# STEP 2 - does Evo2-40B beat conservation (GERP)? One-sided bootstrap p + BH-FDR across 9 species", "",
+    lines = ["# Does Evo2-40B beat conservation (GERP)? One-sided bootstrap p + BH-FDR across 9 species", "",
              "Baseline = GERP (sole conservation baseline; the byte-identical phyloP copies of GERP are not "
              "used). The atlas statistic `p_40b_gt_cons` is the bootstrap fraction P(delta>0); we convert "
              "it to a one-sided p-value  p = 1 - P(delta>0)  and apply Benjamini-Hochberg at q<=0.05.", "",
+             "AUROC Evo2, n and pos are the full panel's; AUROC GERP, Δ and P(Δ>0) are on the variants GERP "
+             "scores (`reports/evo2_vs_conservation.parquet`), so Δ is not the difference of the two printed AUROCs.", "",
              "| species | n | pos | AUROC Evo2 | AUROC GERP | Δ | P(Δ>0) | one-sided p | BH q | verdict |",
              "|---|---|---|---|---|---|---|---|---|---|"]
     for x in rows:
@@ -81,13 +83,14 @@ def main():
                      f"{x['delta']:+.3f} | {x['p_gt0']:.3f} | {x['p']:.3f} | {x['q']:.3f} | {x['verdict']} |")
     lines += ["",
               f"**FDR-corrected result: {n_sig}/{m} species beat GERP after Benjamini-Hochberg (q<=0.05): "
-              f"{', '.join(survivors)}.** Both survivors are floor-limited (P(Δ>0)=1.000 -> one-sided p=0.000). ",
+              f"{', '.join(survivors)}.** Both survivors are floor-limited (P(Δ>0)=1.000 -> one-sided p=0.000).",
               "",
-              "**Honest reading:** the bootstrap P(Δ>0) is NOT a p-value and was uncorrected for 9 simultaneous "
+              "**Reading:** the bootstrap P(Δ>0) is NOT a p-value and is uncorrected for 9 simultaneous "
               "tests. Once converted to a proper one-sided p-value and BH-corrected, only the two species whose "
               "bootstrap never once favored conservation survive; every borderline win (chicken +0.137 at raw "
-              "p=0.028, and all smaller margins) is not significant after FDR. The atlas's headline contribution "
-              "is the CALIBRATION / trust-layer transfer, not a raw-accuracy win over conservation."]
+              "p=0.028, and all smaller margins) is not significant after FDR. This test is at the 1,001-bp "
+              "readout and resamples variants; with positive-bearing loci resampled, as for Table 2, cattle's "
+              "lead alone survives (Additional file 1, Figure S7)."]
 
     os.makedirs("logs", exist_ok=True)
     open("logs/beats_conservation_ci.md", "w", encoding="utf-8").write("\n".join(lines) + "\n")

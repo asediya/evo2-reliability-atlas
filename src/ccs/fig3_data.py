@@ -126,7 +126,7 @@ for win, rd, path, col, neg in [(8192, "mean-LL", "data/processed/scores_cloud/e
     else:
         Y, S = scored(path, col, neg)
     rob["cells"].append({"window": win, "readout": rd, "auroc": round(auroc(Y, S), 3), "n": int(len(Y))})
-rob["untested"] = [{"window": 16384, "readout": "any", "reason": "sequences built but never scored; Evo2 compute retired"}]
+rob["untested"] = [{"window": 16384, "readout": "any", "reason": "sequences built but never scored"}]
 D["D_robustness"] = rob
 
 os.makedirs("reports", exist_ok=True)

@@ -8,7 +8,6 @@ selective prediction, consequence-stratified calibration). Three parts:
   (2) CONSEQUENCE-STRATIFIED CALIBRATION (human ClinVar, coding vs non-coding): Evo2's competence is
       class-heterogeneous (high on coding, low on non-coding), so a single global calibrator is mis-
       specified. Does a coding-conditional calibrator beat the global one, especially on non-coding?
-      -> the positive-method hook.
 
   (3) SELECTIVE PREDICTION (pooled atlas): risk-coverage -- abstaining on low-confidence
       calls trades coverage for accuracy.

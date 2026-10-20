@@ -1,11 +1,11 @@
-"""GATE follow-up: is the positive-class-FNR certificate (Idea 2) a valid OBJECT at ClinVar scale?
+"""Is the positive-class-FNR certificate of build_crc_certificate.py a valid OBJECT at ClinVar scale?
 
 Two tests on n~1.6M ClinVar (labels exist, so we can actually validate):
   (1) IN-DISTRIBUTION: calibrate lambda on a random half, test achieved FNR + benign-call rate on the
       other half. If it holds AND is non-trivial, the certificate is a valid new object at scale.
   (2) TRANSPORT under a real covariate shift: calibrate lambda on CODING variants, test on NONCODING.
       Does the missed-positive guarantee survive a within-human distribution shift?
-The naive cross-species gate is build_crc_certificate.py.
+The cross-species transport of the same certificate is build_crc_certificate.py.
   python src/ccs/build_crc_clinvar.py   -> logs/crc_clinvar.md
 """
 import glob, os, json
@@ -41,7 +41,7 @@ def main():
     coding = df["ref_region_CDS"].cast(pl.Boolean, strict=False).fill_null(False).to_numpy()
     rng = np.random.default_rng(0); half = rng.random(len(y)) < 0.5
 
-    lines = ["# GATE follow-up - positive-class-FNR certificate at ClinVar scale (n~1.6M, labels exist)", ""]
+    lines = ["# Positive-class FNR certificate at ClinVar scale (conformal risk control; n~1.6M, labels exist)", ""]
     id_ok = 0; id_tot = 0; tr_ok = 0; tr_tot = 0; id_strict = 0; tr_strict = 0
     for name, col in SCORES.items():
         s = df.select(pl.col(col).cast(pl.Float64, strict=False))[col]
@@ -74,16 +74,13 @@ def main():
               f"{tr_strict}/{tr_tot} strictly.",
               "",
               ("**OBJECT VALID at scale** - the positive-class-FNR certificate holds and is informative in-distribution on "
-               "ClinVar, and (partly) survives the coding->noncoding shift. So Conformal Risk Control for missed-"
-               "pathogenics IS a legitimate new guarantee object when the target has SOME labels or is exchangeable. "
-               "The genuinely HARD/open part is transport to a ZERO-label species (naive cross-species gate failed) - "
-               "that needs the weighted correction and may be fundamentally limited. HONEST FRAMING for the paper: lead "
-               "the FNR certificate on ClinVar/label-rich settings; present zero-label transport as coverage (which "
-               "works) + FNR-under-stated-assumptions, not as a universal free lunch."
+               "ClinVar, and (partly) survives the coding->noncoding shift. Conformal Risk Control of the missed-"
+               "positive rate is therefore a valid guarantee object when the target has labels or is exchangeable "
+               "with the calibration data. Transport to a ZERO-label species is the separate test of "
+               "build_crc_certificate.py (logs/crc_certificate.md), where the transported certificate does not "
+               "hold at a strict alpha."
                if id_ok >= 0.7 * id_tot else
-               "**OBJECT WEAK even in-distribution** - even with labels the certificate is vacuous/uninformative; the "
-               "theorem does not carry the paper; report the strong calibration and "
-               "conformal+ClinVar paper as-is.")]
+               "**OBJECT WEAK even in-distribution** - even with labels the certificate is vacuous or uninformative.")]
     os.makedirs("logs", exist_ok=True)
     open("logs/crc_clinvar.md", "w", encoding="utf-8").write("\n".join(lines) + "\n")
     print("\n".join(lines))

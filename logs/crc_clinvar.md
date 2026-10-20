@@ -1,4 +1,4 @@
-# GATE follow-up - pathogenic-FNR certificate at ClinVar scale (n~1.6M, labels exist)
+# Positive-class FNR certificate at ClinVar scale (conformal risk control; n~1.6M, labels exist)
 
 ## Evo2-EVEE probe (n=1,599,200)
 | alpha | test (in-dist) FNR | benign-rate | holds? | coding->noncoding FNR | benign-rate | holds? |
@@ -24,4 +24,4 @@
 ## VERDICT
 In-distribution: guarantee held in 9/9 (score x alpha) cases with non-trivial benign-rates within the tolerance (FNR <= alpha + 0.02), 7/9 strictly (CADD at alpha = 0.05 and 0.2). Coding->noncoding transport: held in 9/9 within the tolerance (FNR <= alpha + 0.03), 9/9 strictly.
 
-**OBJECT VALID at scale** - the pathogenic-FNR certificate holds and is informative in-distribution on ClinVar, and (partly) survives the coding->noncoding shift. So Conformal Risk Control for missed-pathogenics IS a legitimate new guarantee object when the target has SOME labels or is exchangeable. The genuinely HARD/open part is transport to a ZERO-label species (naive cross-species gate failed) - that needs the weighted correction and may be fundamentally limited. HONEST FRAMING for the paper: lead the FNR certificate on ClinVar/label-rich settings; present zero-label transport as coverage (which works) + FNR-under-stated-assumptions, not as a universal free lunch.
+**OBJECT VALID at scale** - the positive-class-FNR certificate holds and is informative in-distribution on ClinVar, and (partly) survives the coding->noncoding shift. Conformal Risk Control of the missed-positive rate is therefore a valid guarantee object when the target has labels or is exchangeable with the calibration data. Transport to a ZERO-label species is the separate test of build_crc_certificate.py (logs/crc_certificate.md), where the transported certificate does not hold at a strict alpha.

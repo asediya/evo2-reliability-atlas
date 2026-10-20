@@ -1,15 +1,15 @@
 """Build the eQTL harness/context ABLATION panels.
 
-Critique #2: the 1001-bp window + single-position left-context readout (both set by GPU memory)
-could MANUFACTURE the regulatory blind spot — Evo2-40B is at chance on causal cis-eQTLs (AUROC 0.496)
-under that harness. This re-extracts the eQTL panel at LARGER windows so we can re-score with
-(a) more context and (b) the field-standard full-window mean-LL readout, and test whether the
-near-chance regulatory result SURVIVES a better harness.
+The 1001-bp window + single-position left-context readout (both set by GPU memory) could
+MANUFACTURE the regulatory blind spot — Evo2-40B is at chance on candidate causal cis-eQTLs (AUROC
+0.496) under that harness. This re-extracts the eQTL panel at LARGER windows so we can re-score with
+(a) more context and (b) the reference-implementation full-window mean-LL readout, and test whether
+the near-chance regulatory result SURVIVES a better harness.
 
 Read:
   - if eQTL AUROC stays ~0.5 across 1002 -> 4096 bp and single-pos -> mean-LL  => blind spot is REAL
-    (a model property, not our harness) -> the critique is answered and the centerpiece is stronger.
-  - if AUROC rises with a better harness => the blind spot was partly a scoring artifact -> re-scope.
+    (a model property, not our harness).
+  - if AUROC rises with a better harness => the blind spot is partly a scoring artifact.
 
 Deterministic stratified sample: 1000 causal (label=1, PIP>=0.9) + 1000 non-causal (label=0), taken by
 variant_id sort (reproducible). Windows re-extracted from the pig genome (Sscrofa11.1) at W in

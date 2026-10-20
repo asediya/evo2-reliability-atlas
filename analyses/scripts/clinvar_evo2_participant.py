@@ -12,7 +12,7 @@ asymmetry:
 
 2. **The consequence gradient at usable n.** The paper's regulatory rung carries 18 variants and a
    minimum detectable difference of 0.28. Here each rung carries 54-250 positives, so a rung that
-   fails now fails on evidence.
+   fails, fails on evidence.
 
 3. **The reference-likelihood confound on the human panel.** MLL(ref) alone is scored here, so the
    confound tested on the animal panel can be re-tested where the labels are densest.
@@ -165,9 +165,9 @@ def main():
     print("    corr(delta, ref)    %+.4f" % np.corrcoef(delta, ref)[0, 1])
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
-    # Keep every rung that has been scored, keyed by checkpoint, with the newest also at the top
-    # level so readers expecting the single-rung shape still work. Writing only the newest rung would
-    # silently replace the 1B numbers the manuscript quotes the moment the 7B run finished -- an
+    # Keep every rung that has been scored, keyed by checkpoint, with the last-scored also at the top
+    # level so readers expecting the single-rung shape still work. Writing only the last-scored rung
+    # would silently replace the 1B numbers the manuscript quotes once a 7B run finishes -- an
     # overwritten-artefact failure.
     merged = {}
     if os.path.exists(OUT):

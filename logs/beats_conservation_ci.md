@@ -1,4 +1,4 @@
-# STEP 2 - does Evo2-40B beat conservation (GERP)? One-sided bootstrap p + BH-FDR across 9 species
+# Does Evo2-40B beat conservation (GERP)? One-sided bootstrap p + BH-FDR across 9 species
 
 Baseline = GERP (sole conservation baseline; the byte-identical phyloP copies of GERP are not used). The atlas statistic `p_40b_gt_cons` is the bootstrap fraction P(delta>0); we convert it to a one-sided p-value  p = 1 - P(delta>0)  and apply Benjamini-Hochberg at q<=0.05.
 
@@ -18,4 +18,4 @@ AUROC Evo2, n and pos are the full panel's; AUROC GERP, Δ and P(Δ>0) are on th
 
 **FDR-corrected result: 2/9 species beat GERP after Benjamini-Hochberg (q<=0.05): goat, cattle.** Both survivors are floor-limited (P(Δ>0)=1.000 -> one-sided p=0.000).
 
-**Honest reading:** the bootstrap P(Δ>0) is NOT a p-value and was uncorrected for 9 simultaneous tests. Once converted to a proper one-sided p-value and BH-corrected, only the two species whose bootstrap never once favored conservation survive; every borderline win (chicken +0.137 at raw p=0.028, and all smaller margins) is not significant after FDR. The atlas's headline contribution is the CALIBRATION / trust-layer transfer, not a raw-accuracy win over conservation.
+**Reading:** the bootstrap P(Δ>0) is NOT a p-value and is uncorrected for 9 simultaneous tests. Once converted to a proper one-sided p-value and BH-corrected, only the two species whose bootstrap never once favored conservation survive; every borderline win (chicken +0.137 at raw p=0.028, and all smaller margins) is not significant after FDR. This test is at the 1,001-bp readout and resamples variants; with positive-bearing loci resampled, as for Table 2, cattle's lead alone survives (Additional file 1, Figure S7).

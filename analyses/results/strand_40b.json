@@ -27,15 +27,18 @@
   "ladder": {
     "1B": {
       "pearson": 0.577,
-      "shift": 0.018
+      "shift": 0.018,
+      "basis": "389 variants, 1,002-bp windows; shift = |AUROC forward - AUROC strand-averaged|"
     },
     "7B": {
       "pearson": 0.442,
-      "shift": 0.028
+      "shift": 0.028,
+      "basis": "389 variants, 1,002-bp windows; shift = |AUROC forward - AUROC strand-averaged|"
     },
     "40B": {
       "pearson": 0.7122883704253777,
-      "shift": 0.007883304621376652
+      "shift": 0.007883304621376652,
+      "basis": "327 variants, 8,192-bp windows; shift = |AUROC forward - AUROC reverse complement|"
     }
   },
   "trend_continues": false,

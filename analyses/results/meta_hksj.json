@@ -1,7 +1,7 @@
 {
  "_generated_by": "analyses/scripts/meta_analysis.py",
  "_method": "Random-effects meta-analysis. tau^2 by REML (DerSimonian-Laird reported alongside). Interval by Hartung-Knapp-Sidik-Jonkman with Röver's modification (never narrower than the classic random-effects interval). Prediction interval by Higgins-Thompson-Spiegelhalter.",
- "_why": "The manuscript concedes that its nine-cluster percentile bootstrap undercovers. This replaces it with the standard small-k treatment and adds two quantities the bootstrap cannot give: explicit heterogeneity, and an interval for a species not in the panel.",
+ "_why": "A nine-cluster percentile bootstrap undercovers. This gives the standard small-k treatment, which adds two quantities the bootstrap cannot give: explicit heterogeneity, and an interval for a species not in the panel.",
  "_citations": [
   "10.1186/1471-2288-14-25",
   "10.1186/s12874-015-0091-1",

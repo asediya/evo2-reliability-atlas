@@ -203,7 +203,7 @@
   "n_identified_8192": 7,
   "n_identified_8192_monotone": 9,
   "n_identified_1001_in_evo2_favour": 3,
-  "_identification_count_to_quote": "n_identified_8192 below compares a full-panel GERP bound against an Evo 2 point estimate on the co-scorable subset, and reads 7. The manuscript quotes 6, from manski_like_for_like.json, which puts both sides on the full panel. Quote 6."
+  "_identification_count_to_quote": "n_identified_8192 above compares a full-panel GERP bound against an Evo 2 point estimate on the co-scorable subset, and reads 7. The manuscript's count, 6, is from manski_like_for_like.json, which puts both sides on the full panel."
  },
  "clinvar_panel": {
   "scorers": {

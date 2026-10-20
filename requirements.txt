@@ -1,8 +1,8 @@
 # Python 3.12.10
 # NOT DIRECTLY INSTALLABLE, and not meant to be: see the note at the foot of this file.
 # Generated from the imports of the tracked source. These versions RECORD the environment
-# that produced every published number; they are not a floor the analysis requires. A later run
-# reproduced the table builder under Python 3.11.15 with numpy
+# that produced every published number; they are not a floor the analysis requires. The table
+# builder also reproduces under Python 3.11.15 with numpy
 # 2.4.6 and pandas 2.3.3, so read the pins as provenance rather than as a constraint.
 # analyses/scripts/build_piggtex_maf.py and maf_stratified_auroc.py ran under Python 3.13.13 with numpy
 # 2.5.2, pandas 3.0.5, scipy 1.18.0 and pyarrow 25.0.1.

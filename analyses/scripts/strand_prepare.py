@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""A2 step 1 — build the smallest panel that can answer the reverse-complement question.
+"""Build the smallest panel that can answer the reverse-complement question.
 
-The objection: a genome has no preferred strand, so a score that changes when you flip the window
+The concern: a genome has no preferred strand, so a score that changes when you flip the window
 is measuring the model's strand bias rather than the variant. The paper's 1,001-bp comparison is a
 near-tie with a margin of **+0.0024**, so if strand-flipping moves scores by more than that, the
 near-tie is noise.

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""A2 step 2 — does reverse-complement averaging move the score enough to matter?
+"""Does reverse-complement averaging move the score enough to matter?
 
 A genome has no preferred strand. If a model scores a window differently from its reverse
 complement, part of what it reports is strand bias rather than variant effect. The paper's

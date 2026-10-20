@@ -872,22 +872,29 @@
    "pooled_cost": {
     "A": 0.5921832884097035,
     "B": 0.6422282120395328,
-    "C": 0.5403863432165319,
+    "C": 0.53607367475292,
+    "D": 0.5592991913746631,
     "abstain": 0.5
    },
    "abstention_rate": {
     "A": 0.0,
     "B": 0.5791554357592094,
-    "C": 0.703414195867026,
+    "C": 0.7125786163522012,
+    "D": 0.0,
     "abstain": 1.0
    },
    "macro_cost": {
     "A": 0.44670854703439744,
     "B": 0.5049459413491267,
-    "C": 0.48913544378798357,
+    "C": 0.486556462485598,
+    "D": 0.40236410506211384,
     "abstain": 0.5
    },
    "policy_A_calls_pathogenic": 0.319047619047619,
+   "policy_C_abstentions": {
+    "two_label_sets": 0.7125786163522012,
+    "empty_sets": 0.0
+   },
    "policy_C_split_seeds_0_99": {
     "pooled_median": 0.5403863432165319,
     "pooled_min": 0.53607367475292,
@@ -901,58 +908,72 @@
    "pooled_cost": {
     "A": 1.9500405076964624,
     "B": 0.1409667836889009,
-    "C": 0.14006661265640472,
+    "C": 0.14105680079215052,
+    "D": 0.1471779638131245,
     "abstain": 0.5
    },
    "abstention_rate": {
     "A": 0.0,
     "B": 0.04914933837429111,
-    "C": 0.07111351156719777,
+    "C": 0.06949320370870465,
+    "D": 0.0,
     "abstain": 1.0
    },
    "macro_cost": {
     "A": 1.2469402581226392,
     "B": 0.19133804815779373,
-    "C": 0.16972197288759475,
+    "C": 0.17176941007654137,
+    "D": 0.20522025616203418,
     "abstain": 0.5
    },
    "policy_A_calls_pathogenic": 0.00666126564047169,
+   "policy_C_abstentions": {
+    "two_label_sets": 0.0,
+    "empty_sets": 0.06949320370870465
+   },
    "policy_C_split_seeds_0_99": {
-    "pooled_median": 0.13961652714015663,
-    "pooled_min": 0.13795121073003871,
-    "pooled_max": 0.14213700603114593,
-    "macro_median": 0.1694993945400164,
-    "macro_min": 0.1663108466472527,
-    "macro_max": 0.17266434513399825
+    "pooled_median": 0.1415969034116482,
+    "pooled_min": 0.13939148438203258,
+    "pooled_max": 0.14447745071563597,
+    "macro_median": 0.1723655608728818,
+    "macro_min": 0.16923213275856364,
+    "macro_max": 0.19424596134210675
    }
   },
   "readout_8192_deposited_posterior": {
    "pooled_cost": {
     "A": 1.9500405076964624,
     "B": 0.14380232244126384,
-    "C": 0.1414618777567738,
+    "C": 0.1446574849221352,
+    "D": 0.14636780988387793,
     "abstain": 0.5
    },
    "abstention_rate": {
     "A": 0.0,
     "B": 0.06382212620397876,
-    "C": 0.07516428121343055,
+    "C": 0.06787289585021154,
+    "D": 0.0,
     "abstain": 1.0
    },
    "macro_cost": {
     "A": 1.2469402581226392,
     "B": 0.1943442959169441,
-    "C": 0.17071603224811732,
+    "C": 0.19486613940239733,
+    "D": 0.204827762124533,
     "abstain": 0.5
    },
    "policy_A_calls_pathogenic": 0.00666126564047169,
+   "policy_C_abstentions": {
+    "two_label_sets": 0.0,
+    "empty_sets": 0.06787289585021154
+   },
    "policy_C_split_seeds_0_99": {
-    "pooled_median": 0.14240705734089476,
-    "pooled_min": 0.14020163831127913,
-    "pooled_max": 0.14551264740300657,
-    "macro_median": 0.17463556743243858,
-    "macro_min": 0.1696963936648752,
-    "macro_max": 0.1959050600413118
+    "pooled_median": 0.1446574849221352,
+    "pooled_min": 0.14240705734089476,
+    "pooled_max": 0.14609775857412907,
+    "macro_median": 0.1944525348725116,
+    "macro_min": 0.17463556743243858,
+    "macro_max": 0.2037245998649202
    }
   }
  },
@@ -1217,8 +1238,14 @@
   },
   {
    "value": "8,192 bp, >=50-positive donors: pooled cost of policies B and C",
-   "published": "0.141 and 0.140",
-   "recomputed": "0.141 and 0.140",
+   "published": "0.141 each",
+   "recomputed": "0.141 each",
+   "agree": true
+  },
+  {
+   "value": "8,192 bp, deposited posterior: reject option against a cost-aware threshold that never abstains",
+   "published": "0.144 per variant against 0.146",
+   "recomputed": "0.144 per variant against 0.146",
    "agree": true
   },
   {
@@ -1252,7 +1279,7 @@
    "agree": true
   }
  ],
- "published_values_agree": 14,
- "published_values": 14,
+ "published_values_agree": 15,
+ "published_values": 15,
  "all_agree": true
 }

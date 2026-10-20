@@ -5,9 +5,10 @@ calibrate it is to fit the map on other, labelled groups and apply it unchanged 
 out. :func:`leave_one_group_out` returns the out-of-group calibrated probabilities together with a
 per-group report, so the transfer can be judged group by group rather than pooled.
 
-The paper's finding, carried here as a caution rather than a feature: a transferred *probability* is
-no better than a single global two-parameter sigmoid, so the value of the trust layer is the
-selective-prediction ordering, not the transferred probability. This module makes the transfer easy
+The paper's finding, carried here as a caution rather than a feature: at the single-token readout a
+transferred *probability* is no better than one global sigmoid; at the 8,192-bp readout, the arm this
+package reproduces, isotonic transfer lowers macro ECE by 0.007. The value of the trust layer lies in
+the selective-prediction ordering more than in the transferred probability. This module makes the transfer easy
 to run and easy to check; it does not claim the probability transfers well.
 """
 from __future__ import annotations

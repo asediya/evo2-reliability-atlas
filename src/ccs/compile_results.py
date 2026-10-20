@@ -1,5 +1,5 @@
-"""Compile ALL paper results into one place: the definitive field-standard (8192-bp mean-LL) numbers
-from the cloud run + the consequence-stratified ClinVar calibration (now unblocked), with bootstrap CIs.
+"""Compile ALL paper results into one place: the reference-implementation (8192-bp mean-LL) numbers
+from the cloud run + the consequence-stratified ClinVar calibration, with bootstrap CIs.
 Writes reports/compiled_results.parquet + prints the full ledger.
 
   python src/ccs/compile_results.py --jobs 50 --nboot 20000
@@ -72,7 +72,7 @@ def main():
     rows = []
     t0 = time.time()
 
-    print("=" * 74 + "\n(1) ATLAS @ 8192-bp mean-LL (FIELD STANDARD) -- Evo2-40B, per species\n" + "=" * 74, flush=True)
+    print("=" * 74 + "\n(1) ATLAS @ 8192-bp mean-LL (REFERENCE IMPLEMENTATION) -- Evo2-40B, per species\n" + "=" * 74, flush=True)
     py, ps = [], []
     for sp in SP:
         d = load_scored(f"{D}/atlas8192_{sp}_meanll_8192.parquet", f"data/interim/atlas8192/{sp}_windows_8192.parquet")

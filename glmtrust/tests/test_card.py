@@ -105,7 +105,7 @@ def test_clean_banner_claims_only_what_was_tested():
     y, s = _clean_panel()
     doc = render_card(audit(y, [Scorer("a", s, readout="r")], n_boot=40))
     assert "verdict clean" in doc
-    # the old wording asserted a comparable share of both classes unconditionally
+    # an unconditional claim of a comparable share of both classes would assert an untested absence
     assert "Every scorer reaches a comparable share" not in doc
     assert "materiality thresholds" in doc
 

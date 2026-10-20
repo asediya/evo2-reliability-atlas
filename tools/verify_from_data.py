@@ -235,7 +235,8 @@ def sec_brca1():
     lab = "data/interim/brca1_labels.parquet"
     sc = "data/processed/scores_cloud/brca1_evo2_40b_meanll_8192.parquet"
     if not (os.path.exists(lab) and os.path.exists(sc)):
-        RESULTS.append((None, "brca1", "score/label file absent", None, None, "raw"))
+        RESULTS.append((None, "brca1", "input absent: %s" % " and ".join(p for p in (lab, sc) if not os.path.exists(p)),
+                        None, None, "raw"))
         return
     j = pl.read_parquet(lab).join(pl.read_parquet(sc), on="variant_id", how="inner")
     s = -j["evo2_meanll_delta"].to_numpy().astype(float)
@@ -358,7 +359,7 @@ def sec_trust():
 def sec_human():
     """Every number the human reach section states, re-derived from the panel itself.
 
-    These are the newest claims in the paper and were the only ones no keyed check covered. The
+    No other keyed check covers these claims. The
     quantities are recomputed from the panel parquet rather than read back out of the audit JSON,
     so a defect in the auditor cannot certify itself; only the panel and its labels are taken as
     given. Where a value can only come from a JSON (the pairwise sweep, the whole-panel arm) that
@@ -366,7 +367,7 @@ def sec_human():
     """
     panel = "data/processed/dbnsfp_panel.parquet"
     if not os.path.exists(panel):
-        check("human", "dbnsfp panel present", None, None)
+        check("human", "input absent: %s" % panel, None, None)
         return
     # The audit evaluates at >= 1 review star, and the panel parquet holds every star level. Reading
     # it unfiltered gives 352,907 rows, which is a different panel from the one the paper reports.
@@ -397,7 +398,7 @@ def sec_human():
     got = {}
     for name, col in (("CADD", "CADD_raw_rankscore"), ("REVEL", "REVEL_rankscore")):
         if col not in d.columns:
-            check("human", "%s column present" % name, None, None)
+            check("human", "column absent from %s: %s" % (panel, col), None, None)
             continue
         s = d[col].to_numpy().astype(float)
         fin = np.isfinite(s)
@@ -507,15 +508,18 @@ def sec_human():
 
 
 def sec_table1():
-    """Table 2 as PRINTED, parsed out of the manuscript and checked against the recompute layer.
+    """Table 2 as PRINTED, parsed out of a Markdown export of the manuscript and checked against the
+    recompute layer.
 
-    Table 2 is hand-maintained markdown, not generated; this section ties its cells to the artifacts.
+    The export, reports/manuscript.md, is not shipped (the manuscript is a .docx), so from this archive
+    the section is skipped and names that path. Table 2's cells are typed, not generated; this section
+    ties them to the artifacts.
     Its 8,192-bp AUROC column lets the reader reconcile it with the Abstract's
     macro 0.943.
     """
     ms = "reports/manuscript.md"
     if not os.path.exists(ms):
-        check("table1", "manuscript present", None, None)
+        check("table1", "input absent: %s (a Markdown export of the manuscript, not shipped)" % ms, None, None)
         return
     txt = io.open(ms, encoding="utf-8").read()
     start = txt.index("| Species | N (positives)")
@@ -523,7 +527,7 @@ def sec_table1():
     f2 = jload("reports/fig2_data.json")
     fp = jload("reports/readout_effect_fullpanel.json")
     if not f2 or not fp:
-        check("table1", "recompute layer present", None, None)
+        check("table1", "input absent: reports/fig2_data.json or reports/readout_effect_fullpanel.json", None, None)
         return
     F = {r["species"]: r for r in f2["forest"]}
 
@@ -587,7 +591,7 @@ def sec_matched():
     """
     cm = jload("reports/conservation_matched.json")
     if not cm:
-        check("matched", "conservation_matched.json present", None, None)
+        check("matched", "input absent: reports/conservation_matched.json", None, None)
         return
     per = {r["species"]: r for r in cm["per_species"]}
     # goat is excluded by design (fewer than ten GERP-scorable positives), hence eight not nine

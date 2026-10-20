@@ -1,8 +1,8 @@
-# ARM 1 - trust layer on EXPERIMENTAL fitness (ProteinGym DMS + ESM-2, no-wet-lab attack)
+# Trust layer on EXPERIMENTAL fitness (ProteinGym DMS + ESM-2)
 
 644,387 single mutants scored with ESM-2-150M (wt-marginal LLR); 197 assays with >=15/class. Leave-one-ASSAY-out isotonic calibration transport across proteins; labels are REAL deep-mutational-scan measurements (DMS_score_bin), not clinical curation.
 
-**Result:** median across 197 held-out assays - zero-shot AUROC 0.744; calibration transport cuts ECE 0.141 -> 0.139 on EXPERIMENTAL labels; beats no-calibration on 116/197 assays. The trust layer transports across PROTEINS on wet-lab-grade fitness data, on a protein FM (ESM-2) - a cross-modality backbone AND the strongest available substitute for the no-new-experiments liability.
+**Result:** median across 197 held-out assays - zero-shot AUROC 0.744; calibration transport cuts ECE 0.141 -> 0.139 on EXPERIMENTAL labels; beats no-calibration on 116/197 assays. On wet-lab-grade fitness data and a protein FM (ESM-2), a cross-modality backbone, the transport neither helps nor harms calibration much.
 
 | held-out assay | n | pos | AUROC | ECE none | ECE transfer |
 |---|---|---|---|---|---|

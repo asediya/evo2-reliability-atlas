@@ -1,4 +1,4 @@
-"""C2: score the human positives against a larger ClinVar Benign/Likely_benign sample.
+"""Score the human positives against a larger ClinVar Benign/Likely_benign sample.
 
 The atlas human arm uses a matched 1,500-variant ClinVar Benign/Likely_benign sample; the calibration
 panel holds a larger and differently composed B/LB set. Rescoring the human arm against that set

@@ -1,11 +1,11 @@
 import sys
-"""Idea 1: escape the disease-label ceiling using PURIFYING SELECTION as genome-scale, label-free
+"""Escape the disease-label ceiling using PURIFYING SELECTION as genome-scale, label-free
 ground truth. Stratified-sample variants across the site-frequency spectrum from the ~7,400-sample
 population panel (data/interim/geno_pgen/*.afreq, 44.5M variants). If Evo2 is real, its predicted
 deleteriousness should RISE as allele frequency FALLS (rare = kept rare by selection = damaging).
 
 This step is CPU-only: sample the candidate variants, evenly across frequency bins, for later Evo2
-scoring (needs the GPU -> queued after the atlas). Output: selection_candidates.parquet.
+scoring (needs the GPU). Output: selection_candidates.parquet.
   python src/ccs/build_selection_panel.py --per-bin 6000
 """
 import argparse, glob, os, time
@@ -19,8 +19,10 @@ BINS = [("singleton", 0.0, 0.002), ("rare", 0.002, 0.01), ("low", 0.01, 0.05),
 
 
 def ev(m):
+    os.makedirs("logs/status", exist_ok=True)
     with open(EV, "a", encoding="utf-8") as f: f.write(f"[{time.strftime('%H:%M:%S')}] selection: {m}\n")
 def st(m):
+    os.makedirs("logs/status", exist_ok=True)
     with open(ST, "w") as f: f.write(m + "\n")
 
 

@@ -3,7 +3,7 @@
 All notable changes to `glmtrust` are recorded here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and the project aims to follow semantic versioning.
 
-## [0.1.1] - 2026-08-29
+## [0.1.1]
 
 The deposited package: the `audit`, `reach` and `baseline` commands, the `--card` report, `delong` and
 `--auto`, with the package, citation, documentation and runtime version metadata of the submitted deposit.
@@ -184,7 +184,7 @@ variant, and anything else is refused by name with the recoding to apply.
 - 247 tests, including tests that check the documentation matches the code and one for each input a
   stranger is likely to bring; `pytest --collect-only` reports 247, which is the number that ships.
 
-## [0.1.0] - 2026-07-24
+## [0.1.0]
 
 First release. Extracts the trust-layer methodology from the accompanying cross-species study into a
 tested, installable package.

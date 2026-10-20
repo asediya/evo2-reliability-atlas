@@ -5,7 +5,7 @@ Every rung here is scored by `src/ccs/score_evo2_40b_local.py` on the same 1,001
 readout, the panel and the window length are held fixed and only the checkpoint moves. That is the
 whole point: the deposited 1B and 7B scores for these panels come from the BioNeMo window-sum
 scorer, so reading them against a streamed 40B number would move capacity and readout together --
-the confound Note S38 avoids for the strand ladder by holding panel and window fixed.
+the confound that Note S38 limits for the strand ladder by holding panel and window fixed.
 
 One difference between rungs is NOT capacity and the table says so per row. Evo 2 ships two lines:
 the 8k-trained checkpoints (`evo2_1b_base`, `evo2_7b_base`, `evo2_40b_base`) and the
@@ -48,7 +48,7 @@ PANELS = [
 
 
 def score_path(d, stem, ckpt):
-    """The 40B run predates the _sp_ naming, so it keeps its original file name."""
+    """The 40B score file is named <stem>_evo2_40b_scores.parquet; the 1B and 7B files carry _sp_."""
     if ckpt == "evo2_40b":
         return os.path.join(d, "%s_evo2_40b_scores.parquet" % stem)
     return os.path.join(d, "%s_evo2_%s_sp_scores.parquet" % (stem, ckpt.replace("evo2_", "")))

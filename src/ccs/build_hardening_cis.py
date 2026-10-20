@@ -1,6 +1,5 @@
-"""STEP 2 hardening (journal-agnostic): CONFIDENCE INTERVALS on the two headline tables.
+"""Variant-level CONFIDENCE INTERVALS on the two headline tables.
 
-Reviewer-proofing #1 across every venue: 'no CIs -> small-n cells read as pilots, not findings.'
 Adds nonparametric bootstrap 95% CIs to:
   (A) per-species zero-shot AUROC (atlas Table 2)      -- 2000x stratified resample
   (B) per-species TRANSFERRED ECE (calibration table)  -- isotonic fit on OTHER rich species (fixed),
@@ -90,7 +89,7 @@ def main():
                          auroc=round(auc, 3), auroc_ci=f"[{auc_lo}, {auc_hi}]" if auc_lo is not None else "n/a",
                          ece_transfer=e_tr, ece_ci=f"[{e_lo}, {e_hi}]" if e_lo is not None else "n/a"))
 
-    lines = ["# STEP 2 hardening - variant-level bootstrap 95% CIs (Evo2-40B; not the published locus-clustered intervals of Table 2)", "",
+    lines = ["# Variant-level bootstrap 95% CIs (Evo2-40B; not the published locus-clustered intervals of Table 2)", "",
              f"Nonparametric percentile bootstrap, {NBOOT}x, stratified by class. Transferred ECE uses an isotonic "
              "map fit on the OTHER label-rich species (leave-one-species-out), bootstrapping the target species.", "",
              "| species | n | pos | AUROC | AUROC 95% CI | ECE transfer | ECE 95% CI |",
@@ -99,10 +98,8 @@ def main():
         lines.append(f"| {r['species']} | {r['n']} | {r['pos']} | {r['auroc']} | {r['auroc_ci']} | {r['ece_transfer']} | {r['ece_ci']} |")
     # honest reading of small-n width
     poor = [r for r in rows if r["pos"] < RICH_MIN and r["auroc_ci"] != "n/a"]
-    lines += ["", "**Honest reading:** the label-poor species (goat/chicken/pig) carry WIDE AUROC CIs (small positive "
-              "counts) - we report point estimates with intervals rather than over-claiming per-species accuracy. The "
-              "calibration/trust-layer claims are made at the POOLED level and via the transferred-ECE reduction, which "
-              "is where the evidence is strong; per-species AUROC is contextual, not a headline."]
+    lines += ["", "**Reading:** the label-poor species (goat/chicken/pig) carry WIDE AUROC CIs (small positive "
+              "counts), so their point estimates are given with intervals rather than as per-species accuracy claims."]
     os.makedirs("logs", exist_ok=True)
     open("logs/hardening_cis.md", "w", encoding="utf-8").write("\n".join(lines) + "\n")
     pl.DataFrame(rows).write_parquet("data/processed/hardening_cis.parquet")

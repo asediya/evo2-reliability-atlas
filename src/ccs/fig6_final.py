@@ -726,62 +726,6 @@ def panel_c(ax):
     _check_under_diagonal(ax, _lines, MINPT)
 
 
-def panel_e(ax):
-    """SUPERSEDED — the contour version of the bat replication.
-
-    Deliberately the SAME encoding as panel a. A replication panel is supposed to look like the thing it
-    replicates: the reader's question is "does the anti-diagonal appear again?", and any other idiom
-    would make that comparison harder rather than easier. It is drawn at a quarter of the hero's size and
-    subordinated to it, so it reads as a repeat measurement, not a second finding.
-
-    PILOT GRADE, and the panel says so. Ten Myotis lucifugus samples cap AN at 20, so the frequency axis
-    carries only 32 distinct values and collapses to ~4 usable bins -- a property of the panel, not of
-    the scoring, and not fixable with more compute.
-    """
-    B = J["bat"]
-    sc = pl.read_parquet(ROOT / "data/processed/scores/bat_evo2_40b.parquet")
-    ca = pl.read_parquet(ROOT / "data/interim/bat_candidates.parquet")
-    j = sc.join(ca, on="variant_id", how="inner")
-    x = j["maf"].to_numpy().astype(float)
-    d = j["evo2_40b_neg"].to_numpy().astype(float)
-    ok = np.isfinite(x) & np.isfinite(d) & (x > 0)
-    lx, dd = np.log10(x[ok]), d[ok]
-
-    xe = np.unique(np.quantile(lx, np.linspace(0, 1, 6)))
-    ye = np.unique(np.quantile(dd, np.linspace(0, 1, 9)))
-    H, _, _ = np.histogram2d(lx, dd, bins=[xe, ye])
-    E = H.sum(1)[:, None] * H.sum(0)[None, :] / H.sum()
-    L = np.log2(np.where(H > 0, H, np.nan) / E)
-    nx, ny = H.shape
-    xc = (np.arange(nx) + 0.5) / nx
-    yc = (np.arange(ny) + 0.5) / ny
-    XX, YY = np.meshgrid(xc, yc, indexing="ij")
-    lim = float(np.nanmax(np.abs(L)))
-    cf = ax.contourf(XX, YY, L, levels=np.linspace(-lim, lim, 21), cmap=ENRICH, extend="both", zorder=2)
-    try:
-        cf.set_edgecolor("face")
-    except AttributeError:
-        for c in cf.collections:
-            c.set_edgecolor("face")
-
-    ax.set_xlim(xc[0], xc[-1]); ax.set_ylim(yc[0], yc[-1])
-    ax.set_xticks([0.0, 0.5, 1.0])
-    ax.set_xticklabels([f"{10 ** np.quantile(lx, t):.2f}" for t in [0, 0.5, 1.0]], fontsize=TICK - 1.2)
-    ax.set_yticks([0.0, 0.5, 1.0])
-    ax.set_yticklabels([f"{np.quantile(dd, t):+.1f}" for t in [0, 0.5, 1.0]], fontsize=TICK - 1.2)
-    ax.set_xlabel("minor allele frequency", fontsize=AXIS)
-    ax.set_ylabel("deleteriousness", fontsize=AXIS)
-    _spines(ax)
-    ax.text(0.04, 0.945, "rare · deleterious", transform=ax.transAxes, fontsize=FOOT - 1.0,
-            color=FAIL, fontweight="bold", ha="left", va="top")
-    ax.text(0.96, 0.055, "common · tolerated", transform=ax.transAxes, fontsize=FOOT - 1.0,
-            color=FAIL, ha="right", va="bottom")
-    lo_, hi_ = B["spearman_ci"]
-    ax.text(0.5, -0.26, f"ρ = {B['spearman_rho']:+.3f} [{lo_:+.3f}, {hi_:+.3f}]  ·  n = {B['n']:,}  ·  "
-                        f"PILOT: 10 samples, AN ≤ 20",
-            transform=ax.transAxes, fontsize=FOOT - 1.0, color=MUTED, ha="center", va="top")
-
-
 def hero_preview():
     """Panel a alone, at the width it will ship at, for eyeball review before the full compose."""
     H = 118.0
@@ -796,7 +740,7 @@ def hero_preview():
     fig.text(0.112, 0.030, textwrap.fill(
         f"ρ = {S['spearman_rho']:+.3f} [{lo:+.3f}, {hi:+.3f}], p = {S['spearman_p']:.0e}, "
         f"n = {S['n']:,}, cattle ARS-UCD1.2, scored with the block-streaming variant-delta harness at ~1 kb — "
-        f"NOT the 8192 bp mean-LL readout behind the atlas (Figure 9), which is worth +0.071 on its own. "
+        f"NOT the 8192 bp mean-LL readout behind the atlas (Figure 9), which is worth +0.065 by the species mean (+0.092 pooled) on its own. "
         f"The dependence is real but small: at most {2 ** lim:.2f}× over or under the independence "
         f"expectation. Normalising is what makes it visible — on the raw score axis the conditional "
         f"median moves 0.414 → 0.059, about 5% of the range the distribution spans.", width=150),
@@ -1007,8 +951,8 @@ def panel_e_lattice(ax):
                                            # takes a cross-hatch instead.
                                            lw=0, hatch="xxx", zorder=4))
             # No in-cell numerals. The bottom row's ten counts need 123 pt of advance in a 105 pt
-            # row, so they overprinted into one unreadable 34-digit run and the tenth was not drawn
-            # at all -- a collision the span-overlap check scores as clean because it fuses them
+            # row, so they would overprint into one unreadable 34-digit run and the tenth would not be
+            # drawn at all -- a collision the span-overlap check scores as clean because it fuses them
             # into a single span.
 
     ax.set_xticks(np.arange(len(macs)) + .5); ax.set_xticklabels(macs, fontsize=MINPT)

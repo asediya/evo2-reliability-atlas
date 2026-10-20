@@ -1,4 +1,4 @@
-# PLAN #1 — calibration method bake-off (is the transfer method-agnostic?)
+# Calibration method bake-off (is the transfer method-agnostic?)
 
 LOSO transfer swapping the calibrator; adaptive-ECE (debiased) per held-out species. Sources: ['sheep', 'horse', 'cat', 'cattle', 'dog', 'human']; label-poor targets: ['goat', 'chicken', 'pig'].
 
@@ -17,4 +17,4 @@ LOSO transfer swapping the calibrator; adaptive-ECE (debiased) per held-out spec
 **Median adaptive-ECE — isotonic 0.054 | Platt 0.047 | beta 0.049.**
 On label-poor TARGETS only — isotonic 0.056 | Platt 0.047 | beta 0.044.
 
-**VERDICT:** transfer holds across ALL THREE methods (median aECE spread only 0.007) — the result is not an isotonic-regression artefact. Best overall = **platt**; best on label-poor targets = **beta** (beta beats isotonic at small n as documented). Report isotonic as the headline with this bake-off as robustness.
+**VERDICT:** the three calibrators give similar transferred calibration error (median aECE spread 0.007), so the transferred ECE is not an isotonic-regression artefact. Lowest median overall = **platt**; lowest on label-poor targets = **beta** (beta beats isotonic at small n as documented).

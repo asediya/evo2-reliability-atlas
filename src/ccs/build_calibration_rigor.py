@@ -34,8 +34,10 @@ EV = "logs/status/events.log"; ST = "logs/status/calib_rigor.status"; MD = "logs
 
 
 def ev(m):
+    os.makedirs("logs/status", exist_ok=True)
     with open(EV, "a", encoding="utf-8") as f: f.write(f"[{time.strftime('%H:%M:%S')}] calib-rigor: {m}\n")
 def st(m):
+    os.makedirs("logs/status", exist_ok=True)
     with open(ST, "w", encoding="utf-8") as f: f.write(m + "\n")
 
 

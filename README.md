@@ -157,7 +157,8 @@ raw data tree, and where the guarantees stop.
 
 MIT, see [LICENSE](LICENSE). The data files are CC0 1.0 except the third-party parts that
 [LICENSING.md](LICENSING.md) lists file by file; among them, the PigGTEx fine-mapping probabilities and
-eQTL coordinates are under CC BY-NC 4.0.
+eQTL coordinates, and the sites (`variant_id` values) of the atlas's 360 pig negatives, which come from
+PigGTEx's genotype release, are under CC BY-NC 4.0.
 
 Species silhouettes are from [PhyloPic](https://www.phylopic.org); four are CC BY 4.0 and their
 contributors are credited in `assets/silhouettes/credits.json`. Evo 2 is developed by the Arc

@@ -1,4 +1,4 @@
-"""THE GATE TEST (Idea 2): a TRANSPORTED pathogenic-false-negative-rate certificate.
+"""A TRANSPORTED positive-class false-negative-rate certificate (conformal risk control).
 
 Changes the guarantee OBJECT from marginal coverage to a clinically meaningful one: control
 E[FNR on positives] <= alpha (bound the missed-positive rate), calibrate the decision
@@ -10,8 +10,8 @@ Decision rule: call PATHOGENIC if calibrated p >= lambda, else BENIGN. FNR = P(p
 monotone increasing in lambda -> CRC picks the LARGEST lambda whose calibration FNR (+ finite-sample
 correction) <= alpha, maximising the negative-call region subject to the missed-positive guarantee.
 
-If FNR_target ~ alpha (holds) AND benign-call fraction is substantial across zero-label targets, the
-transported certificate is REAL -> the theorem direction is worth pursuing further. CPU-only.
+The certificate transports if FNR_target ~ alpha (holds) AND the benign-call fraction stays
+substantial across zero-label targets. CPU-only.
   python src/ccs/build_crc_certificate.py   -> logs/crc_certificate.md
 """
 import os
@@ -64,7 +64,7 @@ def main():
         x, y = data[target]
         return iso.predict(x), y, pcal_pos
 
-    lines = ["# GATE TEST (Idea 2) - transported positive-class-FNR certificate", "",
+    lines = ["# Transported positive-class FNR certificate (conformal risk control)", "",
              "Control E[missed-positive rate] <= alpha; calibrate lambda on label-rich species via Conformal Risk "
              "Control; transport to each held-out species. VALID if achieved FNR <= alpha + 0.02 (a 0.02 tolerance "
              "on the nominal level; the strict count is in the verdict); NON-TRIVIAL if it still calls a real "
@@ -95,7 +95,7 @@ def main():
     strict = [(a, sp) for a, sp, _, _, _, _, s in tgt if s]
     nontrivial = sum(1 for _, _, ok, info, _, _, _ in tgt if ok and info)
     if not tgt:
-        # Both comparisons reduce to 0 >= 0.0 on an empty target set, so this would print "GATE PASS"
+        # Both comparisons reduce to 0 >= 0.0 on an empty target set, so this would print "PASS"
         # and exit 0 having evaluated nothing -- the opposite of the deposited note's verdict.
         # Exit 3 is this archive's "stopped at an undeposited path" convention.
         print("  RESULT: NO DATA -- 0 (alpha x zero-label-target) cases were evaluated, because")
@@ -103,19 +103,17 @@ def main():
         print("  reports/DATA_MANIFEST.md). Nothing was examined, so this is NOT a pass.")
         return 3
     passed = holds >= 0.7 * len(tgt) and nontrivial >= 0.5 * len(tgt)
-    lines += ["## GATE VERDICT",
+    lines += ["## VERDICT",
               f"Across {len(tgt)} (alpha x zero-label-target) cases: guarantee HELD in {holds}/{len(tgt)} within the "
               f"tolerance ({len(strict)}/{len(tgt)} strictly"
               + "".join(", %s at alpha = %s" % (sp, a) for a, sp in strict) + "), "
               f"and was NON-TRIVIAL (benign-rate>15%) in {nontrivial}/{len(tgt)}.",
               "",
-              (f"**GATE PASS** - the transported positive-class-FNR certificate holds and is non-trivial on zero-label "
-               "species. The new-guarantee-OBJECT direction is REAL: worth building the theorem, with a "
-               "realistic ceiling near 30-35%. Next: add the weighted/phylo-shift correction + the formal finite-sample proof."
+              ("**PASS** - the transported positive-class-FNR certificate holds and is non-trivial on zero-label "
+               "species."
                if passed else
-               "**GATE FAIL/WEAK** - the certificate is vacuous or does not transport non-trivially on OMIA (small n / "
-               "weak separation). Re-run the gate on the large-N ClinVar/ProteinGym data before concluding; if it fails "
-               "there too, the theorem does not carry the paper and the calibration result is what should be reported.")]
+               "**FAIL/WEAK** - the certificate is vacuous or does not transport non-trivially on OMIA (small n / "
+               "weak separation).")]
     os.makedirs("logs", exist_ok=True)
     open("logs/crc_certificate.md", "w", encoding="utf-8").write("\n".join(lines) + "\n")
     print("\n".join(lines))

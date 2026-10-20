@@ -1,12 +1,12 @@
 {
  "_generated_by": "analyses/scripts/review_round2_statistics.py",
- "_findings": [
-  "S7",
-  "S8",
-  "S10",
-  "S12"
+ "_sections": [
+  "multiplicity families",
+  "Monte Carlo error of B = 200 endpoints",
+  "out-of-sample choice of the 85% knee",
+  "clustering inflation of the random-effects pool"
  ],
- "S7_multiplicity_scope": {
+ "multiplicity_scope": {
   "_question": "which families of tests carry a multiplicity correction, and which do not",
   "corrected": {
    "per_species Evo 2 vs GERP, one-sided bootstrap tail mass": {
@@ -33,7 +33,7 @@
   "_note": "The uncorrected families are read as estimates with intervals, not as a search for significant members, except the four delta-ECE tests, where one of four clears zero and that one is quoted as bounding the effect. That asymmetry is the part a Methods declaration has to name.",
   "n_scorers_in_audit": 5
  },
- "S8_bootstrap_resolution": {
+ "bootstrap_resolution": {
   "deposited_B": 200,
   "panel_n": 1434335,
   "_question": "how much of the printed endpoint precision is Monte Carlo noise",
@@ -60,7 +60,7 @@
   "ratio_B200_over_B2000": 3.168322638798066,
   "_note": "The point estimates are exact functions of the panel and are unaffected. What B controls is the endpoint, and at this B the endpoint carries a Monte Carlo standard deviation of about 0.19 of the statistic's own standard error."
  },
- "S10_heldout_knee": {
+ "heldout_knee": {
   "_question": "how much of the 85% knee's benefit survives choosing it out of sample",
   "grid": [
    0.5,
@@ -154,7 +154,7 @@
   "n_heldout_species_with_reduction_at_or_below_zero": 0,
   "_note": "The in-sample figure picks each species' own best coverage on its own data and is the optimistic bound, not a competing estimate."
  },
- "S12_se_inflation": {
+ "se_inflation": {
   "_question": "does the headline pool survive the clustering penalty the human ClinVar missense panel shows",
   "_clinvar_missense_observed_inflation": 5.9,
   "_deposited_ci95_hksj": [

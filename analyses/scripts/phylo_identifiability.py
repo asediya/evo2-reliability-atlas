@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-"""C2 — settle the phylogeny dispute by measuring, not asserting.
+"""Measure, rather than assert, whether Pagel's lambda is estimable at nine tips.
 
-Additional file 1 says that "nine tips will not support a phylogenetic mixed model". A reviewer
-could dispute that and ask for intercept-only PGLS with an estimated Pagel's lambda. Rather
-than argue, this asks the empirical question: **at nine tips with this tree shape, is lambda
+Additional file 1 says that "nine tips will not support a phylogenetic mixed model". The
+alternative is intercept-only PGLS with an estimated Pagel's lambda, and this asks the empirical
+question: **at nine tips with this tree shape, is lambda
 estimable at all?**
 
 Two facts make the answer likely to be no, and both come from our own deposit:

@@ -15,6 +15,7 @@ import os
 import numpy as np
 import polars as pl
 from sklearn.isotonic import IsotonicRegression
+from sklearn.model_selection import StratifiedKFold
 
 WIN = {"goat": "goat_scoring_windows", "chicken": "chicken_scoring_windows",
        "pig": "pig_scoring_windows_real", "sheep": "sheep_scoring_windows",
@@ -107,13 +108,13 @@ def main():
         callP = (eP <= eB) & (eP <= C_AB); callB = (eB < eP) & (eB <= C_AB)
         decB[callP] = "P"; decB[callB] = "B"
         cB, aB = cost_of(decB, y)
-        # Policy C: calibrated + conformal {both} abstention (Mondrian, nominal 0.90) fit on rich pooled
-        # simple split: use pcal itself; abstain when neither class-set excludes it
-        from numpy import sort
+        # Policy C: calibrated + conformal {both} abstention (Mondrian, nominal 0.90). The two class quantiles are
+        # set on one half of a stratified 50/50 split of the pooled label-rich species (>= RICH_MIN positives)
+        # and applied unchanged to every species, the zero-label targets included.
         alpha = 0.10
-        # build conformal quantiles on a held-out half of the rich-pooled calibrated probs
-        idx = np.arange(len(y)); rng = np.random.default_rng(0); rng.shuffle(idx)
-        cut = len(idx) // 2; cal_i, te_i = idx[:cut], idx[cut:]
+        rich_rows = np.concatenate([np.arange(a, b) for s_, a, b in spans if s_ in rich])
+        (_, cal_pos), = list(StratifiedKFold(2, shuffle=True, random_state=0).split(rich_rows, y[rich_rows]))[:1]
+        cal_i = rich_rows[cal_pos]
         pc, yc = pcal[cal_i], y[cal_i]
         def qh(s):
             s = np.sort(s); k = int(np.ceil((len(s) + 1) * (1 - alpha))); return s[min(k, len(s)) - 1] if len(s) else 1.0
@@ -166,9 +167,9 @@ def main():
     lines += ["",
               "**Trivial-baseline reality check.** At the chosen cost matrix "
               f"(C_FN={C_FN}, C_FP={C_FP}, C_AB={C_AB}) the always-abstain floor is exactly C_AB = {C_AB:.3f}. NO learned "
-              "policy — for either backbone — beats it: the best calibrated cell (NT reject-option ~0.540, Evo2 conformal "
-              "~0.540) sits ABOVE 0.500. NT's 'low' cost is an artifact of abstaining on ~97% of variants, i.e. it "
-              "approaches the zero-information floor from above without reaching it. Under THIS cost matrix the honest "
+              "policy — for either backbone — beats it: the best calibrated cell (NT reject-option "
+              f"~{nt['B']:.3f}, Evo2 conformal ~{ev['C']:.3f}) sits ABOVE 0.500. NT's 'low' cost is an artifact of abstaining on ~97% of variants, i.e. it "
+              "approaches the zero-information floor from above without reaching it. Under this cost matrix the "
               "conclusion is that calibration+abstention does not add decision value — "
               "blanket abstention dominates. Answering only wins once deferral is made expensive relative to errors "
               "(two-action Bayes break-even C_AB ~ 0.56 for Evo2, ~1.13 for NT) or the miss penalty is softened "

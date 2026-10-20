@@ -2,9 +2,8 @@
 """Deposit the four-class consequence gradient as a recompute artifact: reports/fig3_consequence.json
 
 The per-consequence AUROC gradient (nonsense -> missense -> splicing ->
-regulatory) is the in-panel evidence for the coding-to-regulatory decay, and it was the single
-largest verifiability gap in the submission: the values appeared in the Results with no deposited
-artifact behind them, because the producing scripts wrote to `logs/`, which is not part of the code
+regulatory) is the in-panel evidence for the coding-to-regulatory decay. This file deposits it as a
+recompute artefact, because the producing scripts write to `logs/`, which is not part of the code
 deposit.
 
 Estimator, stated explicitly so that no reader has to reverse-engineer it. For each consequence

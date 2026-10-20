@@ -9,8 +9,7 @@ guaranteed (under exchangeability) to contain the true label with prob >= 1-alph
 We report EMPIRICAL coverage vs nominal (1-alpha) on held-out species + set-size efficiency, for
 marginal AND Mondrian (class-conditional, robust to the ~10:1 imbalance) conformal.
 
-If cross-species coverage tracks 1-alpha, that's a guaranteed trust layer for a species with no labels —
-unclaimed for genomic FMs. CPU-only.
+The test is whether cross-species coverage tracks 1-alpha on a species with no labels. CPU-only.
   python src/ccs/build_conformal.py
 """
 import os, sys, time
@@ -31,8 +30,10 @@ EV = "logs/status/events.log"; ST = "logs/status/conformal.status"; MD = "logs/c
 
 
 def ev(m):
+    os.makedirs("logs/status", exist_ok=True)
     with open(EV, "a", encoding="utf-8") as f: f.write(f"[{time.strftime('%H:%M:%S')}] conformal: {m}\n")
 def st(m):
+    os.makedirs("logs/status", exist_ok=True)
     with open(ST, "w", encoding="utf-8") as f: f.write(m + "\n")
 
 
@@ -165,12 +166,12 @@ def main():
     ab = [r["abstain"] for r in tgt]
     sing = sum(r["singleton_marg"] * r["n"] for r in tgt) / nt
     pcm = [r["cov_path_marg"] for r in tgt]
-    lines += ["", f"**VERDICT:** cross-species conformal coverage {'tracks the nominal target' if ok else 'is approximate'} "
+    lines += ["", f"**VERDICT:** at the 1,001-bp readout, overall cross-species conformal coverage {'meets the nominal target' if ok else 'is approximate'} "
               f"on species with NO labels — Mondrian (class-conditional) holds {mean_cov_tgt:.2f} coverage under the ~10:1 imbalance, "
               f"but ONLY by abstaining on {100 * min(ab):.1f}-{100 * max(ab):.1f}% of target variants (it OVER-covers = conservative, not free). "
-              "The prediction SETS are interpretable: singleton = confident call, {both} = safe abstention. "
-              "HONEST FRAMING: coverage under a STATED, empirically-tested cross-species exchangeability assumption "
-              "— NOT a distribution-free finite-sample theorem (cross-species transport breaks exchangeability). "
+              "The prediction SETS are interpretable: singleton = confident call, {both} = abstention. "
+              "This coverage rests on a cross-species exchangeability assumption that cross-species transport "
+              "breaks, so it is NOT a distribution-free finite-sample guarantee. "
               f"No single predictor gives both {mean_cov_tgt:.2f} coverage AND {100 * sing:.1f}% singletons: the near-singleton (marginal) "
               f"construction drops positive-class coverage to {min(pcm):.3f}-{max(pcm):.3f}.",
               "", "Honest caveat: exchangeability across species is imperfect, so coverage is approximate/assumption-"

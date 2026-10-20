@@ -897,7 +897,7 @@
    {
     "window": 16384,
     "readout": "any",
-    "reason": "sequences built but never scored; Evo2 compute retired"
+    "reason": "sequences built but never scored"
    }
   ],
   "window_effect_fixed_readout": 0.0020000000000000018,

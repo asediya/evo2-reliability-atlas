@@ -1,9 +1,12 @@
 """Build a composition-matched labeled scoring set for pig, genome-only (no genotype pool).
 
+No reported panel uses this builder: the atlas's pig negatives come from build_pig_real_neg.py
+(pig_scoring_windows_real).
+
 Positives = genome-verified OMIA pig SNVs (ref_ok). Negatives = random genome sites whose
 reference trinucleotide context (pos-1,pos,pos+1) EXACTLY matches a positive's, with the
 positive's alt allele assigned — i.e. trinucleotide-context + substitution-type matched, the
-same composition control used in CP1. Removes the GC/mutation-rate shortcut.
+composition control the atlas's negatives use. GC is not matched.
 
 Output: pig_scoring_windows.parquet [variant_id, ref_seq, alt_seq, var_off, label]
 """

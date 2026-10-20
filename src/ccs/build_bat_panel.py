@@ -31,8 +31,10 @@ BINS = [("singleton", 1, 2), ("rare", 2, 4), ("low", 4, 7), ("common", 7, 11)]
 
 
 def ev(m):
+    os.makedirs("logs/status", exist_ok=True)
     with open(EV, "a", encoding="utf-8") as f: f.write(f"[{time.strftime('%H:%M:%S')}] bat-panel: {m}\n")
 def st(m):
+    os.makedirs("logs/status", exist_ok=True)
     with open(ST, "w", encoding="utf-8") as f: f.write(m + "\n")
 
 

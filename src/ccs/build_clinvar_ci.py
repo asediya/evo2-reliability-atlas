@@ -1,6 +1,6 @@
 """ClinVar calibration with bootstrap 95% CIs — parallelized across ALL CPU cores (genuine CPU load).
 
-Adds rigor to Idea 11: for each frozen VEP score on the n~1.6M ClinVar benchmark, bootstrap the
+Adds bootstrap intervals to the ClinVar calibration of build_clinvar_calibration.py: for each frozen VEP score on the n~1.6M ClinVar benchmark, bootstrap the
 raw-ECE, isotonic-calibrated-ECE, and AUROC (B resamples, each a full 4-fold isotonic CV) using every
 core via joblib. Reports point estimate + 95% CI so the 'layer collapses ECE' claim is statistically
 hardened at scale.
@@ -81,15 +81,18 @@ def main():
                          ece_cal=round(e_cal0, 4), ece_cal_ci=ci(ec)))
         print(f"  {name}: ECE raw {e_raw0:.3f} {ci(er)} -> cal {e_cal0:.4f} {ci(ec)}")
 
-    lines = ["# Idea 11 hardening - ClinVar calibration with bootstrap 95% CIs (n~1.6M, all-core parallel)", "",
+    lines = ["# ClinVar calibration with bootstrap 95% CIs (n~1.6M, all-core parallel)", "",
              f"B={B} stratified bootstraps per score (each a full 4-fold isotonic CV), parallelized across {ncores} cores.", "",
              "| VEP score | n | pos | AUROC [95% CI] | ECE raw [95% CI] | ECE calibrated [95% CI] |",
              "|---|---|---|---|---|---|"]
     for r in rows:
         lines.append(f"| {r['score']} | {r['n']:,} | {r['pos']:,} | {r['auroc']} {r['auroc_ci']} | "
                      f"{r['ece_raw']} {r['ece_raw_ci']} | **{r['ece_cal']}** {r['ece_cal_ci']} |")
-    lines += ["", "**Result:** every calibrated-ECE 95% CI sits far below its raw-ECE CI (non-overlapping) - the trust "
-              "layer's miscalibration collapse is statistically robust at ClinVar scale, not a point-estimate artifact."]
+    lines += ["", "**Result:** every calibrated-ECE 95% CI sits far below its raw-ECE CI (non-overlapping) - the "
+              "reduction in expected calibration error at ClinVar scale is not a point-estimate artefact. This is a "
+              "discrimination-versus-reliability dissociation, not evidence that calibration confers skill: the Evo "
+              "2-EVEE probe row above is circular against these labels (AUROC 0.997) and is excluded from every "
+              "model-agnostic claim."]
     os.makedirs("logs", exist_ok=True)
     open("logs/clinvar_ci.md", "w", encoding="utf-8").write("\n".join(lines) + "\n")
     print("\n".join(lines[-8:]))

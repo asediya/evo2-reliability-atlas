@@ -6,7 +6,7 @@
   "arXiv:1902.06977",
   "arXiv:1904.01685"
  ],
- "_why": "The supplement discloses that the ECE conclusion moves with the binning rule. That is published behaviour with a published fix. Reporting the spread as an identification issue, plus a debiased estimator with an interval, turns the most awkward note in the supplement into a contribution.",
+ "_why": "The ECE conclusion moves with the binning rule, which is published behaviour with a published fix. This reports the spread as an identification issue, with a debiased estimator and its interval.",
  "_estimands": "L1 ECE under six binning schemes, macro over species. Debiased L2 calibration error (Kumar 2019), macro over species. The two are different quantities and are not compared to each other.",
  "arms": {
   "isotonic_LOSO": {
@@ -161,6 +161,6 @@
   "max_abs_difference_from_platt_LOSO": 0.09923832587250642,
   "n_variants_differing": 11130,
   "n_variants": 11130,
-  "_note": "Reported so nobody repeats the mistake of reading this column as the trivial sigmoid the manuscript's null refers to."
+  "_note": "Reported so that this column is not read as the trivial sigmoid the manuscript's null refers to."
  }
 }

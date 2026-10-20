@@ -59,5 +59,6 @@ Use it when you have variant-effect scores from a genomic language model and nee
    nothing wrong.
 3. **No hidden optimism.** Conformal and selective thresholds are fitted on out-of-fold probabilities;
    `TrustLayer.evaluate` scores every variant with a model fitted without it.
-4. **State what does not transfer.** A transferred probability is not better than a global sigmoid; the
-   selective *ordering* is what survives a cross-species shift. The docs and docstrings say so.
+4. **State what does not transfer.** At the single-token readout a transferred probability is not better
+   than a global sigmoid, and at 8,192 bp it improves on one by 0.007 in macro ECE; the selective
+   *ordering* is what survives a cross-species shift. The docs and docstrings say so.

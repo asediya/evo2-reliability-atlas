@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
-"""C3 — report the whole risk-coverage curve instead of one hand-chosen operating point.
+"""Report the whole risk-coverage curve, not only one operating point.
 
-The manuscript's selective-prediction claim is quoted at 85% coverage, and it concedes that the
-85% knee "was located on the same pooled panel on which its benefit is then reported". Traub et al.
-(2024) catalogue that exact flaw. The standard object is the risk-coverage curve and its summary
+The selective-prediction result is quoted at 85% coverage, a knee located on the same pooled panel on
+which its benefit is then reported (Additional file 1, Note S36). Traub et al. (2024) describe that
+pattern. The standard object is the risk-coverage curve and its summary
 AURC; E-AURC (Geifman, Uziel & El-Yaniv 2019) subtracts the AURC an ideal confidence ranking would
 achieve at the same accuracy, so models with different error rates become comparable.
 
-Reporting the curve makes 85% a presentational detail rather than a fitted parameter, which
-removes the in-sample-selection objection at the root rather than patching it.
+Reporting the curve makes 85% a presentational detail rather than a fitted parameter.
 
 Definitions used here, stated because AURC has more than one convention in the wild:
 
@@ -77,9 +76,9 @@ def main():
                             "AURC_optimal": "r + (1-r)ln(1-r) at the same error rate r",
                             "E_AURC": "AURC - AURC_optimal; 0 = ideal confidence ordering"},
            "_citations": ["arXiv:2407.01032", "arXiv:1805.08206", "JMLR 11:1605"],
-           "_why": "The paper quotes selective prediction at one hand-chosen coverage, located "
-                   "on the panel it is then reported on. The curve makes that operating point a "
-                   "presentational choice rather than a fitted parameter."}
+           "_why": "The whole risk-coverage curve and its area, so that the 85% operating point, "
+                   "located on the panel it is reported on, reads as one point of the curve "
+                   "rather than as a fitted parameter."}
 
     conf = d["conf"].to_numpy().astype(float)
     corr = d["correct"].to_numpy().astype(float)

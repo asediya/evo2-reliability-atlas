@@ -19,10 +19,9 @@ def test_leave_one_group_out(grouped_data):
 def test_out_of_group_probs_are_not_self_fitted(grouped_data):
     """A group's probabilities must come from a map fitted on the OTHER groups only.
 
-    This test asserted finiteness and nothing else, and its own comment conceded it ("we can at
-    least check the values are produced"). A mutant that fitted the calibrator on the held-out
-    group -- the leak this function exists to prevent -- passed the whole suite. It is not a
-    no-op leak either: on the paper's own panel it moves capture by 0.068 and macro lift by 1.03,
+    Checking that the values are finite is not enough: a mutant that fits the calibrator on the
+    held-out group -- the leak this function exists to prevent -- produces finite values too. It
+    is not a no-op leak either: on the paper's own panel it moves capture by 0.068 and macro lift by 1.03,
     and drives macro ECE to 0.0000, which is what a leak looks like from the outside.
 
     So reconstruct the honest map per group and require equality.
@@ -59,8 +58,8 @@ def test_transfer_calibration_direction():
 def test_anti_predictive_group_is_reported_below_chance():
     """A group whose score runs the wrong way must be reported as such, not oriented upward.
 
-    The report used to return max(AUROC, 1-AUROC), so a score that was anti-predictive on a held-out
-    group came back looking good. That is the one case a user needs to be told about, and this paper
+    Returning max(AUROC, 1-AUROC) would make a score that is anti-predictive on a held-out group
+    look good. That is the one case a user needs to be told about, and this paper
     turns on telling 0.488 apart from 0.512.
     """
     rng = np.random.default_rng(0)

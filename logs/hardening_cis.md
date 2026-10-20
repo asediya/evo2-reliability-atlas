@@ -1,4 +1,4 @@
-# STEP 2 hardening - variant-level bootstrap 95% CIs (Evo2-40B; not the published locus-clustered intervals of Table 2)
+# Variant-level bootstrap 95% CIs (Evo2-40B; not the published locus-clustered intervals of Table 2)
 
 Nonparametric percentile bootstrap, 2000x, stratified by class. Transferred ECE uses an isotonic map fit on the OTHER label-rich species (leave-one-species-out), bootstrapping the target species.
 
@@ -14,4 +14,4 @@ Nonparametric percentile bootstrap, 2000x, stratified by class. Transferred ECE 
 | dog | 2497 | 227 | 0.888 | [0.857, 0.915] | 0.05 | [0.044, 0.057] |
 | human | 3000 | 1500 | 0.825 | [0.808, 0.841] | 0.117 | [0.107, 0.13] |
 
-**Honest reading:** the label-poor species (goat/chicken/pig) carry WIDE AUROC CIs (small positive counts) - we report point estimates with intervals rather than over-claiming per-species accuracy. The calibration/trust-layer claims are made at the POOLED level and via the transferred-ECE reduction, which is where the evidence is strong; per-species AUROC is contextual, not a headline.
+**Reading:** the label-poor species (goat/chicken/pig) carry WIDE AUROC CIs (small positive counts), so their point estimates are given with intervals rather than as per-species accuracy claims.

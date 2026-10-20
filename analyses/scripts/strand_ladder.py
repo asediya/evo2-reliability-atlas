@@ -117,11 +117,15 @@ def main():
            "_panel": "the 327-variant 8,192-bp panel, identical across rungs",
            "_margin_8192": MARGIN_8192, "_margin_1001": MARGIN_1001, "rungs": rungs}
     if len(order) >= 2:
+        # Pearson and Spearman are reported separately, with no single direction: they need not move
+        # together, and on this panel Pearson falls with capacity while Spearman rises and the
+        # strand-choice shift is flat (rungs[...]["strand_choice_shift"]).
         p_series = [rungs[o]["pearson"] for o in order]
-        res["monotone_worsening"] = bool(all(b < a for a, b in zip(p_series, p_series[1:])))
-        res["direction"] = ("worsens with capacity" if res["monotone_worsening"]
-                            else "not monotone in capacity")
-        print("\n  strand agreement %s" % res["direction"])
+        s_series = [rungs[o]["spearman"] for o in order]
+        res["pearson_monotone_worsening"] = bool(all(b < a for a, b in zip(p_series, p_series[1:])))
+        res["spearman_monotone_worsening"] = bool(all(b < a for a, b in zip(s_series, s_series[1:])))
+        print("\n  Pearson falls monotonically with capacity: %s; Spearman: %s"
+              % (res["pearson_monotone_worsening"], res["spearman_monotone_worsening"]))
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(res, f, indent=2)

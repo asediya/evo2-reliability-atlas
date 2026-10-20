@@ -3,9 +3,9 @@
 
 The central one is test_closed_form_matches_brute_force: the must-answer penalty is a closed form,
 and the only honest check of it is to enumerate every (positive, negative) pair under the
-uninformative-pair convention and confirm the arithmetic. An earlier attempt tried to validate it
-by filling unreachable variants with random draws and averaging AUROC; that measures the fill
-distribution, not the convention, because a random fill loses to a shifted positive far more often
+uninformative-pair convention and confirm the arithmetic. Filling unreachable variants with random
+draws and averaging AUROC would not validate it: that measures the fill distribution, not the
+convention, because a random fill loses to a shifted positive far more often
 than half the time. There is no fill distribution that makes every pair exactly one half.
 """
 import numpy as np
@@ -157,11 +157,11 @@ def test_missingness_auroc_is_chance_when_reach_is_symmetric():
 def test_missingness_auroc_is_chance_when_reach_is_constant():
     """Constant reach is chance, not undefined -- 0.5, as sklearn also returns.
 
-    This test previously asserted NaN. Two things overturned that. The function's own docstring
-    states the pooled value "equals 0.5 + (reach_pos - reach_neg) / 2 exactly"; under constant
-    reach those two are equal, so the documented identity gives 0.5 while the code returned NaN.
-    And the NaN was not inert: _stratified_reach skips non-finite strata, so a complete-coverage
-    stratum silently left the size-weighted mean and biased it upward.
+    Two facts fix the value at 0.5 rather than NaN. The function's own docstring states the pooled
+    value "equals 0.5 + (reach_pos - reach_neg) / 2 exactly"; under constant reach those two are
+    equal, so the documented identity gives 0.5. And a NaN would not be inert: _stratified_reach
+    skips non-finite strata, so a complete-coverage stratum would silently leave the size-weighted
+    mean and bias it upward.
     """
     y, s = _panel()
     assert missingness_auroc(y, np.ones_like(y)) == 0.5

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-"""C4 — the ECE binning flip is a documented property, not an embarrassment. Quantify it.
+"""The ECE binning flip is a documented property of binned estimators. Quantify it.
 
 The supplement reports that conclusions move between equal-width and equal-mass binning and
-between 10 and 15 bins, and treats that as an awkwardness to disclose. It is published behaviour:
+between 10 and 15 bins. That is published behaviour:
 
   Roelofs et al. 2022 (arXiv:2012.08668)   bias as a function of bin count and scheme; equal-mass
                                            is less biased than equal-width
@@ -105,10 +105,9 @@ def main():
     out = {"_generated_by": "analyses/scripts/calibration_error.py",
            "_citations": ["arXiv:2012.08668", "arXiv:1909.10155", "arXiv:1902.06977",
                           "arXiv:1904.01685"],
-           "_why": "The supplement discloses that the ECE conclusion moves with the binning rule. "
-                   "That is published behaviour with a published fix. Reporting the spread as an "
-                   "identification issue, plus a debiased estimator with an interval, turns the "
-                   "most awkward note in the supplement into a contribution.",
+           "_why": "The ECE conclusion moves with the binning rule, which is published behaviour "
+                   "with a published fix. This reports the spread as an identification issue, with "
+                   "a debiased estimator and its interval.",
            "_estimands": "L1 ECE under six binning schemes, macro over species. Debiased L2 "
                          "calibration error (Kumar 2019), macro over species. The two are "
                          "different quantities and are not compared to each other.",
@@ -179,8 +178,8 @@ def main():
         "max_abs_difference_from_platt_LOSO": float(np.max(np.abs(pv_a - pv_b))),
         "n_variants_differing": int((pv_a != pv_b).sum()),
         "n_variants": int(len(pv_a)),
-        "_note": "Reported so nobody repeats the mistake of reading this column as the trivial "
-                 "sigmoid the manuscript's null refers to."}
+        "_note": "Reported so that this column is not read as the trivial sigmoid the "
+                 "manuscript's null refers to."}
 
     p = os.path.join(OUT, "calibration_error.json")
     io.open(p, "w", encoding="utf-8", newline="\n").write(

@@ -1,4 +1,4 @@
-"""Pillar 1: cross-species CALIBRATION TRANSFER (paper-grade).
+"""Cross-species CALIBRATION TRANSFER.
 
 Can a calibration map (raw Evo2-40B score -> trustworthy probability) learned on LABEL-RICH species
 transfer to LABEL-POOR species that can't calibrate themselves? For every species we compute:
@@ -28,14 +28,19 @@ WIN = {"goat": "goat_scoring_windows", "chicken": "chicken_scoring_windows",
        "human": "human_scoring_windows"}
 CLADE = {"cattle": "ruminant", "sheep": "ruminant", "goat": "ruminant", "dog": "carnivore",
          "cat": "carnivore", "horse": "perissodactyl", "pig": "suid", "chicken": "bird", "human": "primate"}
-DIV_MYA = {"human": 0, "dog": 96, "cat": 96, "horse": 96, "pig": 96, "cattle": 96, "sheep": 96, "goat": 96, "chicken": 319}
+# TimeTree 5 median divergence-from-human, My (timetree.org; Kumar et al., Mol Biol Evol 2022,
+# doi:10.1093/molbev/msac174), the values fig2_data.py uses; TimeTree's terms, not CC0, govern them
+# (LICENSING.md).
+DIV_MYA = {"human": 0, "dog": 92, "cat": 92, "horse": 92, "pig": 92, "cattle": 92, "sheep": 92, "goat": 92, "chicken": 319}
 RICH_MIN = 50
 EV = "logs/status/events.log"; ST = "logs/status/calibration.status"
 
 
 def ev(m):
+    os.makedirs("logs/status", exist_ok=True)
     with open(EV, "a") as f: f.write(f"[{time.strftime('%H:%M:%S')}] calib: {m}\n")
 def st(m):
+    os.makedirs("logs/status", exist_ok=True)
     with open(ST, "w") as f: f.write(m + "\n")
 
 

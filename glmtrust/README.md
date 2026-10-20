@@ -120,7 +120,8 @@ score into three things a user can actually act on:
 > variants being scored. The study accompanying this package tested exactly the setting it targets,
 > transporting a threshold to a species with no labels of its own, and found that exchangeability
 > does **not** hold across species: the achieved positive-class false-negative rate was **0.107–0.321
-> against a nominal 0.05** (up to sixfold), holding only in-distribution or at a lenient error target.
+> in the eight non-human species** (0.075 in human, where it calls only 12% benign) **against a nominal
+> 0.05**, up to 6.4-fold, holding only in-distribution or at a lenient error target.
 > Do **not** rely on these as a distribution-free guarantee in a label-poor target species; treat the
 > layer as a calibrated *ordering* with an operating point, not a safety net against missed positive
 > variants.
@@ -237,8 +238,10 @@ glmtrust reach reach_panel.parquet --label-col label --reach-prefix reach__ \
 
 - It does **not** improve discrimination: calibration and conformal prediction re-express a score; they
   do not add signal.
-- A **transferred probability** across species is, per the study, no better than a single global
-  two-parameter sigmoid; the component that survives transfer is the selective-prediction *ordering*.
+- At the single-token readout a **transferred probability** across species is, per the study, no better
+  than one global sigmoid; at the 8,192-bp readout, the arm this package reproduces, isotonic transfer
+  lowers macro ECE by 0.007. Either way, the component the trust layer relies on is the
+  selective-prediction *ordering*.
 - The selective layer does **not** bound the missed-positive (false-negative) rate; its benefit is
   class-asymmetric, so `SelectivePredictor.evaluate` reports capture for over-calls and misses
   separately. It is a precision aid, not a safety net.

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-"""C1, applied to the headline arm: Evo 2 at 8,192 bp against GERP, per species, properly pooled.
+"""The random-effects pool of meta_analysis.py, applied to the headline arm: Evo 2 at 8,192 bp against
+GERP, per species, properly pooled.
 
 meta_analysis.py runs on the 1,001-bp arm because that is the only one with deposited
 per-species intervals. The paper's headline is the 8,192-bp arm — "Evo 2 led GERP in all nine
@@ -129,8 +130,8 @@ def main():
              "without intervals, so nothing could be pooled from it.")
 
     out = {"_generated_by": "analyses/scripts/meta_8192.py",
-           "_why": "The paper's headline arm had no per-species uncertainty. This supplies it and "
-                   "pools it the way a nine-cluster panel should be pooled.",
+           "_why": "Per-species intervals for Evo 2 against GERP at 8,192 bp, pooled by random "
+                   "effects.",
            "_method": "DeLong structural components for the per-species SE; REML tau^2; HKSJ with "
                       "Röver's modification; Higgins-Thompson-Spiegelhalter prediction interval.",
            "_citations": ["10.2307/2531595", "10.1109/LSP.2014.2337313",

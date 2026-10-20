@@ -1,8 +1,8 @@
-"""PLAN #1 (calibration DEPTH) — method bake-off: is the cross-species calibration TRANSFER an artifact of
+"""Calibration method bake-off: is the cross-species calibration TRANSFER an artifact of
 isotonic regression, or does it hold across calibration methods? Re-run the exact LOSO transfer swapping
 isotonic for a panel of post-hoc calibrators, ranked by transferred ECE/Brier per held-out species.
 
-  isotonic  : monotonic, the current baseline (can overfit / push to 0-1 at small n)
+  isotonic  : monotonic, the baseline (can overfit / push to 0-1 at small n)
   Platt     : logistic sigmoid on the raw score (Platt scaling; = temperature+bias for a scalar)
   beta      : beta calibration (Kull 2017) — the natural family for bounded scores, documented to beat
               isotonic at small n; here = logistic on [ln(s), -ln(1-s)] over a min-max-squashed score
@@ -29,8 +29,10 @@ EV = "logs/status/events.log"; ST = "logs/status/calib_methods.status"; MD = "lo
 
 
 def ev(m):
+    os.makedirs("logs/status", exist_ok=True)
     with open(EV, "a", encoding="utf-8") as f: f.write(f"[{time.strftime('%H:%M:%S')}] calib-methods: {m}\n")
 def st(m):
+    os.makedirs("logs/status", exist_ok=True)
     with open(ST, "w", encoding="utf-8") as f: f.write(m + "\n")
 
 
@@ -116,7 +118,7 @@ def main():
         vals = [r[k] for r in rows if (subset is None or r["role"] == subset)]
         return float(np.median(vals)) if vals else float("nan")
 
-    lines = ["# PLAN #1 — calibration method bake-off (is the transfer method-agnostic?)", "",
+    lines = ["# Calibration method bake-off (is the transfer method-agnostic?)", "",
              f"LOSO transfer swapping the calibrator; adaptive-ECE (debiased) per held-out species. "
              f"Sources: {rich}; label-poor targets: {poor}.", "",
              "| species | role | n | pos | isotonic aECE | Platt aECE | **beta aECE** | best method |",
@@ -132,10 +134,10 @@ def main():
     med_all = {k: med(f"aece_{k}") for k in METHODS}; best_all = min(med_all, key=med_all.get)
     med_tgt = {k: med(f"aece_{k}", "TARGET") for k in METHODS}; best_tgt = min(med_tgt, key=med_tgt.get)
     spread = max(med_all.values()) - min(med_all.values())
-    lines += [f"**VERDICT:** transfer holds across ALL THREE methods (median aECE spread only {spread:.3f}) — "
-              f"the result is not an isotonic-regression artefact. Best overall = **{best_all}**; best on label-poor targets = "
-              f"**{best_tgt}** ({'beta beats isotonic at small n as documented' if best_tgt=='beta' else 'as expected'}). "
-              "Report isotonic as the headline with this bake-off as robustness."]
+    lines += [f"**VERDICT:** the three calibrators give similar transferred calibration error (median aECE spread "
+              f"{spread:.3f}), so the transferred ECE is not an isotonic-regression artefact. Lowest median overall = "
+              f"**{best_all}**; lowest on label-poor targets = "
+              f"**{best_tgt}** ({'beta beats isotonic at small n as documented' if best_tgt=='beta' else 'as expected'})."]
     open(MD, "w", encoding="utf-8").write("\n".join(lines) + "\n")
     pl.DataFrame(rows).write_parquet("data/processed/calibration_methods.parquet")
     print("\n".join(lines))

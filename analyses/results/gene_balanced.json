@@ -1,7 +1,7 @@
 {
  "_generated_by": "analyses/scripts/gene_balanced.py",
  "_panel": "human dbNSFP panel, 328,328 variants, 15,606 genes, 49 predictors",
- "_why": "The manuscript cites Grimm for the concept of circularity and contains no gene-balanced evaluation. This supplies one for every deposited predictor.",
+ "_why": "The gene-balanced evaluation of Supplementary Note S8: pooled covered AUROC minus the unweighted mean of within-gene AUROCs, for every deposited predictor.",
  "_citation": "10.1002/humu.22768",
  "_min_per_class_for_within_gene": 5,
  "n_genes_mixed": 4286,
