@@ -279,7 +279,7 @@ Python 3.12.10 with NumPy 2.5.1, SciPy 1.18.0 and scikit-learn 1.9.0.
 
 ## Relationship to the study & citation
 
-`glmtrust` 0.1.1 packages the trust-layer methodology from *"Checking whether ClinVar comparisons of variant effect predictors can be decided, with a nine-species Evo 2 atlas and glmtrust"* (Asediya, GK, Kadarmideen and Pareek). The analysis
+`glmtrust` 0.1.1 packages the trust-layer methodology from *"How Evo 2 is read decides whether it beats conservation across nine species, and why most ClinVar predictor comparisons stay undecided"* (Asediya, GK, Kadarmideen and Pareek). The analysis
 scripts that produced the paper's numbers live in the study repository; this package is the reusable,
 tested extraction of those methods. A `CITATION.cff`, carrying the Zenodo DOI, is included beside this README.
 
