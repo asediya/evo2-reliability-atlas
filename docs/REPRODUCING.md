@@ -55,7 +55,7 @@ core dependencies, and the benchmark reads the study parquets through it, so `pi
 parquets". The quotes matter in zsh, which treats the brackets as a glob.
 
 Exits zero when the order-invariant figures match within tolerance (415 errors, macro ECE 0.0209) and the published pooled capture 0.6096 and pooled lift 4.0676 lie inside their row-order ranges; the macro lift, 3.9343, is printed beside them. The 11,109 variant-level
-scores it needs travel with the package as a 119 kB fixture.
+scores it needs travel with the package as a 119 KiB fixture.
 
 ### Tier 2: the recompute layer
 

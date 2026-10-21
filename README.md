@@ -22,8 +22,7 @@ know" instead of guessing.
 > **One code base, two copies.** The project home page,
 > `https://github.com/asediya/evo2-reliability-atlas`, and the article's Additional file 2 hold
 > identical code, under the MIT License. The Zenodo record `10.5281/zenodo.22046811` mirrors the
-> submitted additional files and is released on acceptance, so that DOI does not resolve yet. Its
-> being live is not a prerequisite for anything here: every gate, test and recompute step runs
+> submitted additional files. Nothing here depends on it: every gate, test and recompute step runs
 > from the deposit alone, or names the undeposited input it wants.
 
 > **A note on archive timestamps.** Every entry in Additional file 2 carries a normalised
