@@ -306,7 +306,7 @@ class TrustLayer:
             # confidence ordering, which is refusal applied GLOBALLY. The paper's deliverable is
             # each group refusing its own least-confident share, and the two differ materially on
             # the paper's own panel: within-species gives capture 0.354 and lift 2.35, global gives
-            # 0.383 and 2.56, so global numbers must not print under the within-species
+            # 0.384 and 2.56, so global numbers must not print under the within-species
             # heading. When groups are supplied the threshold is applied within each group,
             # which is the shipped deliverable; the global figures remain available beside them.
             "selective": dict(_selective_block(y, pred, conf_val, self.coverage, g_eval),

@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """Apply the partial-identification bounds to OUR OWN claim, not just to the 49 other predictors.
 
-The theorem note demonstrates on dbNSFP that 93% of pairwise rankings are unidentified. The obvious
+On the dbNSFP panel 1,093 of the 1,176 pairwise comparisons, 93%, are unidentified (Figure 3b). The obvious
 next question, and the one a reader will ask first, is whether the paper's own headline survives
 its own argument: **is "Evo 2 beats GERP" identified?**
 
-Setup. Evo 2 answers every variant, so rho = 1 and its interval collapses to a point. GERP has
+Setup. Evo 2 is taken to answer every variant (at 8,192 bp it leaves 21 of 11,130 unscored, which
+Note S30 also bounds), so rho = 1 and its interval collapses to a point. GERP has
 class-dependent coverage, so its panel-wide AUROC lies in a genuine interval. The comparison is
 identified only if the Evo 2 point lies outside GERP's whole interval:
 
@@ -111,7 +112,10 @@ def main():
         "n_identified_8192": int(n_ident_8192),
         "n_identified_8192_monotone": int(n_mono_8192),
         "n_identified_1001_in_evo2_favour": int(n_ident_1001),
-        "paper_claims_evo2_leads_in_all_nine": True}
+        "_identification_count_to_quote": (
+            "n_identified_8192 above compares a full-panel GERP bound against an Evo 2 point estimate on "
+            "the co-scorable subset, and reads 7. The count Note S30 quotes, six of nine, is from "
+            "manski_like_for_like.json, which puts both sides on the full panel.")}
     print()
     print("  8,192-bp readout: identified in %d of %d species (no assumption)"
           % (n_ident_8192, n))
@@ -151,7 +155,7 @@ def main():
     print()
     print("  identified pairwise comparisons among these five: %d of %d" % (ident, pairs))
 
-    # ---- the Part 5 tension: does rho discard the class asymmetry, on OUR data? --------------
+    # ---- the rho-only tension: does rho discard the class asymmetry, on OUR data? --------------
     d = json.load(io.open("reports/dbnsfp_reach_audit.json", encoding="utf-8"))
     P = d["predictors"]
     rp = np.array([p["reach_pos"] for p in P])
@@ -181,10 +185,10 @@ def main():
         "n_J_negative": int((J < 0).sum()), "n_predictors": len(P),
         "bites_on_this_panel": bool(clash > 0)}
     print()
-    print("  Part 5 tension: pairs with matched rho and opposite MATERIAL J (|J| >= 0.02): %d"
+    print("  rho-only tension: pairs with matched rho and opposite MATERIAL J (|J| >= 0.02): %d"
           % clash)
     print("    -> the midpoint estimator discards class asymmetry, but on this panel the")
-    print("       asymmetry is one-directional (%d of %d have J < 0), so it does not bite."
+    print("       asymmetry is not one-directional (%d of %d have J < 0); it bites only through the pairs counted above."
           % (int((J < 0).sum()), len(P)))
 
     os.makedirs(OUT, exist_ok=True)

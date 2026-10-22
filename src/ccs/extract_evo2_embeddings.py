@@ -1,6 +1,6 @@
 """Extract Evo2-1B hidden-state embeddings at the variant position for a windows panel.
-The zero-shot likelihood is Evo2's WEAK mode for coding VEP; its embeddings are the strong mode
-(EVEE hit ~0.997 on ClinVar with embeddings). We grab the ref and alt hidden states at the variant
+The zero-shot likelihood is Evo2's WEAK mode for coding VEP; its embeddings feed a supervised probe
+(the EVEE probe's 0.997 on ClinVar is trained on ClinVar labels and is circular against them). We grab the ref and alt hidden states at the variant
 position; a downstream probe trains on (alt-ref) delta / concat features.
 
 Input windows parquet: variant_id, ref_seq, alt_seq, var_off (all equal-length windows).

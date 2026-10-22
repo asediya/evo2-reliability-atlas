@@ -59,7 +59,6 @@ def _deposit_table(name):
     root = os.path.abspath(os.path.join(here, os.pardir, os.pardir))
     cands = [os.environ.get("CCS_TABLES") and os.path.join(os.environ["CCS_TABLES"], name),
              os.path.join(root, "tables", name),
-             os.path.join(root, os.pardir, "final10", "tables", name),
              os.path.join(root, "reports", name)]
     for c in cands:
         if c and os.path.exists(c):
@@ -347,8 +346,7 @@ def panel_d(axP, axS):
     axis and not the other, and the nine per-species differences are drawn as the strip on the right.
     """
     import pandas as pd
-    d = pd.read_parquet(os.path.join(ROOT, "fig1_atlas_pervariant.parquet")) \
-        if False else pd.read_parquet(_deposit_table("fig1_atlas_pervariant.parquet"))
+    d = pd.read_parquet(_deposit_table("fig1_atlas_pervariant.parquet"))
     m = d[d.gerp.notna() & d.evo2_1001.notna()]
     # WITHIN-SPECIES PERCENTILES, NOT RAW SCORES. The nine GERP tracks come from different alignments
     # and are not on one scale, so a plane of raw GERP pools scores that cannot be pooled; each score
@@ -417,10 +415,9 @@ def panel_d(axP, axS):
     # interval and the same bold value as cattle would assert, on this plate, the significance the Methods
     # elsewhere refuse -- and half of the panel's own "2 of 9" count rests on it. The estimate is
     # still drawn, because it is the paper's estimate; what is withdrawn is the claim that its
-    # interval means what the other eight intervals mean. The set is hard-coded rather than derived
-    # because no deposited artefact carries the per-species cluster count; the citation above is the
-    # audit trail, and if that changes this list is the one place to change.
-    NO_CLUSTER_INTERVAL = {"goat"}
+    # interval means what the other eight intervals mean. The set is the module-level
+    # NO_CLUSTER_INTERVAL below, which table2_intervals() and headtohead() check against the pos_loci
+    # column of Additional file 3's table2_cluster_aware_ci.tsv on every Figure 9 and 10 build.
     for i, (sp, r) in enumerate(rows):
         c = S.species_color(sp)
         weak = sp in NO_CLUSTER_INTERVAL
@@ -434,10 +431,8 @@ def panel_d(axP, axS):
                     facecolor=("white" if weak else c), edgecolor=(c if weak else "white"),
                     lw=(0.7 if weak else .4), zorder=5)
         strong = r["verdict"] == "***" and not weak
-        # Seated past the WIDEST interval, not at a fixed 1.06 of the axes width. At 1.06 the
-        # column's left edge fell at data 0.206 on a (-.16, .32) axis, inside chicken's upper
-        # limit of 0.293, and the whisker and its cap printed through the digits of goat's,
-        # chicken's and pig's differences. The 3 pt gap is in POINTS (see _dy below).
+        # Seated 3 pt (in POINTS) past the WIDEST interval's upper end, so no whisker or cap can
+        # print through the digits of a difference.
         # A difference whose interval excludes zero is set in bold ink and the others in the secondary grey; no
         # asterisks, which a reader takes for a p-value threshold.
         axS.annotate("%+.3f%s" % (r["delta"], " †" if weak else ""),
@@ -482,7 +477,8 @@ def _dy(ax, pt):
 # file 3's tables/fig1_atlas_pervariant.parquet, so no value they draw is carried by a JSON that
 # could lag it.
 #
-# Orientation, identical to Additional file 3's recompute scripts: higher = more pathogenic.
+# Orientation, identical to Additional file 3's recompute scripts: higher = more deleterious,
+# towards the positive class.
 #   e1 = evo2_1001                 as stored
 #   e8 = -evo2_meanll_8192         the negated mean-log-likelihood delta (21 NULL rows)
 #   g  = gerp                      as stored
@@ -694,7 +690,8 @@ def headtohead(B=2000, seed=61):
     return _H2H
 
 
-# ------------------------------------------- Figure 9c : what each species' panel is made of
+# ------------------------------------------- the atlas plate's composition panel (not called;
+# Figure 9c is drawn by fig7_atlas.py)
 # type_matched_atlas.py keeps its own copy of this set and names this one as its twin; keep them equal.
 CODING_SO = {"missense_variant", "synonymous_variant", "stop_gained", "stop_lost", "start_lost",
              "frameshift_variant", "initiator_codon_variant", "splice_donor_variant",
@@ -790,7 +787,8 @@ def panel_composition(ax):
     return skill
 
 
-# ------------------------------------------- Figure 10c : Evo 2 against GERP, species by species
+# ------------------------------------------- the head-to-head panel (not called; Figure 10c is
+# drawn by fig8_readout.py from headtohead())
 def panel_headtohead(ax):
     """The head-to-head the section heading claims, one species per row, both readouts.
 

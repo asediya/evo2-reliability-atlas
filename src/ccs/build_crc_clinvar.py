@@ -20,6 +20,9 @@ ALPHAS = [0.05, 0.10, 0.20]
 def crc_lambda(p_pos, alpha):
     n = len(p_pos); target = max(0.0, ((n + 1) * alpha - 1) / n)
     s = np.sort(p_pos); k = int(np.floor(target * n))
+    # lambda just above the k-th smallest calibration score: a positive tied with that score counts as
+    # missed, so where scores are tied the calibration FNR can exceed the budget by the tied share.
+    # build_crc_certificate.py, whose isotonic probabilities are heavily tied, takes lambda = s[k].
     return (s[k - 1] + 1e-12) if k >= 1 else -np.inf
 
 
@@ -42,7 +45,7 @@ def main():
     rng = np.random.default_rng(0); half = rng.random(len(y)) < 0.5
 
     lines = ["# Positive-class FNR certificate at ClinVar scale (conformal risk control; n~1.6M, labels exist)", ""]
-    id_ok = 0; id_tot = 0; tr_ok = 0; tr_tot = 0; id_strict = 0; tr_strict = 0
+    id_ok = 0; id_tot = 0; tr_ok = 0; tr_tot = 0; id_strict = 0; tr_strict = 0; id_miss = {}
     for name, col in SCORES.items():
         s = df.select(pl.col(col).cast(pl.Float64, strict=False))[col]
         m = s.is_not_null().to_numpy(); p = s.to_numpy()
@@ -55,6 +58,7 @@ def main():
             lam = crc_lambda(p[cal & (y == 1)], a)
             fnr_id, br_id = eval_at(p[te], y[te], lam)
             ok_id = fnr_id <= a + 0.02; id_ok += ok_id; id_tot += 1; id_strict += fnr_id <= a
+            if not fnr_id <= a: id_miss.setdefault(name, []).append(a)
             # (2) coding -> noncoding transport
             calc = m & coding; ten = m & ~coding
             if (ten & (y == 1)).sum() >= 20:
@@ -68,8 +72,11 @@ def main():
         lines.append("")
 
     lines += ["## VERDICT",
-              f"In-distribution: guarantee held in {id_ok}/{id_tot} (score x alpha) cases with non-trivial benign-rates "
-              f"within the tolerance (FNR <= alpha + 0.02), {id_strict}/{id_tot} strictly. "
+              f"In-distribution: guarantee held in {id_ok}/{id_tot} (score x alpha) cases "
+              f"within the tolerance (FNR <= alpha + 0.02), {id_strict}/{id_tot} strictly"
+              + ("" if not id_miss else " (" + "; ".join("%s at alpha = %s" % (k, " and ".join(str(a) for a in v))
+                                                       for k, v in id_miss.items()) + ")")
+              + ". "
               f"Coding->noncoding transport: held in {tr_ok}/{tr_tot} within the tolerance (FNR <= alpha + 0.03), "
               f"{tr_strict}/{tr_tot} strictly.",
               "",
@@ -77,8 +84,7 @@ def main():
                "ClinVar, and (partly) survives the coding->noncoding shift. Conformal Risk Control of the missed-"
                "positive rate is therefore a valid guarantee object when the target has labels or is exchangeable "
                "with the calibration data. Transport to a ZERO-label species is the separate test of "
-               "build_crc_certificate.py (logs/crc_certificate.md), where the transported certificate does not "
-               "hold at a strict alpha."
+               "build_crc_certificate.py (logs/crc_certificate.md)."
                if id_ok >= 0.7 * id_tot else
                "**OBJECT WEAK even in-distribution** - even with labels the certificate is vacuous or uninformative.")]
     os.makedirs("logs", exist_ok=True)

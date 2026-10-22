@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """Precision-recall (AUPRC / average precision) for the atlas, alongside AUROC.
 
-The manuscript reports ~200 discrimination values, all AUROC, on panels that are 9.09% positive by
-construction and proposed for screening — the setting where AUROC is optimistic and AUPRC is the
+Atlas discrimination is reported as AUROC on panels that are 9.09% positive by construction (human
+1:1) and proposed for screening — the setting where AUROC is optimistic and AUPRC is the
 decision-relevant summary. This computes per-species, pooled and macro AUPRC at the 8,192-bp
 mean-log-likelihood readout from the deposited atlas scores, with the no-skill baseline (the base
 rate) for reference, and deposits reports/auprc.json. AUROC is recomputed here too as an orientation

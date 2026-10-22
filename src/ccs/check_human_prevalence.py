@@ -6,11 +6,12 @@ species with adjudicated labels", implying the failure is about label quality. B
 only 1:1 panel; the other eight are 10:1. That single difference moves the calibrated probability,
 the position of the 0.5 threshold, the error composition and the ECE floor.
 
-The test is cheap: downsample human's negatives to a 10:1 ratio, matching the other panels, and
-recompute the layer's per-species behaviour. If human still fails, the label-adjudication reading is
-earned. If it does not, that reading is wrong.
+The test is cheap: bring human to a 10:1 ratio, matching the other panels, and recompute the
+layer's per-species behaviour. Human has 1,500 negatives for 1,500 positives, so 10:1 is reached by
+subsampling POSITIVES to 150 and keeping every negative. If human still fails, the
+label-adjudication reading is earned. If it does not, that reading is wrong.
 
-We resample the negatives many times rather than once, because a single draw of 90 negatives from
+We resample the positives many times rather than once, because a single draw of 150 positives from
 1,500 would confound the answer with sampling noise.
 
     python src/ccs/check_human_prevalence.py

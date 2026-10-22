@@ -1,8 +1,8 @@
 """Evo 2 vs GERP head-to-head at the 8,192-bp mean-log-likelihood readout, on the variants
 BOTH methods can score.
 
-Why this exists. The main-text co-scoreable comparison is reported at the 1,001-bp
-single-position readout, where the pooled estimate is a near-tie (Evo2 0.8805 vs GERP 0.8780). But
+Why this exists. At the 1,001-bp single-position readout the co-scoreable comparison is a
+pooled near-tie (Additional file 1, Note S28) (Evo2 0.8805 vs GERP 0.8780). But
 the paper's own headline discrimination uses the 8,192-bp mean-log-likelihood readout, which is
 worth +0.065 AUROC by the species mean (+0.092 pooled). This script asks: on the variants GERP can
 score, does the reference-implementation readout change the head-to-head?
@@ -63,7 +63,7 @@ def main():
         # rule forbids ("Orientation is asserted, never inferred", tools/verify_from_data.py). The
         # conventions differ by column and are fixed rather than inferred: evo2_meanll_delta is
         # a likelihood delta, so a deleterious variant LOWERS it and it is negated here (raw AUROC
-        # 0.026-0.137 across the nine species); gerp is already higher-is-more-constrained. Note
+        # 0.026-0.174 across the nine species on these co-scoreable variants); gerp is already higher-is-more-constrained. Note
         # the ARRAY is negated, not just the scalar, because ev feeds the pooled estimate below.
         ev = -ev
         a_ev = roc_auc_score(y, ev)
@@ -85,7 +85,7 @@ def main():
                 s1 = d1["s1001"].to_numpy().astype(float)
                 if len(np.unique(y1)) == 2:
                     # evo2_40b_neg is already signed higher-is-deleterious (raw AUROC
-                    # 0.825-0.950 across the nine species), so it is asserted, not flipped.
+                    # 0.814-0.953 across the nine species on these variants), so it is asserted, not flipped.
                     a1 = roc_auc_score(y1, s1)
                     if a1 < 0.5:
                         raise SystemExit("orientation assertion failed for evo2_40b_neg in %s: "

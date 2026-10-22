@@ -1,8 +1,6 @@
 """Build snpEff databases LOCALLY from Ensembl GTF + our own genome FASTAs.
 
-Why: snpEff's database repository (snpeff.blob.core.windows.net) is unreachable from this network, so
-`snpEff download` cannot work. But Ensembl's FTP IS reachable, and `snpEff build` makes a database from
-(genes.gtf + sequences.fa). This bypasses the blocked host entirely AND lets us pin the EXACT assembly
+Why: `snpEff build` makes a database from (genes.gtf + sequences.fa), which lets us pin the EXACT assembly
 each of our variant sets is on (incl. archived builds: chicken GRCg6a r105, dog CanFam3.1 r104,
 sheep Oar_rambouillet_v1.0 r106) -- the same build-matching that rules out the Ensembl-VEP/ESM route.
 

@@ -75,8 +75,9 @@ def _get(d, path):
     return d
 
 
-# Every value Additional file 1 (Notes S33 and S34) and the manuscript print from this record, as printed:
-# (what, key path in the record, format, printed text). The joint MAF + TSS designs are recorded, not printed.
+# Every value Additional file 1 (Note S33, Table S20) and the manuscript print from this record, as printed:
+# (what, key path in the record, format, printed text). The joint MAF x TSS stratified design is recorded, not
+# printed.
 PUBLISHED = [
     ("panel variants with a frequency", "coverage.n_with_maf", "{:,}", "20,000"),
     ("tissues pooled", "frequencies.n_tissues", "{}", "34"),
@@ -96,6 +97,13 @@ PUBLISHED = [
     ("MAF-matched, lower", "maf_matched.ci95.0", "{:.3f}", "0.478"),
     ("MAF-matched, upper", "maf_matched.ci95.1", "{:.3f}", "0.497"),
     ("MAF-decile-stratified AUROC", "maf_stratified_deciles.auroc", "{:.3f}", "0.487"),
+    ("joint MAF + TSS-matched causal variants", "maf_tss_matched.causal_matched", "{:,}", "3,839"),
+    ("joint MAF + TSS-matched causal variants available", "maf_tss_matched.causal_available", "{:,}", "4,844"),
+    ("joint MAF + TSS-matched AUROC", "maf_tss_matched.auroc", "{:.3f}", "0.487"),
+    ("joint MAF + TSS-matched, lower", "maf_tss_matched.ci95.0", "{:.3f}", "0.476"),
+    ("joint MAF + TSS-matched, upper", "maf_tss_matched.ci95.1", "{:.3f}", "0.497"),
+    ("joint MAF + TSS-matched, distance alone", "maf_tss_matched.falsification_tss_proximity_auroc", "{:.3f}",
+     "0.500"),
     ("bootstrap replicates", "B", "{:,}", "2,000"),
 ]
 

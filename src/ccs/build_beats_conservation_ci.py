@@ -87,7 +87,7 @@ def main():
               "",
               "**Reading:** the bootstrap P(Δ>0) is NOT a p-value and is uncorrected for 9 simultaneous "
               "tests. Once converted to a proper one-sided p-value and BH-corrected, only the two species whose "
-              "bootstrap never once favored conservation survive; every borderline win (chicken +0.137 at raw "
+              "bootstrap never once favoured conservation survive; every borderline win (chicken +0.137 at raw "
               "p=0.028, and all smaller margins) is not significant after FDR. This test is at the 1,001-bp "
               "readout and resamples variants; with positive-bearing loci resampled, as for Table 2, cattle's "
               "lead alone survives (Additional file 1, Figure S7)."]

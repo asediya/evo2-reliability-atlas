@@ -7,7 +7,7 @@ except ImportError:
 
 """FIGURE S3 (Additional file 1) — "Signal without a curator."
 
-Every result in Figs 1-6 rests on a CURATED DISEASE LABEL (OMIA, ClinVar, SGE). This figure is the
+Every other result in the paper rests on a CURATED or ASSAYED LABEL (ClinVar, OMIA, SGE, splicing assays). This figure is the
 evidence that does not depend on a curator, and the test of whether it is conservation in disguise.
 
   a  SELECTION FIELD    28,006 cattle variants, MAF x deleteriousness   [2-D density field]
@@ -16,19 +16,13 @@ evidence that does not depend on a curator, and the test of whether it is conser
   d  BAT LATTICE      allele number x minor allele count, bat pilot [observability lattice]
   
 
-SKELETON BUDGET (checked against figure-skeleton-ban-list BEFORE building, not after)
-Fig 5 closed four primitives that were free when it was designed: area-partition waffle (5a),
-step/staircase over a count axis (5b), categorical x categorical matrix (5d), plus the ledger (5e) and
-the slope gnomon (5c). What remained free: small-multiple lattice, alluvial/Sankey pooled flow,
-**2-D density field**, beeswarm, network topology.
-  * panel a takes the 2-D DENSITY FIELD -- the only free primitive whose unit is the VARIANT rather
-    than the species, which is exactly what the ban list prescribes as the way out of the species-rail
-    trap. No scatter anywhere in Figs 1-6 renders a continuous joint density.
-  * panel b takes the SMALL-MULTIPLE LATTICE, faceted on conservation stratum. The lattice entry
-    explicitly requires the facet variable NOT be the nine species; it is not.
-  * panel c is the one per-species panel the gates allow, and only under all four constraints:
-    both axes carry data (a meaningful coordinate, not a slot index), NO silhouettes (Figure 9's ink),
-    NO left name margin, NO right value column, NO sort by n or by the plotted delta.
+PANEL FORMS
+  * panel a is a 2-D table of counts over MAF x deleteriousness whose unit is the VARIANT rather
+    than the species, so the plate does not repeat a species rail.
+  * panel b is a SMALL-MULTIPLE LATTICE faceted on conservation stratum, not on the nine species.
+  * panel c is the plate's one per-species panel, under these constraints: both axes carry data (a
+    meaningful coordinate, not a slot index), NO silhouettes (Figure 9's ink), NO left name margin,
+    NO right value column, NO sort by n or by the plotted delta.
 
 Run: python -m src.ccs.fig6_final
 """
@@ -76,9 +70,9 @@ mpl.rcParams.update({
     "font.family": "sans-serif", "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans"],
     # Without this the figure embeds DejaVuSans alongside
     # Arial, and the cause is not a missing glyph in Arial: it is matplotlib's mathtext engine,
-    # which renders $10^{-4}$ in its own DejaVu font whatever the text family is. Panel b's log
-    # tick labels are the only mathtext in the figure, so five spans would arrive in a second
-    # family. Point mathtext at the same face as everything else.
+    # which renders $10^{-4}$ in its own DejaVu font whatever the text family is. No label on
+    # this plate is set as mathtext (panel b's log ticks are plain text; see panel_b), so this is a
+    # guard: any mathtext is pointed at the same face as everything else.
     "mathtext.fontset": "custom", "mathtext.rm": "Arial", "mathtext.it": "Arial:italic",
     "mathtext.bf": "Arial:bold", "mathtext.default": "regular",
     "pdf.fonttype": 42, "ps.fonttype": 42, "svg.fonttype": "none",
@@ -168,7 +162,7 @@ mpl.rcParams["hatch.linewidth"] = 0.4          # >= style_gb.LINE_MIN (0.3 pt)
 
 
 def _lum(rgb):
-    """WCAG relative luminance, the same test panel d of Figure 1 uses to pick text ink."""
+    """WCAG relative luminance, the same test fig5_final.py's panel_d (Figure S5c) uses to pick text ink."""
     f = lambda c: c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
     return 0.2126 * f(rgb[0]) + 0.7152 * f(rgb[1]) + 0.0722 * f(rgb[2])
 
@@ -431,7 +425,7 @@ def panel_a(ax, ax_cb=None):
 
     This is the dependence that rho = -0.099 measures, rendered so a real-but-small marginal effect is
     visible as STRUCTURE rather than as a tilt. It is drawn as a filled contour surface, not as cells:
-    a celled grid would read as Fig 5d's categorical matrix, and both axes here are continuous.
+    a celled grid would read as Figure S5c's categorical matrix, and both axes here are continuous.
     """
     S = J["selection"]
     maf, dele = load_selection()
@@ -517,9 +511,10 @@ def panel_b(fig, gs_slice):
     conditional median instead would repeat the hero's problem -- the shift is ~5% of the score range.
 
     THE RESULT THIS PANEL CARRIES. The gradient survives at fixed conservation in 4 of 5 quintiles, so
-    it is not a conservation artifact -- but it STRENGTHENS monotonically with conservation and goes
-    flat in the least-conserved quintile. That is Figure S2's regulatory blind spot, reproduced from
-    population genetics instead of eQTLs, with no labels of any kind.
+    it is not a conservation artefact. Its coefficient orders with conservation, but adjacent quintiles
+    are not separable, so no monotone trend is claimed; its interval crosses zero in the least-conserved
+    quintile, the boundary the expression panels also mark (Note S39), and that quintile is mostly neutral
+    sequence, so its null says nothing by itself about regulatory variants.
     """
     C = J["selection_conditioned"]
     cells = C["cells"]
@@ -572,8 +567,7 @@ def panel_b(fig, gs_slice):
         ax.tick_params(labelsize=MINPT, length=1.5)
         # NO MATHTEXT. $10^{-4}$ renders the exponent at ~70% of the base, so
         # even a 5.9 pt tick would put "-4" on the page at 4.13 pt. The axis is
-        # labelled as log10 MAF and the ticks are plain integers at full size, as in
-        # Figure 5. The shared axis title under the lattice says "log10".
+        # labelled as log10 MAF and the ticks are plain integers at full size. The shared axis title under the lattice says "log10".
         ax.set_xticklabels(["−4", "−3", "−2", "−1"], fontsize=MINPT)
         if k % 3:
             ax.set_yticklabels([])
@@ -583,8 +577,8 @@ def panel_b(fig, gs_slice):
 
         # cell title INSIDE the cell (lattice gate), typographically differentiated from panel titles
         # TOP-RIGHT, not top-left. These curves start high on the left and fall to the right, so the
-        # left shoulder is exactly where the first data marker lands — it was drawn on top of its own
-        # caption in the q3 cell. Top-right is the clear quadrant for a descending series.
+        # left shoulder is exactly where the first data marker lands, which in the q3 cell is on top
+        # of a top-left caption. Top-right is the clear quadrant for a descending series.
         # "All quintiles", not "All variants": this cell pools the five strata, the 27,234 variants
         # phyloP reaches, not the 28,006 of panel a and Table S6's first row.
         # Quintile bounds from the strata block, at the two decimals Table S6 prints: at one decimal
@@ -620,7 +614,7 @@ def panel_b(fig, gs_slice):
 
 
 def panel_c(ax):
-    """LIFT PLANE — the same question on the labelled disease panels.
+    """LIFT PLANE — the same question on the labelled panels.
 
     Each species is placed at its CONSERVATION-ONLY AUROC (x; the conservation score is per-base GERP)
     and rises to its COMBINED GERP+Evo2 AUROC (y). The diagonal is 'GERP alone', so the STICK HEIGHT is the lift
@@ -651,7 +645,7 @@ def panel_c(ax):
     grid = np.linspace(lo, max(xs.max(), ys.max()) + 0.012, 50)
     # The band must be COMMENSURABLE with the sticks. The cross-species pooled AUROC (+0.020) ranks
     # variants ACROSS species, so cross-species positive/negative pairs count — a different estimand,
-    # and drawing it here would make 7 of 8 sticks overshoot a band a reader takes for their average.
+    # and drawing it here would make 8 of 9 sticks overshoot a band a reader takes for their average.
     # So the band is built from the very lifts drawn, with species as the resampling unit, because the
     # claim is cross-species generality.
     # THE BAND IS THE SPECIES MEAN, the paper's primary aggregation everywhere else: the unweighted
@@ -676,15 +670,15 @@ def panel_c(ax):
         ax.plot([x, x], [y0, y1], color=FAIL, lw=1.0, alpha=0.85, zorder=5, solid_capstyle="round")
         ax.plot([x], [y1], "o", ms=2.6, color=FAIL, zorder=6)
 
-    # Species names pushed apart along x by a 1-D solver, then leadered back to their own dot. Five of
-    # the nine sit within 0.045 AUROC of each other (cat/goat/sheep/human/dog), so hand-placing collides
-    # -- the first render printed "goat" over "cat" as an unreadable overstrike.
+    # Species names pushed apart along x by a 1-D solver, then leadered back to their own dot. Four of
+    # the nine sit within 0.045 AUROC of each other on x (cat, sheep, human and dog, 0.844 to 0.885), so
+    # hand-placed names overstrike.
     lab = sorted(rows, key=lambda r: r["a_c"])
     lx_ = np.array([r["a_c"] for r in lab], float)
     span = hi - lo
     # The minimum separation is the ROTATED label's own width plus clear air, measured on this
-    # axes, floored at the hand-set 0.052 of the range, which was solved once against a 56 mm box and
-    # silently became too small when the box or the type size changed. Nine names at MINPT need
+    # axes, floored at 0.052 of the range; a fixed fraction alone would fall short whenever the box or
+    # the type size changes. Nine names at MINPT need
     # (MINPT * 1.15 + 2.3) pt each; the solver below spreads them to exactly that and leaders each one back.
     fig_ = ax.figure
     fig_.canvas.draw()
@@ -828,11 +822,11 @@ def bc_preview():
         f"({C['reach']:.1%} reach; missingness is NaN, not null). Within a stratum every variant is "
         f"scored against that stratum's own median, so 0.5 is an exact null. Bands are Wilson 95%. "
         f"The gradient survives at fixed conservation in {C['n_strata_ci_excludes_zero']} of "
-        f"{len(C['strata'])} quintiles — it is NOT a conservation artifact — but it strengthens "
-        f"monotonically with conservation and its CI crosses zero in the least-conserved quintile. "
-        f"That is the same competence boundary, reached from population genetics instead of eQTLs, "
-        f"with no labels. Cattle phyloP is the one genuine phyloP track (the "
-        f"pig/sheep/horse/dog tracks are GERP copies). "
+        f"{len(C['strata'])} quintiles, so it is not a conservation artefact; adjacent quintiles are not "
+        f"separable, so no monotone trend is claimed, and its CI crosses zero in the least-conserved quintile. "
+        f"That is the boundary the expression panels mark, reached from population genetics, "
+        f"with no labels. Cattle phyloP is one of three genuine phyloP tracks (with chicken and human; "
+        f"the pig/sheep/horse/dog tracks are GERP copies). "
         f"c: 5-fold CV logistic on within-species z-scored scores, n = "
         f"{J['decomposition']['pooled']['n']:,} over "
         f"{J['decomposition']['pooled']['n_species_pooled']} species; the pooled lift is given "
@@ -847,7 +841,7 @@ def bc_preview():
 def main():
     """The composed figure. A ClinVar panel is deliberately ABSENT: its
     'abstention concentrates in noncoding' headline rests on a stratum that is 0.3% of the panel with
-    81 negatives at 94.6% positive, so the miscalibration there is a base-rate artifact. The defensible
+    81 negatives at 94.6% positive, so the miscalibration there is a base-rate artefact. The defensible
     ClinVar result is a labelled-benchmark generality claim and belongs with the trust layer, not in a
     figure whose subject is evidence that needs no curator."""
     # The mm budget below is authored from a top edge that reserves 4 mm for a title and
@@ -856,8 +850,8 @@ def main():
     # authored size in millimetres, and the plate does not open with 20 mm of white paper.
     HEAD_MM = 16.0
     # Canvas height (src/ccs/style_gb.py): the journal's 225 mm ceiling covers the figure AND its
-    # legend, and a 300-word legend sets to 25-35 mm, so a full-width graphic has to stop near
-    # 195 mm. A taller plate leaves the typesetter too little room for the legend, and
+    # legend, and a 300-word legend sets to about 47 mm, so a full-width graphic stops at
+    # style_gb.H_MM_MAX, 173 mm. A taller plate leaves the typesetter too little room for the legend, and
     # production would scale the whole figure down -- taking every label with it.
     H_MM = 173.0
     fig = plt.figure(figsize=(W_MM * MM, H_MM * MM))
@@ -865,7 +859,7 @@ def main():
     # Budget solved in MILLIMETRES of the canvas, not by eye. Bands, top edge downwards:
     #   title 4 · subtitle 10-20 · a header 24.5 · a axes 26-56 · a ticks+xlabel
     #   56-64 · key 66-74.5 · b header 78 · b lattice 79.5-127.5 · b ticks to 131.5 ·
-    #   b shared xlabel 132-135 · c/d header 140.5 · c axes 142-183 (square) ·
+    #   b shared xlabel 132-135 · c/d header 140.5 · c axes 142-179 (square) ·
     #   c xlabel to 185 · d axes 142-174 · d xlabel to 182
     #
     # Bands are NOT scaled uniformly with the canvas. Panel b's six lattice cells carry a stratum
@@ -928,7 +922,7 @@ def main():
         # x_ is None for the left column: those letters take the SHARED margin (style_gb.
         # letter_x) rather than a figure fraction typed to this plate's own rail, which would put
         # them at 50.9 pt while other figures in the set put theirs at 5.8 pt.
-        from .style_gb import letter_x as _letter_x
+        _letter_x = _SG.letter_x
         # A right-column letter starts at its panel's bounding-box left edge (panel d's y title).
         _lx, _ha = (_letter_x(fig), "left") if x_ is None else (x_, "left")
         fig.text(_lx, y_, letter, fontsize=PANEL, fontweight="bold", ha=_ha, va="bottom",
@@ -958,7 +952,7 @@ def main():
 
     os.makedirs(ROOT / "reports" / "figures", exist_ok=True)
     base = str(ROOT / "reports" / "figures" / "Figure6_curator")
-    from .style_gb import tidy_minus as _tm
+    _tm = _SG.tidy_minus
     _tm(fig)   # ASCII hyphen -> U+2212 in numeric labels
     fig.savefig(base + ".pdf", dpi=600, metadata={"CreationDate": None})
     fig.savefig(base + ".png", dpi=600)

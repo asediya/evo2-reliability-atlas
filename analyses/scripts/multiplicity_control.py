@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Family-wise error control for the per-class claims, by permutation across all cores.
 
-Two of the new results are read class by class, and each is a family of tests reported together:
+Two results are read class by class, and each is a family of tests reported together:
 
 - the splicing panel compares Evo 2 against SpliceAI in five variant classes
 - the ClinVar panel asks whether each of eight consequence rungs separates pathogenic from benign

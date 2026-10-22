@@ -1,4 +1,4 @@
-"""DEEP trust-layer analysis (real ML: isotonic/Platt calibration, cross-species transfer, conformal
+"""DEEP trust-layer analysis (real ML: isotonic/Platt calibration, cross-species transfer,
 selective prediction, consequence-stratified calibration). Three parts:
 
   (1) CROSS-SPECIES CALIBRATION TRANSFER (atlas, LOSO): does an isotonic calibrator fit on 8 species
@@ -193,7 +193,7 @@ def main():
         else:
             print("  ", r, flush=True)
 
-    print("=" * 70 + "\n(3) CONFORMAL / SELECTIVE PREDICTION (pooled atlas)\n" + "=" * 70, flush=True)
+    print("=" * 70 + "\n(3) SELECTIVE PREDICTION (pooled atlas, in-species oracle posterior)\n" + "=" * 70, flush=True)
     rc = part3_riskcov(data)
     pl.DataFrame(rc).write_parquet("reports/risk_coverage.parquet")
     for r in rc:

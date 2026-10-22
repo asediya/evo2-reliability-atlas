@@ -1,6 +1,6 @@
-"""Figure 5 recompute layer — REACH, RETURN, REGIME.
+"""Additional file 1 Figure S5 recompute layer (project Figure 5, drawn by fig5_final.py) — REACH, RETURN, REGIME.
 
-Everything Figure 5 draws is computed here and written to reports/fig5_reach.json. No float is typed by
+Everything Figure S5 draws, and the legend values it does not draw, is computed here and written to reports/fig5_reach.json. No float is typed by
 hand in the figure module.
 
 THE FINDING THIS FIGURE EXISTS FOR
@@ -206,7 +206,7 @@ def main():
         # panel a indicts -- and draws horse's true cost of +0.245 as +0.010, cattle's as a GAIN.
         #
         # The honest null: a pair touching a no-call is uninformative and contributes 0.5. AUROC is the
-        # probability a random pathogenic outranks a random benign, so that is a closed form and needs
+        # probability a random positive outranks a random negative, so that is a closed form and needs
         # no imputation at all.
         n_pairs = n_pos * n_neg
         cov_pairs = k_pos * k_neg
@@ -238,8 +238,8 @@ def main():
             "reach_all": float(fin.mean()), "nocall_rate": float(1 - fin.mean()),
             "class_gap": reach_pos - reach_neg,
             # Newcombe CI on the gap. Panel a colours a plate red only when this EXCLUDES zero -- a
-            # fixed cut such as gap > 0.02 would flag goat (+0.089, CI [-0.17,+0.27] on
-            # 9 positives) in the same alarm colour as horse (+0.489, CI [+0.42,+0.55]).
+            # fixed cut such as gap > 0.02 would flag goat (+0.089, CI [-0.242, +0.220] on
+            # 9 positives) in the same alarm colour as horse (+0.489, CI [+0.397, +0.543]).
             "class_gap_ci": _newcombe(k_pos, n_pos, k_neg, n_neg),
             "auroc_gerp_covered": auc_cov, "auroc_gerp_full_abstain": auc_full,
             "must_call_penalty": penalty, "penalty_ci": [lo, hi],
@@ -253,10 +253,10 @@ def main():
         })
     out["per_species"] = rows
 
-    # ---------------- panel C: the regime gradient ----------------
+    # ---------------- the regime gradient (fig5_final.panel_c, not placed on Figure S5) ----------------
     # Slopes of AUROC on log10(n), fitted on the MATCHED scoreable set so the two methods are compared on
     # identical variants. The estimand is the CONTRAST; neither slope is individually significant at k=9
-    # and the figure must say so.
+    # and the legend must say so (Figure S5 legend, Note S30).
     x = np.log10(np.array([r["n"] for r in rows], float))
     yg = np.array([r["auroc_gerp_covered"] for r in rows])
     ye = np.array([r["auroc_evo2_covered"] for r in rows])
@@ -276,7 +276,7 @@ def main():
         per-species difference, and the null to test is that this slope is zero. Permuting
         the METHOD LABEL within each species is wrong here -- swapping a and b leaves
         |a-b| unchanged and only flips its sign, so it tests a different null and gives p = 0.208
-        against the correct 0.013.
+        against the correct 0.012.
         """
         d = a - b
         obs = abs(np.polyfit(xx, d, 1)[0]); c = 0
@@ -284,7 +284,7 @@ def main():
             c += abs(np.polyfit(xx, rng.permutation(d), 1)[0]) >= obs
         return (c + 1) / 20001
 
-    # Species-resampled band on the fitted DIFFERENCE line. The figure plots the difference, not the two
+    # Species-resampled band on the fitted DIFFERENCE line. panel_c plots the difference, not the two
     # AUROC series: two fitted lines visually cross, and a reader reads a crossover off that intersection
     # even when the caption disclaims it. The band is what makes the zero-crossing's indeterminacy
     # visible instead of asserted -- it is wide exactly where the line passes zero.
@@ -299,7 +299,7 @@ def main():
         bands.append(k_ * gx + c_)
     bands = np.array(bands)
 
-    # Species-resampled CI on the CONTRAST ITSELF. Panel c does not use the leave-one-species-out
+    # Species-resampled CI on the CONTRAST ITSELF. panel_c does not use the leave-one-species-out
     # range as its uncertainty mark: a jackknife spread is not a confidence interval and that wedge is
     # ~4x too narrow, while reading as the universal grammar of a confidence band. The nine species are
     # the resampling unit.
@@ -373,9 +373,9 @@ def main():
                        "fraction": (nt_cov / nt_tot) if nt_tot else None,
                        "_note": ("Coverage of the GERP no-call set by Nucleotide Transformer. Full reach "
                                  "is a DNA-LM class property, not an Evo2 property; NT's mean atlas "
-                                 "AUROC is 0.595 (COMPILED_RESULTS), which is the point of the title.")}
+                                 "AUROC is 0.595 (reports/nt_vs_evo2.parquet), so full reach does not bring accuracy with it.")}
 
-    # ---------------- consistency with Fig 2F ----------------
+    # ---------------- consistency with Figure S7b ----------------
     # Evo2 does not "lose outright twice": counting horse's -0.033 (CI spans zero) as a
     # loss would contradict reports/fig2_data.json, which records horse as a tie. Read its verdicts so the two
     # figures cannot disagree about the same nine numbers.
@@ -386,10 +386,10 @@ def main():
         out["fig2f_verdicts"] = {
             "evo2_sig_wins": wins, "evo2_sig_losses": loss,
             "n_ties": len(f2) - len(wins) - len(loss),
-            "source": "reports/fig2_data.json (Fig 2F), reused so the two figures cannot contradict",
+            "source": "reports/fig2_data.json (the GERP head-to-head of Figure S7b), reused so the two figures cannot contradict",
         }
 
-    # ---------------- panel D: the supervised arm ----------------
+    # ---------------- the supervised arm (fig5_final.panel_d, drawn as Figure S5c) ----------------
     # Per-variant CNN/k-mer predictions are computed and DISCARDED by cnn_baseline.py / baseline_ml.py,
     # so paired CIs are not computable without a GPU re-run. Point estimates only, disclosed on the panel.
     c = pl.read_parquet("reports/cnn_baseline.parquet")
@@ -399,9 +399,9 @@ def main():
 
     # The Evo 2 column must be measured on the SAME variants as the baselines, because Table S3's
     # caption says it is. cnn_baseline.py does not compute it, and
-    # reports/local_bootstrap_ci.parquet holds the FULL panel. For six species the two sets
-    # coincide and the numbers agree, which would hide a substitution; for the two that lose variants to
-    # the 8,192-bp window requirement they do not -- horse 0.8805 against 0.8825, cat 0.8465 against
+    # reports/local_bootstrap_ci.parquet holds the FULL panel. Four species lose variants to
+    # the 8,192-bp window requirement (Table S3's notes): in cattle and dog, one variant each, the numbers
+    # agree to 5e-4, which would hide a substitution; in horse and cat they do not -- horse 0.8805 against 0.8825, cat 0.8465 against
     # 0.8476 -- so a value looked up there would assert like-for-like while coming from a different panel.
     #
     # fig2_data's forest IS that reduced set: its n matches the baseline n in all eight species. Its
@@ -437,7 +437,7 @@ def main():
                   "must state this rather than draw uncertainty it does not have."),
     }
 
-    # ---------------- panel E: where a protein LM can play ----------------
+    # ---------------- where a protein LM can play (fig5_final.panel_e, not on the plate; Note S43) ----------------
     esm = pl.read_parquet("data/processed/scores/esm/human_esm.parquet")
     ev = pl.read_parquet("data/processed/scores/human_evo2_40b_local_scores.parquet") \
            .select(["variant_id", pl.col("evo2_40b_neg").alias("evo2")])
@@ -451,7 +451,7 @@ def main():
              "auroc_evo2": float(roc_auc_score(ye, ev_v)),
              "auroc_gerp": float(roc_auc_score(ye[fg], ge[fg])) if fg.sum() > 10 else None}
     # The comparison must be like-for-like. auroc_gerp above is measured on the 881 of 912 variants GERP
-    # can score, while auroc_evo2 is measured on all 912 -- exactly the selection artifact panel a
+    # can score, while auroc_evo2 is measured on all 912 -- exactly the selection artefact panel a
     # exists to indict, applied by this figure to its own comparison. Record BOTH the matched-subset
     # contrast and the abstention null this figure argues for in panel b, and let the caption use them.
     esm_v["n_gerp_scoreable"] = int(fg.sum())
@@ -506,8 +506,8 @@ def main():
             vids = cd["variant_id"].to_list()
             nneg = sum(1 for v in vids if v.startswith("neg_")); npos = len(vids) - nneg
         # 'scored' must mean scored at usable size, not "a file exists". cattle_esm.parquet holds 15
-        # rows against the 155 missense the same ledger row advertises; calling that "scored" overstates
-        # coverage 10x and made the header's "barely overlap" false.
+        # rows against the 155 missense the same ledger row advertises; calling that "scored" would
+        # overstate coverage tenfold.
         e_n = e_pos = e_neg = 0
         if os.path.exists(ef):
             ed = pl.read_parquet(ef)
@@ -536,8 +536,8 @@ def main():
                   "as an ESM file existing (cattle has 15 rows of 155 missense).")}
 
     # THE CODING-STATUS CONFOUND -- the single most dangerous question this figure invites.
-    # Negatives are trinucleotide-matched population variants (mostly non-coding);
-    # positives are OMIA causal variants (mostly coding). Alignment coverage tracks coding status, so
+    # Negatives are trinucleotide-matched population variants (mostly non-coding; ClinVar benign in human);
+    # positives are catalogued disease- or trait-associated alleles (mostly coding). Alignment coverage tracks coding status, so
     # the class-dependent missingness could be a property of PANEL CONSTRUCTION rather than of GERP.
     # The test: condition on coding status and see whether the class gap survives.
     conf = []
@@ -562,15 +562,15 @@ def main():
             if (yy == 1).sum() >= 5 and (yy == 0).sum() >= 5:
                 row[f"gap_{lab}"] = float(ff[yy == 1].mean() - ff[yy == 0].mean())
                 row[f"n_{lab}"] = int(m.sum())
-                # A CI, not a sign. "Survives in 6 of 7" counted `gap_coding > 0` on point estimates;
-                # four of those six survivals are indistinguishable from zero, and one is +0.003.
+                # A CI, not a sign: gap_coding > 0 on the point estimate in all eight testable species,
+                # but the interval excludes zero in four, and human's gap is +0.003.
                 row[f"gap_{lab}_ci"] = _newcombe(int(ff[yy == 1].sum()), int((yy == 1).sum()),
                                                  int(ff[yy == 0].sum()), int((yy == 0).sum()))
 
         # THE STRONGER CONTROL. coding/noncoding is a crude binary: it lumps intronic (in-gene) with
         # intergenic, and positives and negatives barely co-occupy it. Condition instead on the actual
         # consequence CATEGORY and pool with Mantel-Haenszel weights, so the gap is only ever measured
-        # between variants of the same functional class. Most species have NO category holding >=5 of
+        # between variants of the same functional class. Four of the nine species have NO category holding >=5 of
         # both classes -- that is itself the finding, and the figure must say so rather than quote a
         # binary-stratum number as if the confound had been removed.
         cat_of = {r["variant_id"]: (r["consequence"] or "").split(",")[0].strip()
@@ -616,7 +616,7 @@ def main():
         "unmatchable_species": [r["species"] for r in conf if r.get("n_matched_strata", 0) == 0],
         "unannotated_species": [sp for sp in SP if not os.path.exists(f"data/processed/consequence_{sp}.parquet")],
         "_note": ("If the class gap survives WITHIN a stratum, class-dependent missingness is a property "
-                  "of the conservation track; if it collapses, it is an artifact of sampling negatives "
+                  "of the conservation track; if it collapses, it is an artefact of sampling negatives "
                   "genome-wide against coding positives. Two strata are reported: the crude coding/"
                   "noncoding binary, and the consequence-category-matched Mantel-Haenszel pooled gap "
                   "(stratified Miettinen-Nurminen score interval), which is the defensible one. Survival is "

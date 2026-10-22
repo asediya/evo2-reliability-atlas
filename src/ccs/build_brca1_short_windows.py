@@ -3,7 +3,7 @@ block-streaming forward fits in GPU memory (the 8192bp mean-LL path OOMs in vort
 batch 2). Produces the standard variant-delta windows schema {variant_id, ref_seq, alt_seq, var_off,
 ref_ok} consumed by score_evo2_40b_local.py — the SAME proven scorer that ran selection (28k) and
 eQTL (20k) at batch 32. This gives BRCA1 a positive control via the atlas variant-delta method
-(evo2_40b_neg = logP(ref)-logP(alt)), which validates OUR harness (not the paper's mean-LL protocol).
+(evo2_40b_neg = logP(ref)-logP(alt)), which tests OUR single-token harness (0.632 on this panel, against 0.874 at the 8,192-bp mean-LL readout).
 
   python src/ccs/build_brca1_short_windows.py --half 500   # -> 1001bp windows (~ the 1002bp atlas config)
 """

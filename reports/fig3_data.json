@@ -1,7 +1,7 @@
 {
   "_meta": {
     "orientation": "causal-ness; mean-LL delta negated, '_neg' as-is; reconciled to compiled_results.parquet",
-    "eqtl_set": "PigGTEx SuSiE-inf fine-mapped cis-eQTLs; positives PIP-high causal, negatives within-eGene LD-matched"
+    "eqtl_set": "PigGTEx SuSiE-inf fine-mapped cis-eQTLs; positives candidate causal (PIP >= 0.9), negatives within-eGene controls (PIP <= 0.001), matched on eGene, not on LD"
   },
   "A_scale_ladder": {
     "coding": {

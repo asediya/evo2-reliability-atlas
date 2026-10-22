@@ -15,7 +15,7 @@ conserved-region-vs-intergenic separation. goat excluded (<10 positives).
 | dog | 2278 | 209 | 0.895 | **0.846** +/- 0.002 | +0.049 | 0.886 |
 | human | 2880 | 1445 | 0.825 | **0.761** +/- 0.003 | +0.064 | 0.874 |
 
-**Mean across 8 species: AUROC(all-neg) 0.869 -> conservation-matched **0.834** (drop +0.034).**
+**Mean across 8 species: AUROC(all-neg) 0.869 -> conservation-matched 0.834 (drop +0.034).**
 
 **Verdict:** Evo2-40B's discrimination SURVIVES conservation-matching (mean ~0.83, range 0.76-0.91), so it is
 not merely conserved-region-vs-intergenic separation. The signal is MODEST and does not cleanly beat

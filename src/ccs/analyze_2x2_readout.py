@@ -9,7 +9,7 @@ mechanisms are confounded in that comparison:
   AGGREGATION the mean-LL readout averages the per-position surprise over thousands of positions,
               the single-position readout reads one position (the variant token).
 
-This job re-scores the whole atlas from a SINGLE 8,192-bp forward pass per sequence, emitting three
+This job re-scores a 2,599-variant subset of the atlas from a SINGLE 8,192-bp forward pass per sequence, emitting three
 readouts that hold the model and context fixed and vary only the aggregation scope:
 
   d_single    log-likelihood delta at the variant position only        (8,192-bp context, 1 position)

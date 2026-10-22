@@ -6,6 +6,7 @@ the tool does not do what it says. These tests are deliberately shallow and broa
 what the docs promise is importable, callable and shaped as advertised, not that the numbers are
 right, which is what the rest of the suite is for.
 """
+import importlib
 import inspect
 import os
 import re
@@ -121,9 +122,11 @@ def test_cli_flags_named_in_the_readme_exist():
 def test_docs_do_not_reference_missing_attributes(doc):
     """Catch a doc naming glmtrust.something that does not exist."""
     text = open(os.path.join(DOCS, doc), encoding="utf-8").read()
-    for mod, attr in re.findall(r"`glmtrust\.(\w+)\.(\w+)`", text):
-        m = getattr(glmtrust, mod, None)
-        if m is None or not inspect.ismodule(m):
-            continue
-        assert hasattr(m, attr), "%s references glmtrust.%s.%s, which does not exist" % (
+    for mod, attr in re.findall(r"`glmtrust\.(\w+)(?:\.(\w+))?`", text):
+        try:
+            m = importlib.import_module("glmtrust." + mod)
+        except ImportError:
+            m = None
+        assert m is not None, "%s references glmtrust.%s, which is not a module" % (doc, mod)
+        assert not attr or hasattr(m, attr), "%s references glmtrust.%s.%s, which does not exist" % (
             doc, mod, attr)

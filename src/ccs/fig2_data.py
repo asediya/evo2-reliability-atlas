@@ -1,11 +1,11 @@
-"""Figure 2 (Vertebrate Reliability Atlas) — verified data assembly.
+"""Atlas readout data for Figure 10, Additional file 1 Figure S7 and Table D1 — verified data assembly.
 Pulls EVERY number for panels A/B/C from on-disk sources, reconciles the denominators, and writes a
-single reports/fig2_data.json the figure script consumes. Run this first; it prints a verification table.
+single reports/fig2_data.json the figure scripts consume. Run this first; it prints a verification table.
 
-Provenance (all on F:):
-  Panel A forest   : reports/compiled_results.parquet  arm=atlas8192_40b  (per-species AUROC/CI/n, pooled 0.956)
-  GERP comparator  : reports/evo2_vs_conservation.parquet (paired Δ Evo2-GERP, conservation-matched set; CI+p)
-  Panel B readout  : documented per-species deltas (COMPILED_RESULTS §2, CI-backed) anchored on the 8192 forest
+Provenance:
+  Panel A forest   : reports/compiled_results.parquet  arm=atlas8192_40b  (per-species AUROC/CI/n, pooled 0.973)
+  GERP comparator  : reports/evo2_vs_conservation.parquet (paired Δ Evo2-GERP on the GERP-scorable set; CI+p)
+  Panel B readout  : per-species deltas recomputed from the two score files on every run (_readout_effect)
   Panel C strata   : reports/type_matched_atlas.parquet (nested ascertainment strata, both readouts)
 Reference (not fitted): TimeTree 5 median divergence-from-human (My; Kumar et al., Mol Biol Evol 2022, doi:10.1093/molbev/msac174), tree scaffold only.
 """
@@ -39,8 +39,8 @@ READOUT_SEED = 20260723
 def _readout_effect():
     """Recompute the readout effect on every variant carrying BOTH readouts.
 
-    Orientation follows build_readout_headtohead.py: flip a score if its AUROC is below 0.5, applied
-    independently to each readout, so the two are treated identically.
+    Orientation follows build_readout_headtohead.py: each readout gets its declared sign (the 8,192-bp
+    delta negated, the 1,001-bp score as is) and an AUROC below 0.5 stops the run; nothing is flipped on the labels.
     """
     from sklearn.metrics import roc_auc_score
     import sys as _sys
@@ -125,12 +125,9 @@ def main():
     for s in SPECIES:
         f = forest[s]
         rowsA.append({"species": s, "n": f["n"], "auroc": f["auroc"], "lo": f["lo"], "hi": f["hi"],
-                      # Was round(f["auroc"] - READOUT_DELTA[s], 4). READOUT_DELTA is rounded to
-                      # 3 dp, so subtracting it reintroduced up to 0.0005 and Table 1 printed
-                      # sheep 0.902 where Table S8 and tables.md Table D4, which compute it
-                      # directly, both printed 0.903 on the same 616 variants.
-                      # six places, not four: a reader rounds this to three, and 0.882531 stored as 0.8825
-                      # printed horse as 0.882 in tables.md where the value is 0.883
+                      # The DIRECT 1,001-bp AUROC: subtracting the 3-dp READOUT_DELTA would reintroduce up to
+                      # 0.0005 (sheep 0.902 against the direct 0.903), and six places, not four, avoid
+                      # double rounding (horse 0.882531 -> 0.8825 -> 0.882 against the true 0.883).
                       "auroc_1001": round(READOUT_1001.get(s, f["auroc"] - READOUT_DELTA[s]), 6),
                       "readout_delta": READOUT_DELTA[s],
                       "divergence_my": DIVERGENCE_MY[s]})
@@ -170,7 +167,7 @@ def main():
               f"  | 1001bp {r['auroc_1001']:.3f} (Δ+{r['readout_delta']:.3f}) | div {r['divergence_my']} My")
     print(f"  POOLED {pooled['auroc']:.3f} [{pooled['lo']:.3f},{pooled['hi']:.3f}] n={pooled['n']}")
     print(f"  distance-decoupling Spearman rho(div,AUROC)={rho_d:+.2f} p={p_d:.2f}  (exploratory, n=9, ns)")
-    print("\nGERP comparator — paired Δ(Evo2-GERP), conservation-matched set:")
+    print("\nGERP comparator — paired Δ(Evo2-GERP), GERP-scorable set:")
     for s in SPECIES:
         if s in gerp:
             g = gerp[s]; print(f"  {s:8s} Evo2 {g['evo2']:.3f} GERP {g['gerp']:.3f}  Δ{g['delta']:+.3f} "

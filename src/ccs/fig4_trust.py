@@ -11,7 +11,7 @@ figure follows the reconciliation:
   * The verdict is a PAIRED bootstrap on delta-ECE, not a comparison of point estimates. Under macro,
     three of the four estimators straddle zero and equal-mass at 15 bins favours transfer, so the count is reported.
   * The oracle arm of reports/risk_coverage.parquet is built on IN-COHORT posteriors
-    (analyze_trust_layer.py:151). Panel c uses honest LOSO posteriors and a random control instead.
+    (analyze_trust_layer.py, part3_riskcov()). Panel c uses honest LOSO posteriors and a random control instead.
   * The per-variant hero uses the PLATT posterior (8,792 distinct confidences / 11,130 variants).
     Isotonic gives only 248, so a per-variant panel on isotonic would place >99% of marks by sort
     tie-break -- decoration wearing the costume of data.
@@ -174,9 +174,9 @@ def _plab_top(ax):
     """
     # WHERE THE LETTER SITS IS MEASURED, NOT TYPED. A pinned y such as 1.075 is a fraction of the
     # axes height, so it means a different number of points in every row, and nothing in it knows
-    # how tall the letter is. At the 11 pt panel size the letter's box outgrows what
-    # 0.075 of a 66 pt panel buys and lands on the two labels that already own the axes' top-left
-    # corner: panel c's top y tick ("0.08") and panel d's "Δlogit π" column header. The letter is
+    # how tall the letter is. At the 12 pt panel size (SG.PANEL) the letter's box outgrows what
+    # 0.075 of a 66 pt panel buys and lands on whatever already owns the axes' top-left corner,
+    # such as panel c's top y tick. The letter is
     # lifted until its own RENDERED box clears whatever occupies that corner, with the letter's
     # BOTTOM (not its baseline) as the anchor, so the clearance is the one the PDF will show.
     fig = ax.figure
@@ -428,10 +428,6 @@ def panel_a(fig, gs_slice):
     ax.text(-0.350, -1.15, "* = held out, never a calibration donor",
             transform=ax.get_yaxis_transform(), ha="left", va="center", fontsize=FOOT, color=MUTED,
             clip_on=False, zorder=9)
-    # NO transform on these two: HI is a DATA x, and the lift column above is placed in data
-    # coordinates too. Passing get_yaxis_transform() here would read HI - 0.12 as an AXES FRACTION
-    # -- roughly 800 % of the axes width -- and put both lines off the right edge of the page,
-    # where they vanish from the PDF entirely rather than failing any bounds check.
     # ONE line, in axes fractions, in the only band above this panel that is clear of ink. Two
     # lines right-aligned over the column itself would sit under the marginal
     # density curve, which is a PATH, so the span-collision gate would score them clean while the
@@ -443,8 +439,7 @@ def panel_a(fig, gs_slice):
     # has a left rail, so its fraction 0 is at page x 164, not at the gridspec's left edge.)
     # The asterisk on goat, chicken and pig needs a key on the plate; without one the
     # legend would have to spend eighteen words saying what it means -- the same rule as the
-    # three marks above. The key sits at the right end of the same clear band (x 335-470 pt is free
-    # there; the "n = ..." subtitle sits a line higher, at y 11-19).
+    # three marks above. The key is the second line of the left-hand header above (x = -0.350, y = -1.15).
     ax.text(-0.350, 1.368, "\u00d7 = errors caught by refusing that species' least-confident 15%, "
             "vs random; n.s. spans 1\u00d7", transform=ax.transAxes,
             ha="left", va="center", fontsize=FOOT, color=MUTED, clip_on=False, zorder=9)
@@ -493,8 +488,8 @@ def panel_a(fig, gs_slice):
     # The argument that refusal is not class-neutral ("731 of 893 errors are MISSED positives and
     # only 26% of those are caught, against 77% of the 162 harmless over-calls") belongs to the
     # legend and Additional file 1 Note S10, not to the canvas in red bold. Its five
-    # numbers do not: they are the census of the dots this panel draws, so they stay as one plain
-    # grey line that counts the marks rather than interpreting them.
+    # numbers, the census of the dots this panel draws, are not set on the canvas either: no
+    # caption line is drawn under panel a (the loop below is empty).
     # The wrap width is DERIVED from the axes box so the block cannot reach past the grid's right
     # edge; a hand-set width such as 1.310 overflows it.
     _bx = ax.get_position()
@@ -698,7 +693,7 @@ def panel_dm(ax):
 
     NO ECE IS PRINTED ON THIS PANEL, and that is deliberate, for two reasons.
 
-    First, a POOLED ECE misleads. Pooling nine species whose base rates run from 4 % to 30 % lets one
+    First, a POOLED ECE misleads. Pooling nine species whose base rates are 9 % (eight species) and 50 % (human) lets one
     species' over-confidence cancel another's under-confidence inside a shared reliability bin, so
     the transfer appears to cut calibration error tenfold. This module's own header rejects pooled
     ECE for exactly that reason. The pooled gap is also three times the upper bound Note S36
@@ -707,13 +702,14 @@ def panel_dm(ax):
 
     Second, the macro pair cannot be computed here in a form that agrees with the supplement.
     Table S23 reports macro trivial 0.0551 against isotonic
-    0.0532 on the equal-width-10 estimator. Recomputing that estimator on this panel's own source,
+    0.0533 on the equal-width-10 estimator, the width10 macro values of reports/fig4_reconciliation.json's
+    ece_grid, which reproduce every cell of Table S23. Recomputing that estimator on this panel's own source,
     reports/_recon_pervariant_trust.parquet, gives 0.0506/0.0501 from the global_sigmoid column and
     0.0541/0.0501 from platt_LOSO, and matches Table S23 to four decimals in none of the nine
     species under either. reports/calibration_transfer.parquet, which tabulates the same quantity,
-    disagrees with both and with S23 (goat isotonic 0.0555 against S23's 0.0564). The isotonic
-    column IS the right one -- it carries the 248 distinct values Note S36 attributes to it -- so
-    this is a lineage gap in the trivial arm, not a wrong column. Printing any of the three pairs
+    disagrees with both and with S23 (goat isotonic 0.0555 against S23's 0.0564). Neither column
+    of that refit reproduces Table S23 (its isotonic arm gives 0.0501, not 0.0533): the refit is a
+    separate fit from the one in fig4_reconcile.py whose grid Table S23 prints. Printing any of the three pairs
     on the plate would put a fourth number into circulation that no table backs.
 
     What this panel is FOR is the decision boundary, and that it computes from its own data: 68 of
@@ -774,7 +770,7 @@ def panel_dm(ax):
 def panel_e(ax):
     """POSITIVE-CLASS coverage under BOTH split-conformal constructions, nominal 90%.
 
-    Plotting only the MARGINAL arm and titling its pathogenic collapse as the finding would be
+    Plotting only the MARGINAL arm and titling its positive-class collapse as the finding would be
     indefensible: build_conformal.py states "Mondrian is reported because marginal coverage skews
     under class imbalance", so the collapse is the documented artifact of the construction the pipeline
     itself rejects -- and abstain_marg is 0.000 for all nine species, i.e. the marginal predictor never
@@ -836,7 +832,7 @@ def panel_e(ax):
     from matplotlib.ticker import FuncFormatter as _FF
     ax.yaxis.set_major_formatter(_FF(lambda v, _: "0" if abs(v) < 1e-9 else "%g" % v))
     # Coverage is bought with silence and the price is not the same in every cell: 43% in human,
-    # 70% in cat. One pooled figure charges all nine the same 61%, which is the accounting error
+    # 70% in cat. One summary figure, the species mean of 61% (59% pooled over variants), charges all nine the same, which is the accounting error
     # this paper exists to name, so every Mondrian point carries its own rate.
     # get_xaxis_transform: x in DATA, y in AXES FRACTION -- get_yaxis_transform is the one whose x
     # is an axes fraction. y = 0.02 clears every mark (the lowest is goat's marginal triangle at
@@ -897,8 +893,8 @@ def main():
     panel_a(fig, gs[0, :])
     # Panel a's marker is placed in FIGURE coordinates because the panel is two stacked axes with
     # its own left rail; b-e use _plab and the axes transform. Same marker either way.
-    # x = 0.111, the figure-coordinate position of the -0.115 axes offset _plab uses for b-e, so
-    # all five letters sit in one column instead of a alone hanging over the grid's left edge.
+    # x = style_gb.letter_x, the shared left margin _plab also gives b and d; c and e sit at their
+    # own axes' -0.115 corner in the right column.
     from .style_gb import letter_x as _letter_x
     _mark(fig.text, _letter_x(fig), _fy(6.2), "a",
           f"n = {PV.height:,}  ·  rows ordered by sample size", x_right=0.955)
@@ -925,8 +921,7 @@ def main():
     # GB: figures are "closely cropped to minimise the amount of white space surrounding the
     # illustration". Crop the PAGE at the save, to the drawn extent plus 3 mm, and only ever
     # upward from the BOTTOM edge: the width stays the declared 170 mm, the top edge does not
-    # move, and no artist is re-placed. This is NOT the H_MM change FIGURES.md warns about --
-    # nothing authored in millimetres from the top is touched. A plate already tighter than
+    # move, and no artist is re-placed. Nothing authored in millimetres from the top is touched. A plate already tighter than
     # 3 mm keeps its own margin (the clamp at 0).
     _y0 = min(max(0.0, fig.get_tightbbox(fig.canvas.get_renderer()).y0 - 3.0 * MM),
               fig.get_figheight())

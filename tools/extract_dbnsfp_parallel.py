@@ -163,7 +163,7 @@ def main():
     t0 = time.time()
     hdr, keep = header_and_columns(a.src)
     names = ["variant_id"] + [hdr[i] for i in keep[4:]]
-    print("  %d columns in dbNSFP; keeping %d (%d scores + gene)"
+    print("  %d columns in dbNSFP; keeping %d (%d raw scores, their rankscores and the gene columns)"
           % (len(hdr), len(names), sum(1 for n in names if n.lower().endswith("_score"))))
 
     print("  indexing BGZF blocks ...")

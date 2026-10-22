@@ -1,12 +1,12 @@
 """BAT One-Health arm — build the polymorphism/SFS-lite panel from the 10-sample Myoluc2.0 VCF.
 
 With only 10 libraries (coarse allele counts, AN<=20) we do NOT chase fine frequencies. Instead the SFS-lite
-test (analog of the cattle Idea-1 selection-spectrum, but coarse): among REAL segregating bat SNVs,
+test (analogue of the label-free cattle selection-spectrum analysis of Note S39, but coarse): among REAL segregating bat SNVs,
 bin by minor-allele COUNT and ask whether Evo2 deleteriousness FALLS as the allele becomes more common
 (singletons = recently arisen / less filtered = more deleterious; common = tolerated). A negative
-Spearman = Evo2 tracks purifying selection in a wild zoonotic-host bat, ~65 My from the farm animals.
+Spearman = Evo2 tracks purifying selection in a wild zoonotic-host bat, in a different laurasiatherian order from the farm animals.
 
-CPU-only. Reads the joint-call VCF (data/interim/bat/bat.vcf.gz) via the bat-map container's bcftools,
+CPU-only. Reads the joint-call VCF (data/interim/bat/bat.vcf.gz) via bcftools in a local Docker image named bat-map (not part of the deposit),
 samples SNVs per allele-count bin, then reuses extract_windows_local.py for ref/alt windows + ref-match
 against Myoluc2.0. Exits with an error naming the VCF and the genome if either is absent.
   python src/ccs/build_bat_panel.py --per-bin 6000

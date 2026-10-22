@@ -102,8 +102,8 @@ def main():
         s = sign * d[col].to_numpy().astype(float)
 
         stars = np.array([rev.get(v.replace("neg_", ""), ("", -1))[1] for v in vids])
-        # Negatives are Ensembl population variants and carry no ClinVar record; the filter is a
-        # statement about the POSITIVE class only, so negatives are always retained.
+        # The human negatives are ClinVar Benign/Likely_benign records, but the filter is applied to
+        # the POSITIVE class only, so negatives of every review status are retained.
         pos = y == 1
         matched = (stars >= 0) & pos
         keep = (~pos) | (matched & (stars >= 1))

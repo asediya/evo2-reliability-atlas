@@ -59,6 +59,15 @@ def main():
     pv = pl.read_parquet(PV)
     rng = np.random.default_rng(SEED)
     out = {
+        "_meta": {"readout": "1001bp single-position variant delta",
+                  "_readout_note": ("This block bootstrap was run at the 1,001-bp readout ONLY. The "
+                                    "locus-clustered intervals Table 2 prints at both readouts come from a "
+                                    "separate two-sample locus-clustered bootstrap (B = 20,000), deposited in "
+                                    "Additional file 3 as tables/table2_cluster_aware_ci.tsv."),
+                  "n_bootstrap": B, "seed": SEED, "locus_bin_bp": BIN,
+                  "block_definition": (f"block bootstrap resampling loci, a locus being a (chromosome, "
+                                       f"{BIN // 1000}-kb bin) block; every variant in a drawn block is taken"),
+                  "n_species": 9},
         "_definition": (f"block bootstrap resampling loci, a locus being a (chromosome, {BIN // 1000}-kb "
                         "bin) block; every variant in a drawn block is taken"),
         "n_bootstrap": B, "seed": SEED, "locus_bin_bp": BIN, "per_species": {},

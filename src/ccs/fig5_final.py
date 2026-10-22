@@ -5,16 +5,15 @@ try:
 except ImportError:
     import style_gb as _SG
 
-"""FIGURE 5 — "Reach is not competence."
+"""Additional file 1's Figure S5 — "Conservation's missingness is class-dependent."
 
-Composes the punched-plate sieve hero with four supports, each in a DIFFERENT idiom and each checked
-against the skeleton ban list derived from Figs 1-4.
+Composes the punched-plate sieve with two supports, each in a different idiom, checked against the
+project's figure-idiom ban list (not deposited; the ban numbers below refer to it).
 
   a  SIEVE            ten variant-resolution plates, holes = no-calls   [area partition + lattice]
-  b  SUBSIDENCE       two skylines over a no-call COUNT axis            [step/staircase family]
-  c  GNOMON           one slope triangle used as an instrument          [angular, not a series]
-  d  CONDITION MATRIX 8 species x 3 conditions, both axes categorical   [ban-9 carve-out]
-  e  LEDGER           typographic set-membership, mostly struck out     [document, not a plot]
+  b  SILENT SET       the atlas as one area-true block, GERP-silent band on top    (panel_b)
+  c  CONDITION MATRIX 8 species x 3 conditions, both axes categorical   [ban-9 carve-out] (panel_d)
+  panel_c (the regime gnomon) and panel_e (the ESM-2 ledger) are not on the plate.
 
 BAN CHECKS PERFORMED BEFORE BUILDING, NOT AFTER
   * Panel d is not a three-rail strand bundle (eight series across three
@@ -33,17 +32,18 @@ WHAT THE FIGURE DOES AND DOES NOT CLAIM
     null, never median imputation.
   * Runs-test z values are the per-species values in the JSON, never the POOLED-sequence values the
     stats layer explicitly disowns.
-  * THE CODING CONFOUND: a coding-stratum "survives in 6 of 7" tally is only a SIGN COUNT.
-    Matched properly on consequence category, the class gap is not separable from zero in ANY of the four
-    species where matching is possible, and human -- the only well-powered match -- is a clean null. The
+  * THE CODING CONFOUND: the crude coding/non-coding stratum keeps a class gap whose CI excludes
+    zero in 4 of the 8 species where it is defined (pig, horse, cat, cattle). Matched on consequence
+    category, a positive class gap is separable from zero in none of the five species where matching
+    is possible (in dog the matched gap reverses), and human -- the only well-powered match -- is a clean null. The
     figure does not claim the confound is defeated. It claims what panel b shows: whatever
     causes the holes, they cost you AUROC at deployment.
 
 INPUTS (all produced by src/ccs/fig5_stats.py unless noted)
   reports/fig5_reach.json                          <- fig5_stats.main()
   data/processed/conservation/{build}_gerp.parquet <- the undeposited data/ tree (FIGURES.md)
-  reports/cnn_baseline.parquet                     <- src/ccs/cnn_baseline.py
-  reports/fig2_data.json                           <- Fig 2, reused for verdict consistency only
+  tables/fig1_atlas_pervariant.parquet             <- Additional file 3 (CCS_TABLES), panel b
+(fig5_stats.py, not this module, reads reports/cnn_baseline.parquet and reports/fig2_data.json.)
 
 Run: python -m src.ccs.fig5_final
 """
@@ -84,8 +84,6 @@ SUB = "#8C929B"
 # WCAG 4.5 at 6.8 pt. The bars keep SUB; the words take the darkened rendition.
 SUB_T = SG_text_safe(SUB)
 POS = "#E69F00"
-ATLAS_PV = str(Path(__file__).resolve().parents[4] / "final10" / "tables"
-                / "fig1_atlas_pervariant.parquet")
 try:                                   # `S` is already this module's own namespace, so alias it
     from . import fig2_style as CLADE
 except ImportError:
@@ -158,10 +156,8 @@ from .style_gb import letter_x as SG_letter_x
 def _plab(ax, letter, text=None, left=False):
     """House style (src/ccs/style_gb.py): a bold lower-case letter, no chip, no heading.
 
-    The reversed-out letter in a filled square was deck styling, and the chip carried a
-    second defect: bbox chips are invisible to get_window_extent, so the collision checker
-    scored zero overlaps while the chip painted over panel c's rotated y-axis label
-    (QA blind spot #4). A plain letter is measurable by the same checker that guards the
+    No letter chip: a bbox chip is invisible to get_window_extent, so a collision check would
+    score it clean wherever it painted over a label. A plain letter is measurable by the same checker that guards the
     rest of the figure. `text` is accepted and ignored -- the call sites keep their strings
     as documentation of what each panel is, and the legend states it for the reader."""
     if left:
@@ -224,7 +220,7 @@ def draw_half(ax, v, x0, w, colour, ncol, row_h):
     the frame and reads as punched holes; padding with material invents reachable variants. Neither
     is acceptable once ncol is shared between the halves, because
     the smaller half can then be up to ncol-1 cells short: goat's 9 positives would take 3
-    invented material cells and print 8/12 = 67% against a true 89%. The remainder row is drawn as its
+    invented cells and print 8/12 = 67% as holes, or 11/12 = 92% as material, against a true 8/9 = 89%. The remainder row is drawn as its
     own short strip spanning only the columns it actually fills, so every drawn cell is exactly one
     variant and no cell is invented in either direction.
     """
@@ -249,10 +245,7 @@ def draw_half(ax, v, x0, w, colour, ncol, row_h):
 
 
 def panel_a(fig, gs_slice):
-    """Ten plates. ylim was (-0.33, 1.17) -- 30% of every plate axes reserved below the plate for two
-    thin text rows, which printed as 38.4 mm of full-width blank paper across the panel while b-e were
-    squeezed to 18.5 mm of plot height each. Tightened to (-0.20, 1.17); the reclaimed height is what
-    brings the figure under the 225 mm ceiling without shrinking any type."""
+    """Ten plates, each with label bands sized in points above and below its 0..1 plate band."""
     inner = gs_slice.subgridspec(2, 5, wspace=0.115, hspace=0.145)
     HW, GAP = 0.47, 0.06
     # THE LABEL BANDS ARE SIZED IN POINTS, NOT IN PLATE FRACTIONS. A band holds two lines of
@@ -303,7 +296,7 @@ def panel_a(fig, gs_slice):
         # BOLD MEANS ONE THING: "this species' gap CI excludes zero", which the key states. Evo 2
         # is already set in CODING blue, and its gap note is blue too, so its name takes no weight.
         # Bold is a redundant channel beside the red gap, and survives a
-        # photocopy, the same reasoning as the hatch in Figure 9's panel a.
+        # photocopy, the same reasoning as the hatch in Figure S4's panel a.
         ax.text(0.0, Y_LAB, lab, fontsize=TICK, color=(CODING if sp == "Evo2" else INK),
                 ha="left", va="top",
                 fontweight=("bold" if _sig_gap(R.get(sp, {})) else "normal"))
@@ -313,7 +306,7 @@ def panel_a(fig, gs_slice):
         # variants and must not stand with no interval anywhere on the plate.
         # No italic on the Evo 2 row: it is already set in CODING blue here and in its species
         # name and gap, so a slant would be a fourth channel for a fact already carried three times.
-        # Italic is reserved in this set for a taxon name (Figure 6's clade), not for emphasis.
+        # Italic is reserved in this set for a taxon name (Figure S3's binomial), not for emphasis.
         ax.text(2 * HW + GAP, Y_CI, ci_s, fontsize=FOOT,
                 color=(CODING if sp == "Evo2" else MUTED), ha="right", va="top")
         ax.text(HW / 2, Y_PCT, l_pct, fontsize=FOOT, color=(CODING if sp == "Evo2" else SUB_T),
@@ -332,7 +325,7 @@ def panel_b(ax):
     11,130 variants cannot say WHICH variants are missing or whether missing them
     matters. Here the whole atlas is one area-true block, split by species (column width is the
     species' share) and by whether GERP returns a value (row height is the share of that species
-    it scores). Cell fill is the share of the cell that is a catalogued disease allele.
+    it scores). Cell fill is the share of the cell that is a catalogued disease- or trait-associated allele.
 
     Three facts a staircase cannot carry come out of the geometry. GERP is silent on 1,598 of
     the 11,130. That silence is not evenly spread -- horse, cat and pig lose 402, 328 and 228 -- and
@@ -681,8 +674,7 @@ def main():
              fontsize=FOOT, color=MUTED, ha="right", va="bottom")
     fig.add_artist(plt.Line2D([0.092, 0.972], [0.98000, 0.98000], color="#C4BFB8", lw=0.6))
 
-    # the headline number rides in the title, not a caption: the only slot left under this panel sits
-    # directly above panel d's own title, where a caption reads as d's rather than b's.
+    # _plab ignores its text argument, so the string below documents panel b and is not printed.
     axb = fig.add_subplot(gs[2, 0]); panel_b(axb)
     _pen = max(r["must_call_penalty"] for r in J["per_species"])
     _plab(axb, "b", left=True, text=f"What the silence costs: up to {_pen:.3f} AUROC")
@@ -723,8 +715,7 @@ def main():
     # GB: figures are "closely cropped to minimise the amount of white space surrounding the
     # illustration". Crop the PAGE at the save, to the drawn extent plus 3 mm, and only ever
     # upward from the BOTTOM edge: the width stays the declared 170 mm, the top edge does not
-    # move, and no artist is re-placed. This is NOT the H_MM change FIGURES.md warns about --
-    # nothing authored in millimetres from the top is touched. A plate already tighter than
+    # move, and no artist is re-placed. Nothing authored in millimetres from the top is touched. A plate already tighter than
     # 3 mm keeps its own margin (the clamp at 0).
     _y0 = min(max(0.0, fig.get_tightbbox(fig.canvas.get_renderer()).y0 - 3.0 * MM),
               fig.get_figheight())

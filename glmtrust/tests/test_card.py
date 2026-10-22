@@ -127,9 +127,10 @@ def test_card_is_self_contained():
 
 def test_nan_values_render_as_a_dash_not_the_word_nan():
     y, s = _clean_panel()
-    doc = render_card(audit(y, [Scorer("full", s, readout="r")], n_boot=20))
-    assert "nan" not in doc.lower().replace("nan-", "")   # miss_auroc is undefined at full reach
-    assert "&mdash;" in doc
+    s = np.where(y == 1, np.nan, s)        # reaches no positives: the covered AUROC is undefined
+    doc = render_card(audit(y, [Scorer("blind", s, readout="r")], n_boot=20))
+    assert "nan" not in doc.lower().replace("nan-", "")
+    assert "<td class='num'>&mdash;</td>" in doc     # in a table cell, not a heading
 
 
 def test_write_card_round_trips(tmp_path):

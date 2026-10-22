@@ -12,7 +12,7 @@ ASSERTED against literals held in _assert_canonical so that a silent drift fails
 instead of reaching a table. That function opens no file; see its docstring.
 
 THE TWO PANELS ARE NOT THE SAME PANEL. Section 1 (8192 bp mean-LL) is n = 11,109 over 9 species; the
-GERP-comparable set (1001 bp) is n = 11,130. Table D1 carries both, in labelled columns, because the
+GERP-comparable set (1001 bp) is n = 9,532, of the 11,130-variant 1,001-bp panel. Table D1 carries both, in labelled columns, because the
 readout is worth +0.092 AUROC pooled (section 2) and mixing them is the single easiest way to
 publish a wrong number here.
 """

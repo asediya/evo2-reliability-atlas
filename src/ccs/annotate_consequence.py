@@ -1,11 +1,11 @@
 """Annotate our OMIA positives with their OMIA 'Variant Effect' (consequence class) -- build-free,
 straight from the OMIA download -- and ask: does Evo2-40B's deleteriousness score respect the
 biological consequence hierarchy (nonsense/frameshift > splice > missense > regulatory > synonymous)?
-If it does, that is direct evidence the model reads FUNCTION, not just local context (rebuts the
-"Blind Spots" critique). Uses positives we already scored -> NO new GPU scoring needed.
+A gradient alone would not show that the model reads function: GERP shows one through the
+identical analysis (Additional file 1, Table S14). Uses positives we already scored -> NO new GPU scoring needed.
 
-Also emits the per-species consequence breakdown (a paper table) and the SNV-only, pathogenic-only
-positive set that a consequence-matched-negative benchmark will use next.
+Also writes every annotated positive with its OMIA effect and classification to
+data/processed/positives_consequence.parquet.
   python src/ccs/annotate_consequence.py
 """
 import os, time, glob

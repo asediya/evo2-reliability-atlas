@@ -156,7 +156,7 @@
   },
   {
    "key": "base_rate",
-   "label": "% path.",
+   "label": "% pos.",
    "fmt": "{:.0%}",
    "group": "cohort",
    "good": null
@@ -234,7 +234,7 @@
   },
   {
    "key": "conf_path",
-   "label": "pathogenic",
+   "label": "positive",
    "fmt": "{:.2f}",
    "group": "conformal 90%",
    "good": "high"

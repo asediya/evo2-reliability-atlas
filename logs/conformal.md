@@ -5,7 +5,7 @@ Conformal quantile calibrated on label-rich species; applied to held-out TARGETS
 ## Per-species coverage & set-size (alpha=0.10, nominal 90%)
 Two constructions, each with coverage AND set sizes from its OWN membership rule. Mondrian holds ~0.97 by abstaining heavily; marginal holds ~0.95 overall as near-singletons but drops POSITIVE-class coverage.
 
-| species | role | n | pos | Mondrian cov | Mond cov benign | Mond cov path | Mond abstain{both} | marginal cov | marg cov benign | marg cov path | marg abstain{both} |
+| species | role | n | pos | Mondrian cov | Mond cov benign | Mond cov positive | Mond abstain{both} | marginal cov | marg cov benign | marg cov positive | marg abstain{both} |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | goat | TARGET | 99 | 9 | **0.970** | 0.967 | 1.000 | **0.505** | 0.929 | 1.000 | 0.222 | 0.000 |
 | chicken | TARGET | 308 | 28 | **0.984** | 0.986 | 0.964 | **0.627** | 0.961 | 1.000 | 0.571 | 0.000 |
@@ -21,7 +21,7 @@ Mean Mondrian coverage on held-out TARGETS = **0.970** vs nominal 0.90.
 
 ## Coverage sweep on held-out label-poor targets — does empirical coverage track the nominal level?
 Mondrian coverage/abstention vs marginal coverage/abstention, each internally consistent. Note the marginal predictor's POSITIVE-class coverage collapses well below nominal.
-| alpha | nominal 1-alpha | Mondrian cov | Mond path cov | Mond abstain | marginal cov | marg path cov | marg abstain |
+| alpha | nominal 1-alpha | Mondrian cov | Mond positive cov | Mond abstain | marginal cov | marg positive cov | marg abstain |
 |---|---|---|---|---|---|---|---|
 | 0.05 | 0.95 | **0.993** | 0.932 | 0.658 | 0.978 | 0.753 | 0.178 |
 | 0.1 | 0.9 | **0.969** | 0.932 | 0.626 | 0.951 | 0.466 | 0.0 |

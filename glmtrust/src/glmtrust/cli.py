@@ -911,7 +911,7 @@ def _common(sub, groups=True, group_required=False):
     # The default is platt because the paper states the per-variant deliverable is the
     # two-parameter Platt posterior; an isotonic default would hand a reader of the documented
     # command a different arm from the paper. The two differ materially on the paper's own panel
-    # (AUROC 0.820 against 0.847, lift 2.37 against 2.56).
+    # (isotonic against Platt: AUROC 0.820 against 0.847, lift 2.22 to 2.33 against 2.37; Additional file 1, Note S29).
     sub.add_argument("--calibration", default="platt", choices=["isotonic", "platt"],
                      help="probability map (default platt)")
     sub.add_argument("--seed", type=int, default=0, help="random seed (default 0)")

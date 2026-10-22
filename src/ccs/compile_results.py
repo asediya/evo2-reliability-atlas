@@ -89,7 +89,7 @@ def main():
         rows.append({"arm": "atlas8192_40b", "key": "POOLED", "n": len(y), "value": au, "lo": lo, "hi": hi})
         print(f"  {'POOLED':8s} n={len(y):5d}  AUROC {au:.3f} [{lo:.3f},{hi:.3f}]", flush=True)
 
-    print("\n" + "=" * 74 + "\n(2) SCALE LADDER (hook #2) -- mean coding AUROC + eQTL by model size\n" + "=" * 74, flush=True)
+    print("\n" + "=" * 74 + "\n(2) SCALE LADDER -- whole-atlas macro AUROC + eQTL by model size\n" + "=" * 74, flush=True)
     for sz, suf in [("1B", "_meanll_1b_8192"), ("7B", "_meanll_7b_8192"), ("40B", "_meanll_8192")]:
         aus = []
         for sp in SP:

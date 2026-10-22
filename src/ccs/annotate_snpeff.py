@@ -2,7 +2,7 @@
 so we can build the TYPE-MATCHED benchmark. Type matching removes an ascertainment inflation:
 negatives are ~84% intergenic/intronic while positives are ~85% coding-impactful, so the
 unmatched atlas AUROC (cattle 0.900) largely measures "is this variant in a gene". Type-matched
-(missense-only) cattle = 0.754.
+(missense-only) cattle = 0.744 at the same 1,001-bp readout.
 
 Coordinates: positives may carry RefSeq-accession variant_ids -> take numeric chrom/pos from the
 OMIA position table the species' panel was built from (OMIA_POS: dog_cf3_omia_pos.parquet for the
@@ -18,11 +18,12 @@ import polars as pl
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
+# snpEff 5.2 and a Java 21 runtime are third-party installs expected at these two paths; neither is deposited.
 JAVA = os.path.abspath("tools/jre/jdk-21.0.11+10-jre/bin/java.exe")   # abspath: subprocess can't resolve rel paths on Windows
 JAR = os.path.abspath("tools/se52/share/snpeff-5.2-1/snpEff.jar")
 DATA = "data/raw/snpeff"
 OUT = "data/interim/snpeff"
-# DBs we BUILT locally from Ensembl GTF + our own genomes (snpEff's DB repo is blocked from this network).
+# DBs we BUILT locally from Ensembl GTF + our own genomes (so that each matches the assembly the panel was scored on).
 # Names must match build_snpeff_dbs.py / data/raw/snpeff/build.config. Assemblies verified against GERP
 # chrom lengths + build_atlas8192.py genome paths. cat: our genome is F.catus_Fca126_mat1.0, which
 # Ensembl carries from release 114 (earlier releases are on Felis_catus_9.0, a different build).

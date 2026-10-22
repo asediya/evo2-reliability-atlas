@@ -8,11 +8,15 @@ This script computes both controls on the panel the paper reports:
     the hosted path, exactly as `build_atlas.py`).
   * Composition control: a classifier restricted to two composition variables -- reference
     trinucleotide (the 3-mer centred on the variant), on which the atlas negatives are matched, and
-    local GC over a 101-bp window, on which they are not. Reported as an out-of-fold AUROC with a
-    TWO-SIDED verdict |AUROC - 0.5| < 0.10, plus the trinucleotide-spectrum chi-square and the GC
-    Mann-Whitney test (the direct "is it matched" statistics, which do not overfit at small n).
+    local GC over a 101-bp window, on which they are not. Reported as an out-of-fold AUROC, which
+    overfits at small n and is not the test, beside the trinucleotide-spectrum chi-square, the GC
+    Mann-Whitney test and a GC-only AUROC (the direct "is it matched" statistics); GC counts as
+    matched when the GC-only macro AUROC is below 0.55 and at most one species' Mann-Whitney p < 0.05.
   * Spatial control: Evo 2-40B alone, full panel vs after dropping negatives
-    within 50 kb of a same-chromosome positive.
+    within 50 kb of a same-chromosome positive, chromosomes as
+    written in the raw variant identifiers, so a RefSeq-accession positive never matches a bare-named
+    negative (Additional file 3's recompute_atlas_strata.py keys both through refseq_chromosome_map.csv
+    and counts 118 within 1 kb and 656 within 50 kb, against 116 and 629 here).
 
 Features come from the stored `ref_seq`/`var_off` in the window tables, so no FASTA access or
 chromosome-name normalisation is involved; `ref_seq[var_off] != alt_seq[var_off]` is checked (failures counted in n_window_ref_eq_alt) per
@@ -87,7 +91,8 @@ def main():
             rs, vo = r["ref_seq"], r["var_off"]
             if rs is None or vo is None or vo < GCW or vo + GCW + 1 > len(rs):
                 continue
-            # ref_seq[vo]/alt_seq[vo] usually differ; a few windows encode them equal (build quirk).
+            # ref_seq[vo]/alt_seq[vo] differ in every window but one, whose assembly base is the record's
+            # alternate allele, so its two windows are identical (Additional file 1, Note S4).
             # trinuc/GC depend only on ref_seq+var_off, so we keep the variant and just count these.
             if r["alt_seq"] is not None and rs[vo] == r["alt_seq"][vo]:
                 n_refeqalt += 1

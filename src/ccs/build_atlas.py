@@ -22,10 +22,10 @@ IN = "data/interim"
 
 # species -> file stems. win = windows panel (holds `label`); gerp = conservation stem;
 # evo2_1b = 1B score stem. The 40B streaming and API stems are derived by convention below.
-# NOTE: phyloP is disabled for pig/sheep/horse/dog because the on-disk *_gerp_phylop
-# tracks are byte-identical copies of GERP (not a genuine phyloP track), so
-# GERP is the SOLE conservation baseline. best_cons is GERP (this is a no-op for the
-# reported AUROC/deltas: GERP already dominated the copied phyloP everywhere).
+# NOTE: phyloP is disabled for every species, so GERP is the SOLE conservation baseline and
+# best_cons is GERP: it is the only per-base score available for all nine assemblies (the
+# on-disk *_gerp_phylop tracks for pig/sheep/horse/dog are byte-identical copies of GERP).
+# The genuine phyloP tracks (chicken, cattle, human) are compared in Additional file 1, Table S8.
 SPECIES = {
     "goat":    dict(win="goat_scoring_windows",          gerp="goat_gerp",         phylop=None, e1b="goat_evo2_scores"),
     "chicken": dict(win="chicken_scoring_windows",       gerp="chicken_gerp",      phylop=None, e1b="chicken_evo2_scores"),

@@ -45,9 +45,10 @@ def crc_lambda(p_pos, alpha):
     n = len(p_pos)
     target = max(0.0, ((n + 1) * alpha - 1) / n)          # finite-sample-corrected budget
     s = np.sort(p_pos)
-    # FNR(lambda)=k/n if lambda in (s[k-1], s[k]]; largest lambda with FNR<=target => k=floor(target*n)
+    # With k = floor(target * n), lambda = s[k] is the largest threshold whose calibration FNR, mean(p_pos < lambda),
+    # is at most k/n: positives tied with s[k] stay on the pathogenic side. (k < n always, since target < 1.)
     k = int(np.floor(target * n))
-    return s[k - 1] + 1e-9 if k >= 1 else -np.inf        # just above the k-th smallest pos prob (or -inf => call all pathogenic)
+    return s[k]                                          # the (k+1)-th smallest: mean(p_pos < s[k]) <= k/n even with ties
 
 
 def main():
@@ -113,7 +114,7 @@ def main():
               f"Across {len(tgt)} (alpha x zero-label-target) cases: guarantee HELD in {holds}/{len(tgt)} within the "
               f"tolerance ({len(strict)}/{len(tgt)} strictly"
               + "".join(", %s at alpha = %s" % (sp, a) for a, sp in strict) + "), "
-              f"and was NON-TRIVIAL (benign-rate>15%) in {nontrivial}/{len(tgt)}.",
+              f"and HELD while NON-TRIVIAL (benign-rate>15%) in {nontrivial}/{len(tgt)}.",
               "",
               ("**PASS** - the transported positive-class-FNR certificate holds and is non-trivial on zero-label "
                "species."

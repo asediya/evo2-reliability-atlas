@@ -140,7 +140,7 @@ def main():
         return float(np.median(vals)) if vals else float("nan")
 
     lines = ["# Calibration method bake-off (is the transfer method-agnostic?)", "",
-             f"LOSO transfer swapping the calibrator; adaptive-ECE (debiased) per held-out species. "
+             f"LOSO transfer swapping the calibrator; adaptive (equal-mass-bin) ECE per held-out species. "
              f"Sources: {rich}; label-poor targets: {poor}.", "",
              "| species | role | n | pos | isotonic aECE | Platt aECE | **beta aECE** | best method |",
              "|---|---|---|---|---|---|---|---|"]

@@ -1,4 +1,4 @@
-"""Figure 3 statistics layer — computes the AUROCs and intervals that panels c and d plot, with real stratified-bootstrap
+"""Additional file 1's Figure S2 statistics layer — computes the AUROCs and intervals that panels c and d plot, with real stratified-bootstrap
 confidence intervals, and writes reports/fig3_stats.json.
 
 
@@ -6,7 +6,8 @@ No float in the figure may be
 typed by hand — everything is read from the JSON this script emits.
 
 Orientation convention: mean-LL delta columns are NEGATED (deleteriousness convention);
-columns already named *_neg are used as-is. Verified against the stored A_scale_ladder values.
+columns already named *_neg are used as-is. The AUROCs equal fig3_data.json's A_scale_ladder values
+to its three printed decimals; this script does not check that.
 
 Run:  python -m src.ccs.fig3_stats
 """
@@ -114,7 +115,8 @@ def main():
         if fl in d.columns:
             a, lo, hi, np_, nn = boot_ci(y, d[fl].to_numpy())
             scorers[f"GERP:{fl}"] = dict(auroc=a, lo=lo, hi=hi, n_pos=np_, n_neg=nn)
-    # positive control: does ANY signal separate these pairs? |z| effect size is a legitimate above-chance ref
+    # circular signals: |z| and PIP separate these pairs, but PIP is computed from |z|, so neither is a
+    # positive control (the keys below keep their historical names; the figure labels them circular)
     a, lo, hi, np_, nn = boot_ci(y, d["absz"].to_numpy())
     scorers["|z| effect size (positive control)"] = dict(auroc=a, lo=lo, hi=hi, n_pos=np_, n_neg=nn)
     a, lo, hi, np_, nn = boot_ci(y, d["pip"].to_numpy())

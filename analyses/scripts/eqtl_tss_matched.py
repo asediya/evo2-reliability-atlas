@@ -10,7 +10,8 @@ being asked to beat a confound rather than to predict biology.
 TraitGym (Benegas, Eraslan & Song 2025) matches controls on chromosome, consequence class, TSS
 distance, MAF and LD score. This applies the part of that design the deposited data supports:
 controls stay within the same eGene, as in the paper's panel, and are additionally matched on log10 TSS
-distance.
+distance (arm 1). Arm 2 drops the eGene constraint and matches within chromosome under a 0.05-dex
+caliper; Table S20 quotes both.
 
 The test has a built-in falsification. If the matching works, the positional baseline must fall to
 chance on the matched panel BY CONSTRUCTION. If it does not fall, the matching failed and nothing

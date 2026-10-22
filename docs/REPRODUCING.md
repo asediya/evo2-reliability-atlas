@@ -20,8 +20,8 @@ submitted PDFs were written under matplotlib 3.11.2; a rebuild under another mat
 them in content and geometry but not pixel for pixel.
 
 Scripts that read the undeposited `data/` tree need more, and none of it is required for anything
-above: `duckdb` and `pybigtools` for the panel and phyloP builders, `pyBigWig` for the older GERP
-and phyloP queries, `pyfaidx` for window extraction,
+above: `duckdb` and `pybigtools` for the panel and phyloP builders, `pyBigWig` for the GERP
+and phyloP queries outside the phyloP cross-check, `pyfaidx` for window extraction,
 `biopython` and `freesasa` for the BRCA1 structure figure, `joblib` where a script parallelises, `requests` for the BRCA1 panel download,
 and `torch`, `transformers`, `fair-esm`, `evo2` and `vortex` on a GPU scoring host.
 

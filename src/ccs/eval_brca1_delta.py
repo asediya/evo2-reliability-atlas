@@ -59,13 +59,13 @@ def main():
         "scorer + 1001bp windows as the cross-species atlas (score_evo2_40b_local.py). This validates the",
         "single-position harness; the 8,192-bp mean-LL readout is reported separately.",
         "",
-        f"- **AUROC (evo2_40b_neg vs pathogenic) = {a:.3f}**",
-        f"- mean evo2_40b_neg: pathogenic {score[pos].mean():.3f} vs benign {score[~pos].mean():.3f} "
-        f"(delta {score[pos].mean() - score[~pos].mean():+.3f}; higher=more damaging)",
+        f"- **AUROC (evo2_40b_neg vs loss-of-function) = {a:.3f}**",
+        f"- mean evo2_40b_neg: loss-of-function {score[pos].mean():.3f} vs functional or intermediate "
+        f"{score[~pos].mean():.3f} (delta {score[pos].mean() - score[~pos].mean():+.3f}; higher=more damaging)",
         "",
-        ("**PASS** — Evo2-40B separates pathogenic from benign BRCA1 SNVs zero-shot; the block-streaming harness"
+        ("**PASS** — Evo2-40B separates loss-of-function from functional BRCA1 SNVs zero-shot; the block-streaming harness"
          " recovers known BRCA1 signal (positive control holds)." if a >= 0.70 else
-         ("**PARTIAL** — signal present but AUROC below the ~0.73 paper mark (variant-delta != mean-LL"
+         ("**PARTIAL** — signal present but AUROC below the 0.73 the Arc Institute notebook prints for Evo 2-1B (variant-delta != mean-LL"
           " protocol; short 1001bp context)." if a >= 0.60 else
           "**WEAK** — variant-delta on 1001bp windows underperforms; note the method/context difference.")),
     ]

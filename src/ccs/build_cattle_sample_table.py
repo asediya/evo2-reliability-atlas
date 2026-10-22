@@ -52,16 +52,17 @@ if not same:
 
 ids = first
 with io.open(OUT, "w", encoding="utf-8", newline="\n") as fh:
-    fh.write("# Cattle allele-frequency panel: individual identifiers as carried in the PLINK2\n")
+    fh.write("# Cattle allele-frequency panel: sample identifiers as carried in the PLINK2\n")
     fh.write("# .psam files the panel was built from (data/interim/geno_pgen/*.psam).\n")
-    fh.write("# These are the sample identifiers of the aggregated public resequencing cohort; the\n")
+    fh.write("# These are the sample identifiers of the FarmGTEx cattle imputed-genotype release, mostly RNA-sequencing\n")
+    fh.write("# libraries and some of them repeated tissues of one animal; the\n")
     fh.write("# panel is an aggregation rather than a single published study, so they are given as\n")
     fh.write("# the record of what was used, not as a claim about any one cohort's provenance.\n")
     fh.write("sample_id\n")
     for s in ids:
         fh.write("%s\n" % s)
 
-print("wrote %s: %d individuals" % (OUT, len(ids)))
+print("wrote %s: %d samples" % (OUT, len(ids)))
 if len(ids) != 7394:
-    print("NOTE: the Methods state 7,394 individuals; this table has %d. "
-          "Reconcile before submission." % len(ids))
+    print("NOTE: Additional file 1 (Note S41) states 7,394 samples; this table has %d."
+          % len(ids))

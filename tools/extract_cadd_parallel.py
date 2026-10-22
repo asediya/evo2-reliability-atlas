@@ -71,8 +71,8 @@ def block_offsets(path, every=1):
                 offs.append(pos)
             pos += bsize
             i += 1
-            if xlen != 6:                     # extra subfields beyond BC are not parsed
-                pass
+            if xlen != 6:                     # BSIZE is read at a fixed offset, valid only for XLEN 6
+                sys.exit("BGZF block at byte %d has XLEN %d; only the plain BC extra field is read" % (pos - bsize, xlen))
     offs.append(size - BGZF_EOF)
     return offs
 

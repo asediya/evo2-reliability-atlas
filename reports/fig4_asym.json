@@ -10272,7 +10272,7 @@
    "frac_in_least_confident_15": 0.12962782065058123
   },
   {
-   "name": "missed pathogenic",
+   "name": "missed positives",
    "n": 731,
    "logit": [
     -2.800505744790225,

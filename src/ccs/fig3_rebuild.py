@@ -1,12 +1,12 @@
-"""Additional file 1's Figure S2 (file Figure3_blindspot) — "The Regulatory Blind Spot", authored 1:1 at Genome Biology
-double-column width.
+"""Additional file 1's Figure S2 (file Figure3_blindspot) — "Evo 2 reads near chance on one porcine cis-eQTL panel", authored 1:1
+at the 170 mm full-page width of the style_gb house style.
 
 Type scale, canvas cap, line-width floor, ink and rcParams come from style_gb rather than
 being restated here, so a contract change reaches this figure without an edit.
 
 Palette is Okabe-Ito throughout. Colour encodes series identity only:
 "candidate causal eQTL" is vermillion in every panel it appears in, Mendelian/coding competence is
-blue, the positive control is orange, chance is neutral ink. Never red-vs-green.
+blue, the two circular signals (PIP and |z|) are orange, chance is neutral ink. Never red-vs-green.
 
 EVERY number is read from reports/: fig3_stats.json (computed by src/ccs/fig3_stats.py), eqtl_pervariant.parquet, eqtl_blindspot_probe.json and eqtl_tss_baseline.json. No float is
 typed by hand in this module.
@@ -53,15 +53,15 @@ AXIS, TICK, FOOT = SG.AXIS, SG.TICK, SG.ANNOT
 # ---------------------------------------------------------------- palette (Okabe-Ito)
 # Colour encodes SERIES IDENTITY and nothing else. It never marks emphasis, and no discrimination
 # anywhere in this figure rests on red vs green.
-CODING = "#0072B2"    # Okabe-Ito blue      — Mendelian / coding competence (matches Fig 2's Evo2)
+CODING = "#0072B2"    # Okabe-Ito blue      — Mendelian / coding competence (the same blue as fig2_style.EVO2)
 FAIL = "#D55E00"      # Okabe-Ito vermillion — the candidate causal eQTL series, in a, b and c
-EQTL = "#8C929B"      # neutral grey        — non-causal control, and the non-Evo2 scorers in d
+EQTL = "#8C929B"      # neutral grey        — non-causal control, and every non-circular row in d, Evo 2-40B included
 # Text-safe renditions. FAIL and EQTL name their own series in the canvas keys, and as
 # TYPE on white they measured 3.87:1 and 3.13:1 -- below WCAG 4.5:1 for small text. Markers and fills keep
 # the full-chroma originals; only the words that name them are darkened (style_gb.text_safe).
 FAIL_T = SG.text_safe(FAIL)
 EQTL_T = SG.text_safe(EQTL)
-POS = "#E69F00"       # Okabe-Ito orange    — positive control only (|z|, panel d)
+POS = "#E69F00"       # Okabe-Ito orange    — the circular signals only (PIP and |z|, panel d)
 BEDROCK = "#3A3A3A"   # the single chance datum, drawn identically everywhere
 RULE = SG.RULE        # light structure: the group separators in a and d
 INK = SG.INK
@@ -77,11 +77,8 @@ HEX_CMAP = _LSC.from_list("greys_from_025",
 # Every line on this canvas is at or above SG.LINE_MIN (0.3 pt): 0.5 pt structure, 0.6 pt axes,
 # 0.7 pt brackets and break marks, 0.9-1.0 pt data: the journal's ceiling for a line is 1 pt.
 #
-# SG.FAMILY is a preference order, not a mandate, and its head is Helvetica. Taking it as written
-# builds this figure in Helvetica while Figures 1, 2, 5, 6 and 7 as submitted are all ArialMT --
-# one figure in a different face, which is the exact defect ("seven figures looking like seven
-# different papers") the style module exists to prevent. Arial is second in SG.FAMILY, so this
-# stays inside the contract's own list and is pinned here rather than silently inherited.
+# The font list is pinned here in SG.FAMILY's own order, Arial first, so this figure is set
+# in the same face as the rest of the set.
 mpl.rcParams.update(SG.rc({"font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans"]}))
 
 S = json.load(open("reports/fig3_stats.json", encoding="utf-8"))
@@ -104,8 +101,8 @@ class Box:
         return [self.x0 / W_MM, 1 - self.ybot / H_MM, self.w / W_MM, self.h / H_MM]
 
 
-# Budget, top to bottom: 5 margin + 6 letter band + A axes + 9 ticks-and-x-label + 6 gap
-# + 11 letter/provenance band + A + 9 + 3 margin, so H = 2A + 49. A = 62.
+# Three bands, top to bottom: panel a with its two marginals, panels b and c side by side, and
+# panel d, each placed in millimetres by the boxes below.
 # Panel a is a plane, not a ledger, and it needs the width; the two score distributions are
 # panel a's own right-hand marginal.
 CGAP = 4.5                     # the axis break in panel c
@@ -243,10 +240,9 @@ def panel_a(ax, axtop, axright, box):
     axtop.set_xlim(XLO, XHI); axtop.set_xticks([]); axtop.set_yticks([])
     for s_ in axtop.spines.values():
         s_.set_visible(False)
-    # Stacked in POINTS, not at data fractions of the marginal's height. At y = 0.99 and 0.58 of
-    # the ylim the gap is 41% of the box, which is 7.1 pt once the box is 8 mm -- under the 7.6 pt
-    # bbox of a 6.8 pt line, so the two class labels overlapped. An offset transform fixes the
-    # leading at 8.6 pt whatever height this marginal is given.
+    # Stacked in POINTS, not at data fractions of the marginal's height, which shrink with the
+    # box while the type does not. An offset transform fixes the leading at 8.6 pt whatever height
+    # this marginal is given.
     _t = axtop.transAxes
     _drop = ScaledTranslation(0.0, -8.6 / 72.0, axtop.figure.dpi_scale_trans)
     # Both labels ride 2 pt above the box top, so the descenders of the lower line clear the
@@ -337,7 +333,7 @@ def panel_b(ax, box):
     _prov(ax, box, ["One hexagon = a count of matched pairs, log-scaled"])
 
 
-# ---------------------------------------------------------------- d. scale, on a broken axis
+# ---------------------------------------------------------------- c. scale, on a broken axis
 def panel_d_scale(axt, axb, boxt):
     """Two sub-axes sharing the model-scale axis, each spanning the SAME 0.120 of AUROC over the
     SAME height, so the two slopes can be compared by eye without the two thirds of empty axis that
@@ -412,7 +408,7 @@ def _break_marks(fig, x_mm, y_mms, w=1.2, h=1.7):
                               clip_on=False, zorder=6))
 
 
-# ------------------------------------------------------- e. one axis: every scorer, every signal
+# ------------------------------------------------------- d. one axis: every scorer, every signal
 def panel_e(ax, box):
     """Two groups on one AUROC axis: the scores this paper tests, and everything else that was
     measured on the same 20,000 variants.

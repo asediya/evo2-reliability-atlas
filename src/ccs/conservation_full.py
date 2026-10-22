@@ -1,6 +1,6 @@
 """Full-panel phyloP conservation for ALL ~44.5M cattle variants, parallelized to saturate every core.
 Cattle phyloP bigWigs are bosTau9 = ARS-UCD1.2 (same build as the panel). Each chromosome is split into
-NCHUNK slices so we run ~75 workers across the 52 cores. Output: [variant_id, phylop] for the whole panel
+NCHUNK slices (66 tasks for the 22 per-chromosome files), run on up to os.cpu_count() workers. Output: [variant_id, phylop] for the whole panel
 -> the genome-scale conservation-vs-selection baseline that the GPU-limited Evo2 (28k) can't match.
   python src/ccs/conservation_full.py
 """

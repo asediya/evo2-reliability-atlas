@@ -148,12 +148,12 @@ def main():
     # missingness AUROC is the identity 0.5 + class_gap/2, so a predictor whose gap is NEGATIVE has
     # miss_auroc < 0.5 by construction and the signed test can never fire for it. On this panel 34
     # of 49 have a negative gap, because the missense-oriented predictors reach the negatives (85 to
-    # 90%) far more than the positives (35%). a signed count of 0 is therefore near-guaranteed by panel
+    # 90%) far more than the positives (35%). A signed count of 0 is therefore near-guaranteed by panel
     # composition rather than earned.
     #
     # A missingness pattern that classifies systematically BACKWARDS is exactly as informative as one
     # that classifies forwards: flip it. max(m, 1-m) is what "how much does coverage alone tell you"
-    # actually means, and it is the convention already used one line above for abs(class_gap). Both
+    # actually means, and it is the convention already used above for abs(class_gap) in n_big. Both
     # counts are emitted and the orientation-free one is primary.
     fin = [r for r in out if r["miss_auroc"] == r["miss_auroc"]]          # drop NaN (never abstains)
     n_beats_signed = sum(1 for r in fin if r["miss_auroc"] > r["auroc_must_answer"])

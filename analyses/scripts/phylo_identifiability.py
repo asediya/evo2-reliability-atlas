@@ -18,7 +18,8 @@ Method. Simulate a trait on a nine-tip ultrametric tree under a KNOWN lambda, es
 maximum likelihood from an intercept-only GLS, and look at the spread of the estimates. If the
 estimator cannot recover a lambda it was given, it cannot be trusted to report one from real data.
 
-The two depths TimeTree does not give us — between mammal orders, and within an order — are varied
+The two depths fig2_data.py does not carry — between mammal orders (TimeTree 5: 74 My, Figure 9) and
+within an order — are varied
 over a grid rather than invented, so the conclusion cannot depend on a number I made up.
 
     python analyses/scripts/phylo_identifiability.py

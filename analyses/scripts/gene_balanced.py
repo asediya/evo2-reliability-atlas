@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Grimm type-2 circularity: how much of a predictor's score is the gene, not the variant?
+"""The gene-balanced drop of Note S8, which neither estimates nor bounds Grimm type-2 circularity.
 
 Grimm et al. name two circularity types. Type 2 is the one that bites a panel like this: genes
 whose variants are predominantly pathogenic, or predominantly benign, let a predictor score well
@@ -13,9 +13,10 @@ declines to score AND by which genes its variants fall in.
 Three evaluations per predictor:
 
   pooled        every variant, as published
-  mixed-gene    only the 4,286 genes that contain both classes (after the stars >= 1 filter applied below); the within-gene arm uses the 2,418 with at least five of each; a predictor that has merely
-                learned which genes are disease genes loses that advantage here
-  within-gene   AUROC computed inside each gene with at least 5 of each class, then averaged over
+  mixed-gene    only the 4,286 genes that contain both classes (after the stars >= 1 filter applied below); the within-gene arm uses the 2,418 with at least five of each; pooled across those
+                genes, this arm still carries between-gene differences in label balance
+  within-gene   AUROC computed inside each gene with at least 5 of each class (by label), over the
+                variants the predictor scores, then averaged over
                 genes; gene identity carries no information at all
 
     python analyses/scripts/gene_balanced.py
@@ -80,14 +81,13 @@ def main():
         for _, ii in usable.items():
             ss, yy = s[ii], y[ii]
             k = np.isfinite(ss)
-            # `usable` applies the >=MIN_PER_CLASS-per-class floor to the LABELS. The coverage mask
-            # below removes the variants this predictor declined, which can take a gene that passed
-            # on labels down to one scored negative and 14 scored positives -- 15 rows, two classes
-            # present, which an aggregate test alone would let through, so the per-class floor the
-            # docstring promises is re-applied here on the masked subset.
-            if (k.sum() < 2 * MIN_PER_CLASS or len(set(yy[k].tolist())) < 2
-                    or int((yy[k] == 1).sum()) < MIN_PER_CLASS
-                    or int((yy[k] == 0).sum()) < MIN_PER_CLASS):
+            # `usable` applies the >=MIN_PER_CLASS-per-class floor to the LABELS. Within such a gene the
+            # predictor's AUROC is taken over the variants it scores whenever it scores at least
+            # 2 * MIN_PER_CLASS of them with both classes present: the rule of Supplementary Note S8 and
+            # of Additional file 3's recompute_dbnsfp.py, section [7], which gives 1,611 to 2,418 genes
+            # per predictor. A gene can therefore enter with fewer than MIN_PER_CLASS scored variants
+            # of one class.
+            if k.sum() < 2 * MIN_PER_CLASS or len(set(yy[k].tolist())) < 2:
                 continue
             v = auroc(ss[k], yy[k])
             if v is not None:

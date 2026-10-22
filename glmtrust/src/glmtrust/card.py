@@ -140,7 +140,7 @@ def _verdicts(rep):
     for s in rep.scorers:
         if getattr(s, "values_run_backwards", False):
             out.append(("%s: its values run opposite to the declared direction" % s.name,
-                        "Ranking by them loses %+.4f AUROC on the missingness pattern (%s %s); "
+                        "Ranking by them gains %+.4f AUROC on the missingness pattern (%s %s); "
                         "declare the score's direction before reading its numbers."
                         % (s.lex_gain, _level(rep), _ci(s.lex_gain_ci, 4))))
         elif s.values_add_nothing and _full_reach(s):

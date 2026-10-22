@@ -22,7 +22,8 @@ from pathlib import Path
 import pandas as pd
 import torch
 
-# PANEL selects which 1,001-bp panel to score; the two share every convention, so they share the
+# PANEL selects the panel: the 1,001-bp splicing or ClinVar panel, or the 8,192-bp strand ladder. They
+# share every convention, so they share the
 # scorer rather than getting a near-duplicate each.
 PANELS = {"mfass": ("/ccs/analyses/data/mfass/mfass_w1001.parquet",
                     "/ccs/analyses/data/mfass", "mfass"),

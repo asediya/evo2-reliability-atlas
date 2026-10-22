@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Blind-spot probe: does Evo 2's REPRESENTATION carry regulatory signal its LIKELIHOOD does not?
 
-The paper's central negative result: Evo 2's zero-shot likelihood reads pig cis-eQTLs at AUROC
+The paper's eQTL-panel null (Additional file 1, Note S32 and Figure S2): Evo 2's zero-shot likelihood reads pig cis-eQTLs at AUROC
 ~0.488 (near chance). The Evo 2 paper itself shows embeddings are the strong mode (supervised probe on
 embeddings beat zero-shot on BRCA1, 0.95 vs 0.87). So the sharp, thesis-aligned hypothesis:
 
@@ -33,7 +33,7 @@ from sklearn.preprocessing import StandardScaler
 sys.stdout.reconfigure(encoding="utf-8")
 
 # Dense 1B embedding matrix from the extraction pass. Not deposited (too large, and regenerable):
-# rebuild it with src/ccs/score_evo2_embeddings.py, or point CCS_EQTL_EMB at an existing copy.
+# rebuild it with src/ccs/extract_evo2_embeddings.py, or point CCS_EQTL_EMB at an existing copy.
 EMB = os.environ.get("CCS_EQTL_EMB", "data/interim/eqtl_emb.npz")
 CAND = "data/interim/eqtl_candidates.parquet"
 # These two live under data/processed/, not data/interim/. Every sibling reads them there
@@ -123,7 +123,7 @@ def main():
             print("  %-26s ERROR %s: %s" % (name, type(e).__name__, e))
             raise
     refs["TSS distance baseline"] = {"auroc": 0.651, "note": "from eqtl_tss_baseline.py"}
-    print("  %-26s AUROC 0.651  (positional baseline)" % "TSS distance")
+    print("  %-26s AUROC 0.651  (positional baseline, on the 19,341-variant panel)" % "TSS distance")
 
     best_probe = max(v["auroc_gene_grouped"] for v in res.values())
     zs_1b = refs.get("1B zero-shot mean-LL", {}).get("auroc")
@@ -150,7 +150,7 @@ def main():
              "non-causal eQTLs by a negligible margin: best AUROC %.2f, 95%% CI [%.3f, %.3f]. "
              "The interval excludes 0.5, so this is a detectable effect of negligible size and "
              "not a null; at the 1B checkpoint the blind spot is representational and not only "
-             "a readout artifact." % (best_probe, _ci[0], _ci[1]))
+             "a readout artefact." % (best_probe, _ci[0], _ci[1]))
     print("  " + v)
 
     io.open(OUT, "w", encoding="utf-8", newline="\n").write(json.dumps(

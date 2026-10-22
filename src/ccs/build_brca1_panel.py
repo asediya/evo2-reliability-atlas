@@ -1,9 +1,9 @@
 """BRCA1 saturation-genome-editing positive-control panel — a faithful reproduction of the Arc
-Institute Evo2 BRCA1 zero-shot VEP notebook (notebooks/brca1/brca1_zero_shot_vep.ipynb).
+Institute Evo2 BRCA1 zero-shot VEP notebook (notebooks/brca1/brca1_zero_shot_vep.ipynb in the ArcInstitute/evo2 repository).
 
 Purpose: this is the ONE benchmark where Evo2's own reference notebook prints a number
-(Evo2-1B AUROC = 0.73 over all 3893 SNVs). Reproducing the exact windows lets us prove our
-scoring harness matches theirs before we trust it on the cross-species atlas.
+(Evo2-1B AUROC = 0.73 over all 3893 SNVs). Reproducing the exact windows keeps the panel identical to theirs; because the
+paper scores 40B, that 1B figure sets a scale rather than testing the harness.
 
 Recipe (verified against the notebook + this repo's data):
  - Findlay 2018 SGE supplement (41586_2018_461_MOESM3_ESM.xlsx): header is on the 3rd row

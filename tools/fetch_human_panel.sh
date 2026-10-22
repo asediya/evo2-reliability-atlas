@@ -77,11 +77,15 @@ fetch() {
   printf '  %-34s done (%s bytes)\n' "$name" "$have"
 }
 
+NFAIL=0
 run_group() {
-  echo "$1" | while read -r line; do
+  # a here-document keeps the loop in this shell, so the failure count survives it
+  while read -r line; do
     [ -z "$line" ] && continue
-    fetch "$line" || echo "  FAILED: $line"
-  done
+    fetch "$line" || { echo "  FAILED: $line"; NFAIL=$((NFAIL + 1)); }
+  done <<EOF_GROUP
+$1
+EOF_GROUP
 }
 
 echo "destination: $DEST"
@@ -91,4 +95,5 @@ case "$GROUP" in
   all)   run_group "$SMALL"; run_group "$CADD" ;;
   *)     echo "usage: sh tools/fetch_human_panel.sh [small|cadd|all]"; exit 2 ;;
 esac
+if [ "$NFAIL" -gt 0 ]; then echo "group '$GROUP' finished with $NFAIL failed download(s)"; exit 1; fi
 echo "group '$GROUP' finished"

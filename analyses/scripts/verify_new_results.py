@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Re-run every CPU analysis registered in CASES and check its artefact is byte-reproducible.
+"""Re-run every CPU analysis registered in CASES and check its artefact reproduces as parsed JSON.
 
 A number can come from an artefact older than its own input while every other gate passes,
 because those gates read the stale file rather than rebuilding it. The
@@ -81,8 +81,8 @@ def main():
                 if r.returncode != 0:
                     blob = (r.stdout or "") + "\n" + (r.stderr or "")
                     tail = [ln.strip() for ln in blob.splitlines() if ln.strip()]
-                    # Not `... % r.stderr.strip().splitlines()[-1:] or ""`, which prints a
-                    # LIST (and "[]" whenever stderr is empty) and hides the reason.
+                    # The last non-empty line of stdout and stderr together, so a reason is
+                    # printed even when stderr is empty.
                     why = tail[-1][:100] if tail else "no output"
                     if any(m in blob for m in MISSING_INPUT):
                         print("  NEEDS %-46s cannot re-run: %s" % (art, why))

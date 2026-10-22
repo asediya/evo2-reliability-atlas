@@ -12,7 +12,7 @@ only the probability needs shifting). We show TWO things on the transferred (LOS
   (B) DEPLOYMENT-PREVALENCE ROBUSTNESS: sweep pi_t from 1:1 down to 1:1000; the UNcorrected probabilities
       become badly miscalibrated at low prevalence, but the Elkan-corrected ones stay calibrated.
 
-= "prevalence-robust cross-species calibration", an adjacent, unclaimed methods contribution. CPU-only; with
+The paper applies the correction only at each panel's construction ratio (Additional file 1, Table S24). CPU-only; with
 fewer than two label-rich species it exits with an error naming the score and window files that are absent.
   python src/ccs/build_prevalence_correction.py
 """
@@ -155,9 +155,9 @@ def main():
         lines.append(f"| {r['prevalence']:.3g} (1:{int(round(1/r['prevalence']))-1 if r['prevalence']<1 else 1}) "
                      f"| {r['ece_uncorr']} | **{r['ece_corr']}** |")
     lines += ["", f"Worst-case ECE across 1:1→1:1000: uncorrected **{worst_unc:.3f}** vs corrected **{worst_cor:.3f}**.",
-              "", "**VERDICT:** the transferred probabilities are prevalence-robust once Elkan-corrected — trustworthy "
-              "at ANY deployment base-rate, not just the panel's. This both preempts the '10:1-panel' attack and "
-              "adds an adjacent, unclaimed contribution (prevalence-robust cross-species calibration)."]
+              "", f"**VERDICT:** worst-case ECE over the sweep is {worst_unc:.3f} uncorrected and {worst_cor:.3f} "
+              "corrected. The sweep re-weights the label-poor targets to each prevalence; it is not a deployment "
+              "validation, and the paper applies the correction only at each panel's construction ratio (Table S24)."]
     open(MD, "w", encoding="utf-8").write("\n".join(lines) + "\n")
     pl.DataFrame(rowsA).write_parquet("data/processed/prevalence_correction.parquet")
     pl.DataFrame(rowsB).write_parquet("data/processed/prevalence_sweep.parquet")

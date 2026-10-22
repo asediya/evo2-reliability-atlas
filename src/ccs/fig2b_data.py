@@ -1,4 +1,4 @@
-"""Figure 2 per-variant backbone: join per-species Evo2 scores to labels, compute ROC / Cohen's d / bootstrap
+"""Figure 9 per-variant backbone: join per-species Evo2 scores to labels, compute ROC / Cohen's d / bootstrap
 CIs, and ASSERT every AUROC reconciles with the verified atlas (reports/compiled_results.parquet). Writes a
 per-variant parquet (for Figure 9's panel b) + a summary json. Fails loudly on drift.
 """
@@ -45,11 +45,11 @@ def main():
         sc = pl.read_parquet(f"data/processed/scores_cloud/atlas8192_{sp}_meanll_8192.parquet")
         d = sc.join(lab, on="variant_id", how="inner")
         y = np.array(d["label"].to_list()).astype(float)
-        val = -d["evo2_meanll_delta"].to_numpy()               # deleteriousness (higher = pathogenic)
+        val = -d["evo2_meanll_delta"].to_numpy()               # deleteriousness (higher = towards the positive class)
         au = auroc(y, val)
         assert abs(au - ref[sp]) < 1e-6, f"{sp}: AUROC {au:.6f} != compiled {ref[sp]:.6f}"
         dd = cohens_d(val[y == 1], val[y == 0])
-        # residue/variant bootstrap CIs
+        # variant-level bootstrap CIs (2,000 resamples, seed 11)
         au_b, d_b = [], []
         idx = np.arange(len(y))
         for _ in range(2000):

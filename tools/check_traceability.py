@@ -23,6 +23,7 @@ from __future__ import annotations
 import io
 import json
 import os
+import re
 import sys
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -32,7 +33,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_traceability_table import load, walk, printed, match      # noqa: E402
 
 TABLE = "reports/traceability_table.json"
-MIN_ROWS = 180          # exact-ish floor: the table holds 206; a large drop means silent shrinkage
+MIN_ROWS = 180          # exact-ish floor: the table holds 211; a large drop means silent shrinkage
 
 
 def main():
@@ -123,7 +124,7 @@ def main():
     # "values" read as coverage, but 211 counts printed-value OCCURRENCES: the same artifact
     # field quoted in more than one section of the paper appears once per quotation. Print both
     # denominators so the total cannot be mistaken for the size of the traceability layer.
-    _fields = len({(r["artifact"], r.get("resolved", r["key"])) for r in rows})
+    _fields = len({(r["artifact"], re.sub(r"\.+", ".", re.sub(r"[\[\]'\"/]", ".", r["key"])).strip(".")) for r in rows})
     print("  RESULT: CLEAN -- all %d traced value occurrences (%d distinct artifact fields) "
           "still agree with their artifacts" % (checked, _fields))
     if absent:

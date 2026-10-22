@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """Does the AlphaMissense-versus-REVEL must-answer difference survive holding gene fixed?
 
-The accusation is that AlphaMissense-vs-REVEL on missense is a gene-composition artefact -- that
-AlphaMissense's no-calls cluster in particular genes, and that once gene is held fixed the
-must-answer delta collapses from -0.0357 to about -0.0065 with an interval spanning zero.
+The question is whether AlphaMissense-vs-REVEL on missense is a gene-composition artefact --
+whether AlphaMissense's no-calls cluster in particular genes, so that once gene is held fixed the
+pooled must-answer delta of -0.0357 collapses towards zero (Additional file 1, Note S8, reports
+-0.0044 within gene).
 
 Two things to check, and they are separate:
   1. CLUSTERING OF THE INTERVAL. ClinVar variants are not independent; they cluster by gene, and both
@@ -110,7 +111,7 @@ print("    ratio              %.2fx" % (d_ma / d_mt if d_mt else float("nan")))
 print()
 print("  === within gene, pooled over genes carrying both classes ===")
 # Weight each gene by its pair count, which is the natural weight for a Mann-Whitney statistic
-num_ma = num_mt = den = 0.0
+num_ma = num_mt = den = den_mt = 0.0
 used = 0
 for g in set(gene):
     m = gene == g
@@ -127,8 +128,9 @@ for g in set(gene):
         used += 1
     if np.isfinite(dmt):
         num_mt += w * dmt
+        den_mt += w
 print("    genes with both classes : %s" % format(used, ","))
-print("    matched delta           %+.4f" % (num_mt / den if den else float("nan")))
+print("    matched delta           %+.4f" % (num_mt / den_mt if den_mt else float("nan")))
 print("    must-answer delta       %+.4f" % (num_ma / den if den else float("nan")))
 
 print()

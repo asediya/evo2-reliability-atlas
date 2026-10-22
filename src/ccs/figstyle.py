@@ -1,5 +1,5 @@
 """rcParams and palette imported only by fig_brca1_composite.py, which then applies style_gb.rc().
-Okabe-Ito derived, colorblind-safe. Evo2 = protagonist blue; GERP = un-heroic gray;
+Okabe-Ito derived, colour-blind-safe. Evo2 = protagonist blue; GERP = un-heroic grey;
 NT = vermillion; ESM = green; from-scratch = purple. Coding = solid fill; regulatory = open.
 Null lives at the ORIGIN via distance-above-chance geometry (AUROC - 0.5)."""
 import matplotlib as mpl
@@ -20,7 +20,6 @@ mpl.rcParams.update({
     "figure.dpi": 300, "savefig.dpi": 300,
     # Embed real TrueType. Without these matplotlib emits Type 3 (outlined) text, which is not
     # selectable/searchable and is rejected by many journals.
-    # fonts and zero TrueType until this was set. fig2_style.py already had it; figstyle.py did not.
     "pdf.fonttype": 42, "ps.fonttype": 42, "svg.fonttype": "none",
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans"],

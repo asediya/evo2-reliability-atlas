@@ -372,7 +372,7 @@
     "drop": 0.14047557380890713
    }
   ],
-  "conservation_track": "phylop (cattle -- the one species whose phyloP is NOT a GERP copy)",
+  "conservation_track": "phylop (cattle; one of three genuine phyloP tracks, with chicken and human, Table S8)",
   "reach": 0.972434478326073,
   "n_scored": 27234,
   "n_total": 28006,
@@ -445,7 +445,7 @@
   ],
   "n_strata_rho_negative": 5,
   "n_strata_ci_excludes_zero": 4,
-  "_note": "If the MAF gradient holds INSIDE every conservation stratum, Evo2 is not re-reading conservation. Survival is counted by a CI excluding zero, never by the sign of a point estimate -- that sign-counting error is what forced the Fig 5 confound withdrawal."
+  "_note": "If the MAF gradient holds INSIDE every conservation stratum, Evo2 is not re-reading conservation. Survival is counted by a CI excluding zero, never by the sign of a point estimate."
  },
  "decomposition": {
   "stratified": {
@@ -456,7 +456,7 @@
    ],
    "loso_min": 0.04590743351113742,
    "loso_max": 0.06263296053257535,
-   "_note": "n-weighted mean of the per-species lifts -- the quantity the sticks actually show. CI is a SPECIES-cluster bootstrap (species are the resampling unit), not a variant-level one. Use this for the band; the cross-species pooled AUROC below is a different estimand and must not be drawn as their average."
+   "_note": "n-weighted mean of the per-species lifts, the legend's second summary; panel c's band is their unweighted mean with its t interval (fig6_final.panel_c). CI is a SPECIES-cluster bootstrap (species are the resampling unit), not a variant-level one. The cross-species pooled AUROC below is a different estimand and must not be drawn as their average."
   },
   "per_species": [
    {
@@ -662,7 +662,7 @@
    "rho": NaN,
    "a_f_lo": null
   },
-  "_species_note": "Two layers, different membership. The DEPOSITED parquet (per_species_deposited_raw) omits goat and carries a 'POOLED' row that is not a species -- counting its rows gives a false 9. The RECOMPUTED arm (per_species, and the pooled block below) includes goat at n=80 / 8 positives, so it is 9 species and n=9,532. Goat's cell is underpowered at 8 positives, but excluding it moves pooled dFM by <0.001 (+0.020 either way), so the headline does not depend on it.",
+  "_species_note": "Two layers, different membership. The input parquet (data/processed/decomposition.parquet, not deposited; per_species_deposited_raw) omits goat and carries a 'POOLED' row that is not a species -- counting its rows gives a false 9. The RECOMPUTED arm (per_species, and the pooled block below) includes goat at n=80 / 8 positives, so it is 9 species and n=9,532. Goat's cell is underpowered at 8 positives, but excluding it moves pooled dFM by <0.001 (+0.020 either way), so the headline does not depend on it.",
   "pooled": {
    "n": 9532,
    "n_pos": 2128,
@@ -678,7 +678,7 @@
    ],
    "_provenance": "Both the point estimate and the CI of the pooled dFM are recomputed here from the per-variant scores."
   },
-  "_note": "LEAD WITH the pooled dFM, not the per-species median: the median equal-weights small-n species (chicken +0.117 on 27 positives)."
+  "_note": "LEAD WITH the unweighted species mean of the per-species lifts, the paper's primary aggregation (Note S17); the pooled dFM ranks pairs across species, a different estimand."
  },
  "bat": {
   "available": true,

@@ -1,8 +1,10 @@
-"""Figure 3 (Regulatory Blind Spot) recompute layer — emits reports/fig3_data.json.
-Every number recomputed from on-disk scores and reconciled against reports/compiled_results.parquet.
+"""Recompute layer for the eQTL arm (Additional file 1's Figure S2, through fig3_stats.py) — emits reports/fig3_data.json.
+Recomputed from on-disk scores, except the coding ladder (copied from reports/compiled_results.parquet)
+and the within-eGene permutation test (copied from reports/eqtl_cluster_bca.json); no value is
+checked against compiled_results.parquet here.
 Score orientation = 'causal-ness' matching the canonical deleteriousness convention:
   - mean-LL delta columns  -> negate (causal = lower delta), matches compiled ladder_eqtl.
-  - '_neg' columns          -> use as-is (already causal-oriented), matches compiled global/NT.
+  - '_neg' columns          -> use as-is (already causal-oriented), (reports/compiled_results.parquet has no arm on these columns).
 No Evo2 compute; all recomputable from saved scores.
 """
 import polars as pl, numpy as np, json, os
@@ -31,7 +33,7 @@ def scored(path, col, negate):
     return y, s
 
 D = {"_meta": {"orientation": "causal-ness; mean-LL delta negated, '_neg' as-is; reconciled to compiled_results.parquet",
-               "eqtl_set": "PigGTEx SuSiE-inf fine-mapped cis-eQTLs; positives PIP-high causal, negatives within-eGene LD-matched"}}
+               "eqtl_set": "PigGTEx SuSiE-inf fine-mapped cis-eQTLs; positives candidate causal (PIP >= 0.9), negatives within-eGene controls (PIP <= 0.001), matched on eGene, not on LD"}}
 
 # ---------- A. SCALE LADDER (dissociation) ----------
 coding = {r["key"]: r["value"] for r in pl.read_parquet("reports/compiled_results.parquet").iter_rows(named=True)
@@ -60,7 +62,7 @@ for col in ["gerp_exact", "gerp_mean25", "gerp_absmax25"]:
 cls["eqtl"].append({"scorer": "GERP", "auroc": round(np.mean([f["auroc"] for f in gflav]), 3),
                     "lo": round(min(f["auroc"] for f in gflav), 3), "hi": round(max(f["auroc"] for f in gflav), 3),
                     "n_range": [min(f["n"] for f in gflav), max(f["n"] for f in gflav)], "flavors": gflav})
-# coding reference heights (Fig-2 territory -> reference only, drives the DROP magnitude)
+# coding reference heights (nine-species atlas means -> reference only, drives the DROP magnitude)
 ntc = pl.read_parquet("reports/nt_vs_evo2.parquet").filter(pl.col("panel") != "eqtl")
 cls["coding_ref"] = {"Evo2-40B": round(coding["40B"], 3),                                   # scale-ladder coding mean
                      "NT-500M": round(float(ntc["auroc_nt"].mean()), 3),
@@ -88,7 +90,7 @@ for gid in np.unique(gser):
     if pp[yy == 1].max() >= 0.9: prec_hp.append(top_causal)
     for ci in np.where(yy == 1)[0]: pctl.append(float((ss < ss[ci]).mean()))
 # The authoritative permutation is the within-eGene 20,000-resample test in eqtl_cluster_and_bca.py;
-# the 600-sample GLOBAL perm above is kept only for the Camouflage Swarm visual, never for the p-value.
+# the 600-sample GLOBAL perm above is deposited as perm_null_sample (no deposited figure draws it) and never used for the p-value.
 _pc = json.load(open("reports/eqtl_cluster_bca.json"))["eqtl"]
 D["C_null"] = {
     "global_auroc": round(gl, 3), "ci": [round(glo, 3), round(ghi, 3)], "n": int(len(y)),
@@ -110,8 +112,8 @@ D["C_null"]["matched2k_auroc"] = {"auroc": round(auroc(y2, s2), 3), "ci": [round
 rob = {"coding_ref": round(coding["40B"], 3), "cells": []}
 # The eqtl_evo2_40b cell is scored on the 1,002-bp windows
 # in data/interim/eqtl_windows.parquet (ref_seq is 1002 characters for all 20,000 rows), not on
-# 8,192-bp windows. Registering it as 8192 would make the window arm read as an increase 2,049 -> 8,192 bp
-# when it is really 1,002 -> 2,049, and make the readout arm vary the window at the same time. The
+# 8,192-bp windows. Registering it as 8192 would make the single-position window arm read as 2,048 -> 8,192 bp
+# when it is really 1,002 -> 4,096, and make the readout arm vary the window at the same time. The
 # matched 1,002-bp mean-LL arm below lets readout be compared at a
 # fixed window, and window at a fixed readout, which is what the control claims to do.
 for win, rd, path, col, neg in [(8192, "mean-LL", "data/processed/scores_cloud/eqtl_abl_8192_ll.parquet", "evo2_meanll_delta", True),

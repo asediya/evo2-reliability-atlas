@@ -1,6 +1,6 @@
 """Trust layer on EXPERIMENTAL fitness labels via ProteinGym DMS.
 
-Substitute millions of REAL deep-mutational-scan measurements for curated clinical labels. Score every
+Substitute hundreds of thousands of REAL deep-mutational-scan measurements (644,387 single mutants) for curated clinical labels. Score every
 single-mutant with ESM-2 (a frozen PROTEIN FM = cross-modality 3rd backbone) by fast wt-marginal LLR,
 take ProteinGym's experimental binary label (DMS_score_bin), and run the SAME trust layer: leave-one-
 ASSAY-out isotonic calibration transport, across different proteins on wet-lab-grade labels.

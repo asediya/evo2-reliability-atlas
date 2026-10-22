@@ -44,7 +44,7 @@
       "bound_by": "glmtrust benchmark"
     },
     {
-      "claim": "Pig cis-eQTL, Evo 2, panel as published",
+      "claim": "Pig cis-eQTL, Evo 2, the 19,341 published-panel variants with a TSS distance",
       "value": "0.4879",
       "artefact": "analyses/results/eqtl_tss_matched.json",
       "bound_by": "eqtl_tss_matched.py"
@@ -86,7 +86,7 @@
       "bound_by": "verify_new_results.py"
     },
     {
-      "claim": "Evo 2's own reach penalty on ClinVar",
+      "claim": "Evo 2's own must-answer penalty on ClinVar",
       "value": "+0.0000",
       "artefact": "analyses/results/clinvar_evo2_participant.json",
       "bound_by": "verify_new_results.py"

@@ -6,7 +6,7 @@ glmtrust/README.md opens with: on a 1,434,335-variant ClinVar panel AlphaMissens
 verdict reverses.
 
 That is the tool's headline. A reader will test it before trusting anything else the package says,
-and it should therefore be reproducible from the deposited score files rather than resting on a
+and it should therefore be reproducible from the score files of the undeposited data tree rather than resting on a
 number in a paper. This recomputes both figures from data/processed/human_scorers/ and prints them
 beside the claim.
 

@@ -1,6 +1,6 @@
 """Map every BRCA1 SGE variant to its protein RESIDUE (VEP on GRCh37, since the SGE data is hg19),
 join Evo2 deleteriousness, and aggregate per residue -> reports/brca1_residue_scores.parquet.
-Used to color the BRCA1 3D structure by Evo2's zero-shot prediction and to quantify Evo2-vs-burial."""
+Used to colour the BRCA1 3D structure by Evo2's zero-shot prediction and to quantify Evo2-vs-burial."""
 import json, os, sys, time, urllib.request, urllib.error
 import numpy as np
 import polars as pl
@@ -31,7 +31,7 @@ def post(url, body, tries=4):
 def main():
     w = pl.read_parquet("data/interim/brca1_windows.parquet")
     # reference-implementation 8192-bp mean-LL readout (matches the saturation quilt + variant AUROC 0.874);
-    # deleteriousness = -delta. (The 1001-bp evo2_40b_neg readout is weak, ~0.66 -- do NOT use here.)
+    # deleteriousness = -delta. (The 1001-bp evo2_40b_neg readout is weak, 0.632 -- do NOT use here.)
     s = pl.read_parquet("data/processed/scores_cloud/brca1_evo2_40b_meanll_8192.parquet")
     d = w.join(s, on="variant_id", how="inner")
     recs = []

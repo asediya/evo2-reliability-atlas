@@ -63,7 +63,8 @@ def main():
     scored = {}
     if os.path.exists(a.out):
         prev = pl.read_parquet(a.out)
-        scored = dict(zip(prev["variant_id"].to_list(), prev["evo2_40b_neg"].to_list()))
+        scored = {v: s for v, s in zip(prev["variant_id"].to_list(), prev["evo2_40b_neg"].to_list())
+                  if s == s}          # a NaN is a failed call: retry it rather than skip it
         rows = [r for r in rows if r["variant_id"] not in scored]
         print(f"resume: {len(scored)} already scored, {len(rows)} remaining", flush=True)
     print(f"scoring {len(rows)} variants with Evo2-40B API ({ap_workers} parallel) ...", flush=True)

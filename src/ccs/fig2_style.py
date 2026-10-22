@@ -1,5 +1,5 @@
 """Shared visual system for the atlas plates (Figures 9 and 10, Figure S7). One import so their panels read as
-one object: clade palette, pathogenic/benign pair, PhyloPic silhouette loader (tinted), radial-tree layout."""
+one object: clade palette, positive/negative class pair, PhyloPic silhouette loader (tinted), tree layout."""
 import os
 import numpy as np
 import matplotlib.pyplot as plt
@@ -12,7 +12,7 @@ plt.rcParams.update({
 
 INK = "#20242B"; MUTED = "#5A5F6A"; CAP = "#4D4D4D"; GRID = "#E3E6EA"
 EVO2 = "#0072B2"
-# pathogenic (ember, warm) vs benign (slate, cool) — the score-distribution pair
+# positives (ember, warm) vs negatives (slate, cool), the class pair
 PATHO = "#C1443E"; BENIGN = "#5B7C99"
 # clade hues (Okabe-Ito-derived, CVD-aware); species get a lightness within their clade
 CLADE_HUE = {"bird": "#009E73", "primate": "#CC79A7", "carnivore": "#E69F00",
@@ -50,10 +50,8 @@ def _shade(hex_color, f):
     return "#%02x%02x%02x" % tuple(int(round(x * 255)) for x in np.clip(c, 0, 1))
 
 
-# SILHOUETTE INK. The nine leaf pictograms share one neutral ink, not full species colour, which
-# would make this the most saturated plate in the paper while carrying nothing new: the species is
-# already given by the pictogram's SHAPE, by its position on the tree, by the wedge beside it and
-# by the row label in panel b. One ink, so the colour that remains belongs to the data.
+# SILHOUETTE INK, a neutral grey for the leaf pictograms. No deposited builder uses it: Figure 9
+# tints its silhouettes with style_main.RULE (fig7_atlas.py).
 SIL_INK = "#A9AEB4"
 
 

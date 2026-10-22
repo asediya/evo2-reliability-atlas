@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """Make-or-break test: does a missingness-aware conformal layer collapse to vanilla Mondrian?
 
-The deep-research verdict: the only defensible novel core is treating GERP's class-dependent
-missingness as label-informative selection bias. But it COLLAPSES to standard Mondrian conformal
-UNLESS the GERP-scoreable variants are non-exchangeable with the GERP-missing variants WITHIN a
-class. Mondrian already guarantees class-conditional coverage BY CONSTRUCTION when within-class
-exchangeability holds; the novelty exists only if that assumption is measurably violated here.
+A layer that treats GERP's class-dependent missingness as label-informative selection bias
+COLLAPSES to standard Mondrian conformal UNLESS the GERP-scoreable variants are non-exchangeable
+with the GERP-missing variants WITHIN a class. Mondrian already guarantees class-conditional
+coverage BY CONSTRUCTION when within-class exchangeability holds, so such a layer adds something
+only if that assumption is measurably violated here.
 
-So the single question that decides whether the week is worth spending:
+So the question is:
 
   WITHIN each class y, do GERP-scoreable variants have a different conformity-score distribution
   than GERP-missing variants?

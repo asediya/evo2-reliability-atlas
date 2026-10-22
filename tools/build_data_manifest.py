@@ -23,17 +23,14 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 OUT = "reports/DATA_MANIFEST.md"
-# the character class included '.', so a path already ending in an extension kept
-# matching through the next one and the pig genome FASTA index was listed with its extension
-# doubled -- a path no script opens. The manifest's own header promises the list cannot drift from
-# what the code opens, so an over-match falsifies that promise. Directory segments may not contain
-# The alternation is also the manifest's blind spot: an input whose extension is missing from it
-# is invisible to a file whose header claims the path list cannot drift from what the scripts
-# open. Five were, and each is a real input: the splicing panel's source table (.xlsx), the
-# BRCA1 structure (.pdb), the eQTL embeddings (.npz), the liftover chain (.chain) and the
-# snpEff build config (.config).
-# a dot; only the final extension does, and the alternation is longest-first so the compressed VCF
-# suffix wins over the bare one.
+# Directory segments may not contain a dot; only the final extension does, so a path that already
+# ends in an extension cannot keep matching into the next one (which would list, for example, the pig
+# genome FASTA index with its extension doubled -- a path no script opens). The alternation is
+# longest-first so the compressed VCF suffix wins over the bare one. It is also the manifest's blind
+# spot: an input whose extension is missing from it is invisible to a file whose header claims the
+# path list cannot drift from what the scripts open, which is why it carries the five less common
+# extensions of real inputs: the splicing panel's source table (.xlsx), the BRCA1 structure (.pdb),
+# the eQTL embeddings (.npz), the liftover chain (.chain) and the snpEff build config (.config).
 #
 # Note for anyone editing the comments in this file: the inventory is grepped from tools/**/*.py,
 # so a literal path written in a comment here is scanned as if a script opened it. Describe paths
@@ -49,7 +46,7 @@ PAT = re.compile(r"(?:analyses/)?data/(?:[A-Za-z0-9_%{}*-]+/)*[A-Za-z0-9_%{}*.-]
 def collect_paths():
     files = []
     # analyses/scripts/ is deposited and reads its own inputs -- the splicing panel, the
-    # ClinVar windows, the strand ladder. Leaving it out made the manifest silently incomplete
+    # ClinVar windows, the strand ladder. Without it the manifest would be silently incomplete
     # for three of the paper's results.
     for pat in ("src/**/*.py", "tools/**/*.py", "glmtrust/**/*.py",
                 "analyses/scripts/**/*.py"):
@@ -107,7 +104,7 @@ def main():
         "listed path is produced by the published analysis.*\n")
     out.append(
         "\n## Why the raw data is not in the deposit\n\n"
-        "The `data/` tree for this study — nine genome FASTAs, per-species variant-window files, and the "
+        "The `data/` tree for this study — nine atlas genome FASTAs and the bat pilot's, per-species variant-window files, and the "
         "8,192-bp Evo 2 score parquets — exceeds any reasonable supplementary-file limit, so it is "
         "**not** included in Additional file 2, apart from the two BRCA1 structure models and their "
         "README under `data/raw/structures/`.\n\n"
@@ -131,7 +128,7 @@ def main():
         "and Figures 1 to 8 and Additional file 1's Figures S8 to S12 are built in Additional file 3 and "
         "need nothing from `data/`.\n"
         % _data_dependent_counts())
-    # Three deposited artefacts are read by deposited scripts but written by
+    # Five deposited artefacts are read by deposited scripts but written by
     # none, so a reader checking provenance would find a hole in the chain and could not tell a
     # deliberate deposited input from a leftover. The numbers themselves all reproduce; only the
     # origin needs documenting. Stated here because this file is where a reader looks for provenance.

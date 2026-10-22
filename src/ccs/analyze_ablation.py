@@ -1,8 +1,8 @@
 """Analyze the eQTL harness/context ablation: Evo2-40B candidate-causal-vs-control AUROC under each
-(window, readout) harness, vs the 1002-bp single-position baseline (headline 0.496).
+(window, readout) harness, vs the 1002-bp single-position baseline (on the 20,000-variant panel 0.488 signed and 0.496 on |score|; here it is rescored on the ablation sample).
 
 For each score file present, AUROC is computed two ways to match the baseline's reporting:
-  - |score|  magnitude (the baseline's headline 0.496 used |LLR|)
+  - |score|  magnitude (the |LLR| ranking that gives 0.496 on the 20,000-variant panel)
   - signed   (oriented to >=0.5)
 with a 1000x bootstrap 95% CI. Labels from data/interim/ablation/eqtl_abl_sample.parquet.
 Skips score files not yet produced (marks PENDING), so it can be run repeatedly as the GPU run fills in.
@@ -68,7 +68,7 @@ def main():
     L = ["# eQTL harness/context ablation - does the regulatory blind spot survive a better harness?", "",
          "Question: could the 1001-bp window + single-position readout MANUFACTURE the regulatory blind",
          "spot? Candidate causal (n=1000) vs control (n=1000) pig cis-eQTL variants, Evo2-40B,",
-         "re-scored under each harness. Baseline = original 1002-bp single-position (AUROC 0.496). AUROC on |score|",
+         "re-scored under each harness. Baseline = original 1002-bp single-position readout, rescored on this sample (0.496 on |score| over the 20,000-variant panel). AUROC on |score|",
          "magnitude (matches baseline |LLR|); signed oriented >=0.5. 95% CI = 1000x bootstrap on |score|.", "",
          "| harness | window(bp) | readout | n | AUROC(|score|) | 95% CI | AUROC(signed) | status |",
          "|---|---|---|---|---|---|---|---|"]
@@ -77,11 +77,13 @@ def main():
                  f"{('%.3f' % amag) if amag is not None else '-'} | "
                  f"{('%.3f-%.3f' % ci) if ci else '-'} | "
                  f"{('%.3f' % asgn) if asgn is not None else '-'} | {st} |")
+    scored = [r for r in rows if r[7] == "ok"]
+    near = bool(scored) and all(r[5][0] <= 0.5 <= r[5][1] for r in scored)
     L += ["", "## Read",
-          "- AUROC stays ~0.5 (CI includes 0.5) across windows & readouts => regulatory blind spot is a MODEL",
-          "  property, not a harness artifact.",
-          "- AUROC rises materially (CI excludes 0.5) under mean-LL / larger windows => partly a scoring artifact",
-          "  => re-scope the regulatory claim.",
+          ("- Every 95%% CI scored here includes 0.5 (%d of %d harnesses scored), so on this sample the" % (len(scored), len(rows))
+           if near else "- At least one scored harness has a 95% CI that excludes 0.5, so on this sample the"),
+          ("  near-chance eQTL result does not depend on the window or the readout." if near else
+           "  eQTL result depends in part on the window or the readout."),
           "", "Caveat (separate): candidate causal cis-eQTLs are common/weakly-selected, so a fitness-trained",
           "model being near chance here may be EXPECTED, not a representational failure. This ablation isolates the",
           "harness confound only; the construct-validity question is addressed in the manuscript text."]

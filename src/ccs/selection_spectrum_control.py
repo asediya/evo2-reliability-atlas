@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Is the label-free frequency gradient a mutational-spectrum or genotype-quality artifact?
+"""Is the label-free frequency gradient a mutational-spectrum or genotype-quality artefact?
 
 Note S41 (Additional file 1) weighs two alternative explanations for the cattle site-frequency-spectrum result:
 

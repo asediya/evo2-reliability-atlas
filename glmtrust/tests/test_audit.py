@@ -231,8 +231,8 @@ def test_no_join_warning_when_coverage_overlaps_normally():
 def test_tiny_reach_gap_on_a_huge_panel_is_not_flagged():
     """Significance stops discriminating at scale; materiality has to gate the flag.
 
-    Reproduces the real case: on a 1.4M-variant ClinVar panel phyloP's reach gap of +0.001 had a
-    95% interval excluding zero and cost 0.0007 AUROC. Flagged next to a genuine +0.489, it would
+    Reproduces the real case: on a 1.4M-variant ClinVar panel CADD's reach gap of +0.0006 had a
+    95% interval excluding zero and cost 0.0009 AUROC. Flagged next to a genuine +0.489, it would
     train the reader to ignore the flag.
     """
     rng = np.random.default_rng(61)

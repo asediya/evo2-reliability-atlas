@@ -22,14 +22,14 @@ know" instead of guessing.
 > **One code base, two copies.** The project home page,
 > `https://github.com/asediya/evo2-reliability-atlas`, and the article's Additional file 2 hold
 > identical code, under the MIT License. The Zenodo record `10.5281/zenodo.22046811` mirrors the
-> submitted additional files. Nothing here depends on it: every gate, test and recompute step runs
+> article's Additional files 2 to 6. Nothing here depends on it: every gate, test and recompute step runs
 > from the deposit alone, or names the undeposited input it wants.
 
 > **A note on archive timestamps.** Every entry in Additional file 2 carries a normalised
 > `2026-01-01` modification time. That is deliberate: a fixed timestamp is what makes the
 > archive byte-reproducible, so two builds of the same tree produce the same file. The
 > consequence is that the deposit carries no temporal provenance and a reader cannot date
-> its contents from the zip; `.git` is not included either. Provenance for every path is in
+> its contents from the zip; `.git` is not included either. Provenance for every `data/` path the code opens, and for the deposited inputs no script writes, is in
 > `reports/DATA_MANIFEST.md`.
 >
 > Every shipped file except `MANIFEST.sha256` itself is declared in `MANIFEST.sha256`, since the manifest cannot list

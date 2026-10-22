@@ -82,7 +82,7 @@ def main():
         print(f"  {name}: ECE raw {e_raw0:.3f} {ci(er)} -> cal {e_cal0:.4f} {ci(ec)}")
 
     lines = ["# ClinVar calibration with bootstrap 95% CIs (n~1.6M, all-core parallel)", "",
-             f"B={B} stratified bootstraps per score (each a full 4-fold isotonic CV), parallelized across {ncores} cores.", "",
+             f"B={B} stratified bootstraps per score (each a full 4-fold isotonic CV), parallelised across {ncores} cores.", "",
              "| VEP score | n | pos | AUROC [95% CI] | ECE raw [95% CI] | ECE calibrated [95% CI] |",
              "|---|---|---|---|---|---|"]
     for r in rows:

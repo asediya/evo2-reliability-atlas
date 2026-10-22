@@ -48,10 +48,9 @@ _cache = {}
 def _relpath(p):
     """Repo-relative artifact path.
 
-    41 of the 211 map rows record an absolute local path
-    (F:/CalibratedCrossSpecies/reports/...) as the provenance path, so check_traceability could not
-    resolve from a clean extraction of the deposit. The
-    reader gets a path they can open; the author's working directory is not provenance.
+    Some map rows record the artifact as an absolute path on the machine the map was compiled on.
+    Cutting it to the part from the first repository directory gives a path that resolves from a
+    clean extraction of the deposit; the working directory it was compiled in is not provenance.
     """
     p = str(p).replace("\\", "/")
     for root in ("reports/", "data/", "logs/", "src/", "tools/", "glmtrust/"):
@@ -62,7 +61,7 @@ def _relpath(p):
 def load(path):
     """Read an artifact. JSON becomes a dict; a parquet becomes a dict of columns plus row count.
 
-    Parquets were 52 of the unresolvable rows. Representing one as {"__rows__": n, "col": [...]}
+    Many map rows name a parquet. Representing one as {"__rows__": n, "col": [...]}
     lets the same key walker reach both kinds without a second code path, and makes the common
     manuscript claim about a parquet -- how many rows it has -- resolvable as `__rows__`.
     """
@@ -97,7 +96,7 @@ PRED = re.compile(r"^(.*?)\s*(==|!=|>=|<=|>|<)\s*(.+)$")
 def aggregate(obj, fn, expr):
     """count(label == 1), len(per_species), sum(x), mean(col) over a parquet column or JSON list.
 
-    These were the 'needs computation' rows. The arithmetic is deliberately narrow: five reductions
+    These are the 'needs computation' rows. The arithmetic is deliberately narrow: five reductions
     over one column with at most one comparison. Anything richer belongs in a real recompute script,
     not in a traceability walker that a reader is meant to be able to audit at a glance.
     """
@@ -133,7 +132,7 @@ def walk(obj, key):
 
     Order matters, and the literal reading comes first. Normalising
     unconditionally -- splitting on "and" and commas before trying anything -- BREAKS keys that
-    resolve literally: the resolved count falls from 206 to 192. A normalisation that can only help is one
+    resolve literally: the resolved count falls. A normalisation that can only help is one
     you reach for after the literal reading fails, never instead of it.
     """
     base = re.split(r"\s{2,}|\s--\s|\s#\s", key.strip())[0].strip()
@@ -280,7 +279,7 @@ def main():
         art, key, val = r.get("artifact", ""), r.get("key", ""), r.get("value", "")
         obj = load(art)
         if obj is None:
-            unres.append((val, art, key, "artifact not a readable reports/*.json"))
+            unres.append((val, art, key, "artifact not a readable JSON or parquet file"))
             continue
         got, why = walk(obj, key)
         if got is None:

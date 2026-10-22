@@ -9,7 +9,7 @@
   "Additional file 3: tables/fig1_atlas_pervariant.parquet"
  ],
  "_atlas_table_sha256": "cf6c66b922622f6fa6edfd66b94849d62c6e724fc679bf6c6b7f346f564b7ef2",
- "_scores": "1,001 bp: evo2_1001 as stored; 8,192 bp: the negative of evo2_meanll_8192; higher = more pathogenic",
+ "_scores": "1,001 bp: evo2_1001 as stored; 8,192 bp: the negative of evo2_meanll_8192; higher = more deleterious",
  "_bootstrap": {
   "B": 2000,
   "seed": 20260719
@@ -1288,9 +1288,9 @@
    "agree": true
   },
   {
-   "value": "manuscript: learned abstention policy against always abstaining",
-   "published": "0.14 per variant against 0.50",
-   "recomputed": "0.14 per variant against 0.50",
+   "value": "manuscript: reject option, cost-aware threshold and always abstaining",
+   "published": "0.144 per variant against 0.146 for a cost-aware threshold that never abstains and 0.50 for always abstaining",
+   "recomputed": "0.144 per variant against 0.146 for a cost-aware threshold that never abstains and 0.50 for always abstaining",
    "agree": true
   }
  ],

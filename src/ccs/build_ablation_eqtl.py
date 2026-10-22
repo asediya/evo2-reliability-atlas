@@ -2,7 +2,7 @@
 
 The 1001-bp window + single-position left-context readout (both set by GPU memory) could
 MANUFACTURE the regulatory blind spot — Evo2-40B is at chance on candidate causal cis-eQTLs (AUROC
-0.496) under that harness. This re-extracts the eQTL panel at LARGER windows so we can re-score with
+0.488 signed, 0.496 on |score|) under that harness. This re-extracts the eQTL panel at LARGER windows so we can re-score with
 (a) more context and (b) the reference-implementation full-window mean-LL readout, and test whether
 the near-chance regulatory result SURVIVES a better harness.
 

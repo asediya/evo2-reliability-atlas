@@ -3,8 +3,8 @@
 
 Every main-figure builder imports this module and nothing here is restated in a builder. It fixes the
 canvas (170 mm wide, at most 173 mm of graphic: the journal's 225 mm limit covers the legend too) and a closed
-design system, which Canvas.save enforces on every plate. The type scale, the neutral inks and the axis
-treatment are those of style_gb.py, the style of the supplementary figures, so the main and supplementary
+design system, which Canvas.save enforces on every plate. The type scale, the two type inks (INK, MUTED) and
+the axis colour and weight are those of style_gb.py, the style of the supplementary figures, so the main and supplementary
 figures read as one set:
 
   type     Arial in five sizes, each with one role: 12-pt bold lower-case panel letters; 9 pt axis titles and
@@ -15,7 +15,7 @@ figures read as one set:
   colour   the pair-coverage regimes keep three hues, each with its shape: FULL (rho >= 0.999) navy circle,
            PART (1/2 <= rho < 0.999) steel square, LOW (rho < 1/2) crimson triangle, with mid and pale tints.
            Data take the Okabe-Ito blue and vermilion, which stay apart under every simulated colour-vision
-           deficiency: the pathogenic (catalogued) class is vermilion against a grey benign class; a
+           deficiency: the pathogenic or catalogued class is vermilion against a grey benign class; a
            right-ranked pair, the missense subset and the deployment background are blue. Magnitudes run on
            the ColorBrewer Blues ramp, lightness monotone. Evo 2 keeps its amber and GERP is grey in the atlas
            figures. Clinical evidence runs PP3 on the crimson hue and BP4 on the navy hue.
@@ -34,7 +34,7 @@ figure that draws them.
 
 `Canvas` lays everything out in millimetres from the top-left corner, so a gap that clears a glyph keeps its
 size, and `Canvas.save` refuses a plate that breaks the contract: wrong width, too tall, type at a size outside
-the scale, a stroke outside the four widths, anything off the page, or a font other than Arial. A submitted main figure
+the scale, a stroke outside the four widths, text off the page, or a font other than Arial. A submitted main figure
 keeps a blank band of SUBMIT_TOP_MM across its top, and the check refuses ink inside it.
 """
 import os
@@ -59,7 +59,7 @@ SIZES = (PANEL, AXIS, TICK, ANNOT, FLOOR)
 LETTER_FAMILY = ["Arial"]        # panel letters: Arial bold
 
 # ---------------------------------------------------------------- colour
-# Neutrals, style_gb.py's: INK and MUTED set type; the rest never do. There is no row banding and no background
+# Neutrals: INK and MUTED are style_gb.py's and set type; the rest never do. There is no row banding and no background
 # tint: a fill is data.
 INK = "#1A1A1A"          # primary type, the darkest data; 17.4:1 on white
 MUTED = "#5C5C5C"        # secondary type (n, units, provenance) and a secondary dark mark; 6.7:1
@@ -710,7 +710,7 @@ def _save(fig, pdf, png=None, png_dpi=300, crop=True, top_mm=0.0):
         fig.savefig(png, dpi=png_dpi, bbox_inches=bb, metadata={"Software": None})
     plt.close(fig)
     try:
-        import fitz                     # pymupdf: the page check below reads the PDF just written
+        import pymupdf as fitz          # the page check below reads the PDF just written
     except ImportError:
         print("wrote %s  (pymupdf not installed: page check not run)" % os.path.basename(pdf))
         return

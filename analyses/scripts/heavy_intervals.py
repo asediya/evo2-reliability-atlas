@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
-"""Recompute every per-class interval in the new results at B = 200,000, across all cores.
+"""Recompute every per-class interval of the splicing and ClinVar consequence panels at B = 200,000, across all cores.
 
-The new per-class cells are small. Splicing essential-splice carries 246 variants of which 238 are
+These per-class cells are small. Splicing essential-splice carries 246 variants of which 238 are
 positive, and the ClinVar 3' UTR rung carries 54 positives. At B = 2,000 the 2.5th and 97.5th
 percentiles of a bootstrap distribution are each estimated from about 50 draws, so the interval
 endpoints, which are the part a reader quotes and checks, carry visible Monte Carlo noise
 of their own. That is avoidable arithmetic and the cores are idle.
 
-Two things are reported that the 2,000-draw version could not support:
+Two things are reported that 2,000 draws could not support:
 
-- the interval endpoints at B = 200,000, with the Monte Carlo standard error of each endpoint, so a
+- the interval endpoints at B = 200,000, with the Monte Carlo standard error of the less precise endpoint, so a
   reader can see the resampling noise is smaller than the last digit printed
 - a BCa interval alongside the percentile one. Several of these cells are strongly skewed, since an
   AUROC near 0.85 on 246 variants cannot move far upward, and the percentile interval is known to
-  mis-cover under skew. Where the two disagree the paper should quote BCa.
+  mis-cover under skew. Where the two disagree the cell is skewed; on
+  few negatives neither interval is informative (Table S20).
 
 This changes no point estimate. It only makes the intervals honest at the precision they are
 printed to.
@@ -153,7 +154,8 @@ def analyse(pool, workers, name, cells):
         # mc_se is the Monte Carlo se of a PERCENTILE ENDPOINT -- binomial se on
         # the quantile scaled by the density -- and mc_se_of_mean is sigma/sqrt(B), the se of the
         # MEAN. Those are not the same number: for a 2.5% endpoint at B = 200,000 the endpoint se is
-        # ~2.1-2.7x the mean se (checked analytically and by refitting the bootstrap 60 times).
+        # about 2.7x the mean se for a normal bootstrap distribution, and 2.8-3.0x on the ClinVar
+        # cells (Additional file 3, scripts/recompute_endpoint_se.py).
         # Both are emitted, under names that say which is which.
         mean_se = float(np.std(draws) / np.sqrt(len(draws)))
         se = endpoint_se(draws, 2.5, 97.5)
@@ -211,7 +213,7 @@ def main():
             worst = max(worst, max(v["endpoints_differ_by"]))
     res["max_percentile_vs_bca_endpoint_gap"] = worst
     print("\n  largest disagreement between percentile and BCa endpoints: %.4f" % worst)
-    print("  where they disagree by more than 0.005 the paper should quote BCa")
+    print("  a gap above 0.005 marks a skewed cell, where neither interval may be informative")
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as f:

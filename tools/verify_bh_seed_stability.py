@@ -2,8 +2,8 @@
 """Does the manuscript's published count move with the seed, once BH correction is applied?
 
 The uncorrected check found chicken significant in 8 of 40 seeds. But the manuscript does not report
-uncorrected intervals: Note S10 of Additional file 1 says Evo 2 "leads significantly in 2
-of 9 species (goat, cattle)". BH across nine species is strictly more conservative than a raw interval, so the question
+uncorrected intervals: Additional file 1's Table S20 notes count goat and cattle
+as significant for Evo 2 at every seed (two-sided bootstrap p-values, Benjamini-Hochberg across the nine species). BH across nine species is strictly more conservative than a raw interval, so the question
 is not whether chicken's raw interval wobbles -- it does -- but whether the PUBLISHED COUNT does.
 
 Per seed: a two-sided bootstrap p-value per species from the sign of the draws, BH across the nine,
@@ -93,8 +93,8 @@ if __name__ == "__main__":
     print("  published count '2 of 9' is %s"
           % ("STABLE across every seed" if ok else "NOT stable -- it varies with the seed"))
     # A gate must be able to fail, so the verdict sets the exit code. "2 of 9" is a live
-    # published claim (Additional file 1, Note S10: "Evo 2 leads significantly in 2 of 9 species
-    # (goat, cattle)"), so a count that moves with the seed, or that
+    # published claim (Additional file 1, Table S20 notes: goat and cattle significant for Evo 2
+    # at every seed), so a count that moves with the seed, or that
     # settles anywhere but 2, contradicts the paper.
     if not ok:
         print("  *** FAIL *** the published count is not reproduced at every seed.")

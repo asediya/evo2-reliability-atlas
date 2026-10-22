@@ -8,7 +8,8 @@ of the comparison are computed on different variant sets, and the side that is r
 belonging to the model whose lead is being claimed.
 
 It changes the answer in one species. Cat's subset estimate is 0.9015 against a GERP upper bound of
-0.9003, identified by 0.0012. Cat's full-panel estimate is 0.8901, which sits inside the bound. The
+0.9003, identified by 0.0012 (by 0.008 when the bound uses GERP's AUROC in Table 2,
+0.846, as Note S30 does). Cat's full-panel estimate is 0.8901, which sits inside the bound. The
 count falls from seven identified species to six, the count the paper quotes, and cat joins pig and horse as unresolved.
 
 The correction is small in magnitude and goes against Evo 2's lead; the paper quotes six, and the computation is deposited
@@ -72,8 +73,8 @@ def main():
     io.open(OUT, "w", encoding="utf-8", newline="\n").write(
         json.dumps(out, indent=1, ensure_ascii=False) + "\n")
 
-    print("  identified, as published (subset estimate) : %d of 9" % n_sub)
-    print("  identified, like for like (full panel)     : %d of 9" % n_full)
+    print("  identified, co-scorable subset estimate    : %d of 9" % n_sub)
+    print("  identified, like for like (full panel)     : %d of 9  (the count the paper quotes)" % n_full)
     print("  species changing verdict                   : %s"
           % (", ".join(out["species_changing_verdict"]) or "none"))
     for sp, r in sorted(rows.items()):

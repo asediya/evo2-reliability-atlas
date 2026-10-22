@@ -1,8 +1,12 @@
 """MAX-CPU local analysis: high-resolution bootstrap CIs + permutation tests
 for every atlas AUROC (Evo2-40B, 1001bp scores) + the eQTL panels. Saturates all cores via
-joblib. Reusable on the 8192 cloud scores (same code path, different --scoredir).
+joblib. It reads only <species>_evo2_40b_local_scores.parquet under --scoredir; the 8,192-bp files are named differently and are not picked up.
 
-  python src/ccs/analyze_local_max.py --nboot 50000 --nperm 20000 --jobs 50
+  python src/ccs/analyze_local_max.py --nboot 50000 --nperm 100000 --jobs 50
+
+With these settings the permutation p-values and null means equal those of the deposited
+reports/local_bootstrap_ci.parquet, and its bootstrap interval bounds agree to within 0.001. Each
+run splits its draws into max(--jobs, 8) seeded chunks, so a different --jobs gives different draws.
 """
 import argparse, glob, os, sys, time
 import numpy as np

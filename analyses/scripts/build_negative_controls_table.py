@@ -54,21 +54,21 @@ def main():
     # BOTH CHECKPOINTS, each labelled and with its interval, as the ClinVar row directly above
     # prints its 7B reading and flags the checkpoint-dependence.
     # The 7B splicing reading, 0.5736, sits in the same dict, is the
-    # LARGEST of the four reference-window controls in the paper, exceeds the 0.5713 animal-panel
+    # largest of the four human-panel readings (Note S24; the animal panel's central kilobase reads 0.6908), exceeds the 0.5713 animal-panel
     # figure the paper concedes as a real confound, and is already asserted as a published value
     # by Additional file 3's recompute_splicing.py. Printing only 1B would support the claim that
     # the confound is "a property of a particular panel's construction and not of the readout" --
-    # the opposite of what the main text concludes from the 7B number. The intervals are the
+    # the opposite of what Note S24 concludes from the 7B number. The intervals are the
     # ones recompute_splicing.py's _ref_ci reproduces.
     rows.append((
         "Reference likelihood alone, splicing panel",
         "The same, on a panel with cell-measured labels",
-        "%.4f [0.4921, 0.5326] at 1B; %.4f [0.5509, 0.5966] at 7B, the largest of the four and "
-        "the reading that counts most against us"
+        "%.4f [0.4921, 0.5326] at 1B; %.4f [0.5509, 0.5966] at 7B, the largest of the four human-panel readings of Note S24, "
+        "below the animal panel's central kilobase, 0.6908"
         % (m["models"]["1b"]["ref_likelihood_alone"], m["models"]["7b"]["ref_likelihood_alone"]),
         "analyses/results/mfass_evo2_vs_specialists.json"))
 
-    # This row is not a pass. "TSS proximity falls from 0.6510 to 0.5165 once matched" is right on
+    # This row is not a pass. A row reading "TSS proximity falls from 0.6510 to 0.5165 once matched" would be right on
     # both numbers, but the conclusion that the control passed is not. The
     # artefact carries its own falsification criterion -- "If the matching worked, the positional
     # baseline MUST fall to chance" -- and records `tss_baseline_collapsed_to_chance: false` for
@@ -100,7 +100,7 @@ def main():
     r = load("analyses/results/mfass_random500k_coverage.json")
     sp = r["predictors"]["SpliceAI delta max (alpha)"]
     rows.append((
-        "Composition standardisation of the coverage gap",
+        "Composition standardisation of the reach gap",
         "The benchmark-to-deployment gap is variant-class mix, not curation, "
         "so it disappears once the panels are standardised",
         "SpliceAI gap %.4f before, %.4f after"
@@ -128,7 +128,7 @@ def main():
         rows.append((
             "Seed stability of a reported count",
             "A count quoted as a finding moves with the bootstrap seed",
-            # "3 always significant, 1 seed-dependent" is true and reads as 3 of 4. There are nine
+            # A row reading "3 always significant, 1 seed-dependent" would be true and would read as 3 of 4. There are nine
             # contrasts: five reach significance under no seed at all, and the unstable one is
             # chicken, whose margin over GERP is second only to goat's. Naming
             # the species and the never-significant five is the difference between a control and a
@@ -164,10 +164,13 @@ def main():
             # printed to five decimals it would report "0.00007" for a value of 7.073e-05 -- above the
             # figure quoted -- and silently drop clinvar_by_consequence, whose 3' UTR cell is larger
             # still. Both blocks are certified by this row, so both belong in the maximum.
-            ("largest endpoint standard error %.2e, in %s; one skewed cell needs BCa"
+            ("largest endpoint standard error %.2e, in %s; the one skewed cell, Essential Splice, rests on "
+             "eight negatives, so neither its percentile nor its BCa interval is informative"
              % (max(mc.values()), max(mc, key=mc.get))
              if _key == "mc_se" else
-             "largest standard error of the bootstrap MEAN %.2e, in %s; one skewed cell needs BCa. "
+             "largest standard error of the bootstrap MEAN %.2e, in %s; the one skewed cell, Essential "
+             "Splice, rests on eight negatives, so neither its percentile nor its BCa interval is "
+             "informative. "
              "The ENDPOINT standard error, which is what Table S20 reports, is not in this "
              "artefact: it is ~3e-04, recomputed from the deposited panel by Additional file 3's "
              "scripts/recompute_endpoint_se.py"

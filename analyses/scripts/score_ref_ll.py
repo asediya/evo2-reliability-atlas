@@ -11,7 +11,7 @@ deposited delta it also recovers MLL(alt) = delta + MLL(ref), so one extra pass 
 
 Runs inside the container, reusing the deposited model loader rather than reimplementing it:
 
-    docker run ... evo2-emb python analyses/scripts/score_ref_ll.py --model-size 1b
+    docker run ... evo2-emb python analyses/scripts/score_ref_ll.py --model-size 1b --out <the strand folder>/refll_1b.parquet
 """
 import argparse
 import os

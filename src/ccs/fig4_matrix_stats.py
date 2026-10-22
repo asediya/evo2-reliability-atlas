@@ -1,4 +1,5 @@
-"""Figure 4 — the dense benchmark matrix: every per-species quantity the trust layer produces, in one table.
+"""The trust layer's per-species benchmark table: every per-species quantity it produces, in one table.
+No figure draws it (FIGURES.md); its sensitivity intervals are Table S29's.
 
 Assembles nine species x fifteen measured columns from the per-variant scores and the deposited calibration,
 conformal and prevalence arms, plus the per-variant confidence field for the strips beneath the matrix.
@@ -79,7 +80,7 @@ def main():
 
     COLS = [
         {"key": "n", "label": "variants", "fmt": "{:,.0f}", "group": "cohort", "good": None, "log": True},
-        {"key": "base_rate", "label": "% path.", "fmt": "{:.0%}", "group": "cohort", "good": None},
+        {"key": "base_rate", "label": "% pos.", "fmt": "{:.0%}", "group": "cohort", "good": None},
         {"key": "sensitivity", "label": "sensitivity", "fmt": "{:.2f}", "group": "what it does", "good": "high"},
         {"key": "specificity", "label": "specificity", "fmt": "{:.2f}", "group": "what it does", "good": "high"},
         {"key": "missed", "label": "missed", "fmt": "{:,.0f}", "group": "what it does", "good": "low", "log": True},
@@ -90,7 +91,7 @@ def main():
         {"key": "lift", "label": "lift", "fmt": "{:.1f}×", "group": "can confidence help?", "good": "high"},
         {"key": "self_auroc", "label": "self-know.", "fmt": "{:.2f}", "group": "can confidence help?", "good": "high"},
         {"key": "conf_benign", "label": "benign", "fmt": "{:.2f}", "group": "conformal 90%", "good": "high"},
-        {"key": "conf_path", "label": "pathogenic", "fmt": "{:.2f}", "group": "conformal 90%", "good": "high"},
+        {"key": "conf_path", "label": "positive", "fmt": "{:.2f}", "group": "conformal 90%", "good": "high"},
         {"key": "prior_shift", "label": "Δlogit π", "fmt": "{:.1f}", "group": "mechanism", "good": "low"},
         {"key": "ece_corrected", "label": "ECE fixed", "fmt": "{:.3f}", "group": "mechanism", "good": "low"},
     ]

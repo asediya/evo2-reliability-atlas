@@ -5,7 +5,7 @@ Answers 'so what if a WEAK model is calibrated?' with a number, under realistic 
 NT weak ~0.58) we compare three deployment policies:
   A. raw score + naive 0.5 threshold        (no calibration, no abstention)
   B. calibrated prob + reject-option         (abstain when a call is expected-cost-worse than abstaining)
-  C. calibrated prob + conformal {both}      (distribution-free abstention)
+  C. calibrated prob + conformal {both}      (abstention; coverage assumes cross-species exchangeability)
 Question: does the WEAK backbone reach LOW expected cost precisely BECAUSE it abstains and refuses
 catastrophic false-benign calls? CPU-only.
   python src/ccs/build_decision_panel.py   -> logs/decision_panel.md
@@ -64,7 +64,7 @@ _SEP = "|---|---|---|---|---|"
 
 def main():
     lines = ["# Decision-theoretic cost panel (calibration and abstention against trivial policies)", "",
-             f"Asymmetric costs: false-benign (miss a pathogenic) = {C_FN}, false-alarm = {C_FP}, abstain = {C_AB}, correct = 0. "
+             f"Asymmetric costs: false-benign (miss a positive) = {C_FN}, false-alarm = {C_FP}, abstain = {C_AB}, correct = 0. "
              "Calibrated probs are leave-one-species-out isotonic transfers (pooled across all 9 species). Lower expected "
              "cost is better.", "",
              ]
@@ -76,9 +76,9 @@ def main():
         rich = [sp for sp in data if int(data[sp][1].sum()) >= RICH_MIN]
         # pooled LOSO-calibrated probs + pooled raw (min-max per backbone)
         praw, pcal, yall = [], [], []
-        # expected cost is prevalence-sensitive and this panel was pooled only,
-        # in a paper whose declared-primary aggregation is the unweighted species mean. Track the
-        # species boundaries so every policy can also be reported macro.
+        # expected cost is prevalence-sensitive, and the paper's declared-primary aggregation is the
+        # unweighted species mean, so the species boundaries are tracked and every policy is also
+        # reported macro.
         spans, cursor = [], 0
         for sp in data:
             x, y = data[sp]
@@ -156,7 +156,7 @@ def main():
                             ("B calibrated + reject-option", (cB, aB)),
                             ("C calibrated + conformal", (cC, aC)),
                             ("T1 always-abstain (trivial)", (cAB, aAB)),
-                            ("T2 always-call-pathogenic (trivial)", (cPP, aPP)),
+                            ("T2 always-call-positive (trivial)", (cPP, aPP)),
                             ("T3 always-call-benign (trivial)", (cBB, aBB))]:
             vs = "" if pol.startswith("A") else f"{100*(cA-c)/cA:+.0f}%"
             beats = "" if c >= cAB else " <-BEATS T1"
@@ -168,7 +168,7 @@ def main():
               "**Trivial-baseline reality check.** At the chosen cost matrix "
               f"(C_FN={C_FN}, C_FP={C_FP}, C_AB={C_AB}) the always-abstain floor is exactly C_AB = {C_AB:.3f}. NO learned "
               "policy — for either backbone — beats it: the best calibrated cell (NT reject-option "
-              f"~{nt['B']:.3f}, Evo2 conformal ~{ev['C']:.3f}) sits ABOVE 0.500. NT's 'low' cost is an artifact of abstaining on ~97% of variants, i.e. it "
+              f"~{nt['B']:.3f}, Evo2 conformal ~{ev['C']:.3f}) sits ABOVE 0.500. NT's 'low' cost is an artefact of abstaining on ~97% of variants, i.e. it "
               "approaches the zero-information floor from above without reaching it. Under this cost matrix the "
               "conclusion is that calibration+abstention does not add decision value — "
               "blanket abstention dominates. Answering only wins once deferral is made expensive relative to errors "

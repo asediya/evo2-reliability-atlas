@@ -163,7 +163,7 @@ def main():
                     help="variants per checkpoint flush (>= batch)")
     ap.add_argument("--limit", type=int, default=0, help="only score N variants (validation)")
     ap.add_argument("--resident", action="store_true",
-                    help="40b: load the FULL model on-GPU via evo2's native scorer (needs >=48GB VRAM; "
+                    help="40b: load the FULL model on-GPU via evo2's native scorer (the bf16 weights alone are ~80GB, so it needs a GPU larger than that, e.g. an H200; "
                          "MUCH faster on a big cloud GPU) instead of block-streaming")
     ap.add_argument("--strand", action="store_true",
                     help="strand-average: score each window AND its reverse-complement, average the "

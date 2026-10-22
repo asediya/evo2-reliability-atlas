@@ -712,7 +712,7 @@ def main():
         # "7 of the 29 sections" for a tool with ten sections. Report each tally against its own
         # denominator.
         _nsec = len({r[1] for r in skips}) if skips and len(skips[0]) > 1 else len(skips)
-        print("%d of the %d sections could not run for want of the raw tree (%d of %d checks ran),"
+        print("%d of the %d sections could not run for want of an undeposited input (%d of %d checks ran),"
               " so this is NODATA,"
               % (_nsec, len(SECTIONS), len(passes) + len(fails),
                  len(passes) + len(fails) + len(skips)))

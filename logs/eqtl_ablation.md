@@ -1,10 +1,8 @@
 # eQTL harness/context ablation - does the regulatory blind spot survive a better harness?
 
-> **Development log.** Both branches of the decision template below survive under `## Read`, two of six harness rows are `TOO_FEW` or `PENDING`, and a baseline is quoted as 0.496 where its own row reads 0.521. Nothing here is a manuscript result; the published eQTL values are 0.488 at the 1,001-bp readout and 0.498 at 8,192 bp.
-
 Question: could the 1001-bp window + single-position readout MANUFACTURE the regulatory blind
 spot? Candidate causal (n=1000) vs control (n=1000) pig cis-eQTL variants, Evo2-40B,
-re-scored under each harness. Baseline = original 1002-bp single-position (AUROC 0.496). AUROC on |score|
+re-scored under each harness. Baseline = original 1002-bp single-position readout, rescored on this sample (0.496 on |score| over the 20,000-variant panel). AUROC on |score|
 magnitude (matches baseline |LLR|); signed oriented >=0.5. 95% CI = 1000x bootstrap on |score|.
 
 | harness | window(bp) | readout | n | AUROC(|score|) | 95% CI | AUROC(signed) | status |
@@ -17,10 +15,8 @@ magnitude (matches baseline |LLR|); signed oriented >=0.5. 95% CI = 1000x bootst
 | ll4096 | 4096 | mean-LL | - | - | - | - | PENDING |
 
 ## Read
-- AUROC stays ~0.5 (CI includes 0.5) across windows & readouts => regulatory blind spot is a MODEL
-  property, not a harness artifact.
-- AUROC rises materially (CI excludes 0.5) under mean-LL / larger windows => partly a scoring artifact
-  => re-scope the regulatory claim.
+- Every 95% CI scored here includes 0.5 (4 of 6 harnesses scored), so on this sample the
+  near-chance eQTL result does not depend on the window or the readout.
 
 Caveat (separate): candidate causal cis-eQTLs are common/weakly-selected, so a fitness-trained
 model being near chance here may be EXPECTED, not a representational failure. This ablation isolates the

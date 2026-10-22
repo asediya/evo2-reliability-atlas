@@ -1,4 +1,4 @@
-"""Render the BRCA1 structure colored by Evo2's zero-shot deleteriousness, AND quantify the claim:
+"""Render the BRCA1 structure coloured by Evo2's zero-shot deleteriousness, AND quantify the claim:
 do Evo2-high residues bury (low relative SASA)? Writes an interactive 3Dmol scene (screenshot via
 browser) + prints the Evo2-vs-burial statistic that makes the figure a result, not decoration.
 

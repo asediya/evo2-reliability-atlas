@@ -54,8 +54,8 @@ def test_precision_operating_point(data):
 def test_precision_operating_point_meets_its_target(data):
     """The routine's stated guarantee, not merely that it returned numbers in range.
 
-    the only test of this function asserted feasible_fraction > 0 and that two
-    values lay in [0, 1] -- all of which hold for arbitrary wrong output. The documented promise
+    test_precision_operating_point above asserts only that feasible_fraction > 0 and that two
+    values lie in [0, 1] -- all of which hold for arbitrary wrong output. The documented promise
     is an RCPS-style lower bound: the flagged set should ACHIEVE the requested precision, and a
     stricter request should flag fewer calls. Both are tested here.
     """

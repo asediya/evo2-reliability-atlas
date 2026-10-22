@@ -48,6 +48,9 @@ def main():
             if clnsig in POS: y = 1
             elif clnsig in NEG: y = 0
             else: continue
+            # The keyword "coding" also matches non-coding-transcript terms (non-coding_transcript_variant),
+            # so a variant whose only consequence term is one of those is flagged coding; the stratified
+            # draw below and Additional file 1's Table S15 use this flag as it stands (its notes give the effect).
             coding = int(mc is not None and any(k in mc.lower() for k in
                         ("missense", "synonymous", "nonsense", "stop", "frameshift", "coding", "inframe")))
             rows.append((chrom, int(pos), ref, alt, y, coding))

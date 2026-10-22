@@ -670,10 +670,13 @@ def main():
         # The manuscript rounds the ECE difference and states it as a reduction, so its sign is part of the check.
         ("manuscript: transfer lowers the ECE below the sigmoid's", "by 0.007",
          "by %.3f" % -dw["delta"] if dw["delta"] < 0 else "does not lower it (%s)" % signed(dw["delta"], 3)),
-        # The manuscript gives one cost for the learned policy; it holds only if B and C agree at two decimals.
-        ("manuscript: learned abstention policy against always abstaining", "0.14 per variant against 0.50",
-         "%s per variant against %.2f" % (b2, r8["abstain"][0]) if b2 == c2 else
-         "%s (B) and %s (C) per variant against %.2f" % (b2, c2, r8["abstain"][0])),
+        # The manuscript states the reject option on the deposited posterior against the threshold that never
+        # abstains and against always abstaining.
+        ("manuscript: reject option, cost-aware threshold and always abstaining",
+         "0.144 per variant against 0.146 for a cost-aware threshold that never abstains and 0.50 for always "
+         "abstaining",
+         "%.3f per variant against %.3f for a cost-aware threshold that never abstains and %.2f for always "
+         "abstaining" % (r8d["B"][0], r8d["D"][0], r8d["abstain"][0])),
     ]
     print("\n=== PUBLISHED vs RECOMPUTED (Additional file 1 and the manuscript) ===")
     print("  %-68s %-50s %-50s" % ("value", "published", "recomputed"))
@@ -699,7 +702,7 @@ def main():
                     "reports/fig4_reconciliation.json", "reports/decision_panel.json", "reports/trust_layer_8192.json",
                     "Additional file 3: tables/fig1_atlas_pervariant.parquet"],
         "_atlas_table_sha256": atlas_sha,
-        "_scores": "1,001 bp: evo2_1001 as stored; 8,192 bp: the negative of evo2_meanll_8192; higher = more pathogenic",
+        "_scores": "1,001 bp: evo2_1001 as stored; 8,192 bp: the negative of evo2_meanll_8192; higher = more deleterious",
         "_bootstrap": {"B": B_V, "seed": SEED_V},
         "_cost": {"false_negative": C_FN, "false_positive": C_FP, "abstain": C_AB},
         "transfer_vs_sigmoid": {key: jrec_i(res_i[tag][0], res_i[tag][1], res_i[tag][2], res_i[tag][3], res_i[tag][4])

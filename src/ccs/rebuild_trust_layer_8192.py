@@ -8,10 +8,13 @@ contribution — calibration transfer, the selective layer, the confusion matrix
 rebuilt because it does not survive.
 
 So rebuild it. Same leave-one-species-out isotonic calibration, same confidence functional |2p-1|,
-same 15% per-species refusal, same 0.5 threshold — only the score changes.
+a 15% per-species refusal and the same 0.5 threshold. Besides the score, the refusal rests on this
+isotonic posterior rather than the deployed 1,001-bp arm's Platt map, the donor pool admits every other
+species, and each species refuses round(0.15 n) of its calls (1,665 in all).
 
-Score orientation follows build_readout_headtohead.py: evo2_meanll_delta is flipped where its AUROC
-falls below 0.5, so higher always means more deleterious.
+Score orientation follows build_readout_headtohead.py: evo2_meanll_delta is a likelihood delta that a
+deleterious variant lowers, so it is negated by that fixed convention and the result asserted, never
+inferred from the labels, so that higher means more deleterious.
 
     python src/ccs/rebuild_trust_layer_8192.py
     -> reports/trust_layer_8192.json
@@ -56,8 +59,10 @@ def load(sp):
     s = d["evo2_meanll_delta"].to_numpy().astype(float)
     if len(np.unique(y)) < 2:
         return None
-    if roc_auc_score(y, s) < 0.5:          # orient so higher = more deleterious
-        s = -s
+    s = -s                                  # declared sign: a deleterious variant LOWERS the delta
+    if roc_auc_score(y, s) < 0.5:           # asserted, never inferred from the labels
+        sys.exit("orientation assertion failed for %s: AUROC %.4f < 0.5 after negation"
+                 % (sp, roc_auc_score(y, s)))
     return s, y
 
 
@@ -135,10 +140,10 @@ def main():
     print("  macro error-detection   %.3f" % macro_ed)
     # The published 1,001-bp figures, printed for comparison with the 8,192-bp layer above.
     # 1,669 is the round-to-nearest boundary, not the published one: the layer as published
-    # refuses 1,674 by the ceiling rank rule, pooled lift 2.35, macro lift 3.42
-    # (reports/fig4_leak.json, fig4_reconciliation.json).
+    # refuses 1,673 by the strict corridor of reports/fig4_reconciliation.json (the ceiling rank rule
+    # of reports/fig4_leak.json gives 1,674 with the same errors removed), pooled lift 2.35, macro lift 3.42.
     #
-    print("\n1,001-bp layer as published: 893 errors (8.02%), 1,674 refused (15.04%), "
+    print("\n1,001-bp layer as published: 893 errors (8.02%), 1,673 refused (15.03%), "
           "316 removed (35.4%), pooled lift 2.35, macro lift 3.42")
 
     io.open(OUT, "w", encoding="utf-8", newline="\n").write(json.dumps(

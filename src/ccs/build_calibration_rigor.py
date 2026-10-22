@@ -4,15 +4,15 @@ calibration_transfer.py; CPU-only, re-analyzes scores already on disk.
 
   (1) DEBIASED METRIC SUITE — retire bare equal-width ECE. Report, for transfer vs oracle vs no-cal:
       equal-width ECE (reference), ADAPTIVE (equal-mass) ECE, binning-free KS-CALIBRATION error, Brier
-      score + Murphy decomposition (reliability/resolution/uncertainty). Robust to the "ECE is a binning
-      artifact" attack, and Brier shows transfer preserves sharpness.
+      score + Murphy decomposition (reliability/resolution/uncertainty). Robust to the objection that ECE is a binning
+      artefact, and Brier shows transfer preserves sharpness.
   (2) FORMAL CALIBRATION TEST — for each species, a simulation goodness-of-fit test under H0 = perfectly
       calibrated (resample y~Bernoulli(p), rebuild the KS-cal statistic) -> a p-value for "reject perfect
       calibration", plus a percentile bootstrap CI on adaptive ECE. Turns "close to oracle" into an
       inferential claim.
   (3) CALIBRATION-SET-SIZE LEARNING CURVE — subsample the pooled source calibration set to n=25..all,
-      refit, measure transferred ECE on the label-poor targets -> kills the "goat n=99 overfitting"
-      attack and names the minimum viable N.
+      refit, measure transferred ECE on the label-poor targets -> tests whether the label-poor
+      panels (goat, n=99) are overfitting and names the minimum viable N.
 
 With fewer than two label-rich species it exits with an error naming the score and window files that are absent.
 

@@ -14,7 +14,7 @@ import polars as pl
 AF = "data/interim/geno_pgen"
 OUT = "data/interim/selection_candidates.parquet"
 EV = "logs/status/events.log"; ST = "logs/status/selection.status"
-BINS = [("singleton", 0.0, 0.002), ("rare", 0.002, 0.01), ("low", 0.01, 0.05),
+BINS = [("ultra-rare", 0.0, 0.002), ("rare", 0.002, 0.01), ("low", 0.01, 0.05),
         ("common", 0.05, 0.30), ("major", 0.30, 0.999)]  # exclude fixed 0/1
 
 

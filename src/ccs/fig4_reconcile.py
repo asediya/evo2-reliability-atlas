@@ -1,4 +1,4 @@
-"""Figure 4 RECONCILIATION — settle the calibration analysis before any figure is designed.
+"""Trust-layer RECONCILIATION behind Additional file 1's Figure S4 — the calibration analysis, settled.
 
 WHY THIS EXISTS
 The deposited calibration numbers must survive contact with their own estimator and aggregation
@@ -6,15 +6,16 @@ choices. Problems this script resolves:
   (1) The transfer-vs-trivial verdict FLIPS with (binning x aggregation): pooled equal-width says isotonic
       transfer wins by ~10x; pooled and macro equal-mass both say the trivial
       sigmoid wins. A headline a reader can invert by rebinning is not a headline.
-  (2) reports/COMPILED_RESULTS.md (not deposited) appears to MIX aggregations across rows of one table (its oracle/trivial
-      match pooled values while its isotonic matches a macro value).
+  (2) The four ECE values hard-coded in section 6 come from a project table that is not deposited, and
+      they MIX aggregations (the oracle and trivial values match pooled ECEs, the isotonic one a macro ECE).
   (3) Two different ECE estimators live in the codebase (10 equal-width bins in calibration_transfer.py,
       15 in analyze_trust_layer.py).
-  (4) reports/risk_coverage.parquet's oracle_isotonic_in_species_5fold arm is built at
-      analyze_trust_layer.py:151 by an IN-COHORT isotonic fit -- the same construction used for
+  (4) reports/risk_coverage.parquet's oracle_isotonic_in_species_5fold arm is built in
+      analyze_trust_layer.py's part3_riskcov() by an IN-COHORT isotonic fit -- the same construction used for
       oracle_isotonic -- so that arm is an upper bound, not the transferred arm the paper reports.
   (5) The LOSO training pool is RICH species only (RICH_MIN=50): goat, chicken and pig are targets that
-      never appear in any training pool, i.e. transfer was never tested where labels are scarcest.
+      never appear in any training pool, so the label-poorest species are only ever transfer targets,
+      never calibration donors.
 
 METHODOLOGICAL DECISIONS, STATED AND DEFENDED
   * AGGREGATION = MACRO (unweighted mean across species) is primary. Species are the unit of
@@ -72,9 +73,8 @@ def ece_mass(p, y, bins=10):
 
     An order-based split, `np.array_split(np.argsort(p, kind="stable"), bins)`, splits
     the sorted ORDER into equal counts. The isotonic LOSO posterior is a step function with only 16-40
-    distinct values per species, so essentially every bin boundary fell inside a block of tied scores and
-    membership was decided by parquet row order. Under 1,000 row permutations that moved a panel-d mark
-    across ~15 mm of a 64 mm axis: not a reproducible coordinate.
+    distinct values per species, so essentially every bin boundary would fall inside a block of tied scores and
+    membership would be decided by parquet row order: not a function of the data.
 
     Binning on value quantiles and collapsing duplicate edges keeps ties together, so the result is a
     function of the data alone. Where ties are heavy the effective bin count drops below `bins` -- that
@@ -264,7 +264,8 @@ def main():
                  "pooled_error": risk_coverage(np.abs(2 * P - 1), Y, P, cov).tolist()}
     ab["_note"] = ("oracle_isotonic is an in-species 4-fold fit: an UPPER BOUND, not attainable "
                    "cross-species. The deposited reports/risk_coverage.parquet was built with this "
-                   "construction (analyze_trust_layer.py:151).")
+                   "construction for its oracle_isotonic_in_species_5fold arm (analyze_trust_layer.py, "
+                   "part3_riskcov()).")
     R["abstention"] = ab
 
     # ---- 5. contingency diagnostics: can per-variant marks be drawn honestly? ----
@@ -297,7 +298,8 @@ def main():
 
     R["prior_shift"] = _tbl("data/processed/prevalence_correction.parquet",
                             ["sp", "n", "pos", "pi_src", "pi_tgt", "ece_uncorr", "ece_corr"])
-    # ---- 5b2. PANEL d, recomputed so all three marks are ONE quantity ----
+    # ---- 5b2. the prior-shift arm (key panel_d; no panel of Figure S4 draws it), recomputed so all
+    # three marks are ONE quantity ----
     # The deposited prevalence arm above (R["prior_shift"]) scores with build_prevalence_correction.wece(),
     # which bins on np.linspace(0,1,11) -- EQUAL-WIDTH -- and is called with unit weights, so it is exactly
     # ece_width(p, y, 10). Drawing panel d's grey/blue from that arm and its amber oracle from mass10, under
@@ -367,9 +369,9 @@ def main():
             for sp in post},
         "_note": ("equal-mass binning cannot deliver the requested bin count on the isotonic LOSO "
                   "posterior (16-40 distinct values per species). ece_mass bins BY VALUE so ties stay "
-                  "together; the effective counts above are what is actually being measured. The prior "
-                  "np.array_split(argsort) implementation faked the requested count by splitting tied "
-                  "scores on row order, which made every mark row-order dependent."),
+                  "together; the effective counts above are what is actually being measured. An order-based "
+                  "split, np.array_split(argsort), would fake the requested count by splitting tied "
+                  "scores on row order."),
     }
 
     R["conformal"] = _tbl("data/processed/conformal_per_species.parquet",
@@ -380,7 +382,7 @@ def main():
     if R["size_curve"]:
         v = np.array(R["size_curve"]["mean_transfer_aece"]); s = np.array(R["size_curve"]["sd"])
         # every point's +/-1sd band overlaps every other -> "flat within noise", NOT an optimum at n=100
-        R["size_curve"]["flat_within_noise"] = bool(np.all((v.min() - s.max()) <= v) and
+        R["size_curve"]["flat_within_noise"] = bool(np.all(np.abs(v[:, None] - v[None, :]) <= s[:, None] + s[None, :]) and
                                                     (v.max() - v.min()) < 2 * s.mean())
 
     # ---- 5c. EQUAL-EVIDENCE RISK STAIRCASE (panel a) ----
@@ -468,7 +470,7 @@ def main():
                  "disagree about anything derived.",
     }
 
-    # ---- 6. reconcile against the deposited table ----
+    # ---- 6. reconcile against the project's compiled-results table (four values, not deposited) ----
     dep = {"oracle": 0.0063, "trivial": 0.0467, "platt_transfer": 0.0510, "isotonic_transfer": 0.0513}
     rec = {}
     for label, val in dep.items():
@@ -485,7 +487,8 @@ def main():
     # ---- 7. per-variant table for the refusal-field hero (PLATT posteriors only) ----
     # isotonic collapses 11,130 variants onto 213 confidence levels, so a per-variant panel drawn on it
     # would position >99% of marks by sort tie-break. The Platt/sigmoid posterior is smooth and monotone
-    # in the score, keeping ~79% of variants at a unique confidence -> honestly drawable.
+    # in the score, keeping 8,792 distinct confidences over 11,130 variants, 65% of variants at a confidence no other
+    # variant shares -> honestly drawable.
     rows = []
     for sp in post:
         pr, y = post[sp]

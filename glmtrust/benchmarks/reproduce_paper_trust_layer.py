@@ -107,6 +107,7 @@ def load():
             "Regenerate them from the raw inputs listed in the manifest, or run this benchmark from\n"
             "inside the full study working tree." % (SCORES % "<species>")
         )
+    missing = [sp for sp in SPECIES if not any(g[0] == sp for g in groups)]
     if missing:
         sys.stderr.write("warning: %d of %d species score files were missing and skipped:\n  %s\n"
                          % (len(missing), len(SPECIES), "\n  ".join(missing)))

@@ -686,7 +686,7 @@
   "gerp_blind_total": 1598,
   "nt_scored_total": 1598,
   "fraction": 1.0,
-  "_note": "Coverage of the GERP no-call set by Nucleotide Transformer. Full reach is a DNA-LM class property, not an Evo2 property; NT's mean atlas AUROC is 0.595 (COMPILED_RESULTS), which is the point of the title."
+  "_note": "Coverage of the GERP no-call set by Nucleotide Transformer. Full reach is a DNA-LM class property, not an Evo2 property; NT's mean atlas AUROC is 0.595 (reports/nt_vs_evo2.parquet), so full reach does not bring accuracy with it."
  },
  "fig2f_verdicts": {
   "evo2_sig_wins": [
@@ -697,7 +697,7 @@
    "human"
   ],
   "n_ties": 6,
-  "source": "reports/fig2_data.json (Fig 2F), reused so the two figures cannot contradict"
+  "source": "reports/fig2_data.json (the GERP head-to-head of Figure S7b), reused so the two figures cannot contradict"
  },
  "supervised": {
   "rows": [
@@ -1266,6 +1266,6 @@
    "sheep"
   ],
   "unannotated_species": [],
-  "_note": "If the class gap survives WITHIN a stratum, class-dependent missingness is a property of the conservation track; if it collapses, it is an artifact of sampling negatives genome-wide against coding positives. Two strata are reported: the crude coding/noncoding binary, and the consequence-category-matched Mantel-Haenszel pooled gap (stratified Miettinen-Nurminen score interval), which is the defensible one. Survival is counted by a CI excluding zero, NEVER by the sign of a point estimate."
+  "_note": "If the class gap survives WITHIN a stratum, class-dependent missingness is a property of the conservation track; if it collapses, it is an artefact of sampling negatives genome-wide against coding positives. Two strata are reported: the crude coding/noncoding binary, and the consequence-category-matched Mantel-Haenszel pooled gap (stratified Miettinen-Nurminen score interval), which is the defensible one. Survival is counted by a CI excluding zero, NEVER by the sign of a point estimate."
  }
 }

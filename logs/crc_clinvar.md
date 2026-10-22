@@ -22,6 +22,6 @@
 | 0.2 | 0.201 | 0.55 | YES | 0.132 | 0.17 | YES |
 
 ## VERDICT
-In-distribution: guarantee held in 9/9 (score x alpha) cases with non-trivial benign-rates within the tolerance (FNR <= alpha + 0.02), 7/9 strictly (CADD at alpha = 0.05 and 0.2). Coding->noncoding transport: held in 9/9 within the tolerance (FNR <= alpha + 0.03), 9/9 strictly.
+In-distribution: guarantee held in 9/9 (score x alpha) cases within the tolerance (FNR <= alpha + 0.02), 7/9 strictly (CADD at alpha = 0.05 and 0.2). Coding->noncoding transport: held in 9/9 within the tolerance (FNR <= alpha + 0.03), 9/9 strictly.
 
-**OBJECT VALID at scale** - the positive-class-FNR certificate holds and is informative in-distribution on ClinVar, and (partly) survives the coding->noncoding shift. Conformal Risk Control of the missed-positive rate is therefore a valid guarantee object when the target has labels or is exchangeable with the calibration data. Transport to a ZERO-label species is the separate test of build_crc_certificate.py (logs/crc_certificate.md), where the transported certificate does not hold at a strict alpha.
+**OBJECT VALID at scale** - the positive-class-FNR certificate holds and is informative in-distribution on ClinVar, and (partly) survives the coding->noncoding shift. Conformal Risk Control of the missed-positive rate is therefore a valid guarantee object when the target has labels or is exchangeable with the calibration data. Transport to a ZERO-label species is the separate test of build_crc_certificate.py (logs/crc_certificate.md).

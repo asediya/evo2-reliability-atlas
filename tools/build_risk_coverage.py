@@ -62,8 +62,8 @@ def main():
         rows.append({"arm": "platt_LOSO_macro", "coverage": c, "n_retained": tot,
                      "error": float(np.mean(es))})
 
-    # 2. The arms the reconciliation already computes, including the isotonic LOSO one the Results
-    #    quote ("falls from 0.058 to 0.038 at 85% coverage").
+    # 2. The arms the reconciliation already computes, including the isotonic LOSO one Additional file 1's
+    #    Figure S4c quotes ("falls from 0.058 to 0.038 at 85% coverage").
     ab = json.load(io.open(RECON, encoding="utf-8"))["abstention"]
     n_total = int(d.height)
     for arm in ("isotonic_LOSO", "trivial_sigmoid_LOSO", "oracle_isotonic"):
@@ -101,7 +101,7 @@ def main():
     if iso.height:
         full = new.filter((pl.col("arm") == "isotonic_LOSO_macro") & (pl.col("coverage") == 1.0))
         print("    isotonic_LOSO_macro %.4f at full coverage -> %.4f at 0.85 "
-              "(the Results' 0.058 -> 0.038)" % (full["error"][0], iso["error"][0]))
+              "(Additional file 1, Figure S4c: 0.058 -> 0.038)" % (full["error"][0], iso["error"][0]))
     return 0
 
 

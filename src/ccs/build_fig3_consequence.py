@@ -16,7 +16,7 @@ this SNV set. The gradient is therefore a seven-species result for positives.
 Intervals are a stratified nonparametric percentile bootstrap: within each species, that class's
 positives and that species' negatives are resampled with replacement, the per-species AUROC is
 recomputed, and the positive-weighted mean is re-formed. 2,000 resamples, seed 20260719 (the
-project's Figure 3 resample seed).
+seed the fig3_* builders share).
 
     python src/ccs/build_fig3_consequence.py
 """
@@ -43,7 +43,7 @@ B = 2000
 SEED = 20260719
 
 # What the manuscript prints, so the build fails loudly if the recompute drifts from the text.
-PUBLISHED = {"nonsense (stop-gain)": 0.953, "missense": 0.896, "splicing": 0.774, "regulatory": 0.579}
+PUBLISHED = {"nonsense (stop-gain)": 0.954, "missense": 0.896, "splicing": 0.772, "regulatory": 0.579}
 TOL = 0.004
 
 

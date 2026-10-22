@@ -17,7 +17,7 @@ and the script exits 1 if it does not.
 
 The panel's allele frequencies are not deposited; build_piggtex_maf.py computes them from PigGTEx's genotype release,
 and maf_stratified_auroc.py stratifies and matches on them (Supplementary Note S33); its designs that also match on
-these distances are recorded, not printed.
+these distances are recorded, and the matched one is printed (Note S33, Table S20).
 
     python analyses/scripts/eqtl_tss_distance.py --gtf data/raw/genomes/pig/Sus_scrofa.Sscrofa11.1.112.gtf.gz
 """

@@ -26,17 +26,18 @@ would cost information; removing a sentence that argues does not.
 """
 
 # ---------------------------------------------------------------- type scale (points)
-# Calibrated to what Genome Biology actually prints, not to a floor. Glyph-ink measurement
-# of ten published GB figures at the 170 mm full-page width gives tick labels 5-9.5 pt,
+# Calibrated to measured published figures, not to a floor. Glyph-ink measurement
+# of ten published Genome Biology figures at the 170 mm full-page width gives tick labels 5-9.5 pt,
 # axis titles 7-12.5 pt and panel letters 11-16 pt, in a ratio of about 1.6 : 1.25 : 1.
 # Nature Portfolio's 5-7 pt guidance is calibrated to a narrower column and does not apply at 170 mm.
 #
-# WHY FLOOR DOES NOT TRACK ANNOT. Figure 2 panel a has 386.4 pt of height for 49 predictor
+# WHY FLOOR DOES NOT TRACK ANNOT. Figure 2 (one panel, built with style_main.py, which
+# keeps this FLOOR) has 386.4 pt of height for 49 predictor
 # names. At 7.0 pt exactly 49 fit; at 7.6 pt only 45 do, and the plate cannot grow because
 # graphic + legend is capped at 225 mm. Cutting four predictors would change what the figure
-# claims. So the dense blocks -- Figure 2's name and reach columns, Figure 4's provenance line,
-# Figure 5's SGE key, Figure 7's nine-species list, Figure 9's whole annotation tier, Figure 10's
-# b/c legend -- are set at FLOOR, and ANNOT rises past them. FLOOR is the size the house style
+# claims. So the dense blocks -- Figure 2's 49 names (style_main.py) and, in the figures this
+# module styles, Figure S3's annotation tier and the multi-line keys of Figures S4 and
+# S6 -- are set at FLOOR, and ANNOT rises past them. FLOOR is the size the house style
 # provides for exactly this case.
 #
 # MEASURE PENETRATION, NOT BOX HEIGHT. A value and its CI on one line grazing by 0.8 pt have a
@@ -133,14 +134,14 @@ def tol_del_cmap():
 LINE_MIN = 0.3            # "All lines should be wider than 0.25 pt"
 
 # ---------------------------------------------------------------- colour
-# Okabe-Ito, ordered so that any prefix stays maximally separated under dichromacy
+# OKABE (defined below, after the text helpers): Okabe-Ito, ordered so that any prefix stays
+# maximally separated under dichromacy
 # (minimum pairwise CIE-Lab dE >= 17 deuteranope, >= 20 protanope at every n).
 # ---------------------------------------------------------------- the text-safe ochre
-# MEASURED. As LABEL TEXT, the set's three different ochres all
-# fail WCAG's 4.5:1 for small text on white: #E8B15C at 1.93 (Figure 5's BRCT), #C08A2E at
-# 3.04 (Figures 2 and 4's middle reach regime) and #B37C00 at 3.62 (a clade shade in 6 and 7).
+# MEASURED. As LABEL TEXT an ochre fails WCAG's 4.5:1 for small text on white: #E8B15C at 1.93,
+# #C08A2E at 3.04 and #B37C00 (dog's clade shade in fig2_style.py) at 3.62.
 # 1.93:1 is a label a reader has to hunt for. OCHRE_TEXT is one colour at the same hue (40 deg,
-# the family all three sit in) taken down to 4.60:1, so the swatch and the word that names
+# the family all three sit in) taken down to 4.59:1, so the swatch and the word that names
 # it stay the same colour and the word is readable. Use it wherever an ochre also sets type.
 OCHRE_TEXT = "#9F6B02"
 
@@ -300,8 +301,8 @@ def over(fg, alpha, bg="#FFFFFF"):
     """The colour a reader ACTUALLY SEES when `fg` is painted at `alpha` over `bg`.
 
     ink_on() answers a question about the ink behind the type, so it has to be handed the
-    composited colour, not the nominal one. Figure 6's wedges are filled with desat(col, 0.35) at
-    alpha 0.96. For horse, INK clears the nominal #D55E00 at exactly 4.50:1 but reads only 4.20:1
+    composited colour, not the nominal one. A species wedge filled with fig2_style.desat(col, 0.35) at
+    alpha 0.96 shows why: for horse, INK clears the nominal #D55E00 at exactly 4.50:1 but reads only 4.20:1
     on the #B56A30 the reader actually sees.
     """
     from matplotlib.colors import to_hex
@@ -314,12 +315,12 @@ def ink_on(bg, target=4.5):
     """White, the house INK, or pure black -- whichever a reader can actually read on `bg`.
 
     MEASURED. A value printed inside a filled mark is routinely set white because the
-    fill is "a colour", but a fill chosen to be distinguishable as a MARK is often light: Figure 6's
-    wedge numerals set white come to 1.76:1 on cat's amber and Figure 1's cells to 2.73:1 on mid viridis.
+    fill is "a colour", but a fill chosen to be distinguishable as a MARK is often light: wedge
+    numerals set white come to 1.79:1 on cat's amber (#EDBA47) and cell values to 2.73:1 on mid viridis.
 
     White and a PURE BLACK dark candidate cross over at luminance 0.179, so whichever wins always
     clears WCAG's 4.5. The house INK is #1A1A1A, whose own luminance 0.0103 moves the crossover
-    to luminance 0.202, where both candidates sit at 4.18:1 -- short of 4.5 for mid-tone fills.
+    to luminance 0.202, where both candidates sit at 4.17:1 -- short of 4.5 for mid-tone fills.
 
     Pure black gives a real floor -- worst case 4.58:1 at luminance 0.179 -- so it is the
     fallback wherever neither house candidate reaches `target`. That band is narrow, and #1A1A1A
@@ -390,8 +391,8 @@ RULE = "#B4B4B4"     # reference rules, chance lines, light structure
 GRID = "#E4E4E4"
 
 # Arial first, deliberately: every figure in this paper as submitted is ArialMT, and
-# Helvetica resolves on macOS as a .ttc collection. Leaving Helvetica at the head made
-# any builder that trusted this list alone render in a different face from its siblings.
+# Helvetica resolves on macOS as a .ttc collection. With Helvetica at the head, any
+# builder that trusts this list alone renders in a different face from its siblings.
 FAMILY = ["Arial", "Helvetica", "DejaVu Sans"]
 
 

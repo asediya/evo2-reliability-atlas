@@ -820,7 +820,7 @@
    "gerp_blind_total": 1598,
    "nt_scored_total": 1598,
    "fraction": 1.0,
-   "_note": "Coverage of the GERP no-call set by Nucleotide Transformer. Full reach is a DNA-LM class property, not an Evo2 property; NT's mean atlas AUROC is 0.595 (COMPILED_RESULTS), which is the point of the title."
+   "_note": "Coverage of the GERP no-call set by Nucleotide Transformer. Full reach is a DNA-LM class property, not an Evo2 property; NT's mean atlas AUROC is 0.595 (reports/nt_vs_evo2.parquet), so full reach does not bring accuracy with it."
   },
   "protein_lm": {
    "human": {

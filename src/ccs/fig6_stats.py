@@ -6,7 +6,7 @@ caption describe an estimator the code does not compute, or quote a number that 
 in the data.
 
 WHAT THIS FIGURE IS FOR
-Every result in Figs 1-5 rests on a CURATED DISEASE LABEL (OMIA, ClinVar, SGE). That is the paper's
+Every other result in the paper rests on a CURATED or ASSAYED LABEL (ClinVar, OMIA, SGE, splicing assays). That is the paper's
 ceiling and its most predictable attack: curation is confounded with conservation, gene identity and
 study effort. This arm scores the same model against ALLELE FREQUENCY IN A POPULATION -- no labels, no
 curator, no ascertainment -- and then asks whether the signal survives conditioning on conservation.
@@ -16,11 +16,11 @@ THREE TRAPS, ALL OF WHICH GIVE A PLAUSIBLE WRONG ANSWER
     is on `maf` (FOLDED minor-allele frequency). `af` is the unfolded allele frequency and gives
     rho = -0.1145 (p = 2.5e-82) -- a different number that still looks right and still "passes" a
     sign-and-significance check. The column is pinned and asserted below.
-  * Missingness is NaN, not null (the Fig 5 trap). `notna()` reports 100% reach on the conservation
+  * Missingness is NaN, not null (the trap fig5_stats.py documents). `notna()` reports 100% reach on the conservation
     track and silently deletes the coverage caveat. Use np.isfinite().
   * phyloP provenance: the phyloP tracks for pig/sheep/horse/dog are
-    BYTE-IDENTICAL copies of GERP. Only CATTLE has a genuine phyloP track -- which is what this arm
-    uses, since the selection panel is cattle. Do not generalise the panel-b design to other species
+    BYTE-IDENTICAL copies of GERP. Genuine phyloP exists for chicken, human and CATTLE (Table S8),
+    and this arm uses cattle's, since the selection panel is cattle. Do not generalise the panel-b design to other species
     without re-checking that.
 
 Run: python -m src.ccs.fig6_stats
@@ -157,34 +157,35 @@ def selection_arm(rng, out):
 
     out["selection_conditioned"] = {
         "cells": cells,
-        "conservation_track": "phylop (cattle -- the one species whose phyloP is NOT a GERP copy)",
+        "conservation_track": "phylop (cattle; one of three genuine phyloP tracks, with chicken and human, Table S8)",
         "reach": float(fin.sum() / len(fin)), "n_scored": int(fin.sum()), "n_total": int(len(fin)),
         "strata": strata,
         "n_strata_rho_negative": sum(1 for s in strata if s["rho"] < 0),
         "n_strata_ci_excludes_zero": sum(1 for s in strata if s["ci"][1] < 0),
         "_note": ("If the MAF gradient holds INSIDE every conservation stratum, Evo2 is not re-reading "
                   "conservation. Survival is counted by a CI excluding zero, never by the sign of a "
-                  "point estimate -- that sign-counting error is what forced the Fig 5 confound "
-                  "withdrawal."),
+                  "point estimate."),
     }
 
 
 def decomposition_arm(rng, out):
-    """Panel c: on the DISEASE panels, does the FM add signal beyond conservation?
+    """Panel c: on the labelled panels, does the FM add signal beyond conservation?
 
-    The POOLED ΔFM is the load-bearing number (the per-species median is inflated by equal-weighting
-    small-n species -- chicken is +0.117 on 27 positives), so both the pooled point estimate and its
-    confidence interval are recomputed here from the per-variant scores.
+    Three summaries answer different questions (Note S17): the unweighted species mean of the lifts, the
+    paper's primary aggregation and panel c's band (fig6_final.panel_c); their n-weighted mean; and the
+    POOLED ΔFM, which ranks pairs across species. The pooled point estimate and its confidence interval
+    are recomputed here from the per-variant scores.
     """
     from sklearn.linear_model import LogisticRegression
     from sklearn.model_selection import StratifiedKFold
     from sklearn.metrics import roc_auc_score
 
     d = pl.read_parquet(ROOT / "data/processed/decomposition.parquet")
-    # The deposited parquet has NINE rows but only EIGHT species: the ninth is a 'POOLED' summary row.
+    # The input parquet (data/processed/decomposition.parquet, not deposited) has NINE rows but only
+    # EIGHT species: the ninth is a 'POOLED' summary row.
     # Counting it as a species gives "9/9 species positive" and pulls the median.
-    # GOAT is absent from the deposited parquet only
-    # (the same 8-species restriction as the CNN arm in Fig 5d), which has to be disclosed, not implied.
+    # GOAT is absent from that parquet only
+    # (the same 8-species restriction as the CNN arm of Figure S5c), which has to be disclosed, not implied.
     all_rows = d.to_dicts()
     rows = [r for r in all_rows if r["sp"] != "POOLED"]
     deposited_pooled = next((r for r in all_rows if r["sp"] == "POOLED"), None)
@@ -236,7 +237,7 @@ def decomposition_arm(rng, out):
     a_cf = _cv_auc(np.c_[C, F], Y)
 
     boot = []
-    for _ in range(400):                       # 400 x 3 models x 5 folds; the estimand is stable
+    for _ in range(400):                       # 400 x 2 models x 5 folds; the estimand is stable
         b = rng.choice(len(Y), size=len(Y), replace=True)
         if len(np.unique(Y[b])) < 2:
             continue
@@ -247,7 +248,7 @@ def decomposition_arm(rng, out):
 
     dfm_cv = np.array([r["d_fm"] for r in per], float)
     # The pooled AUROC ranks variants ACROSS species, so cross-species positive/negative pairs count.
-    # That is NOT the estimand the per-species sticks measure, which is why 7 of 8 sticks sit outside
+    # That is NOT the estimand the per-species sticks measure, which is why 8 of 9 sticks sit outside
     # the pooled band. Report the within-species stratified mean as the commensurable quantity, and a
     # SPECIES-CLUSTER interval, because the claim is cross-species generality and a variant-level
     # bootstrap treats 9,532 rows from 9 species as exchangeable.
@@ -266,10 +267,11 @@ def decomposition_arm(rng, out):
             "d_fm": strat_mean,
             "ci_species_cluster": [float(np.percentile(cl, 2.5)), float(np.percentile(cl, 97.5))],
             "loso_min": float(min(loso)), "loso_max": float(max(loso)),
-            "_note": ("n-weighted mean of the per-species lifts -- the quantity the sticks actually "
-                      "show. CI is a SPECIES-cluster bootstrap (species are the resampling unit), not "
-                      "a variant-level one. Use this for the band; the cross-species pooled AUROC "
-                      "below is a different estimand and must not be drawn as their average."),
+            "_note": ("n-weighted mean of the per-species lifts, the legend's second summary; panel c's "
+                      "band is their unweighted mean with its t interval (fig6_final.panel_c). CI is a "
+                      "SPECIES-cluster bootstrap (species are the resampling unit), not a variant-level "
+                      "one. The cross-species pooled AUROC below is a different estimand and must not "
+                      "be drawn as their average."),
         },
         "per_species": per,                       # estimator-consistent; THIS is what panel c plots
         "per_species_deposited_raw": rows,        # raw-AUROC columns, kept for provenance only
@@ -288,8 +290,8 @@ def decomposition_arm(rng, out):
         "species_absent_from_deposited": [s for s in SP
                                           if s not in {r.get("sp", r.get("species")) for r in rows}],
         "deposited_pooled_row": deposited_pooled,
-        "_species_note": ("Two layers, different membership. The DEPOSITED parquet "
-                          "(per_species_deposited_raw) omits goat and carries a 'POOLED' row that is "
+        "_species_note": ("Two layers, different membership. The input parquet "
+                          "(data/processed/decomposition.parquet, not deposited; per_species_deposited_raw) omits goat and carries a 'POOLED' row that is "
                           "not a species -- counting its rows gives a false 9. The RECOMPUTED arm "
                           "(per_species, and the pooled block below) includes goat at n=80 / 8 "
                           "positives, so it is 9 species and n=9,532. Goat's cell is underpowered at "
@@ -305,13 +307,13 @@ def decomposition_arm(rng, out):
                             "are recomputed here "
                             "from the per-variant scores."),
         },
-        "_note": ("LEAD WITH the pooled dFM, not the per-species median: the median equal-weights "
-                  "small-n species (chicken +0.117 on 27 positives)."),
+        "_note": ("LEAD WITH the unweighted species mean of the per-species lifts, the paper's primary "
+                  "aggregation (Note S17); the pooled dFM ranks pairs across species, a different estimand."),
     }
 
 
 def bat_arm(rng, out):
-    """Panel d: cross-clade pilot ~65 My away.
+    """Panel d: cross-clade pilot, a bat in a different laurasiatherian order from cattle.
 
     PROVENANCE WARNING carried into the JSON: this is PILOT-grade (10 Myotis lucifugus samples,
     AN <= 20, so the frequency axis is coarse). In a main figure the pilot status must be

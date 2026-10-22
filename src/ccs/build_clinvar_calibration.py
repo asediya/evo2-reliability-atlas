@@ -1,4 +1,4 @@
-"""The trust layer on the human ClinVar benchmark (n~825k), applied to frozen external scores.
+"""The trust layer on the human ClinVar benchmark (1,599,200 labelled variants, sub-sampled to 150,000), applied to frozen external scores.
 
 Uses the EVEE Zenodo shard (Evo2-embedding pathogenicity probe + raw reference predictors + ClinVar
 labels + region flags). Shows, on the standard human clinical benchmark: (a) are SOTA VEP scores calibrated

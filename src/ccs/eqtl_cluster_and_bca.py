@@ -3,17 +3,18 @@
 
 Three checks on the eQTL and macro intervals.
 
-1. THE eQTL INTERVAL UNDER NON-INDEPENDENCE (2.1). The panel holds 20,000 distinct variants, so
-   nothing is duplicated - but 5,000 causal variants fall in 1,430 eGenes, i.e. 3.50 credible-set
-   variants per gene, and variants within a gene are correlated through linkage disequilibrium. An
+1. THE eQTL INTERVAL UNDER NON-INDEPENDENCE. The panel holds 20,000 distinct variants, so
+   nothing is duplicated - but its 5,000 candidate causal variants fall in 3,160 eGenes (1.58 per
+   eGene) and its 15,000 controls in 1,430 of those (10.49 per eGene), and variants within a gene
+   are correlated through linkage disequilibrium. An
    interval computed as though variants were independent is therefore too narrow. We resample
    eGENES rather than variants, which is the correct unit, and report what survives.
 
-2. PERMUTATION RESOLUTION (4.15). p = 0.012 from 2,000 permutations has a Monte Carlo standard
-   error of about 0.0024, and that p is load-bearing for the "resolvable departure from chance"
-   claim. Rerun at 20,000.
+2. PERMUTATION RESOLUTION. The p-value is load-bearing for the "resolvable departure from chance"
+   claim, and 2,000 permutations would leave it too coarse, so it is run at 20,000 (labels permuted
+   within eGene).
 
-3. BCa FOR THE NINE-CLUSTER BOOTSTRAP (4.15). A percentile interval on nine clusters undercovers
+3. BCa FOR THE NINE-CLUSTER BOOTSTRAP. A percentile interval on nine clusters undercovers
    regardless of resample count. Bias-corrected and accelerated intervals are the standard remedy;
    we report both so the reader can see how much the correction moves it.
 
@@ -65,9 +66,9 @@ def main():
     s = d["evo2_40b_neg"].to_numpy().astype(float)
     # Score convention: keep the deleteriousness orientation used
     # throughout the paper (higher = more deleterious). Do NOT flip the sign to force AUROC > 0.5 --
-    # an AUROC below 0.5 is the actual, reportable result (causal eQTLs score BELOW their non-causal
-    # controls), and an auto-flip would put this artifact in the opposite sign from the manuscript
-    # and from every other deposited file (all of which carry 0.4888).
+    # an AUROC below 0.5 is the actual, reportable result (candidate causal eQTLs score BELOW their
+    # controls), and an auto-flip would put this artefact in the opposite sign from the manuscript
+    # and from every other deposited file (all of which carry 0.4875, the published 0.488).
     genes = d["gene_id"].to_numpy()
     obs = roc_auc_score(y, s)
     print("eQTL panel: %s variants, %s causal, %s eGenes"

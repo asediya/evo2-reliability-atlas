@@ -12,10 +12,11 @@ Reference amino-acid identities come from the literature/canonical numbering, ne
 
 Type, colour and canvas come from src/ccs/style_gb.py. Nothing here sets a font size of its own.
 
-WHAT THE LEGEND CARRIES. Three blocks of prose are not on the canvas; the legend has to
-carry them, and none of them is data:
-  1. "reference notebook, 1B: 0.73  ->  reproduces, not beats" -- editorial commentary, which on
-     the canvas runs through "res 1837 . max Evo 2" (a true bbox collision).
+WHAT THE LEGEND CARRIES. Three blocks of prose are not on the canvas; the legend carries
+their substance, and none of them is data:
+  1. the comparison with the Evo 2-1B reference-notebook AUROC, 0.73, which the legend states as the
+     0.874 lying above it -- editorial commentary, which on the canvas would run through
+     "res 1837 . max Evo 2" (a true bbox collision).
   2. the three-line note that each panel b map is scaled independently, between its own 5th and
      95th percentiles (make_brca1_structure.py).
   3. the PDB composition line ("RING 1JM7 . BRCA1 1-103 + BARD1 (gray) + 2 Zn2+ / BRCT 1T29 .
@@ -44,7 +45,7 @@ from scipy.stats import spearmanr, rankdata
 import figstyle as fs
 from figtext import restore_text_layer
 
-# The shared house style. Imported the same way as figtext: relative when this file
+# The shared house style. Imported (unlike figtext, which is imported flat): relative when this file
 # runs as part of the package, flat when src/ccs is on sys.path directly. figstyle updates rcParams
 # at import time, so SG.rc() is applied AFTER it and wins -- this figure takes its whole type scale,
 # its canvas and its ink from the contract, and a change there reaches it without an edit here.
@@ -255,7 +256,7 @@ def main():
     # The site-clustered interval quoted in the Analyses and in this figure's
     # legend is computed here; compiled_results.parquet carries only the variant-level
     # [0.862, 0.886], not the site-clustered [0.858, 0.889]. This
-    # builder needs data/, so the interval travels as its own small artifact.
+    # builder needs data/, so the interval travels as its own small artefact.
     _stats = {
         "_meta": {
             "what": "BRCA1 saturation-editing variant-level discrimination and its site-clustered CI",
@@ -316,7 +317,7 @@ def main():
         axAnn.plot([x, x], [0.05, 0.36], color=c, lw=lw)
     axAnn.plot([xs_lig[0], xs_lig[-1]], [0.36, 0.36], color="#444", lw=0.8)
     # At 170 mm both labels sit in the leftmost quarter of the lane (the zinc ligands span x 92-270 of
-    # ~1,300), and the two-line cage caption grew into the C61G callout. Separated VERTICALLY — the cage
+    # ~1,300), where the two-line cage caption would run into the C61G callout. Separated VERTICALLY — the cage
     # caption above its own bracket, C61G below it — rather than by nudging x, which cannot work when
     # both must stay anchored near the same residues.
     # The caption's second line is counted, not asserted. Every ligand is loss-of-function in the
@@ -383,7 +384,7 @@ def main():
     pD, pS, pH = axD.get_position(), axSg.get_position(), axH.get_position()
     KX, KX2 = 0.905, 0.918          # swatch column, label column
     # 0.36 of the quilt height. The bar is pinned to the quilt's foot and grows upward,
-    # so on the shorter 173 mm canvas its top tick ("0.010") rose into the SGE key's last row
+    # so on the 173 mm canvas a taller bar's top tick ("0.010") would reach the SGE key's last row
     # ("LOF"), which is pinned to a different axes. Both live in the same 17 mm margin column;
     # the bar is the one with slack, since its job is a ramp and not a scale to read values off.
     cax = fig.add_axes([0.8985, pH.y0, 0.012, 0.36 * pH.height])   # aligned with the foot of the quilt
@@ -396,8 +397,8 @@ def main():
     # Under the quilt's right end nothing else is set (its x-label ends 9 mm to the left).
     fig.text(1.0 - 1.5 / SG.W_MM, pH.y0 - 2.6 * PT, "Evo 2  −Δ mean-LL (8,192 bp)\nred = deleterious",
              fontsize=SG.ANNOT, ha="right", va="top", color=INK_, linespacing=LEAD)
-    # Explicit ticks and explicit labels. Shortening the bar to clear the SGE key handed the
-    # locator a 34 pt run and it dropped to "0.00"/"0.01" -- two decimals on a scale whose real
+    # Explicit ticks and explicit labels. On a bar short enough to clear the SGE key the
+    # default locator, given a 34 pt run, drops to "0.00"/"0.01" -- two decimals on a scale whose real
     # maximum is 0.01486, which reads as if the ramp topped out at one hundredth.
     # Three ticks: the two ends and 0.001, next to the norm's centre (the median of the experimentally
     # functional substitutions, +0.00097). The norm is not linear, so an evenly spaced 0.005 would
@@ -462,7 +463,7 @@ def main():
                  fontsize=SG.AXIS, fontweight="bold", color=(RING_TXT if j == 0 else BRCT_TXT))
         fig.text(colc[j], grid_top + 1.5 * PT, pdbid[j], ha="center", va="bottom",
                  fontsize=SG.ANNOT, color=CAP)
-    # The structures' composition — BARD1 partner (gray), the two Zn2+, the BACH1 phosphopeptide
+    # The structures' composition — BARD1 partner (grey), the two Zn2+, the BACH1 phosphopeptide
     # cleft, the 1–103 construct bounds — is legend material and is not set under the colour cue.
     # The accessions stay: they are what a reader needs to fetch the same coordinates.
     fig.text(SG.letter_x(fig), grid_top + 10 * PT, "b", fontsize=SG.PANEL, fontweight="bold", color=INK_,
@@ -525,9 +526,9 @@ def main():
     # decoupled from the deleteriousness-red used elsewhere.
     if 1 in rmap:
         # BELOW and right of the residue, in the band under the cloud's right flank that no marker
-        # enters: seated above it at (1.72, 0.0044) the label's first letters sat on BRCT markers.
+        # enters: above it, at (1.72, 0.0044), the label's first letters would sit on BRCT markers.
         _tag(1, "Res 1 · start-loss", (2.02, 0.0009), MISS_C, arrow="->")
-    # (residue 1775 / M1775R under-call is discussed in the legend, NOT ringed on-figure: any leader to it
+    # (residue 1775 / M1775R under-call is NOT ringed on-figure: any leader to it
     #  would have to cross the dense cloud and could misread as a spurious negative trend in a no-fit plot.)
 
     # labelpad 3: the strip under this panel holds two things stacked with no elastic between them
@@ -561,8 +562,8 @@ def main():
                # construction; redacting the text and measuring the ink
                # underneath puts the word there on 25% cover at 14.7% edge density, the worst on the
                # page. The marker-free rectangle at x < 0.7, y > 0.0105 is 60 x 68 pt: too small for
-               # the nine-line stats card (209 pt wide, which is why it sits under the panel), ample
-               # for three legend rows. The 0.86 matters -- flush at 1.0 the key would cross the
+               # the six-line stats card (209 pt wide, which is why it sits under the panel), ample
+               # for three legend rows. The anchor stays below 1.0 -- flush at 1.0 the key would cross the
                # "res 1837 - max Evo 2" leader label by 3.8 pt, trading an ink collision for a worse
                # text one. 0.93, not lower: the third row is two lines, and lower its first line
                # "Outside both" would end on the BRCT triangle at (0.83, 0.0102).
@@ -584,7 +585,7 @@ def main():
     # largest marker-free rectangle in the scatter is about 60 × 68 pt (x < 0.7, y > 0.0105) and the
     # widest line below is 209 pt. So it sits in the empty strip beneath the panel, left edge
     # aligned with panel c's own letter. An editorial line such as
-    # "reference notebook, 1B: 0.73 → reproduces, not beats" is not a key and is not here; it is
+    # a comparison with the 1B notebook's 0.73 is not a key and is not here; it is
     # an argument, and it belongs to the legend in the journal's voice.
     fig.text(0.5, Y(485.0),
              # The header names the statistic in words, Spearman's correlation, and the three values

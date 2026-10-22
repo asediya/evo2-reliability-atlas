@@ -29,5 +29,5 @@
     }
   },
   "best_probe": 0.5194669599999999,
-  "summary": "A gene-grouped linear probe of Evo 2-1B embeddings separates causal from non-causal eQTLs by a negligible margin: best AUROC 0.52, 95% CI [0.508, 0.531]. The interval excludes 0.5, so this is a detectable effect of negligible size and not a null; at the 1B checkpoint the blind spot is representational and not only a readout artifact."
+  "summary": "A gene-grouped linear probe of Evo 2-1B embeddings separates causal from non-causal eQTLs by a negligible margin: best AUROC 0.52, 95% CI [0.508, 0.531]. The interval excludes 0.5, so this is a detectable effect of negligible size and not a null; at the 1B checkpoint the blind spot is representational and not only a readout artefact."
 }

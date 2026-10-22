@@ -4,8 +4,9 @@ Motivation. The cross-species conservation baseline in this paper is GERP, becau
 per-base conservation score available uniformly for all nine assemblies (verified against the UCSC
 download server: UCSC phyloP tracks exist for chicken/human only; cattle's comes from Zenodo, see below).
 This script is the robustness check a reader would ask for: on the three species where a genuine
-phyloP track DOES exist, does phyloP agree with GERP as a conservation baseline for discriminating
-pathogenic from population variants? If yes, the choice of GERP is validated.
+phyloP track DOES exist, how does phyloP compare with GERP as a conservation baseline for separating
+catalogued disease- or trait-associated alleles from population variants? GERP is kept for uniformity,
+not strength (Additional file 1, Note S27 and Table S8).
 
 Every phyloP value here is queried from a genuine UCSC (chicken, human) or Zenodo/Roslin-computed (cattle)
 phyloP bigWig at the exact variant position — no imputation, no GERP-derived stand-in.
@@ -187,7 +188,8 @@ def main():
     out_path = "reports/phylop_crosscheck.json"
     results = json.load(io.open(out_path, encoding="utf-8")) if os.path.exists(out_path) else {"_meta": {
         "test": "phyloP vs GERP conservation baseline, species where genuine phyloP exists",
-        "note": "validates GERP as the uniform cross-species baseline; phyloP queried from genuine "
+        "note": "GERP is the uniform cross-species baseline because it exists for all nine assemblies; this check "
+                "measures how much stronger phyloP is where it exists. phyloP queried from genuine "
                 "UCSC (chicken galGal6, human hg38) and Zenodo/Roslin Cactus 241-way (cattle bosTau9) bigWigs"},
         "per_species": {}}
 
@@ -197,7 +199,7 @@ def main():
         if "status" in r:
             print("%-8s %s" % (sp, r["status"]))
         else:
-            print("%-8s [%s] n=%d | GERP %.3f  phyloP %.3f (d %+.3f)  Evo2@8192 %.3f (vs phyloP %+.3f)  Evo2@1001 %.3f (vs phyloP %+.3f)  rho=%.3f"
+            print("%-8s [%s] n=%d | GERP %.3f  phyloP %.3f (d %+.3f)  Evo2@8192 %.3f (vs phyloP %+.3f)  Evo2@1001 %.3f (vs phyloP %+.3f)  Pearson r=%.3f"
                   % (sp, r["assembly"], r["n_matched"], r["auroc_gerp"], r["auroc_phylop"],
                      r["delta_phylop_minus_gerp"], r["auroc_evo2_8192"], r["delta_evo2_8192_minus_phylop"],
                      r["auroc_evo2_1001"], r["delta_evo2_1001_minus_phylop"], r["pearson_gerp_phylop"]))

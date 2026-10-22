@@ -5,7 +5,7 @@ hand.
 
 **Figures 1 to 8 and Additional file 1's Figures S8 to S12 are built from Additional file 3** rather than
 from this repository, and their builders ship there, in its `figures/` directory. Eight of them have a
-prep script beside them that recomputes what they draw from the deposited per-variant panels, and
+prep script beside them that recomputes what they draw from the deposited per-variant panels, five of them only with the licensed score values, and
 Figures 3, 5 and S11 draw what Figure 2's prep script writes, Figure 5 with Additional file 3's tables and
 Figure S11 with Figure 4's verdicts; Figure S8 reads Additional file 3's tables directly, and Figure 1 draws a
 constructed toy panel and reads no data. They are listed below for completeness but they are not in `src/ccs/`,
@@ -59,7 +59,7 @@ python -m src.ccs.fig5_final
 ```
 
 Use the `-m` form. The builders import sibling modules (`fig5_final` imports `fig5_stats`); most fall back to
-a flat import when run as a file, but `fig4_trust` and `fig5_final` also use relative imports that only resolve
+a flat import when run as a file, but `fig4_trust`, `fig5_final` and `fig6_final` also use relative imports that only resolve
 under `-m`.
 
 ## Two numbering systems
@@ -89,7 +89,7 @@ need the undeposited `data/` tree (Figures S3, S5 and S6).
 | Figure 9 | `Figure7_atlas.pdf` | `src/ccs/fig7_atlas.py` (data through `fig2_measure.py` and `fig2_style.py`) | `reports/fig2b_summary.json`, `fig2_pervariant.parquet`, `compiled_results.parquet`, and **Additional file 3** `tables/fig1_atlas_pervariant.parquet`, `table2_cluster_aware_ci.tsv` and `refseq_chromosome_map.csv` | `fig9.pdf` |
 | Figure 10 | `Figure8_readout.pdf` | `src/ccs/fig8_readout.py` (data through `fig2_measure.py` and `fig2_style.py`) | `reports/fig2_data.json`, `readout_effect_fullpanel.json`, `readout_headtohead.json`, and **Additional file 3** `tables/fig1_atlas_pervariant.parquet`, `table2_cluster_aware_ci.tsv`, `refseq_chromosome_map.csv` and `atlas_gerp_windows.parquet` | `fig10.pdf` |
 | Additional file 1: Figure S1 | `figS1_missing_panels.pdf` | `src/ccs/figS1_missing_panels.py` | `reports/fig4_pervariant.parquet` | `Additional_file_1_FigureS1.pdf` |
-| Additional file 1: Figure S2 | `Figure3_blindspot.pdf` | `src/ccs/fig3_rebuild.py` | `reports/fig3_stats.json`, `eqtl_pervariant.parquet`, `eqtl_cluster_bca.json`, `eqtl_blindspot_probe.json`, `eqtl_tss_baseline.json` | `Additional_file_1_FigureS2.pdf` |
+| Additional file 1: Figure S2 | `Figure3_blindspot.pdf` | `src/ccs/fig3_rebuild.py` | `reports/fig3_stats.json`, `eqtl_pervariant.parquet`, `eqtl_blindspot_probe.json`, `eqtl_tss_baseline.json` | `Additional_file_1_FigureS2.pdf` |
 | Additional file 1: Figure S3 | `Figure6_curator.pdf` | `src/ccs/fig6_final.py` | `reports/fig6_free.json`, Additional file 3 `tables/fig6_bat_selection.parquet` (`CCS_TABLES`) **+ `data/`** | `Additional_file_1_FigureS3.pdf` |
 | Additional file 1: Figure S4 | `Figure4_trust.pdf` | `src/ccs/fig4_trust.py` | `reports/fig4_reconciliation.json`, `fig4_pervariant.parquet`, `fig4_field.json`, `_recon_pervariant_trust.parquet` | `Additional_file_1_FigureS4.pdf` |
 | Additional file 1: Figure S5 | `Figure5_reach.pdf` | `src/ccs/fig5_final.py` | `reports/fig5_reach.json`, Additional file 3 `tables/fig1_atlas_pervariant.parquet` (`CCS_TABLES`) **+ `data/`** | `Additional_file_1_FigureS5.pdf` |

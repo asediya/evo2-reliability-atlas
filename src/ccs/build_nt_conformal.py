@@ -45,8 +45,8 @@ def qhat(scores, alpha):
 def evaluate(p, y, qm, q0, q1):
     inc1 = (1 - p) <= qm; inc0 = p <= qm
     cov = float(np.where(y == 1, inc1, inc0).mean())
-    size = inc0.astype(int) + inc1.astype(int)
     m1 = (1 - p) <= q1; m0 = p <= q0
+    size = m0.astype(int) + m1.astype(int)          # Mondrian set sizes, beside the Mondrian coverage, as in build_conformal.py
     covm = float(np.where(y == 1, m1, m0).mean())
     cov_ben = float(m0[y == 0].mean()) if (y == 0).any() else float("nan")
     cov_path = float(m1[y == 1].mean()) if (y == 1).any() else float("nan")
@@ -99,7 +99,7 @@ def main():
     lines = ["# Conformal trust layer on Nucleotide Transformer - does cross-species coverage hold on a second backbone?", "",
              f"Conformal quantile calibrated on label-rich species; applied to held-out TARGETS: {poor}. Nominal 0.90.", "",
              "## Per-species coverage & set-size (alpha=0.10, nominal 90%) - NT backbone",
-             "| species | role | n | pos | Mondrian cov | cov benign | cov pathogenic | singleton | abstain{both} |",
+             "| species | role | n | pos | Mondrian cov | cov benign | cov positive | singleton | abstain{both} |",
              "|---|---|---|---|---|---|---|---|---|"]
     for r in rows:
         lines.append(f"| {r['sp']} | {r['role']} | {r['n']} | {r['pos']} | **{r['cov_mond']:.3f}** "
@@ -107,7 +107,7 @@ def main():
     lines += ["", f"Mean Mondrian coverage on held-out TARGETS = **{mean_cov_tgt:.3f}** vs nominal 0.90 "
               f"(mean abstain rate {mean_abst_tgt:.2f}).", "",
               "## Coverage sweep on held-out targets (NT)",
-              "| alpha | nominal | Mondrian cov | pathogenic cov | singleton | abstain |",
+              "| alpha | nominal | Mondrian cov | positive cov | singleton | abstain |",
               "|---|---|---|---|---|---|"]
     for s in sweep:
         lines.append(f"| {s['alpha']} | {s['nominal']} | **{s['cov_mond']}** | {s['cov_path']} | {s['singleton']} | {s['abstain']} |")

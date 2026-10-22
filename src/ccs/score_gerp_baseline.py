@@ -85,7 +85,7 @@ def main():
                      "delta_evo2_minus_gerp": au_e - au_g,
                      "delta_ci_lo": lo, "delta_ci_hi": hi, "p_gerp_ge_evo2": p_le, "verdict": sig})
         print(f"  {sp:8s} n={len(y):5d}  Evo2 {au_e:.3f} | GERP {au_g:.3f} | phyloP "
-              f"{au_p if not np.isnan(au_p) else 0:.3f}  |  d={au_e-au_g:+.3f} "
+              f"{('%.3f' % au_p) if np.isfinite(au_p) else 'n/a'}  |  d={au_e-au_g:+.3f} "
               f"[{lo:+.3f},{hi:+.3f}] {sig}", flush=True)
 
     os.makedirs("reports", exist_ok=True)

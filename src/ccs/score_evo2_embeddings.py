@@ -1,5 +1,6 @@
-"""Extract Evo2-40B internal embeddings for the atlas + eQTL panels (for the representational
-hooks: H1 cross-species coding-manifold alignment, H3 eQTL probe-vs-likelihood).
+"""Extract Evo2-40B internal embeddings for the atlas + eQTL panels (40B
+representations that no reported value reads: the published eQTL probe uses Evo 2-1B embeddings from
+extract_evo2_embeddings.py, and the probe is not extended to 40B).
 
 Runs AFTER the scoring run on the same resident 40B (one extra forward pass each for ref + alt).
 To keep it cheap we center-crop each 8192bp window to `--crop` bp around the variant (var_off) --

@@ -164,8 +164,8 @@ def main():
              "Two constructions, each with coverage AND set sizes from its OWN membership rule. "
              "Mondrian holds ~0.97 by abstaining heavily; marginal holds ~0.95 overall as near-singletons "
              "but drops POSITIVE-class coverage.", "",
-             "| species | role | n | pos | Mondrian cov | Mond cov benign | Mond cov path | Mond abstain{both} | "
-             "marginal cov | marg cov benign | marg cov path | marg abstain{both} |",
+             "| species | role | n | pos | Mondrian cov | Mond cov benign | Mond cov positive | Mond abstain{both} | "
+             "marginal cov | marg cov benign | marg cov positive | marg abstain{both} |",
              "|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for r in rows:
         lines.append(f"| {r['sp']} | {r['role']} | {r['n']} | {r['pos']} | **{r['cov_mond']:.3f}** "
@@ -175,7 +175,7 @@ def main():
               "## Coverage sweep on held-out label-poor targets — does empirical coverage track the nominal level?",
               "Mondrian coverage/abstention vs marginal coverage/abstention, each internally consistent. "
               "Note the marginal predictor's POSITIVE-class coverage collapses well below nominal.",
-              "| alpha | nominal 1-alpha | Mondrian cov | Mond path cov | Mond abstain | marginal cov | marg path cov | marg abstain |",
+              "| alpha | nominal 1-alpha | Mondrian cov | Mond positive cov | Mond abstain | marginal cov | marg positive cov | marg abstain |",
               "|---|---|---|---|---|---|---|---|"]
     for s in sweep:
         lines.append(f"| {s['alpha']} | {s['nominal']} | **{s['cov_mond']}** | {s['cov_path_mond']} | {s['abstain_mond']} "

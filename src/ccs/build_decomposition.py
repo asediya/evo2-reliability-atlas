@@ -145,8 +145,7 @@ def main():
               f"({'>0.5 → the FM detects pathogenicity where alignment conservation is weak = lineage-specific/recent constraint' if med_lo > 0.55 else 'near chance → FM signal tracks conservation'}).",
               "",
               f"**{verdict}** — " + ("the FM is NOT just conservation: it adds orthogonal signal (combined beats "
-              "conservation alone) and works at low-conservation sites, capturing recent/lineage-specific function "
-              "that alignment-based scores miss." if verdict == "PASS" else
+              "conservation alone) and still discriminates at low-conservation sites, where alignment-based scores are weak." if verdict == "PASS" else
               "the FM and conservation largely overlap; the combined model gives limited lift — report honestly.")]
     open(MD, "w", encoding="utf-8").write("\n".join(lines) + "\n")
     pl.DataFrame(rows + [dict(sp="POOLED", n=len(Y), pos=int(Y.sum()), a_c=pa_c, a_f=pa_f, a_cf=pa_cf,

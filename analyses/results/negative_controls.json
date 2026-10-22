@@ -10,7 +10,7 @@
     {
       "control": "Reference likelihood alone, splicing panel",
       "expectation_if_false": "The same, on a panel with cell-measured labels",
-      "observed": "0.5122 [0.4921, 0.5326] at 1B; 0.5736 [0.5509, 0.5966] at 7B, the largest of the four and the reading that counts most against us",
+      "observed": "0.5122 [0.4921, 0.5326] at 1B; 0.5736 [0.5509, 0.5966] at 7B, the largest of the four human-panel readings of Note S24, below the animal panel's central kilobase, 0.6908",
       "artefact": "analyses/results/mfass_evo2_vs_specialists.json"
     },
     {
@@ -20,7 +20,7 @@
       "artefact": "analyses/results/eqtl_tss_matched.json"
     },
     {
-      "control": "Composition standardisation of the coverage gap",
+      "control": "Composition standardisation of the reach gap",
       "expectation_if_false": "The benchmark-to-deployment gap is variant-class mix, not curation, so it disappears once the panels are standardised",
       "observed": "SpliceAI gap 0.0409 before, 0.0407 after",
       "artefact": "analyses/results/mfass_random500k_coverage.json"
@@ -46,7 +46,7 @@
     {
       "control": "Interval stability at 200,000 resamples",
       "expectation_if_false": "The published intervals are Monte Carlo noise at the precision printed",
-      "observed": "largest standard error of the bootstrap MEAN 9.77e-05, in 3_prime_UTR_variant (clinvar); one skewed cell needs BCa. The ENDPOINT standard error, which is what Table S20 reports, is not in this artefact: it is ~3e-04, recomputed from the deposited panel by Additional file 3's scripts/recompute_endpoint_se.py",
+      "observed": "largest standard error of the bootstrap MEAN 9.77e-05, in 3_prime_UTR_variant (clinvar); the one skewed cell, Essential Splice, rests on eight negatives, so neither its percentile nor its BCa interval is informative. The ENDPOINT standard error, which is what Table S20 reports, is not in this artefact: it is ~3e-04, recomputed from the deposited panel by Additional file 3's scripts/recompute_endpoint_se.py",
       "artefact": "analyses/results/heavy_intervals.json"
     }
   ]

@@ -3,8 +3,9 @@
 Problem: atlas negatives were drawn genome-wide from Ensembl variation while positives
 are OMIA catalogued alleles (heavily coding). In cattle: negatives 84% intergenic/intronic, positives 85%
 coding-impactful. So the unmatched AUROC largely measures "is this variant in a gene", not "is this
-coding variant pathogenic" (cattle 0.900 -> 0.744 missense-only). This replicates the Jiang et al. preprint (rs-7579108)
-(0.934 -> 0.717 with type-matched controls).
+coding variant a catalogued disease- or trait-associated allele" (cattle 0.900 -> 0.744 missense-only). Concurrent work reports the same kind of
+drop (Jiang et al., Research Square rs-7579108: 0.934 -> 0.717 with type-matched controls); the two
+designs match differently and use different checkpoints (Additional file 1, Note S1).
 
 Fix: snpEff consequence for EVERY variant (build-matched DBs we built ourselves), then compare
 positives vs negatives WITHIN a consequence class. Pooling across species gives the power a single
@@ -116,10 +117,10 @@ def main():
     print(f"  {'consequence':38s} {'POS':>6s} {'NEG':>7s}")
     for eff in sorted(set(cp) | set(cn), key=lambda x: -(cp.get(x, 0) + cn.get(x, 0)))[:9]:
         print(f"  {eff:38s} {cp.get(eff,0):6d} {cn.get(eff,0):7d}")
-    ncod_n = sum(v for k, v in cn.items() if k not in CODING)
+    ncod_n = sum(v for k, v in cn.items() if not alters_cds(k))
     print(f"  {'TOTAL':38s} {tot_p:6d} {tot_n:7d}")
     print(f"  -> {100*ncod_n/max(tot_n,1):.0f}% of NEGATIVES are non-coding; "
-          f"{100*sum(v for k,v in cp.items() if k in CODING)/max(tot_p,1):.0f}% of POSITIVES are coding")
+          f"{100*sum(v for k,v in cp.items() if alters_cds(k))/max(tot_p,1):.0f}% of POSITIVES are coding")
 
     rows = []
     for readout, idx in [("1001bp single-pos", 1), ("8192bp mean-LL", 2)]:

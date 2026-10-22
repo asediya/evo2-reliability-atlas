@@ -31,9 +31,8 @@ from figtext import restore_text_layer
 
 MM = 1 / 25.4
 W_MM = 170.0                    # GB: 170 mm wide, 225 mm tall INCLUDING the legend
-# Authoring width in inches. The panels were written for a 12.2 in canvas; at that size the composite
-# had to be scaled to 0.55 to reach 170 mm, which is what drove the smallest type to 4.3 pt. Each
-# half is authored narrower so the scale to 170 mm is gentler and the type survives it.
+# The plate is authored at its printed size, 170 mm wide, so no scale is applied at the save and
+# every type size is the size that prints.
 H2_MM, H3_MM = 173, 173     # graphic height. The 225 mm cap in the guidelines covers
                                 # "figure and legend", and a 300-word legend sets to roughly
                                 # 25-35 mm, so a full-width graphic has to stop near 195 mm.
@@ -87,7 +86,7 @@ def build_supplement(N):
     plane rather than on it, and its hexbin carries a count scale in the gutter beside it.
     """
     fig = plt.figure(figsize=(W_MM * MM, H3_MM * MM))
-    # Panel a's top edge is set by the two-line note above it, which must stay on the canvas;
+    # Panel a's top edge is set by the one-line note above it, which must stay on the canvas;
     # panel b sits 12 mm under panel a's axis title (its letter, and the strip's "difference" head).
     axA = fig.add_axes([0.115, 0.700, 0.805, 0.235])
     axB1 = fig.add_axes([0.115, 0.305, 0.440, 0.255])
@@ -162,7 +161,6 @@ def build_supplement(N):
         fig.text(_LX, min(pos.y1 + 0.016, SG.letter_top(fig, margin_pt=0.4)), letter,
                  fontsize=SG.PANEL, fontweight="bold", va="bottom", ha="left", color=SG.INK)
     # The note for panel a, right-aligned over the panel it measures.
-    # The species count is the number of points the panel draws, not a typed 9.
     # The pooled value only. The Spearman test of AUROC against divergence
     # runs over nine points of which seven share one divergence, and the legend itself calls it
     # uninformative; a statistic that cannot inform does not belong on the plate.

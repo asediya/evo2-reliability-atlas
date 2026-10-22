@@ -5,9 +5,9 @@
 
 ## Why the raw data is not in the deposit
 
-The `data/` tree for this study — nine genome FASTAs, per-species variant-window files, and the 8,192-bp Evo 2 score parquets — exceeds any reasonable supplementary-file limit, so it is **not** included in Additional file 2, apart from the two BRCA1 structure models and their README under `data/raw/structures/`.
+The `data/` tree for this study — nine atlas genome FASTAs and the bat pilot's, per-species variant-window files, and the 8,192-bp Evo 2 score parquets — exceeds any reasonable supplementary-file limit, so it is **not** included in Additional file 2, apart from the two BRCA1 structure models and their README under `data/raw/structures/`.
 
-**This does not block reproduction of the published numbers.** Every value in the manuscript, tables and figures is held in the recompute layer — the `reports/*.json` files and the small `reports/*.parquet` files, both shipped in Additional file 2 — which the table and figure builders read directly. Running `src/ccs/build_tables.py` against those deposited artefacts regenerates the deposit's own tables report, `reports/tables.md`, without touching `data/`; `tools/verify_from_data.py`, by contrast, re-derives published values from the raw score and label files under `data/`. Three of the six `fig*_stats.py` scripts, `fig3_stats.py`, `fig5_stats.py` and `fig6_stats.py`, are **not** in that class: they read per-variant panels under `data/` and exit non-zero without it; the other three, the `fig4_*_stats.py`, read only deposited `reports/` files and run here. Most deposited analysis scripts need `data/` too — 79 of the 117 under `src/` reference a `data/` path, including `build_phylop_crosscheck.py` and the other `fig*_stats.py` scripts, and `build_tost_equivalence.py` needs `data/` through its import of `fig5_stats`. What they emit — the recompute JSONs and small parquets — IS deposited, so every published value stays checkable where the script that produced it cannot be re-run here. The raw tree is needed to re-run Evo 2 scoring end-to-end (a GPU workload) and to rebuild Additional file 1's Figures S3, S5 and S6 (see FIGURES.md). Figures 9 and 10 and Additional file 1's Figures S1, S2, S4 and S7 rebuild from deposited artefacts, and Figures 1 to 8 and Additional file 1's Figures S8 to S12 are built in Additional file 3 and need nothing from `data/`.
+**This does not block reproduction of the published numbers.** Every value in the manuscript, tables and figures is held in the recompute layer — the `reports/*.json` files and the small `reports/*.parquet` files, both shipped in Additional file 2 — which the table and figure builders read directly. Running `src/ccs/build_tables.py` against those deposited artefacts regenerates the deposit's own tables report, `reports/tables.md`, without touching `data/`; `tools/verify_from_data.py`, by contrast, re-derives published values from the raw score and label files under `data/`. Three of the six `fig*_stats.py` scripts, `fig3_stats.py`, `fig5_stats.py` and `fig6_stats.py`, are **not** in that class: they read per-variant panels under `data/` and exit non-zero without it; the other three, the `fig4_*_stats.py`, read only deposited `reports/` files and run here. Most deposited analysis scripts need `data/` too — 78 of the 116 under `src/` reference a `data/` path, including `build_phylop_crosscheck.py` and the other `fig*_stats.py` scripts, and `build_tost_equivalence.py` needs `data/` through its import of `fig5_stats`. What they emit — the recompute JSONs and small parquets — IS deposited, so every published value stays checkable where the script that produced it cannot be re-run here. The raw tree is needed to re-run Evo 2 scoring end-to-end (a GPU workload) and to rebuild Additional file 1's Figures S3, S5 and S6 (see FIGURES.md). Figures 9 and 10 and Additional file 1's Figures S1, S2, S4 and S7 rebuild from deposited artefacts, and Figures 1 to 8 and Additional file 1's Figures S8 to S12 are built in Additional file 3 and need nothing from `data/`.
 
 
 ## Deposited `reports/` artefacts with no in-deposit writer
@@ -36,7 +36,7 @@ Exact releases and assembly accessions are in the manuscript Methods and Data Av
 - **Label-free panels:** the cattle population allele-frequency panel and the pilot bat cohort VCF described in Methods.
 
 
-## Path inventory (149 distinct templates; `<var>` = a species, sample, model size, scorer or file stem)
+## Path inventory (148 distinct templates; `<var>` = a species, sample, model size, scorer or file stem)
 
 
 ### `analyses/data/` — Inputs of the analyses/scripts/ arms — splicing, ClinVar and strand-ladder scores and windows.
@@ -110,7 +110,6 @@ Exact releases and assembly accessions are in the manuscript Methods and Data Av
 - `data/interim/human_scoring_windows.parquet`
 - `data/interim/omia_multispecies_positives.parquet`
 - `data/interim/pig_omia_pos.parquet`
-- `data/interim/pig_scoring_windows.parquet`
 - `data/interim/pig_scoring_windows_real.parquet`
 - `data/interim/pig_windows.parquet`
 - `data/interim/readout2x2/<var>_2x2.parquet`

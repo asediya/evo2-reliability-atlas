@@ -1,6 +1,6 @@
 # ClinVar calibration with bootstrap 95% CIs (n~1.6M, all-core parallel)
 
-B=300 stratified bootstraps per score (each a full 4-fold isotonic CV), parallelized across 52 cores.
+B=300 stratified bootstraps per score (each a full 4-fold isotonic CV), parallelised across 52 cores.
 
 | VEP score | n | pos | AUROC [95% CI] | ECE raw [95% CI] | ECE calibrated [95% CI] |
 |---|---|---|---|---|---|

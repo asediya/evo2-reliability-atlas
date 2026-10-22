@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Is the published "2 of 9" a finding, or an artefact of seed=0?
+"""Is the published seed-stability pattern (Table S20's notes) a finding, or an artefact of seed=0?
 
 Chicken may sit on the significance boundary of the covered-subset contrast,
 so that whether its bootstrap interval excludes zero is decided by the RNG. If true, a count printed
@@ -115,7 +115,7 @@ def main():
     print("  SEED-DEPENDENT     : %d" % unstable)
     print()
     if unstable:
-        print("  A count that moves with the seed is not a finding. The manuscript's '2 of 9' must be")
+        print("  A count that moves with the seed is not a finding. The pattern in Table S20's notes must be")
         print("  reported as a range or the estimator changed.")
     else:
         print("  The published count is reproducible under every seed tested.")

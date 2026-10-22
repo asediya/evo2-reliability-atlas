@@ -5,15 +5,15 @@ FarmGTEx PigGTEx v0 SuSiE-inf fine-mapping (32 tissues, Sscrofa11.1 = our pig.fa
 per (tissue, eGene, variant) posterior inclusion probability `prob` = PIP. Fine-mapping resolves,
 among all the LD-correlated cis variants of an eGene, WHICH one is likely causal for expression.
 
-  POSITIVES  = high-PIP fine-mapped causal eQTL variants (prob >= --pos-pip in any tissue)
-  NEGATIVES  = tested-but-not-causal variants (prob <= --neg-pip) drawn from the SAME eGenes
-               -> same promoter/enhancer landscape, so the test isolates "is THIS the causal base",
-                  not "is this near a gene" (a much harder benchmark).
+  POSITIVES  = high-PIP fine-mapped candidate causal eQTL variants (prob >= --pos-pip in any tissue)
+  NEGATIVES  = tested-but-not-causal variants (prob <= --neg-pip) drawn from the eGenes that carry positives
+               (region-matched only: 44.3% of positives have no control in their own eGene,
+                Additional file 1, Note S41).
 
 This is CPU-only (parse + label + SNV filter). It emits the [variant_id,chrom,pos,ref,alt,label,...]
 table; window extraction + ref-match is done by extract_windows_local.py against pig.fa (Sscrofa11.1),
 exactly like the selection arm. Evo2 delta-LL scoring is queued to the GPU. If Evo2 is a real
-regulatory model, causal variants should get larger |delta-LL| than matched non-causal ones (AUROC).
+regulatory model, candidate causal variants should score as more deleterious than non-causal ones (AUROC of the signed score).
 
   python src/ccs/build_eqtl_benchmark.py --pos-pip 0.9 --neg-pip 0.001 --neg-per-pos 3 --cap 20000
 """

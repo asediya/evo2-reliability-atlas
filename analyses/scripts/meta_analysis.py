@@ -182,8 +182,8 @@ def main():
              "variants no longer count the same as human's 2,880.")
 
     # The readout effect, per species: how much the 8,192-bp mean-LL readout is worth over the
-    # single-position one. No deposited interval per species, so this arm reports tau2 and the
-    # prediction interval only, with SE from the species' own panel size as a crude proxy.
+    # single-position one. No deposited interval per species, so the SE is proxied by the half-width of
+    # the species' 8,192-bp AUROC interval, and tau2 and I2 are indicative only.
     b_names = [r["species"] for r in rows]
     b_y = [r["readout_delta"] for r in rows]
     b_se = [max(1e-4, (r["ci_8192"][1] - r["ci_8192"][0]) / (2 * 1.959963985)) for r in rows]

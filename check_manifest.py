@@ -15,7 +15,7 @@ Reports three things separately, because they fail for different reasons:
 WHY THIS EXISTS. reports/DATA_MANIFEST.md inventories paths and provenance and holds no
 checksums, so this script verifies every file MANIFEST.sha256 lists, byte for byte.
 
-The skip rules below are this deposit's own, not Additional file 3's: here logs/ holds 25
+The skip rules below are this deposit's own, not Additional file 3's: here logs/ holds 18
 analysis notes that are part of the deliverable, so it is checked like any other directory.
 
 Format is the standard sha256sum layout, so it can also be checked without Python:

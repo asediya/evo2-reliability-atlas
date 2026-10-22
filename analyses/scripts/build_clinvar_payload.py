@@ -6,12 +6,13 @@ Two things this addresses, and the first matters more than the second.
 **Evo 2 must be a participant, not only the auditor.** The paper charges CADD, REVEL and
 AlphaMissense a must-answer penalty on 1.4 M ClinVar variants; leaving Evo 2 uncharged on the same
 panel is an asymmetry a reader sees immediately. Scoring Evo 2 here puts it into the league table
-it critiques, with its own reach, its own class gap and its own identified interval beside the
-other 49.
+it critiques, with its own reach and its own must-answer AUROC, measured on a consequence-balanced
+ClinVar sample rather than on the 49-predictor panel.
 
 **The regulatory rung of the consequence gradient is n = 18**, with a minimum detectable difference
 of 0.28 — that rung cannot resolve anything smaller than a quarter of the AUROC scale.
-ClinVar carries tens of thousands of variants in each regulatory class.
+ClinVar carries far more variants in each regulatory class, though few pathogenic UTR ones: 54 at 3' and
+160 at 5' on this panel.
 
 Sampling is balanced by (consequence x label) so no cell can dominate, and every window is
 verified: the reference base at the variant offset must match the ClinVar REF, or the variant is

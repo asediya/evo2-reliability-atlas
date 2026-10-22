@@ -14,8 +14,8 @@ Two quantities answer it, and both are estimable from a few hundred variants:
      cannot move far
   2. the AUROC computed both ways on the same subset, which bounds the movement directly
 
-This selects a stratified subset: equal numbers per species, balanced on label, so no species or
-class dominates the estimate.
+This selects a stratified subset: up to the same number from each scoring-window file, balanced on
+label; dog has two such files (dog and dog_cf3), so it carries twice the share of the other species.
 
     python analyses/scripts/strand_prepare.py --per-species 40
 """

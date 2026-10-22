@@ -1,7 +1,8 @@
 """Variant-level CONFIDENCE INTERVALS on the two headline tables.
 
 Adds nonparametric bootstrap 95% CIs to:
-  (A) per-species zero-shot AUROC (atlas Table 2)      -- 2000x stratified resample
+  (A) per-species zero-shot AUROC (Table 2's 1,001-bp values; Table 2 itself prints locus-clustered
+      intervals, not these) -- 2000x stratified resample
   (B) per-species TRANSFERRED ECE (calibration table)  -- isotonic fit on OTHER rich species (fixed),
       bootstrap the TARGET species, apply the fixed map, recompute ECE.
 Runs on Evo2-40B scores (the headline backbone). CPU-only.

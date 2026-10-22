@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Deposit the phylogenetic-collapse sensitivity the manuscript quotes.
 
-The manuscript states that collapsing the nine species to one unit per taxonomic order leaves the
+Additional file 1 (Note S28) states that collapsing the nine species to one unit per taxonomic order leaves the
 macro Evo 2 advantage essentially unchanged, and that every one-representative-per-order choice
 lands in a narrow band. Without this script none of those values would exist in any deposited
 artefact, only in the manuscript prose, so the one phylogenetic-sensitivity claim in the paper

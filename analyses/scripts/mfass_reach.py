@@ -125,7 +125,7 @@ def main():
 
     res = {"_generated_by": "analyses/scripts/mfass_reach.py",
            "_source": "Smith & Kitzman, Genome Biol 2023, doi:10.1186/s13059-023-03144-z, table S1",
-           "_label": "measured splice-disruptive call; the 296 MLH1 calls are curated by the source study from published RT-PCR and minigene results rather than assayed de novo",
+           "_label": "measured splice-disruptive call; the 296 MLH1 calls are curated by the source study rather than assayed de novo, from published RT-PCR and minigene results except 82 essential-splice calls admitted by rule",
            "n": int(len(d)), "n_pos": int(y.sum()), "assays": SHEETS, "predictors": {}}
 
     print("\n  %-32s %6s %6s %6s  %8s %8s %8s   %-16s" %

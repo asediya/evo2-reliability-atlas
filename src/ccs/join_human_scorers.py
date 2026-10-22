@@ -70,7 +70,8 @@ def join_alphamissense(panel):
             .with_columns((pl.col("chrom") + "-" + pl.col("pos").cast(pl.Utf8) + "-"
                            + pl.col("ref") + "-" + pl.col("alt")).alias("variant_id"))
             .select(["variant_id", pl.col("am_path").cast(pl.Float64).alias("alphamissense")]))
-    # one score per variant: AlphaMissense repeats a variant across transcripts in the isoform file
+    # one score per variant. A no-op on this canonical-transcript file (AlphaMissense repeats a variant
+    # across transcripts only in its isoforms file), kept so the join key stays unique
     am = am.group_by("variant_id").agg(pl.col("alphamissense").max())
     print("  scorer rows (unique variants) %s" % format(am.height, ","))
     out = panel.join(am, on="variant_id", how="left")
@@ -116,8 +117,9 @@ def join_revel(panel):
 def _join_bigwig(panel, path, name):
     """Look up a per-base conservation track at each panel position.
 
-    fillna=None IS LOAD-BEARING. pybigtools defaults to returning 0.0 for positions the track does
-    not cover. For every other purpose that is a harmless convenience; here it is fatal, because an
+    NaN AT AN UNCOVERED BASE IS LOAD-BEARING. pybigtools 0.3.0, the pinned version, returns NaN there
+    by default (uncovered=None, fillna=None; the fillna=None below restates that default). A 0.0 fill
+    (uncovered=0.0 or fillna=0.0) is a harmless convenience elsewhere; here it is fatal, because an
     uncovered base is exactly the thing being measured. Filling it with 0.0 turns an unreachable
     variant into a confidently benign one, and the audit would report 100% reach for a track full of
     alignment gaps -- the precise failure this module exists to detect.

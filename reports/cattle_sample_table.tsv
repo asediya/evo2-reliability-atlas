@@ -1,6 +1,7 @@
-# Cattle allele-frequency panel: individual identifiers as carried in the PLINK2
+# Cattle allele-frequency panel: sample identifiers as carried in the PLINK2
 # .psam files the panel was built from (data/interim/geno_pgen/*.psam).
-# These are the sample identifiers of the aggregated public resequencing cohort; the
+# These are the sample identifiers of the FarmGTEx cattle imputed-genotype release, mostly RNA-sequencing
+# libraries and some of them repeated tissues of one animal; the
 # panel is an aggregation rather than a single published study, so they are given as
 # the record of what was used, not as a claim about any one cohort's provenance.
 sample_id

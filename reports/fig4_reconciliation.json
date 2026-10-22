@@ -16700,7 +16700,7 @@
     0.021263851452530697
    ]
   },
-  "_note": "oracle_isotonic is an in-species 4-fold fit: an UPPER BOUND, not attainable cross-species. The deposited reports/risk_coverage.parquet was built with this construction (analyze_trust_layer.py:151)."
+  "_note": "oracle_isotonic is an in-species 4-fold fit: an UPPER BOUND, not attainable cross-species. The deposited reports/risk_coverage.parquet was built with this construction for its oracle_isotonic_in_species_5fold arm (analyze_trust_layer.py, part3_riskcov())."
  },
  "contingency_diagnostics": {
   "isotonic_LOSO": {
@@ -17172,7 +17172,7 @@
     "mass15": 11
    }
   },
-  "_note": "equal-mass binning cannot deliver the requested bin count on the isotonic LOSO posterior (16-40 distinct values per species). ece_mass bins BY VALUE so ties stay together; the effective counts above are what is actually being measured. The prior np.array_split(argsort) implementation faked the requested count by splitting tied scores on row order, which made every mark row-order dependent."
+  "_note": "equal-mass binning cannot deliver the requested bin count on the isotonic LOSO posterior (16-40 distinct values per species). ece_mass bins BY VALUE so ties stay together; the effective counts above are what is actually being measured. An order-based split, np.array_split(argsort), would fake the requested count by splitting tied scores on row order."
  },
  "conformal": {
   "sp": [
