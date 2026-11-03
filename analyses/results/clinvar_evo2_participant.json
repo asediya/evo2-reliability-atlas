@@ -1,0 +1,353 @@
+{
+  "model": "7b",
+  "source": "analyses/data/clinvar/clinvar_evo2_7b_scores.parquet",
+  "n": 3714,
+  "n_pos": 1714,
+  "n_neg": 2000,
+  "reach": {
+    "coverage": 1.0,
+    "auroc_covered": 0.77999256126021,
+    "ci": [
+      0.7641579127771295,
+      0.7951271222287049
+    ],
+    "auroc_must_answer": 0.77999256126021,
+    "penalty": 0.0
+  },
+  "consequence": {
+    "3_prime_UTR_variant": {
+      "n_pos": 54,
+      "n_neg": 250,
+      "auroc": 0.7360740740740741,
+      "ci": [
+        0.644511111111111,
+        0.8199574074074073
+      ],
+      "mde": 0.122051326391303,
+      "resolved": true
+    },
+    "5_prime_UTR_variant": {
+      "n_pos": 160,
+      "n_neg": 250,
+      "auroc": 0.7241375,
+      "ci": [
+        0.6723103125,
+        0.7753103124999999
+      ],
+      "mde": 0.08186513136924178,
+      "resolved": true
+    },
+    "missense_variant": {
+      "n_pos": 250,
+      "n_neg": 250,
+      "auroc": 0.87224,
+      "ci": [
+        0.8385404,
+        0.9013444
+      ],
+      "mde": 0.0721317274506943,
+      "resolved": true
+    },
+    "non-coding_transcript_variant": {
+      "n_pos": 250,
+      "n_neg": 250,
+      "auroc": 0.7232,
+      "ci": [
+        0.6772132000000001,
+        0.7672228
+      ],
+      "mde": 0.0721317274506943,
+      "resolved": true
+    },
+    "nonsense": {
+      "n_pos": 250,
+      "n_neg": 250,
+      "auroc": 0.698512,
+      "ci": [
+        0.6541264,
+        0.7418803999999999
+      ],
+      "mde": 0.0721317274506943,
+      "resolved": true
+    },
+    "splice_acceptor_variant": {
+      "n_pos": 250,
+      "n_neg": 250,
+      "auroc": 0.779368,
+      "ci": [
+        0.7363334,
+        0.8193122
+      ],
+      "mde": 0.0721317274506943,
+      "resolved": true
+    },
+    "splice_donor_variant": {
+      "n_pos": 250,
+      "n_neg": 250,
+      "auroc": 0.781744,
+      "ci": [
+        0.7417116,
+        0.8204332000000001
+      ],
+      "mde": 0.0721317274506943,
+      "resolved": true
+    },
+    "synonymous_variant": {
+      "n_pos": 250,
+      "n_neg": 250,
+      "auroc": 0.845936,
+      "ci": [
+        0.8079152,
+        0.8814124
+      ],
+      "mde": 0.0721317274506943,
+      "resolved": true
+    }
+  },
+  "confound": {
+    "auroc_ref_likelihood_alone": 0.4609743290548425,
+    "ci": [
+      0.44262384043173864,
+      0.48018297841306884
+    ],
+    "auroc_delta": 0.77999256126021,
+    "auroc_delta_at_variant": NaN,
+    "corr_delta_ref": -0.05131352691032822
+  },
+  "models": {
+    "7b": {
+      "model": "7b",
+      "source": "analyses/data/clinvar/clinvar_evo2_7b_scores.parquet",
+      "n": 3714,
+      "n_pos": 1714,
+      "n_neg": 2000,
+      "reach": {
+        "coverage": 1.0,
+        "auroc_covered": 0.77999256126021,
+        "ci": [
+          0.7641579127771295,
+          0.7951271222287049
+        ],
+        "auroc_must_answer": 0.77999256126021,
+        "penalty": 0.0
+      },
+      "consequence": {
+        "3_prime_UTR_variant": {
+          "n_pos": 54,
+          "n_neg": 250,
+          "auroc": 0.7360740740740741,
+          "ci": [
+            0.644511111111111,
+            0.8199574074074073
+          ],
+          "mde": 0.122051326391303,
+          "resolved": true
+        },
+        "5_prime_UTR_variant": {
+          "n_pos": 160,
+          "n_neg": 250,
+          "auroc": 0.7241375,
+          "ci": [
+            0.6723103125,
+            0.7753103124999999
+          ],
+          "mde": 0.08186513136924178,
+          "resolved": true
+        },
+        "missense_variant": {
+          "n_pos": 250,
+          "n_neg": 250,
+          "auroc": 0.87224,
+          "ci": [
+            0.8385404,
+            0.9013444
+          ],
+          "mde": 0.0721317274506943,
+          "resolved": true
+        },
+        "non-coding_transcript_variant": {
+          "n_pos": 250,
+          "n_neg": 250,
+          "auroc": 0.7232,
+          "ci": [
+            0.6772132000000001,
+            0.7672228
+          ],
+          "mde": 0.0721317274506943,
+          "resolved": true
+        },
+        "nonsense": {
+          "n_pos": 250,
+          "n_neg": 250,
+          "auroc": 0.698512,
+          "ci": [
+            0.6541264,
+            0.7418803999999999
+          ],
+          "mde": 0.0721317274506943,
+          "resolved": true
+        },
+        "splice_acceptor_variant": {
+          "n_pos": 250,
+          "n_neg": 250,
+          "auroc": 0.779368,
+          "ci": [
+            0.7363334,
+            0.8193122
+          ],
+          "mde": 0.0721317274506943,
+          "resolved": true
+        },
+        "splice_donor_variant": {
+          "n_pos": 250,
+          "n_neg": 250,
+          "auroc": 0.781744,
+          "ci": [
+            0.7417116,
+            0.8204332000000001
+          ],
+          "mde": 0.0721317274506943,
+          "resolved": true
+        },
+        "synonymous_variant": {
+          "n_pos": 250,
+          "n_neg": 250,
+          "auroc": 0.845936,
+          "ci": [
+            0.8079152,
+            0.8814124
+          ],
+          "mde": 0.0721317274506943,
+          "resolved": true
+        }
+      },
+      "confound": {
+        "auroc_ref_likelihood_alone": 0.4609743290548425,
+        "ci": [
+          0.44262384043173864,
+          0.48018297841306884
+        ],
+        "auroc_delta": 0.77999256126021,
+        "auroc_delta_at_variant": NaN,
+        "corr_delta_ref": -0.05131352691032822
+      }
+    },
+    "1b": {
+      "model": "1b",
+      "source": "analyses/data/clinvar/clinvar_evo2_1b_scores.parquet",
+      "n": 3714,
+      "n_pos": 1714,
+      "n_neg": 2000,
+      "reach": {
+        "coverage": 1.0,
+        "auroc_covered": 0.7704079638273046,
+        "ci": [
+          0.7552689542007002,
+          0.7858768122812135
+        ],
+        "auroc_must_answer": 0.7704079638273046,
+        "penalty": 0.0
+      },
+      "consequence": {
+        "3_prime_UTR_variant": {
+          "n_pos": 54,
+          "n_neg": 250,
+          "auroc": 0.7022962962962963,
+          "ci": [
+            0.6142074074074074,
+            0.7849018518518518
+          ],
+          "mde": 0.122051326391303,
+          "resolved": true
+        },
+        "5_prime_UTR_variant": {
+          "n_pos": 160,
+          "n_neg": 250,
+          "auroc": 0.6496875,
+          "ci": [
+            0.5953184375,
+            0.7076281249999999
+          ],
+          "mde": 0.08186513136924178,
+          "resolved": true
+        },
+        "missense_variant": {
+          "n_pos": 250,
+          "n_neg": 250,
+          "auroc": 0.8496,
+          "ci": [
+            0.8131343999999999,
+            0.8829124
+          ],
+          "mde": 0.0721317274506943,
+          "resolved": true
+        },
+        "non-coding_transcript_variant": {
+          "n_pos": 250,
+          "n_neg": 250,
+          "auroc": 0.716744,
+          "ci": [
+            0.6687466,
+            0.7593156
+          ],
+          "mde": 0.0721317274506943,
+          "resolved": true
+        },
+        "nonsense": {
+          "n_pos": 250,
+          "n_neg": 250,
+          "auroc": 0.746216,
+          "ci": [
+            0.7030204,
+            0.7858428
+          ],
+          "mde": 0.0721317274506943,
+          "resolved": true
+        },
+        "splice_acceptor_variant": {
+          "n_pos": 250,
+          "n_neg": 250,
+          "auroc": 0.785184,
+          "ci": [
+            0.7444772000000001,
+            0.8250424
+          ],
+          "mde": 0.0721317274506943,
+          "resolved": true
+        },
+        "splice_donor_variant": {
+          "n_pos": 250,
+          "n_neg": 250,
+          "auroc": 0.795232,
+          "ci": [
+            0.7545752,
+            0.8341008
+          ],
+          "mde": 0.0721317274506943,
+          "resolved": true
+        },
+        "synonymous_variant": {
+          "n_pos": 250,
+          "n_neg": 250,
+          "auroc": 0.79016,
+          "ci": [
+            0.7475676,
+            0.8290604
+          ],
+          "mde": 0.0721317274506943,
+          "resolved": true
+        }
+      },
+      "confound": {
+        "auroc_ref_likelihood_alone": 0.4878081971995333,
+        "ci": [
+          0.46934834816219373,
+          0.5063818224912485
+        ],
+        "auroc_delta": 0.7704079638273046,
+        "auroc_delta_at_variant": NaN,
+        "corr_delta_ref": -0.15840794644157608
+      }
+    }
+  }
+}
