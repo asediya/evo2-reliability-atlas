@@ -1,0 +1,64 @@
+# glmtrust documentation
+
+Version 0.1.1.
+
+`glmtrust` does two things, useful independently:
+
+1. **Audits a comparison** between variant-effect scorers, asking whether it measures skill or
+   bookkeeping. Different scorers reach different variants, so two accuracies quoted side by side are
+   routinely computed on different sets.
+2. **Wraps a scorer** so it can abstain: a calibrated probability, a conformal prediction set with a
+   coverage guarantee (valid under exchangeability), and a selective call.
+
+- **[Tutorial](tutorial.md)** — a hands-on walk through each component and the one-object pipeline.
+- **[API reference](api.md)** — the public classes and functions.
+- **[README](../README.md)** — install, quickstart, and the scope of what the tool does and
+  does not claim.
+
+## When to reach for the audit
+
+Whenever a comparison involves a scorer that cannot score everything — which is most of them.
+Alignment-based scores are undefined where the alignment fails; protein-level scores are undefined
+outside coding sequence; anything needing an MSA inherits its gaps.
+
+Concretely, reach for it when you are:
+
+- **benchmarking two or more scorers** and want to know whether the winner would change on the
+  variants both can score;
+- **choosing a scorer to deploy** and need its accuracy over everything that will arrive, not over
+  the subset it happens to cover;
+- **checking a comparison**, someone else's published one or your own before submission;
+- **assembling a panel from several annotation sources**, where a merge on mismatched keys produces
+  a plausible-looking accuracy computed over a handful of rows.
+
+It is inert when every scorer reaches every variant: the penalty is zero, matched equals
+naive, and it says so.
+
+## When to reach for the trust layer
+
+Use it when you have variant-effect scores from a genomic language model and need to know
+*how far to trust them* — in particular when:
+
+- you are working in a **non-model species** with few or no curated labels, and need a defensible
+  operating point rather than a raw ranking;
+- the classes are **imbalanced** (deleterious variants are rare), so a single marginal threshold can
+  silently under-cover the class you care about — the `MondrianConformal` class-conditional guarantee
+  targets coverage within that class;
+- you want to **abstain** on the least-confident calls and need to know how many errors that removes,
+  reported separately for over-calls and missed positives.
+
+## Design principles
+
+1. **Standard methods, assembled and tested.** In the trust layer no component is novel; the value is a
+   tested, documented layer with out-of-fold thresholds and cross-validated reporting built in. In the
+   audit, restricting a comparison to shared variants is likewise established practice — what is added
+   is the must-answer accounting and the treatment of reach as a reportable property.
+2. **Gated warnings.** Warnings are gated on effect size as well as significance,
+   because on a million-variant panel even a reach gap far too small to matter excludes zero, and
+   warnings raised on every panel would be ignored. The audit also reports when it finds
+   nothing wrong.
+3. **Out-of-fold fitting.** Conformal and selective thresholds are fitted on out-of-fold probabilities;
+   `TrustLayer.evaluate` scores every variant with a model fitted without it.
+4. **State what does not transfer.** At the single-token readout a transferred probability is not better
+   than a global sigmoid, and at 8,192 bp it improves on one by 0.007 in macro ECE; the selective
+   *ordering* is what survives a cross-species shift. The docs and docstrings say so.

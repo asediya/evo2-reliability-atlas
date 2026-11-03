@@ -1,0 +1,203 @@
+# -*- coding: utf-8 -*-
+"""Generate reports/DATA_MANIFEST.md — the inventory of raw/intermediate inputs the analysis reads.
+
+Scripts under src/ and tools/ read over a hundred
+distinct paths under data/. That tree is large (genome FASTAs, per-species window files, and
+the 8,192-bp score parquets), so it cannot travel inside Additional file 2, and without a manifest the deposit would contain scripts that abort on missing inputs with no
+statement of what the inputs are or where they come from. This manifest is that statement: it lists
+every data/ path the deposited code references and points to the public
+sources and to the recompute layers (JSON + small parquets, both deposited) from which every
+published number is re-derivable without the raw data.
+
+The path list is grepped from the code, so it follows what the scripts name (the extension pattern
+below says what it can miss).
+
+    python tools/build_data_manifest.py   -> reports/DATA_MANIFEST.md
+"""
+import glob
+import io
+import os
+import re
+import sys
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
+OUT = "reports/DATA_MANIFEST.md"
+# Directory segments may not contain a dot; only the final extension does, so a path that already
+# ends in an extension cannot keep matching into the next one (which would list, for example, the pig
+# genome FASTA index with its extension doubled -- a path no script opens). The alternation is
+# longest-first so the compressed VCF suffix wins over the bare one. It is also the manifest's blind
+# spot: an input whose extension is missing from it is left out of the inventory, which is why it
+# carries the five less common extensions of real inputs: the splicing panel's source table (.xlsx),
+# the BRCA1 structure (.pdb), the eQTL embeddings (.npz), the liftover chain (.chain) and the snpEff
+# build config (.config).
+#
+# Note for anyone editing the comments in this file: the inventory is grepped from tools/**/*.py,
+# so a literal path written in a comment here is scanned as if a script opened it. Describe paths
+# in words rather than writing them out.
+# The optional leading directory is needed: the splicing and ClinVar scorers open their
+# inputs from a path that carries one more component than the raw tree does, and a pattern anchored
+# on the bare inventory directory would record them one level too shallow, as paths that do not
+# exist.
+PAT = re.compile(r"(?:analyses/)?data/(?:[A-Za-z0-9_%{}*-]+/)*[A-Za-z0-9_%{}*.-]+?"
+                 r"\.(?:vcf\.gz|fa\.gz|tsv\.gz|gtf\.gz|gz|parquet|csv|vcf|fai|fa|bw|bed|txt|tsv|json|npy|xlsx|npz|pdb|chain|config|bim|psam|pgen|pvar|afreq)(?![A-Za-z0-9.])")
+
+
+def collect_paths():
+    files = []
+    # analyses/scripts/ is deposited and reads its own inputs -- the splicing panel, the
+    # ClinVar windows, the strand ladder. Without it the manifest would be silently incomplete
+    # for three of the paper's results.
+    for pat in ("src/**/*.py", "tools/**/*.py", "glmtrust/**/*.py",
+                "analyses/scripts/**/*.py"):
+        files.extend(glob.glob(pat, recursive=True))
+    found = set()
+    for fp in files:
+        txt = io.open(fp, encoding="utf-8", errors="ignore").read()
+        for m in PAT.finditer(txt):
+            found.add(m.group(0))
+    # normalise format placeholders (%s, {sp}) to <species> so the list is a template inventory
+    norm = set()
+    for p in found:
+        norm.add(re.sub(r"%s|%d|\{[a-z_]+\}", "<var>", p))
+    return sorted(norm)
+
+
+def _data_dependent_counts():
+    """(scripts under src/ that reference a data/ path, total scripts under src/).
+
+    Scripts that need data/ are the majority rather than a named exception to "reproduces without
+    touching data/", so the count is measured rather than asserted.
+
+    Count what ships, using the deposit's own exclusion rule: the code deposit leaves out the
+    working tree's `_superseded_` folders, so counting every file in the working tree would quote a
+    denominator larger than the tree a reader holds.
+    """
+    srcs = [f for f in glob.glob("src/**/*.py", recursive=True)
+            if "_superseded_" not in f.replace("\\", "/")]
+    dep = sum(1 for f in srcs
+              if re.search(r"[\"']data/", io.open(f, encoding="utf-8", errors="ignore").read()))
+    return dep, len(srcs)
+
+
+def group(paths):
+    buckets = {}
+    for p in paths:
+        parts = p.split("/")
+        top = "/".join(parts[:2]) + "/"        # e.g. data/processed/
+        buckets.setdefault(top, []).append(p)
+    return buckets
+
+
+def main():
+    paths = collect_paths()
+    buckets = group(paths)
+    W = [].append
+    out = []
+    out.append("# Data manifest — inputs required to regenerate the analysis from scratch\n")
+    out.append(
+        "*This file, its path inventory and the prose around it, is written by "
+        "`tools/build_data_manifest.py`, which greps the deposited code for paths under `data/` ending in a "
+        "data-file extension, so the list follows what the scripts name rather than being typed by hand. "
+        "It inventories what the code references; not every "
+        "listed path is produced by the published analysis.*\n")
+    out.append(
+        "\n## Why the raw data is not in the deposit\n\n"
+        "The `data/` tree for this study — nine atlas genome FASTAs and the bat pilot's, per-species variant-window files, and the "
+        "8,192-bp Evo 2 score parquets — exceeds any reasonable supplementary-file limit, so it is "
+        "**not** included in Additional file 2, apart from the two BRCA1 structure models and their "
+        "README under `data/raw/structures/`.\n\n"
+        "**This does not block reproduction of the published numbers.** Every value in the "
+        "manuscript, tables and figures is held in the recompute layer — the `reports/*.json` "
+        "files and the small `reports/*.parquet` files, both shipped in Additional file 2 — which the "
+        "table and figure builders read directly. Running `src/ccs/build_tables.py` against those "
+        "deposited artefacts regenerates the deposit's own tables report, `reports/tables.md`, without "
+        "touching `data/`; `tools/verify_from_data.py`, by contrast, re-derives published values "
+        "from the raw score and label files under `data/`. Three of the six `fig*_stats.py` scripts, "
+        "`fig3_stats.py`, `fig5_stats.py` and `fig6_stats.py`, are **not** in that class: they read "
+        "per-variant panels under `data/` and exit non-zero without it; the other three, the `fig4_*_stats.py`, "
+        "read only deposited `reports/` files and run here. Most deposited "
+        "analysis scripts need `data/` too — %d of the %d under `src/` reference a `data/` path, including "
+        "`build_phylop_crosscheck.py` and the other `fig*_stats.py` scripts, and `build_tost_equivalence.py` "
+        "needs `data/` through its import of `fig5_stats`. What they emit — the recompute JSONs and small parquets — is deposited, so "
+        "every published value stays checkable where the script that produced it cannot be re-run "
+        "here. The raw tree is needed to re-run Evo 2 scoring end-to-end (a GPU workload) and to "
+        "rebuild Additional file 1's Figures S3, S5 and S6 (see FIGURES.md). Figures 9 and 10 "
+        "and Additional file 1's Figures S1, S2, S4 and S7 rebuild from deposited artefacts, "
+        "and Figures 1 to 8 and Additional file 1's Figures S8 to S12 are built in Additional file 3 and "
+        "need nothing from `data/`.\n"
+        % _data_dependent_counts())
+    # Five deposited artefacts are read by deposited scripts but written by
+    # none, so a reader checking provenance would find a hole in the chain and could not tell a
+    # deliberate deposited input from a leftover. The numbers themselves all reproduce; only the
+    # origin needs documenting. Stated here because this file is where a reader looks for provenance.
+    out.append(
+        "\n## Deposited `reports/` artefacts with no in-deposit writer\n\n"
+        "Five artefacts in the deposit are inputs rather than outputs: deposited scripts read "
+        "them, but no deposited script writes them. They are listed here so the provenance chain "
+        "has no unexplained node.\n\n"
+        "- `reports/_recon_pervariant_trust.parquet` — per-variant trust-layer reconstruction "
+        "(species, variant_id, label, score and the four calibration posteriors) for the 1,001-bp "
+        "single-position readout on all 11,130 atlas variants. It is a deposited **input**, consumed by "
+        "`build_fig3_consequence.py`, `build_locus_clustered_ci.py`, "
+        "`build_raw_ece.py`, `fig4_trust.py`, `analyses/scripts/calibration_error.py` and "
+        "`analyses/scripts/tie_sensitivity.py`. "
+        "Produced by the trust-layer build from `data/processed/scores/<species>_evo2_40b_local_scores.parquet` "
+        "(the input `src/ccs/fig4_reconcile.py` reads), which is not "
+        "deposited; the file is shipped so those consumers run without it.\n"
+        "- `reports/fig4_leak.json` — the selective-layer confusion counts (missed positives, "
+        "false alarms, caught, reaching the clinician); Additional file 1 prints the first three "
+        "in Table S28, the refusal total in Table S27's notes and the share of errors refused "
+        "(35.4%) in Note S36. Every stored count "
+        "recomputes from the deposited `reports/fig4_pervariant.parquet` at the 15% cut.\n"
+        "- `reports/eqtl_pervariant.parquet` — the 20,000 pig cis-eQTL records (variant_id, chrom, pos, "
+        "gene_id, pip, label, evo2_40b_score), read by the Figure S2 builder and the eQTL control scripts.\n"
+        "- `reports/gerp_pervariant.parquet` — GERP per atlas variant (11,130 rows; species, source, "
+        "variant_id, label, gerp, gerp_is_finite), read by `src/ccs/gerp_consequence.py` and two "
+        "`analyses/scripts/`.\n"
+        "- `reports/nt_vs_evo2.parquet` — the per-panel Nucleotide Transformer, Evo 2 and GERP AUROCs "
+        "(10 rows), read by `src/ccs/fig3_data.py`.\n\n"
+        "Two further files are records that no deposited script writes: "
+        "`reports/eqtl_pervariant_meta.json` and `reports/gerp_pervariant_meta.json` describe the two "
+        "parquets above.\n\n"
+        "One deposited record has a writer but records an analysis that did not run: "
+        "`reports/clinvar_stratified_calib.parquet` is the output of part 2 of "
+        "`src/ccs/analyze_trust_layer.py`, the consequence-stratified ClinVar calibration, whose join of "
+        "scores and windows left a single label class. The file therefore holds one row, that note and the "
+        "number of joined variants with a finite score, and no reported value uses it.\n")
+    out.append(
+        "\n## Public sources of the raw inputs\n\n"
+        "Exact releases and assembly accessions are in the manuscript Methods and Data Availability; "
+        "the primary sources are:\n\n"
+        "- **Catalogued alleles (positives):** OMIA (Online Mendelian Inheritance in Animals, "
+        "<https://omia.org>) for the eight non-human species; NCBI ClinVar "
+        "(<https://www.ncbi.nlm.nih.gov/clinvar/>, release dated in Methods) for the human panel.\n"
+        "- **Negatives and genome assemblies:** population variants from Ensembl Variation for seven non-human species, "
+        "the PigGTEx v0 genotype panel for pig, and ClinVar Benign/Likely_benign records for human; the Ensembl per-species releases and GenBank assembly accessions are listed in Methods.\n"
+        "- **Regulatory (eQTL) panel:** PigGTEx fine-mapped candidate causal *cis*-eQTLs (SuSiE-inf); their allele "
+        "frequencies from PigGTEx's molQTL genotype release (Science Data Bank, doi:10.57760/sciencedb.08089), "
+        "which `analyses/scripts/build_piggtex_maf.py` identifies by URL and MD5.\n"
+        "- **Conservation tracks:** GERP from the per-species Ensembl bigWig tracks (see `src/ccs/query_gerp.py`); phyloP from UCSC where a track exists (human hg38 phyloP100way, chicken galGal6 phyloP77way) and, for cattle (bosTau9), from Zenodo record 13332541 (Roslin) over a Cactus 241-way alignment — a different alignment and species set, described in Additional file 1: Table S8.\n"
+        "- **Label-free panels:** the cattle population allele-frequency panel and the pilot bat "
+        "cohort VCF described in Methods.\n")
+    out.append("\n## Path inventory (%d distinct templates; `<var>` = a species, sample, model size, scorer or file stem)\n"
+                % len(paths))
+    labels = {
+        "data/raw/": "Raw downloads — genome FASTAs, OMIA/ClinVar truth sets, source VCFs.",
+        "data/external/": "Third-party tracks and panels obtained externally.",
+        "data/interim/": "Intermediate build products — variant windows, candidate tables, pilots.",
+        "data/processed/": "Scored outputs — Evo 2 / NT / conservation scores per panel.",
+        "analyses/data/": "Inputs of the analyses/scripts/ arms — splicing, ClinVar and strand-ladder scores and windows.",
+    }
+    for top in sorted(buckets):
+        out.append("\n### `%s` — %s\n" % (top, labels.get(top, "")))
+        for p in buckets[top]:
+            out.append("- `%s`" % p)
+    out.append("\n")
+    io.open(OUT, "w", encoding="utf-8", newline="\n").write("\n".join(out))
+    print("wrote %s (%d path templates across %d groups)" % (OUT, len(paths), len(buckets)))
+
+
+if __name__ == "__main__":
+    main()
