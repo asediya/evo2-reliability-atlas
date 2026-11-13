@@ -57,7 +57,7 @@ glmtrust audit variants.parquet --auto --label-col label \
 | **breakdown frontier** | with covered AUROCs, `glmtrust reach` gives each pair's breakdown point λ* and counts the pairs still ordered at each share (`--lambdas`); λ = 1 is the sharp bound |
 | **sequence-blind baseline** | `glmtrust baseline` (`sequence_blind`) scores every variant by the out-of-fold rate of its gene, its consequence class or both: the floor an accuracy is read against |
 
-### Design notes worth knowing before you rely on it
+### Design notes
 
 - **A declared `readout` is mandatory.** How a model's output becomes one number per variant can
   invert a verdict, so scorers that declare different readouts are refused a delta.
@@ -75,7 +75,7 @@ glmtrust audit variants.parquet --auto --label-col label \
 
 ## The trust layer
 
-`glmtrust` turns a genomic language model's variant score into three things a user can act on:
+`glmtrust` turns a genomic language model's variant score into three outputs:
 
 1. a **calibrated probability** that a variant is deleterious, at the class balance of the labels it was fitted on
    (in the study, about ten negatives per positive in the eight animal species and one in human), not at a
@@ -86,7 +86,7 @@ glmtrust audit variants.parquet --auto --label-col label \
 3. a **selective call** that abstains when the model is not confident, with an operating point set by a
    target coverage or a precision guarantee that is distribution-free under exchangeability.
 
-> **Scope of the guarantees: read before deploying.** The conformal coverage and the precision
+> **Scope of the guarantees.** The conformal coverage and the precision
 > guarantee are finite-sample valid *under exchangeability* between the calibration data and the
 > variants being scored. The accompanying study found that exchangeability does **not** hold across
 > species: in a label-poor target species, treat the layer as a calibrated *ordering* with an operating point.
@@ -162,7 +162,7 @@ glmtrust reach reach_panel.parquet --label-col label --reach-prefix reach__ \
 
 [docs/api.md](docs/api.md) documents every module and function.
 
-## What it deliberately does *not* claim
+## Limits
 
 - It does **not** improve discrimination: calibration and conformal prediction re-express a score; they
   do not add signal.
