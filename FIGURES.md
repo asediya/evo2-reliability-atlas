@@ -1,7 +1,6 @@
 # Figure-to-script manifest
 
-Each figure is rendered by exactly one **live builder**, and no number is typed into a figure script by
-hand.
+This file maps each submitted figure to the script that draws it and to the tables that script reads.
 
 **Figures 1 to 6 and Additional file 1's Figures S8 to S20 are built from Additional file 3**, in its
 `figures/` directory, whose README says how; they need nothing from `data/`.
@@ -26,7 +25,7 @@ Most builder outputs carry project, not submission, numbers: `fig3_rebuild.py` e
 `Figure3_blindspot.pdf`, which is Additional file 1's Figure S2.
 The table below maps each builder output to its submitted figure.
 
-| Figure | Builder output | Live builder | Recompute layer it draws from |
+| Figure | Builder output | Builder script | Recompute layer it draws from |
 |---|---|---|---|
 | Figures 1 to 6 (`fig1.pdf` to `fig6.pdf`); Additional file 1: Figures S8 to S20 | listed in Additional file 3's `source_data/README.md` | **Additional file 3** `figures/` | listed in the same README |
 | none (Figure 5 redraws its panels from Additional file 3) | `Figure7_atlas.pdf` | `src/ccs/fig7_atlas.py` (data through `fig2_measure.py` and `fig2_style.py`) | `reports/fig2b_summary.json`, `fig2_pervariant.parquet`, `compiled_results.parquet`, and **Additional file 3** `tables/fig1_atlas_pervariant.parquet`, `table2_cluster_aware_ci.tsv` and `refseq_chromosome_map.csv` |

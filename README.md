@@ -1,5 +1,3 @@
-![glmtrust](docs/img/banner.png)
-
 # glmtrust
 
 [![tests](https://img.shields.io/badge/tests-247%20passing-brightgreen.svg)](glmtrust/tests)
@@ -9,17 +7,18 @@
 
 Varunkumar Asediya, Udayaraja GK, Haja N. Kadarmideen and Chandra S. Pareek
 
-**Audit a variant-scorer comparison before you believe it. Then wrap the scorer so it can abstain.**
+`glmtrust` audits a comparison of variant effect predictors for the variants each leaves unscored, and
+wraps a scorer with calibration and selective prediction so that it can abstain.
 
-Two variant effect predictors are rarely evaluated on the same variants, because each declines to
-score a different part of the panel. The accuracies quoted for them are then computed on different
-sets and read as a ranking. `glmtrust` measures that, and gives you a scorer that says "I don't
-know" instead of guessing.
+Two variant effect predictors are rarely evaluated on the same variants, because each leaves a
+different part of the panel unscored. The accuracies quoted for them are then computed on different
+sets and read as a ranking. `glmtrust` reports how much of the panel each scorer covers, its accuracy
+on the variants it covers and over the whole panel, and the comparison on the variants both score.
 
 ![Two predictors, one panel, different variants](docs/img/concept.png)
 
 
-> **One code base, two copies.** The project home page,
+> The project home page,
 > `https://github.com/asediya/evo2-reliability-atlas`, and the article's Additional file 2 hold
 > identical code, under the MIT License. The Zenodo record `10.5281/zenodo.22046811` mirrors the
 > article's Additional files 2 to 6. The article is *Unscored variants leave many comparisons of variant effect predictors undecided: evidence from ClinVar, published benchmarks and genomic language models*, and glmtrust is registered as RRID:SCR_029089.
@@ -34,8 +33,8 @@ pip install './glmtrust[io]'   # writes glmtrust/build/ and glmtrust/src/glmtrus
 ```
 
 glmtrust needs Python 3.9+, numpy, scipy and scikit-learn; the analysis layer (src/, analyses/) was run under
-Python 3.12. The `[io]` extra adds polars for parquet input. No GPU,
-no model weights, nothing to download.
+Python 3.12. The `[io]` extra adds polars for parquet input. It needs no GPU
+and no model weights.
 
 ## Audit a comparison
 
@@ -82,6 +81,9 @@ Tier 1.
 `src/`, `tools/` and `analyses/scripts/` hold the analysis this tool came out of, and
 `reports/` and `analyses/results/` hold the recompute layer. `glmtrust` does not need them; `container/` holds
 the recipe of the container the Evo 2 scores were produced in.
+
+The `src/ccs/fig*` scripts keep working names, and the numbers in those names are not the article's figure
+numbers. **[FIGURES.md](FIGURES.md)** maps every submitted figure to the script that draws it.
 
 **[docs/REPRODUCING.md](docs/REPRODUCING.md)** gives what regenerates from a clone, what needs the
 raw data tree, which code and scores are not deposited, and where the guarantees stop.
