@@ -1,98 +1,152 @@
 # glmtrust
 
-[![tests](https://img.shields.io/badge/tests-247%20passing-brightgreen.svg)](glmtrust/tests)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Tests](https://img.shields.io/badge/tests-247%20passing-brightgreen.svg)](glmtrust/tests)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/asediya/evo2-reliability-atlas/blob/main/notebooks/quickstart.ipynb)
 
-Varunkumar Asediya, Udayaraja GK, Haja N. Kadarmideen and Chandra S. Pareek
+**Put coverage, reach, and uncertainty back into your variant-prediction results.**
 
-`glmtrust` audits a comparison of variant effect predictors for the variants each leaves unscored, and
-wraps a scorer with calibration and selective prediction so that it can abstain.
+Variant-effect scorers often do not answer every variant. One scorer may cover the easy cases,
+another the alignment-rich ones, and a headline AUROC can compare two different panels. `glmtrust`
+helps you see exactly what changed—and whether the apparent winner still wins on shared variants.
 
-Two variant effect predictors are rarely evaluated on the same variants, because each leaves a
-different part of the panel unscored. The accuracies quoted for them are then computed on different
-sets and read as a ranking. `glmtrust` reports how much of the panel each scorer covers, its accuracy
-on the variants it covers and over the whole panel, and the comparison on the variants both score.
+It also turns a genomic score into calibrated probabilities, conformal prediction sets, and
+calls that know when to abstain.
 
 ![Two predictors, one panel, different variants](docs/img/concept.png)
 
+Varunkumar Asediya, Udayaraja GK, Haja N. Kadarmideen, and Chandra S. Pareek
 
-> The project home page,
-> `https://github.com/asediya/evo2-reliability-atlas`, and the article's Additional file 2 hold
-> identical code, under the MIT License. The Zenodo record `10.5281/zenodo.22046811` mirrors the
-> article's Additional files 2 to 6. The article is *Unscored variants leave many comparisons of variant effect predictors undecided: evidence from ClinVar, published benchmarks and genomic language models*, and glmtrust is registered as RRID:SCR_029089.
+**RRID:** SCR_029089
 
-`reports/DATA_MANIFEST.md` inventories the `data/` paths the code names, gives the raw inputs'
-public sources by category and lists the deposited inputs no script writes; `check_manifest.py` verifies every shipped file against `MANIFEST.sha256`.
+**Paper:** *Unscored variants leave many comparisons of variant effect predictors undecided:
+evidence from ClinVar, published benchmarks and genomic language models*
 
 ## Install
 
 ```bash
-pip install './glmtrust[io]'   # writes glmtrust/build/ and glmtrust/src/glmtrust.egg-info/ into this folder; run check_manifest.py first
+pip install './glmtrust[io]'
 ```
 
-glmtrust needs Python 3.9+, numpy, scipy and scikit-learn; the analysis layer (src/, analyses/) was run under
-Python 3.12. The `[io]` extra adds polars for parquet input. It needs no GPU
-and no model weights.
+You will need Python 3.9+ plus NumPy, SciPy, and scikit-learn. The `[io]` extra adds Polars for
+CSV, TSV, and Parquet files.
 
 ## Audit a comparison
+
+Have a score column for each predictor, and use `NaN` wherever a predictor declines to score a
+variant.
 
 ```python
 from glmtrust import Scorer, audit
 
 report = audit(labels, [
-    Scorer("scorer_a", a, readout="per-substitution score"),
-    Scorer("scorer_b", b, readout="per-substitution score"),   # NaN where it declines
+    Scorer("scorer_a", scores_a, readout="per-substitution score"),
+    Scorer("scorer_b", scores_b, readout="per-substitution score"),
 ])
+
 print(report)
 ```
 
-For each scorer it reports how much of the panel it reaches, whether that reach differs by class,
-its accuracy on the variants it covers, and its accuracy when every variant must be answered. A
-scorer that declines the hard cases looks better on the first number and worse on the second.
+You get a practical picture of:
 
-## The trust layer
+- **Reach** — how much of the panel each scorer can answer;
+- **Outcome gaps** — whether reach differs for positive and negative labels;
+- **Covered AUROC** — performance on only the variants reached;
+- **Whole-panel AUROC** — how coverage conventions affect the result;
+- **Matched comparisons** — how scorers perform on the variants both reach;
+- **Composition effects** — whether class differences survive stratification.
+
+If higher scores mean *more benign*, declare that once:
+
+```python
+Scorer(
+    "scorer",
+    scores,
+    readout="per-substitution score",
+    higher_is_worse=False,
+)
+```
+
+## Build a trust layer
 
 ```python
 from glmtrust import TrustLayer
 
-layer = TrustLayer(calibration="isotonic", conformal="mondrian", alpha=0.10, coverage=0.85)
-report = layer.fit(scores, labels).evaluate(scores, labels, groups=species)
-out = layer.predict(new_scores)      # probability, prediction set, answer-or-abstain
+layer = TrustLayer(
+    calibration="isotonic",
+    conformal="mondrian",
+    alpha=0.10,
+    coverage=0.85,
+)
+
+report = layer.fit(scores, labels).evaluate(
+    scores,
+    labels,
+    groups=species,
+)
+
+output = layer.predict(new_scores)
 ```
 
-Abstention suppresses false alarms far better than it catches missed positives, so it should not be
-used as a screen for missed positives.
+`output` includes calibrated probabilities, conformal prediction sets, conformal decisions,
+and selective decisions (`0`, `1`, or `ABSTAIN`). It is ideal for precision-oriented workflows,
+but abstention does not reliably catch every missed deleterious variant.
 
-## Notebook
+> **Important:** conformal coverage and precision guarantees depend on exchangeability. A
+> cross-species deployment should be treated as a calibrated ordering with a selective operating
+> point—not as an assumption that one population will behave exactly like another.
 
-**[notebooks/quickstart.ipynb](notebooks/quickstart.ipynb)** runs the audit and the trust layer on a fixture that
-ships with the package, 11,109 variants across nine species, with no data of your own.
+## Prefer the terminal?
 
-To run it with nothing installed, open it in Google Colab from the badge above; its first cell installs
-`glmtrust`. To run it locally, and to run the package's tests, see [docs/REPRODUCING.md](docs/REPRODUCING.md).
+```bash
+glmtrust audit variants.parquet --label-col label --auto --card audit.html
+glmtrust evaluate variants.parquet --score-col evo2 --label-col label --group-col species
+glmtrust calibrate variants.csv --score-col evo2 --label-col label --out probabilities.csv
+glmtrust transfer variants.parquet --score-col evo2 --label-col label --group-col species \
+  --out probabilities.csv
+```
 
-To reproduce the published trust-layer numbers from that fixture, see [docs/REPRODUCING.md](docs/REPRODUCING.md),
-Tier 1.
+The CLI accepts CSV, TSV, TXT, gzipped text, and Parquet. Labels should be `0`/`1`, or you can
+map text labels explicitly. Missing score cells mean “not scored”; infinite values are rejected.
 
-## Analysis code
+## Try it yourself
 
-`src/`, `tools/` and `analyses/scripts/` hold the analysis this tool came out of, and
-`reports/` and `analyses/results/` hold the recompute layer. `glmtrust` does not need them; `container/` holds
-the recipe of the container the Evo 2 scores were produced in.
+Run the package benchmark:
 
-The `src/ccs/fig*` scripts keep working names, and the numbers in those names are not the article's figure
-numbers. **[FIGURES.md](FIGURES.md)** maps every submitted figure to the script that draws it.
+```bash
+PYTHONPATH=glmtrust/src python glmtrust/benchmarks/reproduce_paper_trust_layer.py
+```
 
-**[docs/REPRODUCING.md](docs/REPRODUCING.md)** gives what regenerates from a clone, what needs the
-raw data tree, which code and scores are not deposited, and where the guarantees stop.
+Run the package tests:
 
-## Licence
+```bash
+cd glmtrust
+PYTHONPATH=src python -m pytest -q
+```
 
-MIT, see [LICENSE](LICENSE). The data files are CC0 1.0 except the third-party parts that
-[LICENSING.md](LICENSING.md) lists file by file, some of them PigGTEx's, under CC BY-NC 4.0.
+Need the full reproducibility story? Start here:
 
-This repository calls Evo 2 (Arc Institute, Apache 2.0) and redistributes none of its source.
+- [Reproducibility guide](docs/REPRODUCING.md)
+- [Package API](glmtrust/docs/api.md)
+- [Figure-to-script map](FIGURES.md)
+- [Data manifest](reports/DATA_MANIFEST.md)
 
-`glmtrust/CITATION.cff` carries the software's citation metadata; cite the article itself from its journal record.
+## What's inside
+
+- `glmtrust/` — installable package, benchmarks, tests, and docs;
+- `src/` and `analyses/scripts/` — recomputation and figure-generation code;
+- `reports/` and `analyses/results/` — deposited recomputation outputs;
+- `tools/` — verification and manifest utilities;
+- `container/` — Evo 2 scoring environment definition.
+
+`check_manifest.py` verifies the shipped repository against `MANIFEST.sha256`.
+`reports/DATA_MANIFEST.md` documents raw-input sources and deposited inputs.
+
+## Citation and licensing
+
+The code is MIT licensed. Deposited data are CC0 1.0 except third-party components listed in
+[LICENSING.md](LICENSING.md); some PigGTEx components are CC BY-NC 4.0.
+
+This repository uses Evo 2 (Apache 2.0) but does not redistribute Evo 2 source.
+Use [`glmtrust/CITATION.cff`](glmtrust/CITATION.cff) for software metadata, and cite the article
+itself for the scientific study.

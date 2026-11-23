@@ -51,10 +51,6 @@ pytest (pytest is in the `[test]` extra):
 cd glmtrust && PYTHONPATH=src python -m pytest -q      # 247 tests, about 75 s on an Apple M4 Pro
 ```
 
-`notebooks/quickstart.ipynb` also runs locally: install the package and Jupyter
-(`pip install './glmtrust[io]' notebook`) and open it with `jupyter notebook notebooks/quickstart.ipynb`; its
-six code cells take about 10 s.
-
 ### Tier 2: the recompute layer
 
 The tables read the recompute layer's JSONs and assert their headline values.
